@@ -1,0 +1,85 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/l-wikibase#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/endpoint> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/userName> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/password> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/siteIri> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/sparqlUrl> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/referenceProperty> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/averageTimePerEdit> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/strictMatching> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/skipOnError> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/newItemMessage> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/updateItemMessage> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/retryCount> ,
+        <http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/retryPause> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/endpoint>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#endpoint> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#endpointControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/userName>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#userName> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#userNameControl> ;
+    config:private true .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/password>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#password> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#passwordControl> ;
+    config:private true .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/siteIri>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#siteIri> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#siteIriControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/sparqlUrl>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#sparqlUrl> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#sparqlUrlControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/referenceProperty>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#referenceProperty> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#referencePropertyControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/averageTimePerEdit>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#averageTimePerEdit> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#averageTimePerEditControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/strictMatching>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#strictMatching> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#strictMatchingControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/skipOnError>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#skipOnError> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#skipOnErrorControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/newItemMessage>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#newItemMessage> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#newItemMessageControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/updateItemMessage>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#updateItemMessage> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#updateItemMessageControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/retryCount>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#retryCount> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#retryCountControl> .
+
+<http://linkedpipes.com/resources/components/l-wikibase/0.0.0/configuration/desc/retryPause>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/l-wikibase#retryPause> ;
+    config:control <http://plugins.linkedpipes.com/ontology/l-wikibase#retryPauseControl> .

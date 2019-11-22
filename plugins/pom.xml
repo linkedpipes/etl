@@ -8,6 +8,7 @@
     <name>LinkedPipes Plugins</name>
 
     <modules>
+        <module>l-wikibase</module>
         <module>t-chunkedToGraph</module>
         <module>t-excelToCsv</module>
         <module>t-filesFilter</module>

@@ -3,8 +3,11 @@ ARG LP_ETL_BUILD_BRANCH=master
 ARG LP_ETL_BUILD_JAVA_TEST=-DskipTests
 LABEL lp_project=etl
 RUN apk add --no-cache maven git
+WORKDIR /opt/wdtk/
+RUN git clone https://github.com/Wikidata/Wikidata-Toolkit.git . \
+ && git checkout 0afe49fef56a6da58a8f8fd3f023a56920c04f3b \
+ && mvn install
 WORKDIR /opt/lp/etl
-VOLUME ["/root/.m2/repository"]
 RUN git clone --single-branch --branch $LP_ETL_BUILD_BRANCH https://github.com/linkedpipes/etl.git .
 RUN mvn install $LP_ETL_BUILD_JAVA_TEST -P "install-executor,install-executor-monitor,install-storage,install-plugins"
 
