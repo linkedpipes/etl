@@ -1,0 +1,27 @@
+@prefix p: <https://wikibase.opendata.cz/prop/> .
+@prefix pqv: <https://wikibase.opendata.cz/prop/qualifier/value/> .
+@prefix psv: <https://wikibase.opendata.cz/prop/statement/value/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix wikibase: <http://wikiba.se/ontology#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<urn:NewItem> a <http://plugins.linkedpipes.com/ontology/l-wikibase#New>, wikibase:Item;
+  rdfs:label "qualifierTest item"@en;
+  p:P12 <urn:NewStatement> .
+
+<urn:NewStatement> a <http://plugins.linkedpipes.com/ontology/l-wikibase#New>, wikibase:Statement;
+  pqv:P12 <urn:value2>;
+  psv:P12 <urn:value1> .
+
+<urn:value1> a wikibase:GlobecoordinateValue;
+  wikibase:geoGlobe <http://www.wikidata.org/entity/Q2>;
+  wikibase:geoLatitude 1.2933333333333E1;
+  wikibase:geoLongitude 3.53E1;
+  wikibase:geoPrecision 2.77778E-4 .
+
+<urn:value2> a wikibase:GlobecoordinateValue;
+  wikibase:geoGlobe <http://www.wikidata.org/entity/Q2>;
+  wikibase:geoLatitude 5.0675546897005E1;
+  wikibase:geoLongitude 1.5538850308905E1;
+  wikibase:geoPrecision 1.0E-6 .

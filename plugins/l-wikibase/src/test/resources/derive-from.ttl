@@ -1,0 +1,31 @@
+@prefix p: <https://wikibase.opendata.cz/prop/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix prv: <https://wikibase.opendata.cz/prop/reference/value/> .
+@prefix psv: <https://wikibase.opendata.cz/prop/statement/value/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix wikibase: <http://wikiba.se/ontology#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<urn:NewItem> a <http://plugins.linkedpipes.com/ontology/l-wikibase#New>, wikibase:Item;
+  rdfs:label "Multiple Quantities reference test item"@en;
+  p:P8 <urn:NewStatement> .
+
+<urn:NewStatement> a <http://plugins.linkedpipes.com/ontology/l-wikibase#New>, wikibase:Statement;
+  prov:wasDerivedFrom <urn:ref1>;
+  psv:P8 <urn:value1> .
+
+<urn:ref1> a <http://plugins.linkedpipes.com/ontology/l-wikibase#New>, wikibase:Reference;
+  prv:P8 <urn:value2> .
+
+<urn:value1> a wikibase:QuantityValue;
+  wikibase:quantityAmount 362.0;
+  wikibase:quantityLowerBound 362.0;
+  wikibase:quantityUnit <https://wikibase.opendata.cz/entity/Q2106>;
+  wikibase:quantityUpperBound 362.0 .
+
+<urn:value2> a wikibase:QuantityValue;
+  wikibase:quantityAmount 3.62;
+  wikibase:quantityLowerBound 3.62;
+  wikibase:quantityUnit <https://wikibase.opendata.cz/entity/Q2153>;
+  wikibase:quantityUpperBound 3.62 .
