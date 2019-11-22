@@ -13,7 +13,7 @@
     <packaging>bundle</packaging>
     <name>plugin l-wikibase</name>
     <properties>
-        <wikidataToolkitVersion>0.11.0-SNAPSHOT</wikidataToolkitVersion>
+        <wikidataToolkitVersion>0.11.0</wikidataToolkitVersion>
     </properties>
 
     <dependencies>
