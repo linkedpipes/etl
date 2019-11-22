@@ -8,6 +8,7 @@
     <name>LinkedPipes Plugins</name>
 
     <modules>
+        <module>l-wikibase</module>
         <module>t-chunkedToGraph</module>
         <module>t-excelToCsv</module>
         <module>t-filesFilter</module>
@@ -97,7 +98,6 @@
         <module>t-jsonLdToRdfChunked</module>
         <module>t-hdtToRdf</module>
         <module>t-rdfToHdt</module>
-        <module>l-wikibase</module>
         <module>t-shacl</module>
     </modules>
 </project>
