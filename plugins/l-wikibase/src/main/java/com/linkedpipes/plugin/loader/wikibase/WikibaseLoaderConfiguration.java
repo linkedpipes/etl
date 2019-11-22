@@ -35,15 +35,8 @@ public class WikibaseLoaderConfiguration {
     @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_NEW_ITEM_MESSAGE)
     private String newItemMessage = "Create new entity.";
 
-    @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_REPLACE_ITEM_MESSAGE)
-    private String replaceItemMessage = "Replace entity.";
-
     @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_UPDATE_ITEM_MESSAGE)
-    private String mergeItemMessage = "Update entity.";
-
-    @RdfToPojo.Property(
-            iri = WikibaseLoaderVocabulary.HAS_UPDATE_BY_REPLACE_ITEM_MESSAGE)
-    private String mergeByReplaceItemMessage = "Update by replace.";
+    private String updateItemMessage = "Update entity.";
 
     @RdfToPojo.Property(iri = WikibaseLoaderVocabulary.HAS_RETRY_COUNT)
     private int retryCount = 0;
@@ -137,28 +130,12 @@ public class WikibaseLoaderConfiguration {
         this.newItemMessage = newItemMessage;
     }
 
-    public String getReplaceItemMessage() {
-        return replaceItemMessage;
+    public String getUpdateItemMessage() {
+        return updateItemMessage;
     }
 
-    public void setReplaceItemMessage(String replaceItemMessage) {
-        this.replaceItemMessage = replaceItemMessage;
-    }
-
-    public String getMergeItemMessage() {
-        return mergeItemMessage;
-    }
-
-    public void setMergeItemMessage(String mergeItemMessage) {
-        this.mergeItemMessage = mergeItemMessage;
-    }
-
-    public String getMergeByReplaceItemMessage() {
-        return mergeByReplaceItemMessage;
-    }
-
-    public void setMergeByReplaceItemMessage(String mergeByReplaceItemMessage) {
-        this.mergeByReplaceItemMessage = mergeByReplaceItemMessage;
+    public void setUpdateItemMessage(String updateItemMessage) {
+        this.updateItemMessage = updateItemMessage;
     }
 
     public int getRetryCount() {

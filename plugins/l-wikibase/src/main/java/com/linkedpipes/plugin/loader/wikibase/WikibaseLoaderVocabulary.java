@@ -40,14 +40,8 @@ public final class WikibaseLoaderVocabulary {
     public static final String HAS_NEW_ITEM_MESSAGE  =
             PREFIX + "newItemMessage";
 
-    public static final String HAS_REPLACE_ITEM_MESSAGE  =
-            PREFIX + "replaceItemMessage";
-
     public static final String HAS_UPDATE_ITEM_MESSAGE  =
             PREFIX + "updateItemMessage";
-
-    public static final String HAS_UPDATE_BY_REPLACE_ITEM_MESSAGE  =
-            PREFIX + "updateByMergeMessage";
 
     public static final String HAS_RETRY_COUNT = PREFIX + "retryCount";
 

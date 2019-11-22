@@ -48,17 +48,9 @@ define([], function () {
             "$type": "str",
             "$label": "New item message"
         },
-        "replaceItemMessage": {
-            "$type": "str",
-            "$label": "Replace item message"
-        },
         "updateItemMessage": {
             "$type": "str",
             "$label": "Update item message"
-        },
-        "updateByMergeMessage": {
-            "$type": "str",
-            "$label": "Update by replace message"
         },
         "retryCount": {
             "$type": "int",
