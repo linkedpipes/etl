@@ -23,7 +23,6 @@ services:
        - data-storage:/data/lp/etl/storage
        - configuration:/data/lp/etl/configuration
        - data-logs:/data/lp/etl/logs
-       - maven-cache:/root/.m2/repository
     environment:
       - LP_ETL_DOMAIN
     restart: always
@@ -53,7 +52,6 @@ services:
       - data-execution:/data/lp/etl/executor
       - data-logs:/data/lp/etl/logs
       - configuration:/data/lp/etl/configuration
-      - maven-cache:/root/.m2/repository
     environment:
       - LP_ETL_DOMAIN
     restart: always
@@ -69,12 +67,10 @@ services:
       - data-execution:/data/lp/etl/executor
       - data-logs:/data/lp/etl/logs
       - configuration:/data/lp/etl/configuration
-      - maven-cache:/root/.m2/repository
     environment:
       - LP_ETL_DOMAIN
     restart: always
 volumes:
-  maven-cache:
   data-logs:
   data-execution:
 # Uncomment following lines to allow local data binding.
