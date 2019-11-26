@@ -13,7 +13,7 @@
     <packaging>bundle</packaging>
     <name>plugin l-wikibase</name>
     <properties>
-        <wikidataToolkitVersion>0.10.0</wikidataToolkitVersion>
+        <wikidataToolkitVersion>0.11.0</wikidataToolkitVersion>
     </properties>
 
     <dependencies>
@@ -63,6 +63,18 @@
             <artifactId>wdtk-util</artifactId>
             <version>${wikidataToolkitVersion}</version>
         </dependency>
+        <!-- org.wikidata.wdtk dependencies -->
+        <dependency>
+            <groupId>org.threeten</groupId>
+            <artifactId>threeten-extra</artifactId>
+            <version>1.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.joda</groupId>
+            <artifactId>joda-convert</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+        <!-- -->
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>test-environment</artifactId>
@@ -70,6 +82,12 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.0.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

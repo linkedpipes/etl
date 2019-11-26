@@ -16,7 +16,7 @@
   psv:P8 <urn:value1> .
 
 <urn:ref1> a <http://plugins.linkedpipes.com/ontology/l-wikibase#New>, wikibase:Reference;
-  prv:P8 <urn:value1>, <urn:value2> .
+  prv:P8 <urn:value2> .
 
 <urn:value1> a wikibase:QuantityValue;
   wikibase:quantityAmount 362.0;

@@ -69,6 +69,7 @@ class TaskExecutor<T extends Task> implements Runnable {
     }
 
     private void execute() {
+        taskConsumer.setContext(context);
         while (!taskSource.isAllExecuted()) {
             if (context.isCancelled()) {
                 break;

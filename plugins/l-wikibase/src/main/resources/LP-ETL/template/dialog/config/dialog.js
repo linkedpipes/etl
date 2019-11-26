@@ -24,9 +24,41 @@ define([], function () {
             "$type": "str",
             "$label": "Wikibase instance IRI"
         },
+        "sparqlUrl": {
+            "$type": "str",
+            "$label": "Wikibase SPARQL URL"
+        },
+        "referenceProperty": {
+            "$type": "str",
+            "$label": "Property from the Wikibase"
+        },
         "averageTimePerEdit": {
             "$type": "int",
             "$label": "Average time per edit"
+        },
+        "strictMatching": {
+            "$type": "bool",
+            "$label": "Strict matching"
+        },
+        "skipOnError": {
+            "$type": "bool",
+            "$label": "Skip on error"
+        },
+        "newItemMessage": {
+            "$type": "str",
+            "$label": "New item message"
+        },
+        "updateItemMessage": {
+            "$type": "str",
+            "$label": "Update item message"
+        },
+        "retryCount": {
+            "$type": "int",
+            "$label": "Retry count"
+        },
+        "retryPause": {
+            "$type": "int",
+            "$label": "Retry pause"
         }
     };
 

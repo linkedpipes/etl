@@ -1,0 +1,28 @@
+@prefix ns1: <http://www.wikidata.org/prop/reference/> .
+@prefix ns2: <http://www.wikidata.org/prop/> .
+@prefix ns3: <http://www.wikidata.org/prop/qualifier/value/> .
+@prefix ns4: <http://www.wikidata.org/prop/statement/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix wikibase: <http://wikiba.se/ontology#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://www.wikidata.org/entity/Q10768607> a wikibase:Item ;
+    rdfs:label "Alej u náhonu"@cs ;
+    ns2:P31 <http://www.wikidata.org/entity/statement/Q10768607-6FF319F0-3A86-4A82-A6AE-25D8F6579132> .
+
+<http://www.wikidata.org/entity/statement/Q10768607-6FF319F0-3A86-4A82-A6AE-25D8F6579132> a wikibase:Statement ;
+    prov:wasDerivedFrom <urn:uuid:29c2a5a8-d55b-4d3e-878c-d472814fc5d7> ;
+    ns3:P580 <urn:1985-11-21> ;
+    ns4:P31 <http://www.wikidata.org/entity/Q811534> .
+
+<urn:1985-11-21> a wikibase:TimeValue ;
+    wikibase:timeCalendarModel <http://www.wikidata.org/entity/Q1985727> ;
+    wikibase:timePrecision 11 ;
+    wikibase:timeTimezone 0 ;
+    wikibase:timeValue "1985-11-21T00:00:00+00:00"^^xsd:dateTime .
+
+<urn:uuid:29c2a5a8-d55b-4d3e-878c-d472814fc5d7> a wikibase:Reference ;
+    ns1:P248 <http://www.wikidata.org/entity/Q26778346> .
