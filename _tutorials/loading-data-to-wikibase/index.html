@@ -8,6 +8,7 @@ title: Loading data to Wikibase
 	In this tutorial, we will walk through the process of preparing a schedulable pipeline for loading data from an external data source to a Wikibase instance such as <a href="https://www.wikidata.org">Wikidata</a>, using LinkedPipes ETL.
 	This was made possible thanks to the <a href="https://meta.wikimedia.org/wiki/Grants:Project/MFFUK/Wikidata_%26_ETL">Wikimedia Foundation Project Grant Wikidata &amp; ETL</a>.
 	We will demonstrate the process on a pipeline loading basic data about Czech <a href="https://www.wikidata.org/wiki/Q2438638">solitary</a> <a href="https://www.wikidata.org/wiki/Q811534">remarkable trees</a> to <a href="https://www.wikidata.org">Wikidata</a>.
+	Note that the tutorial also provides pipeline examples, which can be <a href="/documentation/#sharing">easily imported</a> into a LinkedPipes ETL instance.
 </p>
 
 <h2 class="orange-text center">0. Prerequisites</h2>
@@ -1219,3 +1220,16 @@ WHERE {
 <p class="flow-text">
 	In that case, the loading must be attemted later again.
 </p>
+
+<h2 id="pipelines" class="orange-text center">Additional pipelines</h2>
+<p class="flow-text">
+	Using the same method, additional pipelines were created:
+</p>
+<dl class="flow-text">
+	<dt>Czech streets from the <a href="https://www.wikidata.org/wiki/Q12049125">Register of territorial identification, addresses and real estates</a></dt>
+    <dd><a href="https://www.wikidata.org/wiki/Wikidata:Requests_for_permissions/Bot/LinkedPipes_ETL_Bot_2">Task approval</a></dd>
+	<dd><a href="../../assets/tutorials/loading-data-to-wikibase/pipelines/streets.jsonld">Pipeline download</a></dd>
+	<dt>Linking languages in Wikidata to languages in <a href="https://op.europa.eu/cs/web/eu-vocabularies/at-dataset/-/resource/dataset/language">Language EU Vocabulary</a></dt>
+	<dd><a href="https://www.wikidata.org/wiki/Wikidata:Requests_for_permissions/Bot/LinkedPipes_ETL_Bot_3">Task approval</a></dd>
+	<dd><a href="../../assets/tutorials/loading-data-to-wikibase/pipelines/languages.jsonld">Pipeline download</a></dd>
+</dl>

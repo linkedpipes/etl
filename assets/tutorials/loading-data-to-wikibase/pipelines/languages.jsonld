@@ -1,0 +1,2783 @@
+[
+  {
+    "@graph": [
+      {
+        "@id": "https://etl.opendata.cz/resources/components/1565796171754-d17b3c71-5cd7-410e-8783-8fc1a13ae434",
+        "http://www.w3.org/2002/07/owl#sameAs": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/components/1574255682014-4f47f167-8803-4580-8db8-76b9c3c1b6b4"
+          }
+        ]
+      }
+    ],
+    "@id": "http://etl.linkedpipes.com/resources/plugins/mapping"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/components/1574255682014-4f47f167-8803-4580-8db8-76b9c3c1b6b4",
+        "@type": [
+          "http://linkedpipes.com/ontology/Template"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/components/1574255682014-4f47f167-8803-4580-8db8-76b9c3c1b6b4/configuration"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/l-wikibase/0.0.0"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Wikidata loader"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/components/1574255682014-4f47f167-8803-4580-8db8-76b9c3c1b6b4"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/components/1574255682014-4f47f167-8803-4580-8db8-76b9c3c1b6b4/configuration/0",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/l-wikibase#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#averageTimePerEdit": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "2000"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#averageTimePerEditControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Force"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#endpoint": [
+          {
+            "@value": "https://www.wikidata.org/w/api.php"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#endpointControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Force"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#passwordControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#referenceProperty": [
+          {
+            "@value": "P1921"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#referencePropertyControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#siteIri": [
+          {
+            "@value": "http://www.wikidata.org/"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#siteIriControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Force"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#sparqlUrl": [
+          {
+            "@value": "https://query.wikidata.org/sparql"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#sparqlUrlControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#userNameControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/components/1574255682014-4f47f167-8803-4580-8db8-76b9c3c1b6b4/configuration"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344",
+        "@type": [
+          "http://linkedpipes.com/ontology/Pipeline"
+        ],
+        "http://etl.linkedpipes.com/ontology/tag": [
+          {
+            "@value": "WIKIDATA"
+          },
+          {
+            "@value": "EU"
+          }
+        ],
+        "http://etl.linkedpipes.com/ontology/version": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#int",
+            "@value": "2"
+          }
+        ],
+        "http://linkedpipes.com/ontology/profile": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/2"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "EU Vocabularies and Wikidata Languages mapping"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/10",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/86"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "882"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "637"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Map existing statements\nto Wikidata statements\nP219"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL construct"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/11",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/82"
+          }
+        ],
+        "http://linkedpipes.com/ontology/disabled": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "true"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlUpdate/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1513"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "158"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Tag items to be created"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL update"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/12",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/67"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlUpdate/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1482"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "521"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Tag new statements of\nItems to be created\nP2888 P218 P219 P220"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL update"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/13",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/graph/70"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-singleGraphUnion/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "721"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "308"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Union"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/14",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/64"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "879"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "253"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Map existing entities\nto Wikidata Items\nbased on ISO 639-2"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL construct"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/15",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/71"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "282"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "477"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "ISO codes"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL endpoint"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/16",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/graph/78"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-singleGraphUnion/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "542"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "445"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Union"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/17",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/84"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "880"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "362"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Map existing entities\nto Wikidata Items\nbased on ISO 639-3"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL construct"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/18",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/79"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "399"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "117"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Wikidata model of languages"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL construct"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/19",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/65"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "281"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "297"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Labels"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL endpoint"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/2",
+        "@type": [
+          "http://linkedpipes.com/ontology/ExecutionProfile"
+        ],
+        "http://linkedpipes.com/ontology/rdfRepositoryPolicy": [
+          {
+            "@id": "http://linkedpipes.com/ontology/repository/SingleRepository"
+          }
+        ],
+        "http://linkedpipes.com/ontology/rdfRepositoryType": [
+          {
+            "@id": "http://linkedpipes.com/ontology/repository/NativeStore"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/20",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/80"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "880"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "136"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Map existing entities\nto Wikidata Items\nbased on ISO 639-1"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL construct"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/21",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/74"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "168"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "380"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Instance of, labels, descriptions,\nexact match"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL endpoint"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/22",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/66"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlUpdate/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1147"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "161"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Replace existing item IRIs\nwith Wikibase Item IRIs"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL update"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/23",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/81"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlUpdate/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1966"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "454"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Cleanup fromSource\nand fromWikibase tags"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL update"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/24",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/graph/88"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-filesToRdfGraph/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "143"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "116"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Files to RDF single graph"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/25",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/85"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "883"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "744"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Map existing statements\nto Wikidata statements\nP219\nmissing qualifier in Wiki"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL construct"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/26",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/15"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/16"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/27",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/14"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/22"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/28",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/23"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/8"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/29",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/3"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/10"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/3",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/graph/75"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-singleGraphUnion/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "721"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "551"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Union"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/30",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/18"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/22"
+          }
+        ],
+        "http://linkedpipes.com/ontology/vertex": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/4c2a-9773"
+          },
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/8946-9727"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/33",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/16"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/13"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/34",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/18"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/13"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/35",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/3"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/4"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/36",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/21"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/16"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/37",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/19"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/16"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/38",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/22"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/3"
+          }
+        ],
+        "http://linkedpipes.com/ontology/vertex": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/228d-abc4"
+          },
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/b08f-8b8a"
+          },
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/736f-bb47"
+          },
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/dc98-a6dc"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/4",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/83"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "883"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "523"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Map existing statements\nto Wikidata statements\nP2888 P218 P220"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL construct"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/43",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/16"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/3"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/44",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/24"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/18"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/45",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "FilesOutput"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/9"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputFiles"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/24"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/46",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/7"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/6"
+          }
+        ],
+        "http://linkedpipes.com/ontology/vertex": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/7cc3-ae92"
+          },
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/cf56-95ee"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/49",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/10"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/6"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/5",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/72"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlUpdate/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1964"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "368"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Cleanup owl:sameAs"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL update"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/50",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/13"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/20"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/51",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/6"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/12"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/52",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/12"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/5"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/53",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/25"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/6"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/54",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/3"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/25"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/55",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/13"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/17"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/56",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/22"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/7"
+          }
+        ],
+        "http://linkedpipes.com/ontology/vertex": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/5590-992c"
+          },
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/3c41-b2ab"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/59",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/17"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/22"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/6",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/89"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlUpdate/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1157"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "522"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Replace existing statement IRIs\nwith Wikibase statement IRIs\nP2888 P218 P219 P220"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL update"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/60",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/13"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/14"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/61",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/5"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/23"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/62",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/20"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/22"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/63",
+        "@type": [
+          "http://linkedpipes.com/ontology/Connection"
+        ],
+        "http://linkedpipes.com/ontology/sourceBinding": [
+          {
+            "@value": "OutputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/sourceComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/4"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetBinding": [
+          {
+            "@value": "InputRdf"
+          }
+        ],
+        "http://linkedpipes.com/ontology/targetComponent": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/6"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/7",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/73"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/t-sparqlUpdate/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1224"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "287"
+          }
+        ],
+        "http://purl.org/dc/terms/description": [
+          {
+            "@value": "Clear items\nnot found in Wikibase"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "SPARQL update"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/8",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/graph/77"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/components/1574255682014-4f47f167-8803-4580-8db8-76b9c3c1b6b4"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "2017"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "548"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "Wikidata loader"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/9",
+        "@type": [
+          "http://linkedpipes.com/ontology/Component"
+        ],
+        "http://linkedpipes.com/ontology/configurationGraph": [
+          {
+            "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/68"
+          }
+        ],
+        "http://linkedpipes.com/ontology/template": [
+          {
+            "@id": "http://etl.linkedpipes.com/resources/components/e-httpGetFile/0.0.0"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "143"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "59"
+          }
+        ],
+        "http://www.w3.org/2004/02/skos/core#prefLabel": [
+          {
+            "@value": "HTTP get"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/228d-abc4",
+        "@type": [
+          "http://linkedpipes.com/ontology/Vertex"
+        ],
+        "http://linkedpipes.com/ontology/order": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1415"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "233"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/3c41-b2ab",
+        "@type": [
+          "http://linkedpipes.com/ontology/Vertex"
+        ],
+        "http://linkedpipes.com/ontology/order": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "2"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1189"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "278"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/4c2a-9773",
+        "@type": [
+          "http://linkedpipes.com/ontology/Vertex"
+        ],
+        "http://linkedpipes.com/ontology/order": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "853"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "113"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/5590-992c",
+        "@type": [
+          "http://linkedpipes.com/ontology/Vertex"
+        ],
+        "http://linkedpipes.com/ontology/order": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1446"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "235"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/736f-bb47",
+        "@type": [
+          "http://linkedpipes.com/ontology/Vertex"
+        ],
+        "http://linkedpipes.com/ontology/order": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "3"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1101"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "470"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/7cc3-ae92",
+        "@type": [
+          "http://linkedpipes.com/ontology/Vertex"
+        ],
+        "http://linkedpipes.com/ontology/order": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1438"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "360"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/8946-9727",
+        "@type": [
+          "http://linkedpipes.com/ontology/Vertex"
+        ],
+        "http://linkedpipes.com/ontology/order": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "2"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1079"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "114"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/b08f-8b8a",
+        "@type": [
+          "http://linkedpipes.com/ontology/Vertex"
+        ],
+        "http://linkedpipes.com/ontology/order": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "2"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1162"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "259"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/cf56-95ee",
+        "@type": [
+          "http://linkedpipes.com/ontology/Vertex"
+        ],
+        "http://linkedpipes.com/ontology/order": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "2"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "1117"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "502"
+          }
+        ]
+      },
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/vertex/dc98-a6dc",
+        "@type": [
+          "http://linkedpipes.com/ontology/Vertex"
+        ],
+        "http://linkedpipes.com/ontology/order": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "4"
+          }
+        ],
+        "http://linkedpipes.com/ontology/x": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "702"
+          }
+        ],
+        "http://linkedpipes.com/ontology/y": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "469"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/64",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query": [
+          {
+            "@value": "PREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX wikibase: <http://wikiba.se/ontology#>\nPREFIX p: <http://www.wikidata.org/prop/>\nPREFIX ps: <http://www.wikidata.org/prop/statement/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nPREFIX fromWikibase: <urn:fromWikiBase>\nPREFIX fromSource: <urn:fromSource>\n\nCONSTRUCT {\n  ?item owl:sameAs ?minexisting .\n}\nWHERE { \n#The aggregation is to make sure we don't have duplicities\n  SELECT ?item (MIN(?existing) as ?minexisting)\n  WHERE {\n    ?item a fromSource: ;\n        p:P219 ?p219_statement .\n  \n    ?p219_statement ps:P219 ?p219_value .\n  \n    ?existing a fromWikibase: ;\n            p:P219 ?p219_statement_wb .\n    ?p219_statement_wb ps:P219 ?p219_value .\n  }\n  GROUP BY ?item\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/64"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/65",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#defaultGraphControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#encodeRdf": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#endpoint": [
+          {
+            "@value": "https://query.wikidata.org/sparql"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#endpointControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#handleInvalidData": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#headerAcceptControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#query": [
+          {
+            "@value": "PREFIX lang: <http://ontologi.es/lang/core#>\nPREFIX str: <http://nlp2rdf.lod2.eu/schema/string/>\nPREFIX st: <http://semweb.mmlab.be/ns/stoptimes#>\nPREFIX psv: <http://www.wikidata.org/prop/statement/value/>\nPREFIX schema: <http://schema.org/>\nPREFIX sc: <http://purl.org/science/owl/sciencecommons/>\nPREFIX wd: <http://www.wikidata.org/entity/>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nPREFIX wikibase: <http://wikiba.se/ontology#>\nPREFIX p: <http://www.wikidata.org/prop/>\nPREFIX ps: <http://www.wikidata.org/prop/statement/>\nPREFIX pr: <http://www.wikidata.org/prop/reference/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX wdt: <http://www.wikidata.org/prop/direct/>\nPREFIX pqv: <http://www.wikidata.org/prop/qualifier/value/>\n\nPREFIX fromWikibase: <urn:fromWikiBase>\nPREFIX language: <http://www.wikidata.org/entity/Q34770>\nPREFIX dialect: <http://www.wikidata.org/entity/Q33384>\n\nCONSTRUCT {\n  ?item a wikibase:Item, fromWikibase: ;\n        <urn:nameFromWiki> ?label .\n}\nWHERE { \n  {\n  #P220 ISO 639-3 code\n  ?item p:P220 ?p220_statement . \n  ?p220_statement ps:P220 ?p220_value .\n\n  OPTIONAL {\n    ?item rdfs:label ?label .\n  }\n  }\n  UNION\n  {\n  #P219 ISO 639-2 code\n  ?item p:P219 ?p219_statement . \n  ?p219_statement ps:P219 ?p219_value .\n\n  OPTIONAL {\n    ?item rdfs:label ?label .\n  }\n  }\n  UNION\n  {\n  #P218 ISO 639-1 code\n  ?item p:P218 ?p218_statement . \n  ?p218_statement ps:P218 ?p218_value .\n\n  OPTIONAL {\n    ?item rdfs:label ?label .\n  }\n  }\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useAuthentication": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useTolerantRepository": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/65"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/66",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#query": [
+          {
+            "@value": "PREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX wikibase: <http://wikiba.se/ontology#>\n\nPREFIX fromSource: <urn:fromSource>\n\nDELETE { ?sourceItem ?p ?o . }\nINSERT { ?wikiItem ?p ?o . }\nWHERE { \n  ?sourceItem a wikibase:Item, fromSource: ;\n    owl:sameAs ?wikiItem ;\n    ?p ?o .\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/66"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/67",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#query": [
+          {
+            "@value": "PREFIX pp: <http://peoplesplaces.de/ontology#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX wikibase: <http://wikiba.se/ontology#>\nPREFIX p: <http://www.wikidata.org/prop/>\n\nPREFIX new: <http://plugins.linkedpipes.com/ontology/l-wikibase#New>\n\nINSERT { ?statement a new: }\nWHERE { \n  ?sourceItem a wikibase:Item ;\n              ?p ?statement .\n  ?statement a wikibase:Statement .\n  \n  VALUES ?p { p:P2888 p:P218 p:P219 p:P220 }\n  \n  FILTER NOT EXISTS {\n    ?statement a wikibase:Statement ;\n               owl:sameAs ?wikiStatement .\n  }\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/67"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/68",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/e-httpGetFile#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-httpGetFile#encodeUrl": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-httpGetFile#encodeUrlControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-httpGetFile#fileName": [
+          {
+            "@value": "languages-skos.rdf"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-httpGetFile#fileNameControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-httpGetFile#fileUri": [
+          {
+            "@value": "http://publications.europa.eu/resource/distribution/language/rdf/skos_core/languages-skos.rdf"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-httpGetFile#fileUriControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-httpGetFile#hardRedirect": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-httpGetFile#hardRedirectControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-httpGetFile#userAgent": [
+          {
+            "@value": ""
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-httpGetFile#userAgentControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-httpGetFile#utf8Redirect": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-httpGetFile#utf8RedirectControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/68"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/71",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#defaultGraphControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#encodeRdf": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#endpoint": [
+          {
+            "@value": "https://query.wikidata.org/sparql"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#endpointControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#handleInvalidData": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#headerAcceptControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#query": [
+          {
+            "@value": "PREFIX lang: <http://ontologi.es/lang/core#>\nPREFIX str: <http://nlp2rdf.lod2.eu/schema/string/>\nPREFIX st: <http://semweb.mmlab.be/ns/stoptimes#>\nPREFIX psv: <http://www.wikidata.org/prop/statement/value/>\nPREFIX schema: <http://schema.org/>\nPREFIX sc: <http://purl.org/science/owl/sciencecommons/>\nPREFIX wd: <http://www.wikidata.org/entity/>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nPREFIX wikibase: <http://wikiba.se/ontology#>\nPREFIX p: <http://www.wikidata.org/prop/>\nPREFIX ps: <http://www.wikidata.org/prop/statement/>\nPREFIX pr: <http://www.wikidata.org/prop/reference/>\nPREFIX pq: <http://www.wikidata.org/prop/qualifier/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX wdt: <http://www.wikidata.org/prop/direct/>\nPREFIX pqv: <http://www.wikidata.org/prop/qualifier/value/>\n\nPREFIX fromWikibase: <urn:fromWikiBase>\nPREFIX language: <http://www.wikidata.org/entity/Q34770>\nPREFIX dialect: <http://www.wikidata.org/entity/Q33384>\n\nCONSTRUCT {\n  ?item a wikibase:Item, fromWikibase: ;\n        p:P218 ?p218_statement ;\n        p:P219 ?p219_statement ;\n        p:P220 ?p220_statement .\n \n  ?p218_statement a wikibase:Statement, fromWikibase: ;\n    ps:P218 ?p218_value .\n\n  ?p219_statement a wikibase:Statement, fromWikibase: ;\n    ps:P219 ?p219_value ;\n    pq:P518 ?p219_q518 .\n\n  ?p220_statement a wikibase:Statement, fromWikibase: ;\n    ps:P220 ?p220_value .\n}\nWHERE { \n {\n  #P220 ISO 639-3 code\n  ?item p:P220 ?p220_statement . \n  ?p220_statement ps:P220 ?p220_value .\n  }\n  UNION\n  {\n  #P219 ISO 639-2\n  ?item p:P219 ?p219_statement . \n  ?p219_statement ps:P219 ?p219_value .\n  OPTIONAL { ?p219_statement pq:P518 ?p219_q518 . }\n  }\n  UNION\n  {\n  #P218 ISO 639-1 code\n  ?item p:P218 ?p218_statement . \n  ?p218_statement ps:P218 ?p218_value .\n  } \n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useAuthentication": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useTolerantRepository": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/71"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/72",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#query": [
+          {
+            "@value": "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n\nDELETE WHERE { \n  ?s owl:sameAs ?o .\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/72"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/73",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#query": [
+          {
+            "@value": "PREFIX wikibase: <http://wikiba.se/ontology#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\n\nDELETE { ?s a wikibase:Item } \nWHERE { \n  ?s a wikibase:Item .\n  FILTER NOT EXISTS {?s owl:sameAs []}\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/73"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/74",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#defaultGraphControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#encodeRdf": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#endpoint": [
+          {
+            "@value": "https://query.wikidata.org/sparql"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#endpointControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#handleInvalidData": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#headerAcceptControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#query": [
+          {
+            "@value": "PREFIX lang: <http://ontologi.es/lang/core#>\nPREFIX str: <http://nlp2rdf.lod2.eu/schema/string/>\nPREFIX st: <http://semweb.mmlab.be/ns/stoptimes#>\nPREFIX psv: <http://www.wikidata.org/prop/statement/value/>\nPREFIX schema: <http://schema.org/>\nPREFIX sc: <http://purl.org/science/owl/sciencecommons/>\nPREFIX wd: <http://www.wikidata.org/entity/>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nPREFIX wikibase: <http://wikiba.se/ontology#>\nPREFIX p: <http://www.wikidata.org/prop/>\nPREFIX ps: <http://www.wikidata.org/prop/statement/>\nPREFIX pr: <http://www.wikidata.org/prop/reference/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX wdt: <http://www.wikidata.org/prop/direct/>\nPREFIX pqv: <http://www.wikidata.org/prop/qualifier/value/>\n\nPREFIX fromWikibase: <urn:fromWikiBase>\nPREFIX language: <http://www.wikidata.org/entity/Q34770>\nPREFIX dialect: <http://www.wikidata.org/entity/Q33384>\n\nCONSTRUCT {\n  ?item a wikibase:Item, fromWikibase: ;\n        <urn:descriptionFromWikibase> ?description ;\n        p:P2888 ?p2888_statement .\n  \n  ?p2888_statement a wikibase:Statement, fromWikibase: ;\n    ps:P2888 ?p2888_value .\n}\nWHERE { \n  {\n  #P220 ISO 639-3 code\n  ?item p:P220 ?p220_statement . \n  ?p220_statement ps:P220 ?p220_value .\n  }\n  UNION\n  {\n  #P219 ISO 639-2 code\n  ?item p:P219 ?p219_statement . \n  ?p219_statement ps:P219 ?p219_value .\n  }\n  UNION\n  {\n  #P218 ISO 639-1 code\n  ?item p:P218 ?p218_statement . \n  ?p218_statement ps:P218 ?p218_value .\n  }\n  \n  #P2888 exact match\n  OPTIONAL {\n    ?item p:P2888 ?p2888_statement . \n    ?p2888_statement ps:P2888 ?p2888_value .\n  }\n  \n  OPTIONAL {\n    ?item schema:description ?description. \n  }\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useAuthentication": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useTolerantRepository": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/74"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/79",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query": [
+          {
+            "@value": "PREFIX dc: <http://purl.org/dc/elements/1.1/>\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\nPREFIX psv: <http://www.wikidata.org/prop/statement/value/>\nPREFIX schema: <http://schema.org/>\nPREFIX sc: <http://purl.org/science/owl/sciencecommons/>\nPREFIX wd: <http://www.wikidata.org/entity/>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nPREFIX wikibase: <http://wikiba.se/ontology#>\nPREFIX p: <http://www.wikidata.org/prop/>\nPREFIX ps: <http://www.wikidata.org/prop/statement/>\nPREFIX pr: <http://www.wikidata.org/prop/reference/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX wdt: <http://www.wikidata.org/prop/direct/>\nPREFIX pqv: <http://www.wikidata.org/prop/qualifier/value/>\nPREFIX pq: <http://www.wikidata.org/prop/qualifier/>\n\nPREFIX at: <http://publications.europa.eu/ontology/authority/>\n\nPREFIX fromSource: <urn:fromSource>\nPREFIX language: <http://www.wikidata.org/entity/Q34770>\nPREFIX eunal: <http://www.wikidata.org/entity/Q75488338>\n\nPREFIX bibliography: <http://www.wikidata.org/entity/Q1631107>\nPREFIX terminology: <http://www.wikidata.org/entity/Q1725664>\n\nCONSTRUCT { \n  ?lang a wikibase:Item, fromSource: ;\n#        <urn:nameFromSource> ?name ;\n#        <urn:descriptionFromSource> ?description ;\n        p:P2888 ?p2888_statement ;\n        p:P218 ?p218_statement ;\n        p:P219 ?p219_statement_b, ?p219_statement_t ;\n        p:P220 ?p220_statement .\n  \n  ?p2888_statement a wikibase:Statement, fromSource: ;\n    ps:P2888 ?lang ;\n    prov:wasDerivedFrom ?ref .\n\n  ?p218_statement a wikibase:Statement, fromSource: ;\n    ps:P218 ?iso1 ;\n    prov:wasDerivedFrom ?ref .\n\n  ?p219_statement_b a wikibase:Statement, fromSource: ;\n    ps:P219 ?iso2b ;\n    prov:wasDerivedFrom ?ref ;\n    pq:P518 bibliography: .\n\n  ?p219_statement_t a wikibase:Statement, fromSource: ;\n    ps:P219 ?iso2t ;\n    prov:wasDerivedFrom ?ref ;\n    pq:P518 terminology: .\n\n  ?p220_statement a wikibase:Statement, fromSource: ;\n    ps:P220 ?iso3 ;\n    prov:wasDerivedFrom ?ref .\n\n  ?ref a wikibase:Reference, fromSource: ;\n    #P248 - stated in\n    pr:P248 eunal: ;\n    #P854 - reference URL\n    pr:P854 <https://op.europa.eu/web/eu-vocabularies/at-dataset/-/resource/dataset/language> .\n\n} \nWHERE {    \n  ?lang a skos:Concept;\n       skos:prefLabel ?name .\n  \n  OPTIONAL {\n   ?lang at:op-mapped-code ?code1 .\n    \n   ?code1 dc:source \"iso-639-1\" ;\n          at:legacy-code ?iso1 .\n  }\n\n  OPTIONAL {\n   ?lang at:op-mapped-code ?code2b .\n    \n   ?code2b dc:source \"iso-639-2b\" ;\n          at:legacy-code ?iso2b .\n  }\n\n  OPTIONAL {\n   ?lang at:op-mapped-code ?code2t .\n    \n   ?code2t dc:source \"iso-639-2t\" ;\n          at:legacy-code ?iso2t .\n  }\n\n  OPTIONAL {\n   ?lang at:op-mapped-code ?code3 .\n    \n   ?code3 dc:source \"iso-639-3\" ;\n          at:legacy-code ?iso3 .\n  }\n  \n  FILTER(BOUND(?code3) || BOUND(?code2b) || BOUND(?code2t) || BOUND(?code1))\n\n  BIND(<http://localhost/reference> as ?ref)\n  BIND(IRI(CONCAT(STR(?lang), \"/P2888\")) as ?p2888_statement)\n  BIND(IRI(CONCAT(STR(?lang), \"/P218/\", ?iso1)) as ?p218_statement)\n  BIND(IRI(CONCAT(STR(?lang), \"/P219t/\", ?iso2t)) as ?p219_statement_t)\n  BIND(IRI(CONCAT(STR(?lang), \"/P219b/\", ?iso2b)) as ?p219_statement_b)\n  BIND(IRI(CONCAT(STR(?lang), \"/P220/\", ?iso3)) as ?p220_statement)\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/79"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/80",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query": [
+          {
+            "@value": "PREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX wikibase: <http://wikiba.se/ontology#>\nPREFIX p: <http://www.wikidata.org/prop/>\nPREFIX ps: <http://www.wikidata.org/prop/statement/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nPREFIX fromWikibase: <urn:fromWikiBase>\nPREFIX fromSource: <urn:fromSource>\n\nCONSTRUCT {\n  ?item owl:sameAs ?minexisting .\n}\nWHERE { \n#The aggregation is to make sure we don't have duplicities\n  SELECT ?item (MIN(?existing) as ?minexisting)\n  WHERE {\n    ?item a fromSource: ;\n        p:P218 ?p218_statement .\n  \n    ?p218_statement ps:P218 ?p218_value .\n  \n    ?existing a fromWikibase: ;\n            p:P218 ?p218_statement_wb .\n    ?p218_statement_wb ps:P218 ?p218_value .\n  }\n  GROUP BY ?item\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/80"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/81",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#query": [
+          {
+            "@value": "PREFIX fromWikibase: <urn:fromWikiBase>\nPREFIX fromSource: <urn:fromSource>\n\nDELETE {\n  ?s a fromWikibase:, fromSource: .  \n}\nWHERE { \n  ?s ?p ?o .\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/81"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/82",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#query": [
+          {
+            "@value": "PREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX wikibase: <http://wikiba.se/ontology#>\n\nPREFIX fromSource: <urn:fromSource>\nPREFIX new: <http://plugins.linkedpipes.com/ontology/l-wikibase#New>\n\nINSERT { ?sourceItem a new: }\nWHERE { \n  ?sourceItem a wikibase:Item, fromSource: .\n  FILTER NOT EXISTS { ?sourceItem owl:sameAs ?wikiItem }\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/82"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/83",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query": [
+          {
+            "@value": "PREFIX prov: <http://www.w3.org/ns/prov#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX wikibase: <http://wikiba.se/ontology#>\nPREFIX p: <http://www.wikidata.org/prop/>\nPREFIX pr: <http://www.wikidata.org/prop/reference/>\nPREFIX ps: <http://www.wikidata.org/prop/statement/>\nPREFIX fromWikibase: <urn:fromWikiBase>\nPREFIX fromSource: <urn:fromSource>\n\nCONSTRUCT {\n  ?sourceStatement owl:sameAs ?wikiStatement .\n}\nWHERE { \n      ?item a wikibase:Item;\n            ?p ?sourceStatement ;\n            ?p ?wikiStatement .\n\n      ?sourceStatement a wikibase:Statement, fromSource: ;\n          ?ps ?value .\n\n      ?wikiStatement a wikibase:Statement, fromWikibase: ;\n          ?ps ?value .\n    \n    VALUES (?p ?ps) { \n      (p:P2888 ps:P2888)\n      (p:P218 ps:P218)\n      (p:P220 ps:P220)\n    }\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/83"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/84",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query": [
+          {
+            "@value": "PREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX wikibase: <http://wikiba.se/ontology#>\nPREFIX p: <http://www.wikidata.org/prop/>\nPREFIX ps: <http://www.wikidata.org/prop/statement/>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\nPREFIX fromWikibase: <urn:fromWikiBase>\nPREFIX fromSource: <urn:fromSource>\n\nCONSTRUCT {\n  ?item owl:sameAs ?minexisting .\n}\nWHERE { \n#The aggregation is to make sure we don't have duplicities\n  SELECT ?item (MIN(?existing) as ?minexisting)\n  WHERE {\n    ?item a fromSource: ;\n        p:P220 ?p220_statement .\n  \n    ?p220_statement ps:P220 ?p220_value .\n  \n    ?existing a fromWikibase: ;\n            p:P220 ?p220_statement_wb .\n    ?p220_statement_wb ps:P220 ?p220_value .\n  }\n  GROUP BY ?item\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/84"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/85",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query": [
+          {
+            "@value": "PREFIX prov: <http://www.w3.org/ns/prov#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX wikibase: <http://wikiba.se/ontology#>\nPREFIX p: <http://www.wikidata.org/prop/>\nPREFIX pr: <http://www.wikidata.org/prop/reference/>\nPREFIX ps: <http://www.wikidata.org/prop/statement/>\nPREFIX pq: <http://www.wikidata.org/prop/qualifier/>\n\nPREFIX fromWikibase: <urn:fromWikiBase>\nPREFIX fromSource: <urn:fromSource>\n\nCONSTRUCT {\n  ?sourceStatement owl:sameAs ?wikiStatement .\n}\nWHERE { \n      ?item a wikibase:Item;\n            ?p ?sourceStatement ;\n            ?p ?wikiStatement .\n\n      ?sourceStatement a wikibase:Statement, fromSource: ;\n          ?ps ?value ;\n          pq:P518 ?q .\n\n      ?wikiStatement a wikibase:Statement, fromWikibase: ;\n          ?ps ?value .\n\n    VALUES (?p ?ps) { \n      (p:P219 ps:P219)\n    }\n  \n  FILTER NOT EXISTS {\n    ?wikiStatement pq:P518 [] .\n  }\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/85"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/86",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query": [
+          {
+            "@value": "PREFIX prov: <http://www.w3.org/ns/prov#>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX wikibase: <http://wikiba.se/ontology#>\nPREFIX p: <http://www.wikidata.org/prop/>\nPREFIX pr: <http://www.wikidata.org/prop/reference/>\nPREFIX ps: <http://www.wikidata.org/prop/statement/>\nPREFIX pq: <http://www.wikidata.org/prop/qualifier/>\n\nPREFIX fromWikibase: <urn:fromWikiBase>\nPREFIX fromSource: <urn:fromSource>\n\nCONSTRUCT {\n  ?sourceStatement owl:sameAs ?wikiStatement .\n}\nWHERE { \n      ?item a wikibase:Item;\n            ?p ?sourceStatement ;\n            ?p ?wikiStatement .\n\n      ?sourceStatement a wikibase:Statement, fromSource: ;\n          ?ps ?value ;\n          pq:P518 ?q .\n\n      ?wikiStatement a wikibase:Statement, fromWikibase: ;\n          ?ps ?value ;\n          pq:P518 ?q .\n\n    VALUES (?p ?ps) { \n      (p:P219 ps:P219)\n    }\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/86"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/89",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#query": [
+          {
+            "@value": "PREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX p: <http://www.wikidata.org/prop/>\nPREFIX wikibase: <http://wikiba.se/ontology#>\n\nDELETE { \n  ?item ?statementProperty ?sourceStatement .\n  ?sourceStatement ?p ?o . \n}\nINSERT { \n  ?item ?statementProperty ?wikiStatement .\n  ?wikiStatement ?p ?o . \n}\nWHERE { \n  ?item a wikibase:Item ;\n        ?statementProperty ?sourceStatement .\n  \n  ?sourceStatement a wikibase:Statement ;\n                   owl:sameAs ?wikiStatement ;\n                   ?p ?o .  \n  \n   VALUES (?statementProperty) { \n      (p:P2888)\n      (p:P218)\n      (p:P219)\n      (p:P220)\n    }\n}"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#queryControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/89"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/69",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-singleGraphUnion#Configuration"
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/graph/70"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/69",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-singleGraphUnion#Configuration"
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/graph/75"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/8/configuration",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/l-wikibase#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#averageTimePerEdit": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "2000"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#averageTimePerEditControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#endpoint": [
+          {
+            "@value": "https://www.wikidata.org/w/api.php"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#endpointControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#newItemMessage": [
+          {
+            "@value": "[[Wikidata:Requests_for_permissions/Bot/LinkedPipes_ETL_Bot_3|LinkedPipes ETL Bot 3]] added a language from the [[Q75488338|Language controlled vocabulary]] of the [[Q75487064|EU Vocabularies]]"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#newItemMessageControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#passwordControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#referenceProperty": [
+          {
+            "@value": "P1921"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#referencePropertyControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#retryCountControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#retryPauseControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#siteIri": [
+          {
+            "@value": "http://www.wikidata.org/"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#siteIriControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#skipOnError": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#skipOnErrorControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#sparqlUrl": [
+          {
+            "@value": "https://query.wikidata.org/sparql"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#sparqlUrlControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#strictMatching": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#strictMatchingControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#updateItemMessage": [
+          {
+            "@value": "[[Wikidata:Requests_for_permissions/Bot/LinkedPipes_ETL_Bot_3|LinkedPipes ETL Bot 3]] linked a language to the [[Q75488338|Language controlled vocabulary]] of the [[Q75487064|EU Vocabularies]]"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#updateItemMessageControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/l-wikibase#userNameControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/Inherit"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/graph/77"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/69",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-singleGraphUnion#Configuration"
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/graph/78"
+  },
+  {
+    "@graph": [
+      {
+        "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/87",
+        "@type": [
+          "http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#Configuration"
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#commitSize": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": "50000"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#commitSizeControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#mimeType": [
+          {
+            "@value": ""
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#mimeTypeControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#softFail": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#boolean",
+            "@value": "false"
+          }
+        ],
+        "http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#softFailControl": [
+          {
+            "@id": "http://plugins.linkedpipes.com/resource/configuration/None"
+          }
+        ]
+      }
+    ],
+    "@id": "https://fit1.opendata.cz/resources/pipelines/1574751308344/graph/88"
+  }
+]
