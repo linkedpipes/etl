@@ -73,13 +73,15 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
         //
         wbde = new WikibaseDataEditor(
                 connection, configuration.getSiteIri() + "entity/");
+        // TODO Use API retry function.
+        // wbde.setMaxLagMaxRetries();
         wbde.setEditAsBot(true);
         wbdf = new WikibaseDataFetcher(
                 connection, configuration.getSiteIri() + "entity/");
     }
 
     private void initializeConnection() throws LpException {
-        connection = new ApiConnection(configuration.getEndpoint());
+        connection = new WikibaseApiConnection(configuration.getEndpoint());
         try {
             connection.login(
                     configuration.getUserName(),
