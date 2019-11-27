@@ -208,12 +208,13 @@ public class ExecutionObserver {
         this.writeComponentMessagesToDisk(component);
     }
 
-    public void onExecuteComponentSuccessful(ExecutionComponent component) {
+    public void onExecuteComponentSuccessful(
+            ExecutionComponent component, boolean cancelled) {
         LOG.info("onExecuteComponentSuccessful : {}",
                 component.getIri());
         this.getComponentWriter(component).onComponentEnd(component);
         this.overview.onComponentExecuted();
-        this.information.onComponentEnd(component);
+        this.information.onComponentEnd(component, cancelled);
         this.writeOverviewToDisk();
         this.writeInformationToDisk();
     }

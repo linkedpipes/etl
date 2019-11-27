@@ -58,6 +58,10 @@
       "stroke": "#388E3C",
       "stroke-width": 4
     },
+    [LP.EXEC_CANCELLED]: {
+      "stroke": "#DED702",
+      "stroke-width": 4
+    },
     [LP.EXEC_MAPPED]: {
       "stroke": "#00796B",
       "stroke-width": 3
@@ -72,6 +76,10 @@
     },
     "disabled-failed": {
       "stroke": "red",
+      "stroke-width": 2
+    },
+    "disabled-mapped": {
+      "stroke": "#DED702",
       "stroke-width": 2
     },
     "notAvailable": {
@@ -105,6 +113,8 @@
     if (!execModel.isMappingEnabled($execution, execComponent)) {
       if (status === LP.EXEC_FAILED) {
         return statusToRectStyle["disabled-failed"];
+      } else if (status === LP.EXEC_CANCELLED) {
+        return statusToRectStyle["disabled-mapped"];
       }
       return statusToRectStyle["disabled"];
     }

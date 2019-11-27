@@ -158,8 +158,13 @@ public class ExecutionInformation {
         }
     }
 
-    public void onComponentEnd(ExecutionComponent component) {
-        componentStatus.put(component.getIri(), LP_EXEC.STATUS_FINISHED);
+    public void onComponentEnd(
+            ExecutionComponent component, boolean cancelled) {
+        if (cancelled) {
+            componentStatus.put(component.getIri(), LP_EXEC.STATUS_CANCELLED);
+        } else {
+            componentStatus.put(component.getIri(), LP_EXEC.STATUS_FINISHED);
+        }
     }
 
     public void onMapComponentSuccessful(ExecutionComponent component) {
