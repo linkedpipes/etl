@@ -60,6 +60,9 @@ public class RdfToDocumentTest {
         Mockito.when(register.getPropertyType(
                 Datamodel.makePropertyIdValue("P12", prefix)))
                 .thenReturn("http://wikiba.se/ontology#GlobeCoordinate");
+        Mockito.when(register.getPropertyType(
+                Datamodel.makePropertyIdValue("P19", prefix)))
+                .thenReturn("http://wikiba.se/ontology#WikibaseItem");
         //
         Mockito.when(register.getPropertyType(
                 Datamodel.makePropertyIdValue("P31", prefixWiki)))
@@ -399,6 +402,33 @@ public class RdfToDocumentTest {
         // Assert also count revision which we can not load from RDF.
         // Also some references are missing in RDF.
 //        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void issues786() throws IOException {
+        Model model = loadModelFromResource("issues-786.ttl");
+        RdfToDocument rdfToDocument =
+                new RdfToDocument(register, "https://wikibase.opendata.cz/");
+        ItemDocument document = rdfToDocument.loadItemDocument(
+                model, "urn:item");
+        //
+        Assert.assertEquals(1, document.getLabels().size());
+        List<Statement> statements = asList(document.getAllStatements());
+        Assert.assertEquals(1, statements.size());
+        Statement statement = statements.get(0);
+        Assert.assertEquals(
+                Datamodel.makeGlobeCoordinatesValue(
+                        28, 20, 0.000277778,
+                        "http://www.wikidata.org/entity/Q2"),
+                statement.getValue());
+        List<Snak> qualifiers = asList(statement.getAllQualifiers());
+        Assert.assertEquals(1, qualifiers.size());
+        ValueSnak qualifier = (ValueSnak) qualifiers.get(0);
+        Assert.assertEquals(qualifier.getPropertyId().getId(), "P19");
+        Assert.assertEquals(
+                Datamodel.makeItemIdValue(
+                        "Q2212", "https://wikibase.opendata.cz/entity/"),
+                qualifier.getValue());
     }
 
 }
