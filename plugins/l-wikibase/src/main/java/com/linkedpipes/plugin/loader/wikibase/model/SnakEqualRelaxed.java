@@ -24,6 +24,7 @@ class SnakEqualRelaxed implements SnakEqual {
 
     private boolean quantityValueEqual(
             QuantityValue left, QuantityValue right) {
+
         return bigDecimalEqual(left.getLowerBound(), right.getLowerBound()) &&
                 bigDecimalEqual(left.getUpperBound(), right.getUpperBound()) &&
                 bigDecimalEqual(
@@ -33,6 +34,11 @@ class SnakEqualRelaxed implements SnakEqual {
     }
 
     private boolean bigDecimalEqual(BigDecimal left, BigDecimal right) {
+        if (left == null && right == null) {
+            return true;
+        } else if (left == null || right == null) {
+            return false;
+        }
         return left.compareTo(right) == 0;
     }
 
