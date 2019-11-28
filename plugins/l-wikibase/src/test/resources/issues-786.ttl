@@ -1,0 +1,28 @@
+@prefix new: <http://plugins.linkedpipes.com/ontology/l-wikibase#New> .
+@prefix p: <https://wikibase.opendata.cz/prop/> .
+@prefix ps: <https://wikibase.opendata.cz/prop/statement/> .
+@prefix pq: <https://wikibase.opendata.cz/prop/qualifier/> .
+@prefix psv: <https://wikibase.opendata.cz/prop/statement/value/> .
+@prefix pqv: <https://wikibase.opendata.cz/prop/qualifier/value/> .
+@prefix wikibase: <http://wikiba.se/ontology#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix wd: <https://wikibase.opendata.cz/entity/> .
+@prefix schema: <http://schema.org/> .
+
+#
+# Qualifier with simple property ie. pq: not pqv: .
+#
+
+<urn:item> a wikibase:Item, new: ;
+    schema:name "Item qualifier test item"@en ;
+    p:P12 <urn:s1> .
+
+<urn:s1> a wikibase:Statement, new: ;
+    psv:P12 <urn:value1> ;
+    pq:P19 wd:Q2212  .
+
+<urn:value1> a wikibase:GlobecoordinateValue ;
+	wikibase:geoLatitude "28"^^xsd:double ;
+	wikibase:geoLongitude "20"^^xsd:double ;
+	wikibase:geoPrecision "0.000277778"^^xsd:double ;
+	wikibase:geoGlobe <http://www.wikidata.org/entity/Q2> .

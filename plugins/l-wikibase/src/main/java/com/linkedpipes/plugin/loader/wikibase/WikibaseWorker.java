@@ -2,6 +2,7 @@ package com.linkedpipes.plugin.loader.wikibase;
 
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
@@ -19,6 +20,7 @@ import org.wikidata.wdtk.wikibaseapi.ApiConnection;
 import org.wikidata.wdtk.wikibaseapi.LoginFailedException;
 import org.wikidata.wdtk.wikibaseapi.WikibaseDataEditor;
 import org.wikidata.wdtk.wikibaseapi.WikibaseDataFetcher;
+import org.wikidata.wdtk.wikibaseapi.apierrors.MaxlagErrorException;
 import org.wikidata.wdtk.wikibaseapi.apierrors.MediaWikiApiErrorException;
 
 import java.io.IOException;
@@ -34,6 +36,8 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
         T apply() throws IOException, MediaWikiApiErrorException;
 
     }
+
+    private static final int MAX_WAIT_TIME_MULTIPLICATION = 10;
 
     private static final Logger LOG =
             LoggerFactory.getLogger(WikibaseWorker.class);
@@ -56,6 +60,8 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
 
     private Throwable lastException;
 
+    private Component.Context context;
+
     public WikibaseWorker(
             WikibaseLoaderConfiguration configuration,
             ExceptionFactory exceptionFactory,
@@ -67,14 +73,17 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
         this.source = source;
     }
 
+    @Override
+    public void setContext(Component.Context context) {
+        this.context = context;
+    }
+
     public void onBeforeExecution() throws LpException {
         initializeConnection();
         loadPropertyRegister();
         //
         wbde = new WikibaseDataEditor(
                 connection, configuration.getSiteIri() + "entity/");
-        // TODO Use API retry function.
-        // wbde.setMaxLagMaxRetries();
         wbde.setEditAsBot(true);
         wbdf = new WikibaseDataFetcher(
                 connection, configuration.getSiteIri() + "entity/");
@@ -151,22 +160,33 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
     private <T> T execute(Action<T> action)
             throws IOException, MediaWikiApiErrorException {
         int tryCounter = 0;
+        int retryWait = configuration.getRetryWait();
+        int maxRetryWait =
+                MAX_WAIT_TIME_MULTIPLICATION * configuration.getRetryWait();
         while (true) {
-            IOException lastException = null;
             try {
                 return action.apply();
             } catch (IOException ex) {
-                lastException = ex;
+                tryCounter++;
+                if (tryCounter >= configuration.getRetryCount()) {
+                    throw ex;
+                }
+                LOG.warn("Operation failed, waiting before retry", ex);
+            } catch (MaxlagErrorException ex) {
+                // We ignore this exception and just continue.
+                LOG.info("Waiting for wikidata lag before next try.", ex);
+                retryWait *= 1.1;
+                if (retryWait > maxRetryWait) {
+                    retryWait = maxRetryWait;
+                }
             }
-            tryCounter++;
-            if (tryCounter >= configuration.getRetryCount()) {
-                throw lastException;
-            }
-            LOG.warn("Operation failed, waiting before retry", lastException);
             try {
-                Thread.sleep(configuration.getRetryWait());
+                Thread.sleep(retryWait);
             } catch (InterruptedException ex) {
                 // Ignore.
+            }
+            if (context.isCancelled()) {
+                throw new IOException("Operation cancelled on user request.");
             }
         }
     }

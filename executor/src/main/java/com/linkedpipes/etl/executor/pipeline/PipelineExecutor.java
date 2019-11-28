@@ -210,6 +210,10 @@ public class PipelineExecutor {
         }
     }
 
+    /**
+     * Load component's original execution and set last working directory,
+     * reading its value from the original execution.
+     */
     private void resolveWorkingDirectory(
             PipelineComponent component)
             throws ExecutorException {

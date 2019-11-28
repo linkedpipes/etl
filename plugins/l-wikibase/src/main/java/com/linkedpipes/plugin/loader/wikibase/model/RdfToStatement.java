@@ -68,7 +68,8 @@ public class RdfToStatement {
                 propPrefix + "statement/" + property.getId();
         String valuePredicate =
                 propPrefix + "statement/value/" + property.getId();
-        String qualifierPrefix = propPrefix + "qualifier/value/";
+        String qualifierValuePrefix = propPrefix + "qualifier/value/";
+        String qualifierPrefix = propPrefix + "qualifier/";
 
         statements.stream()
                 .filter((st) -> st.getSubject().equals(resource))
@@ -80,8 +81,12 @@ public class RdfToStatement {
                         loadValueShort(property, st.getObject());
                     } else if (predicate.equals(valuePredicate)) {
                         loadValue(property, st.getObject());
-                    } else if (predicate.startsWith(qualifierPrefix)) {
+                    } else if (predicate.startsWith(qualifierValuePrefix)) {
                         loadQualifier(
+                                iriToPropertyId(st.getPredicate()),
+                                st.getObject());
+                    } else if (predicate.startsWith(qualifierPrefix)) {
+                        loadQualifierShort(
                                 iriToPropertyId(st.getPredicate()),
                                 st.getObject());
                     } else if (predicate.equals(WAS_DERIVED_FROM)) {
@@ -166,6 +171,21 @@ public class RdfToStatement {
         Resource rdfResource = (Resource) rdfValue;
         org.wikidata.wdtk.datamodel.interfaces.Value value =
                 RdfToValue.get(type).getValue(statements, rdfResource, type);
+        builder.withQualifierValue(storeProperty(property), value);
+    }
+
+    private void loadQualifierShort(PropertyIdValue property, Value rdfValue) {
+        String type = register.getPropertyType(property);
+        if (rdfValue instanceof BNode) {
+            builder.withQualifierSomeValue(property);
+            return;
+        } else if (!(rdfValue instanceof Resource)) {
+            // TODO Invalid schema.
+            return;
+        }
+        Resource rdfResource = (Resource) rdfValue;
+        org.wikidata.wdtk.datamodel.interfaces.Value value =
+                RdfToValue.get(type).getValue(rdfResource, type);
         builder.withQualifierValue(storeProperty(property), value);
     }
 

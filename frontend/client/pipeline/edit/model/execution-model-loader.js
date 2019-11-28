@@ -65,6 +65,8 @@
         return MAPPING_STATUS.FINISHED_MAPPED;
       case LP.EXEC_FAILED:
         return MAPPING_STATUS.FAILED;
+      case LP.EXEC_CANCELLED:
+        return MAPPING_STATUS.UNFINISHED_MAPPED;
       default:
         return MAPPING_STATUS.UNFINISHED;
     }

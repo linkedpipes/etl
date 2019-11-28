@@ -28,14 +28,14 @@
      */
     "FAILED": 6,
     /**
-     * Represent an unfinished component with mapping.
+     * Represent an unfinished (cancelled) component with mapping.
      */
     "UNFINISHED": 4,
     /**
-     * Represent an unfinished component with disabled mapping. Mapping
-     * can be enabled.
+     * Represent an unfinished (cancelled) component with disabled mapping.
+     * Mapping can be enabled.
      */
-    "UNFINISHED_MAPPED": 4,
+    "UNFINISHED_MAPPED": 6,
     /**
      * Changed component, mapping is not available and can not be changed.
      */
