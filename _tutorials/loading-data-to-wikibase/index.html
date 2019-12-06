@@ -1218,18 +1218,25 @@ WHERE {
 	[maxlag] Waiting for all: 5.2166666666667 seconds lagged.
 </pre>
 <p class="flow-text">
-	In that case, the loading must be attemted later again.
+	In that case, the loader will wait until the lag has disappeared.
 </p>
 
-<h2 id="pipelines" class="orange-text center">Additional pipelines</h2>
+<h2 id="pipelines" class="orange-text center">Use cases</h2>
 <p class="flow-text">
-	Using the same method, additional pipelines were created:
+	Using the same method, these use cases were addressed:
 </p>
 <dl class="flow-text">
+	<dt>Veteran trees, groves and alleys from the <a href="https://www.wikidata.org/wiki/Q26778346">Digital Register of the Nature Conservancy Central Register</a></dt>
+    <dd><a href="https://www.wikidata.org/wiki/Wikidata:Requests_for_permissions/Bot/LinkedPipes_ETL_Bot">Task approval</a></dd>
+	<dd><a href="../../assets/tutorials/loading-data-to-wikibase/pipelines/trees.jsonld">Pipeline for solitary trees (presented in this tutorial)</a></dd>
+	<dd><a href="../../assets/tutorials/loading-data-to-wikibase/pipelines/groves.jsonld">Pipeline for groves and alleys</a></dd>
 	<dt>Czech streets from the <a href="https://www.wikidata.org/wiki/Q12049125">Register of territorial identification, addresses and real estates</a></dt>
     <dd><a href="https://www.wikidata.org/wiki/Wikidata:Requests_for_permissions/Bot/LinkedPipes_ETL_Bot_2">Task approval</a></dd>
-	<dd><a href="../../assets/tutorials/loading-data-to-wikibase/pipelines/streets.jsonld">Pipeline download</a></dd>
+	<dd><a href="../../assets/tutorials/loading-data-to-wikibase/pipelines/streets.jsonld">Pipeline</a></dd>
 	<dt>Linking languages in Wikidata to languages in <a href="https://op.europa.eu/cs/web/eu-vocabularies/at-dataset/-/resource/dataset/language">Language EU Vocabulary</a></dt>
 	<dd><a href="https://www.wikidata.org/wiki/Wikidata:Requests_for_permissions/Bot/LinkedPipes_ETL_Bot_3">Task approval</a></dd>
-	<dd><a href="../../assets/tutorials/loading-data-to-wikibase/pipelines/languages.jsonld">Pipeline download</a></dd>
+	<dd><a href="../../assets/tutorials/loading-data-to-wikibase/pipelines/languages.jsonld">Pipeline</a></dd>
+	<dt>Updating basic information about Czech theatres from the <a href="https://www.wikidata.org/wiki/Q76504070">Virtual Study of the Theatre Institute</a></dt>
+	<dd><a href="https://www.wikidata.org/wiki/Wikidata:Requests_for_permissions/Bot/LinkedPipes_ETL_Bot_MN">Task approval</a></dd>
+	<dd><a href="../../assets/tutorials/loading-data-to-wikibase/pipelines/idu-theatres.jsonld">Pipeline</a></dd>
 </dl>
