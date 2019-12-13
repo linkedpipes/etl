@@ -137,7 +137,8 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
 
     private String getEndpoint() {
         String[] tokens = task.getEndpoint().split("://", 2);
-        return tokens[0] + "://" + IDN.toASCII(tokens[1]);
+        String[] url = tokens[1].split("/", 2);
+        return tokens[0] + "://" + IDN.toASCII(url[0]) + "/" + url[1];
     }
 
     private void setRepositoryHeaders(SPARQLRepository repository) {

@@ -1,17 +1,25 @@
 ---
-- hosts: etl_docker 
+# presumes that etl_docker is defined in /etc/ansible/hosts
+- hosts: etl_docker
   tasks:
           - name: Stop LP-ETL
             docker_compose:
+                    #in the host, docker-compose.yml is located here
                     project_src: /opt/lp/etl-docker
                     state: absent
                     remove_images: all
           - name: Remove images
             shell: docker image rm $(docker images --filter "label=lp_project=etl" -q)
-          - name: Build and start LP-ETL # this will work, but ansible will fail due to https://github.com/ansible/ansible/issues/42506
+          - name: Build and start LP-ETL
             environment:
+                    #we are running frontend on 8090
                     LP_ETL_PORT: 8090
+                    #in the host, user 1001 is the one running LP-ETL
+                    LP_ETL_USER: 1001
+                    #we are building from develop
+                    LP_ETL_BUILD_BRANCH: develop
             docker_compose:
+                    #in the host, docker-compose.yml is located here
                     project_src: /opt/lp/etl-docker
                     state: present
                     build: yes

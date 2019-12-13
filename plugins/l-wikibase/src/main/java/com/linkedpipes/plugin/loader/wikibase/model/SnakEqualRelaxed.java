@@ -1,5 +1,6 @@
 package com.linkedpipes.plugin.loader.wikibase.model;
 
+import org.wikidata.wdtk.datamodel.interfaces.ItemIdValue;
 import org.wikidata.wdtk.datamodel.interfaces.QuantityValue;
 import org.wikidata.wdtk.datamodel.interfaces.Value;
 
@@ -24,16 +25,31 @@ class SnakEqualRelaxed implements SnakEqual {
 
     private boolean quantityValueEqual(
             QuantityValue left, QuantityValue right) {
+
         return bigDecimalEqual(left.getLowerBound(), right.getLowerBound()) &&
                 bigDecimalEqual(left.getUpperBound(), right.getUpperBound()) &&
                 bigDecimalEqual(
                         left.getNumericValue(), right.getNumericValue()) &&
                 left.getUnit().equals(right.getUnit()) &&
-                left.getUnitItemId().equals(right.getUnitItemId());
+                sameUnitItemId(left, right);
     }
 
     private boolean bigDecimalEqual(BigDecimal left, BigDecimal right) {
+        if (left == null && right == null) {
+            return true;
+        } else if (left == null || right == null) {
+            return false;
+        }
         return left.compareTo(right) == 0;
+    }
+
+    private boolean sameUnitItemId(QuantityValue left, QuantityValue right) {
+        ItemIdValue leftValue = left.getUnitItemId();
+        ItemIdValue rightValue = right.getUnitItemId();
+        if (leftValue == null) {
+            return rightValue == null;
+        }
+        return leftValue.equals(rightValue);
     }
 
 }
