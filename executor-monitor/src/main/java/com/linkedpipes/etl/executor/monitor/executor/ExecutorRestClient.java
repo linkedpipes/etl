@@ -1,5 +1,8 @@
 package com.linkedpipes.etl.executor.monitor.executor;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import org.apache.http.HttpStatus;
@@ -76,17 +79,19 @@ class ExecutorRestClient {
         return executor.getAddress() + "/api/v1/executions";
     }
 
-    private String createStartExecutionBody(Execution execution) {
-        StringBuilder body = new StringBuilder();
-        body.append("{");
-        body.append("\"iri\":\"");
-        body.append(execution.getIri());
-        body.append("\",");
-        body.append("\"directory\":\"");
-        // Windows use \ in path - we need to get rid of this character.
-        body.append(execution.getDirectory().toString().replace("\\", "/"));
-        body.append("\"}");
-        return body.toString();
+    private String createStartExecutionBody(Execution execution)
+            throws MonitorException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+        root.put("iri", execution.getIri());
+        root.put(
+                "directory",
+                execution.getDirectory().toString().replace("\\", "/"));
+        try {
+            return mapper.writeValueAsString(root);
+        } catch (JsonProcessingException ex) {
+            throw new MonitorException("Can't serialize request.", ex);
+        }
     }
 
     public void cancel(Executor executor, String userRequest)
