@@ -11,11 +11,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import java.nio.charset.StandardCharsets;
 
 @Service
 class ExecutorRestClient {
@@ -23,7 +26,14 @@ class ExecutorRestClient {
     private static final Logger LOG =
             LoggerFactory.getLogger(ExecutorRestClient.class);
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
+
+    public ExecutorRestClient() {
+        restTemplate = new RestTemplate();
+        // Support national character encoding in messages.
+        restTemplate.getMessageConverters()
+                .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+    }
 
     /**
      * Can return null as an empty body.
