@@ -7,12 +7,18 @@
             <md-option value="http://plugins.linkedpipes.com/ontology/t-jsonLdFormat#Flat">Flatten</md-option>
             <md-option value="http://plugins.linkedpipes.com/ontology/t-jsonLdFormat#Expanded">Expand</md-option>
             <md-option value="http://plugins.linkedpipes.com/ontology/t-jsonLdFormat#Compact">Compact</md-option>
+            <md-option value="http://plugins.linkedpipes.com/ontology/t-jsonLdFormat#Frame">Frame</md-option>
         </md-select>
     </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.context.hide">
         <label>JSON-LD context (where applicable):</label>
         <textarea id="query" ng-model="dialog.context.value"
                   ng-disabled="dialog.context.disabled || dialog.context.inherit"/>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.frame.hide">
+        <label>JSON-LD frame (where applicable):</label>
+        <textarea id="frame" ng-model="dialog.frame.value"
+                  ng-disabled="dialog.frame.disabled || dialog.frame.inherit"/>
     </md-input-container>
 </div>
 

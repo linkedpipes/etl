@@ -48,8 +48,8 @@ public class JsonLdFormat implements Component, SequentialExecution {
             try {
                 transformFile(inputFIle, outputFile);
             } catch (LpException ex) {
-                throw exceptionFactory.failure("Can't transform: {}",
-                        entry.getFileName(), ex);
+                throw exceptionFactory.failure(
+                        "Can't transform: {}", entry.getFileName(), ex);
             }
             progressReport.entryProcessed();
         }
@@ -63,14 +63,14 @@ public class JsonLdFormat implements Component, SequentialExecution {
         }
         try {
             context = JsonUtils.fromString(configuration.getContext());
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             throw exceptionFactory.failure("Can't prepare context.", ex);
         }
     }
 
     private void transformFile(File source, File target) throws LpException {
-        final Object inputObject = readJsonLdFile(source);
-        final Object outputObject = transformJsonLd(inputObject);
+        Object inputObject = readJsonLdFile(source);
+        Object outputObject = transformJsonLd(inputObject);
         writeJsonLdFile(target, outputObject);
     }
 
@@ -92,18 +92,9 @@ public class JsonLdFormat implements Component, SequentialExecution {
         }
     }
 
-    private void writeJsonLdFile(File file, Object jsonLdObject)
-            throws LpException {
-        file.getParentFile().mkdirs();
-        try (FileWriter writer = new FileWriter(file)) {
-            JsonUtils.write(writer, jsonLdObject);
-        } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't write file: {}", file, ex);
-        }
-    }
-
-    private Object formatJsonLd(Object object,
-            JsonLdOptions options) throws LpException, JsonLdError {
+    private Object formatJsonLd(
+            Object object, JsonLdOptions options)
+            throws LpException, JsonLdError {
         switch (configuration.getFormat()) {
             case JsonLdFormatVocabulary.COMPACT:
                 return JsonLdProcessor.compact(object, context, options);
@@ -111,9 +102,29 @@ public class JsonLdFormat implements Component, SequentialExecution {
                 return JsonLdProcessor.flatten(object, context, options);
             case JsonLdFormatVocabulary.EXPANDED:
                 return JsonLdProcessor.expand(object, options);
+            case JsonLdFormatVocabulary.FRAME:
+                return JsonLdProcessor.frame(object, getFrameJson(), options);
             default:
                 throw exceptionFactory.failure("Invalid format type: '{}'",
                         configuration.getFormat());
+        }
+    }
+
+    private Object getFrameJson() throws LpException {
+        try {
+            return JsonUtils.fromString(configuration.getFrame());
+        } catch(IOException ex) {
+            throw exceptionFactory.failure("Can't parse frame.", ex);
+        }
+    }
+
+    private void writeJsonLdFile(File file, Object jsonLdObject)
+            throws LpException {
+        file.getParentFile().mkdirs();
+        try (FileWriter writer = new FileWriter(file)) {
+            JsonUtils.write(writer, jsonLdObject);
+        } catch (IOException ex) {
+            throw exceptionFactory.failure("Can't write file: {}", file, ex);
         }
     }
 
