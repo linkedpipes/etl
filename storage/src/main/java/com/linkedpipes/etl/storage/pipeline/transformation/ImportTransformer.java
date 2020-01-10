@@ -176,7 +176,7 @@ class ImportTransformer {
     private Collection<Statement> replacePipelineLabel(
             Collection<Statement> pipelineRdf, IRI pipelineIri) {
 
-        if (this.options.getLabels() != null
+        if (this.options.getLabels() == null
                 || this.options.getLabels().isEmpty()) {
             return pipelineRdf;
         }
