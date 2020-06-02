@@ -13,9 +13,9 @@ version: '3'
 services:
   storage:
     build:
-      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-develop}:storage
+      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-master}:storage
       args:
-        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-develop}
+        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-master}
         LP_ETL_BUILD_JAVA_TEST: ${LP_ETL_BUILD_JAVA_TEST--DskipTests}
         LP_ETL_USER: ${LP_ETL_USER-5987}
     image: lp/etl/storage
@@ -28,9 +28,9 @@ services:
     restart: always
   frontend:
     build:
-      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-develop}:frontend
+      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-master}:frontend
       args:
-        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-develop}
+        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-master}
         LP_ETL_USER: ${LP_ETL_USER-5987}
     image: lp/etl/frontend
     volumes:
@@ -42,9 +42,9 @@ services:
     restart: always
   executor-monitor:
     build:
-      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-develop}:executor-monitor
+      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-master}:executor-monitor
       args:
-        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-develop}
+        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-master}
         LP_ETL_BUILD_JAVA_TEST: ${LP_ETL_BUILD_JAVA_TEST--DskipTests}
         LP_ETL_USER: ${LP_ETL_USER-5987}
     image: lp/etl/executor-monitor
@@ -57,9 +57,9 @@ services:
     restart: always
   executor:
     build:
-      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-develop}:executor
+      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-master}:executor
       args:
-        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-develop}
+        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-master}
         LP_ETL_BUILD_JAVA_TEST: ${LP_ETL_BUILD_JAVA_TEST--DskipTests}
         LP_ETL_USER: ${LP_ETL_USER-5987}
     image: lp/etl/executor
