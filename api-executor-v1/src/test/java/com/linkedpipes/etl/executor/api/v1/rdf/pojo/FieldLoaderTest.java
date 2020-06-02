@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 
 public class FieldLoaderTest {
 
@@ -278,6 +279,7 @@ public class FieldLoaderTest {
         Assert.assertEquals(1, calendar.get(Calendar.MONTH));
         Assert.assertEquals(20, calendar.get(Calendar.DAY_OF_MONTH));
     }
+
 
     @Test(expected = RdfException.class)
     public void loadNestedCollection() throws Exception {

@@ -185,10 +185,7 @@ final class FieldLoader {
             } else if (type == long.class || type == Long.class) {
                 return value.asLong();
             } else if (type == Date.class) {
-                // We use GMT time zone as default, to have the same
-                // settings on different systems.
                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                format.setTimeZone(TimeZone.getTimeZone("GMT"));
                 return format.parse(value.asString());
             } else {
                 throw new RdfException("Unknown type: {}", type.getName());
