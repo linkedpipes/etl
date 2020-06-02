@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TimeZone;
 
 /**
  * Can be used to load values into a properties of an object.
