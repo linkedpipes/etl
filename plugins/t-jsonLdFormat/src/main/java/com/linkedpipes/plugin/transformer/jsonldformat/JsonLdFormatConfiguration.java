@@ -11,6 +11,9 @@ public class JsonLdFormatConfiguration {
     @RdfToPojo.Property(iri = JsonLdFormatVocabulary.HAS_CONTEXT)
     private String context;
 
+    @RdfToPojo.Property(iri = JsonLdFormatVocabulary.HAS_FRAME)
+    private String frame;
+
     public JsonLdFormatConfiguration() {
     }
 
@@ -29,4 +32,13 @@ public class JsonLdFormatConfiguration {
     public void setContext(String context) {
         this.context = context;
     }
+
+    public String getFrame() {
+        return frame;
+    }
+
+    public void setFrame(String frame) {
+        this.frame = frame;
+    }
+
 }

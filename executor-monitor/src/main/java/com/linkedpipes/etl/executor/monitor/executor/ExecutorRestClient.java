@@ -1,5 +1,8 @@
 package com.linkedpipes.etl.executor.monitor.executor;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import org.apache.http.HttpStatus;
@@ -8,11 +11,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import java.nio.charset.StandardCharsets;
 
 @Service
 class ExecutorRestClient {
@@ -20,7 +26,14 @@ class ExecutorRestClient {
     private static final Logger LOG =
             LoggerFactory.getLogger(ExecutorRestClient.class);
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
+
+    public ExecutorRestClient() {
+        restTemplate = new RestTemplate();
+        // Support national character encoding in messages.
+        restTemplate.getMessageConverters()
+                .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+    }
 
     /**
      * Can return null as an empty body.
@@ -76,17 +89,19 @@ class ExecutorRestClient {
         return executor.getAddress() + "/api/v1/executions";
     }
 
-    private String createStartExecutionBody(Execution execution) {
-        StringBuilder body = new StringBuilder();
-        body.append("{");
-        body.append("\"iri\":\"");
-        body.append(execution.getIri());
-        body.append("\",");
-        body.append("\"directory\":\"");
-        // Windows use \ in path - we need to get rid of this character.
-        body.append(execution.getDirectory().toString().replace("\\", "/"));
-        body.append("\"}");
-        return body.toString();
+    private String createStartExecutionBody(Execution execution)
+            throws MonitorException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+        root.put("iri", execution.getIri());
+        root.put(
+                "directory",
+                execution.getDirectory().toString().replace("\\", "/"));
+        try {
+            return mapper.writeValueAsString(root);
+        } catch (JsonProcessingException ex) {
+            throw new MonitorException("Can't serialize request.", ex);
+        }
     }
 
     public void cancel(Executor executor, String userRequest)

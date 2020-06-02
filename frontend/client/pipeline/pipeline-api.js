@@ -98,25 +98,27 @@
   }
 
   function copyPipeline($http, pipeline) {
-    const data = createPipelineCopyPostData();
+    const data = createPipelineCopyPostData(pipeline);
     const config = createPostConfigWithJsonLd();
     const url =
       "./resources/pipelines?fromLocal=true&pipeline=" + pipeline.iri;
     return $http.post(url, data, config);
   }
 
-  function createPipelineCopyPostData() {
+  function createPipelineCopyPostData(pipeline) {
     const data = new FormData();
-    const options = createCopyPipelineOptions();
+    const options = createCopyPipelineOptions(pipeline);
     addOptionsToData(data, options);
     return data;
   }
 
-  function createCopyPipelineOptions() {
+  function createCopyPipelineOptions(pipeline) {
     return {
       "@id": "http://localhost/pipelineImportOptions",
       "@type": LP.UPDATE_OPTIONS,
-      "http://etl.linkedpipes.com/ontology/local": true
+      "http://etl.linkedpipes.com/ontology/local": true,
+      "http://www.w3.org/2004/02/skos/core#prefLabel":
+        "Copy of " + pipeline.label,
     };
   }
 
@@ -185,7 +187,7 @@
     });
   }
 
-  function createPipelineFromData($http, pipeline) {
+  function createPipelineFromData($http, pipeline, label) {
     const form = new FormData();
     form.append("pipeline",
       new Blob([JSON.stringify(pipeline)], {
@@ -194,7 +196,8 @@
     const options = {
       "@id": "http://localhost/options",
       "@type": "http://linkedpipes.com/ontology/UpdateOptions",
-      "http://etl.linkedpipes.com/ontology/local": true
+      "http://etl.linkedpipes.com/ontology/local": true,
+      "http://www.w3.org/2004/02/skos/core#prefLabel": label,
     };
     form.append("options",
       new Blob([JSON.stringify(options)], {

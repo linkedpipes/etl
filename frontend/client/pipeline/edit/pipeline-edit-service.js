@@ -246,7 +246,8 @@
     function onCopyPipeline() {
       $canvas.synchronize();
       const pipeline = actions.asJsonLd();
-      pipelines.createPipelineFromData($http, pipeline)
+      const label = "Copy of " + $scope.pipelineLabel;
+      pipelines.createPipelineFromData($http, pipeline, label)
         .then((iri) => {
           $status.success("Pipeline has been successfully copied.");
           $location.path("/pipelines/edit/canvas")

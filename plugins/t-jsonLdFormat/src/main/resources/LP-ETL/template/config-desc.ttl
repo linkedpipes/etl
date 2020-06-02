@@ -4,6 +4,7 @@
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/t-jsonLdFormat#Configuration> ;
     config:member <http://linkedpipes.com/resources/components/t-jsonLdFormat/0.0.0/configuration/desc/format> ,
+        <http://linkedpipes.com/resources/components/t-jsonLdFormat/0.0.0/configuration/desc/frame> ,
         <http://linkedpipes.com/resources/components/t-jsonLdFormat/0.0.0/configuration/desc/context> .
 
 <http://linkedpipes.com/resources/components/t-jsonLdFormat/0.0.0/configuration/desc/format>
@@ -15,3 +16,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/t-jsonLdFormat#context> ;
     config:control <http://plugins.linkedpipes.com/ontology/t-jsonLdFormat#contextControl> .
+
+<http://linkedpipes.com/resources/components/t-jsonLdFormat/0.0.0/configuration/desc/frame>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-jsonLdFormat#frame> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-jsonLdFormat#frameControl> .

@@ -15,6 +15,10 @@ define([], function () {
         "context": {
             "$type": "str",
             "$label": "Context"
+        },
+        "frame": {
+            "$type": "str",
+            "$label": "Frame"
         }
     };
 
