@@ -158,7 +158,6 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
             HttpURLConnection connection, HttpRequestTask.Content content)
             throws IOException {
         connection.setDoOutput(true);
-        connection.addRequestProperty("Content-Type", "application/" + "POST");
         taskContentWriter.writeContentToConnection(connection, content);
         return new Connection(connection);
     }
