@@ -1,8 +1,5 @@
-import Vue from "vue";
 import VueRouter from "vue-router";
 import {getRegistered} from "./registry"
-
-Vue.use(VueRouter);
 
 const routes = [];
 getRegistered().forEach((module) => {

@@ -1,8 +1,7 @@
 <template>
-  <v-toolbar
+  <v-app-bar
     color="green"
     dark
-    fixed
     app
   >
     <v-btn
@@ -26,7 +25,7 @@
         cloud_download
       </v-icon>
     </v-btn>
-  </v-toolbar>
+  </v-app-bar>
 </template>
 
 <script>
