@@ -17,13 +17,13 @@
         <repository>
             <id>boundless</id>
             <name>Boundless Maven Repository</name>
-            <url>http://repo.boundlessgeo.com/main</url>
+            <url>https://repo.boundlessgeo.com/main</url>
         </repository>
         <!-- Alternatives. -->
         <repository>
             <id>geomajas</id>
             <name>Geomajas Repository</name>
-            <url>http://maven.geomajas.org/</url>
+            <url>https://maven.geomajas.org/</url>
         </repository>
         <repository>
             <id>osgeo</id>
