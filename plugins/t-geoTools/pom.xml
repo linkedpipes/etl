@@ -15,21 +15,21 @@
 
     <repositories>
         <repository>
-            <id>boundless</id>
-            <name>Boundless Maven Repository</name>
-            <url>https://repo.boundlessgeo.com/main</url>
-        </repository>
-        <!-- Alternatives. -->
-        <repository>
-            <id>geomajas</id>
-            <name>Geomajas Repository</name>
-            <url>https://maven.geomajas.org/</url>
-        </repository>
-        <repository>
             <id>osgeo</id>
             <name>OSGeo Repository</name>
-            <url>https://download.osgeo.org/webdav/geotools/</url>
+            <url>https://repo.osgeo.org/repository/release/</url>
         </repository>
+        <!-- Alternatives. -->
+<!--        <repository>-->
+<!--            <id>geomajas</id>-->
+<!--            <name>Geomajas Repository</name>-->
+<!--            <url>https://maven.geomajas.org/</url>-->
+<!--        </repository>-->
+<!--        <repository>-->
+<!--            <id>osgeo</id>-->
+<!--            <name>OSGeo Repository</name>-->
+<!--            <url>https://download.osgeo.org/webdav/geotools/</url>-->
+<!--        </repository>-->
     </repositories>
 
     <properties>

@@ -16,14 +16,6 @@
         <plugins.directory>../plugins</plugins.directory>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>artefacts.linkedpipes.com</id>
-            <name>artefacts.linkedpipes.com</name>
-            <url>https://artefacts.linkedpipes.com/repository/maven-public/</url>
-        </repository>
-    </repositories>
-
     <profiles>
         <profile>
             <id>deploy</id>
