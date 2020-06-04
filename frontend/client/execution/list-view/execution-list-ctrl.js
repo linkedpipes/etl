@@ -23,6 +23,8 @@
 
     $scope.$watch("filter.labelSearch", service.onSearchStringChange);
 
+    $scope.$watch("filter.status", service.onSearchStateChange);
+
     $scope.noAction = () => {
       // This is do nothing action, we need it else the menu is open
       // on click to item. This cause menu to open which together

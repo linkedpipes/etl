@@ -245,9 +245,17 @@
     }
   }
 
-  function filter(item, filters) {
-    filterSearchLabel(item, filters.labelSearch);
-    return item["filterLabel"];
+  function filter(item, filters, options) {
+    if (options === "label") {
+      filterSearchLabel(item, filters.labelSearch);
+    } else if (options === "status") {
+      filterState(item, filters.status);
+    } else {
+      // Else we need to filter all.
+      filterSearchLabel(item, filters.labelSearch);
+      filterState(item, filters.status);
+    }
+    return item["filterLabel"] && item["filterState"];
   }
 
   function filterSearchLabel(item, value) {
@@ -257,6 +265,20 @@
     }
     const query = value.toLowerCase();
     item["filterLabel"] = item["searchLabel"].indexOf(query) !== -1;
+  }
+
+  function filterState(item, values) {
+    if (values.length === 0) {
+      item["filterState"] = true;
+      return;
+    }
+    for (const value of values) {
+      if (value.filter.includes(item.status)) {
+        item["filterState"] = true;
+        return;
+      }
+    }
+    item["filterState"] = false;
   }
 
   function deleteExecution(execution, repository) {

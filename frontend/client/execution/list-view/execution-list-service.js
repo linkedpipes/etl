@@ -11,6 +11,8 @@
   }
 })((vocabulary, angular, _repository, _logTailDialog, executionApi, pipelineApi) => {
 
+  const LP = vocabulary.LP;
+
   function factory($http, $mdDialog, $status, $mdMedia, repository) {
 
     let $scope;
@@ -19,7 +21,34 @@
       $scope = scope;
       $scope.filter = {
         "labelSearch": "",
+        "status": "",
       };
+      $scope.pipelineStates = [
+        {
+          "label": "Running",
+          "filter": [LP.EXEC_INITIALIZING, LP.EXEC_RUNNING],
+        },
+        {
+          "label": "Finished",
+          "filter": [LP.EXEC_FINISHED],
+        },
+        {
+          "label": "Failed",
+          "filter": [LP.EXEC_FAILED],
+        },
+        {
+          "label": "Queued",
+          "filter": [LP.EXEC_QUEUED],
+        },
+        {
+          "label": "Cancelling",
+          "filter": [LP.EXEC_CANCELLING],
+        },
+        {
+          "label": "Cancelled",
+          "filter": [LP.EXEC_CANCELLED],
+        },
+      ];
       $scope.repository = repository.create($scope.filter);
     }
 
@@ -75,6 +104,10 @@
       repository.onFilterChanged($scope.repository, "label");
     }
 
+    function onSearchStateChange() {
+      repository.onFilterChanged($scope.repository, "status");
+    }
+
     function loadExecutions() {
       repository.load($scope.repository)
         .catch(angular.noop)
@@ -96,6 +129,7 @@
       "openLogTail": openLogTail,
       "delete": deleteExecution,
       "onSearchStringChange": onSearchStringChange,
+      "onSearchStateChange": onSearchStateChange,
       "increaseVisibleItemLimit": increaseVisibleItemLimit,
       "load": loadExecutions,
       "update": updateRepository

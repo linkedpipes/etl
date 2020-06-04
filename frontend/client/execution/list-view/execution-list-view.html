@@ -19,6 +19,14 @@
           <label>Label search</label>
           <input ng-model="filter.labelSearch">
         </md-input-container>
+        <md-input-container class="md-block">
+          <label>Execution status</label>
+          <md-select ng-model="filter.status" multiple>
+            <md-option ng-value="options" ng-repeat="options in pipelineStates">
+              {{ options.label }}
+            </md-option>
+          </md-select>
+        </md-input-container>
       </div>
       <div ng-show="repository.areDataReady">
         <md-list>
