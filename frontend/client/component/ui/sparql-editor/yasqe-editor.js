@@ -1,16 +1,24 @@
-define(["yasgui-yasqe", "yasgui-yasqe/dist/yasqe.css", "./yasqe-editor.css"],
+define([
+    "@triply/yasqe",
+    "@triply/yasqe/build/yasqe.min.css",
+    "./yasqe-editor.css"
+  ],
   (YASQE) => {
 
     /**
      * Initialize only one way binding.
      */
     function createYasqe(element, $scope) {
-      const settings = {
-        "createShareLink": null,
-        "consumeShareLink": null,
-        "persistent": null
-      };
-      const yasqe = YASQE(element, settings);
+      // -> https://triply.cc/docs/yasgui-api#yasqe-api
+      const yasqe = new YASQE(element, {
+        // Disable buttons.
+        "showQueryButton": false,
+        "createShareableLink": null,
+        // Does not work well with the dialogs.
+        "resizeable": false,
+        // Disable persistence.
+        "persistenceId": null,
+      });
       yasqe.setSize("100%", "100%");
 
       yasqe.on("change", () => {
@@ -31,7 +39,8 @@ define(["yasgui-yasqe", "yasgui-yasqe/dist/yasqe.css", "./yasqe-editor.css"],
         "template": "",
         "link": ($scope, element) => {
           element.ready(() => {
-            const yasqe = createYasqe(element, $scope);
+            // element is wrapped in JQLite but we need the element.
+            const yasqe = createYasqe(element[0], $scope);
             yasqe.setValue($scope.ngModel);
             yasqe.setOption("readOnly", $scope.ngDisabled);
 
