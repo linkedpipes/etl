@@ -2,7 +2,7 @@
     {
         "@id": "http://etl.linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0",
         "@type": "http://linkedpipes.com/ontology/JarTemplate",
-        "http://www.w3.org/2004/02/skos/core#prefLabel": "SPARQL update endpoint chunked",
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "SPARQL endpoint loader chunked",
         "http://linkedpipes.com/ontology/jar" : {"@id": "http://etl.linkedpipes.com/resources/jars/l-sparqlEndpointChunked/0.0.0"},
         "http://linkedpipes.com/ontology/color": "#CEF6D8",
         "http://linkedpipes.com/ontology/componentType": {"@id": "http://etl.linkedpipes.com/ontology/component/type/Loader"},
