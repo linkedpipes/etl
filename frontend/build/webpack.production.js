@@ -3,7 +3,7 @@ const merge = require("webpack-merge");
 const common = Object.assign({}, require("./webpack.common"));
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
+const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
@@ -37,15 +37,17 @@ module.exports = merge(common, {
     ]
   },
   "plugins": [
-    new CleanWebpackPlugin(),
+    new CleanWebpackPlugin({}),
     new MiniCssExtractPlugin({
       "filename": path.join("assets", "styles", "[name].[chunkhash].css")
     }),
-    new CopyWebpackPlugin([
-      {
-        "from": path.join(__dirname, "..", "public", "assets"),
-        "to": path.join(__dirname, "..", "dist", "assets")
-      }
-    ])
+    new CopyWebpackPlugin({
+      "patterns": [
+        {
+          "from": path.join(__dirname, "..", "public", "assets"),
+          "to": path.join(__dirname, "..", "dist", "assets"),
+        },
+      ],
+    }),
   ]
 });
