@@ -55,7 +55,7 @@ public class PipelineExecutorTest {
         // Prepare working directory.
         File file = new File(Thread.currentThread()
                 .getContextClassLoader()
-                .getResource("pipeline/twoConnectedComponents.trig")
+                .getResource("pipeline/two-connected-components.trig")
                 .getPath());
         File directory =
                 Files.createTempDirectory("lp-test-executor-exec-").toFile();

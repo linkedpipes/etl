@@ -30,6 +30,8 @@ public class Configuration {
 
     private String osgiStorageDirectory;
 
+    private String osgiComponentDirectory;
+
     private String storageAddress;
 
     private final List<String> bannedJarPatterns = new ArrayList<>(20);
@@ -62,6 +64,7 @@ public class Configuration {
         logCoreFilter = getProperty("executor.log.core.level");
         osgiLibDirectoryPath = getProperty("executor.osgi.lib.directory");
         osgiStorageDirectory = getProperty("executor.osgi.working.directory");
+        osgiComponentDirectory = getProperty("storage.jars.directory");
         storageAddress = getProperty("storage.uri");
         //
         try {
@@ -79,6 +82,7 @@ public class Configuration {
         validateDirectory(logDirectoryPath);
         validateDirectory(osgiLibDirectoryPath);
         validateDirectory(osgiStorageDirectory);
+        validateDirectory(osgiComponentDirectory);
     }
 
     public File getLogDirectory() {
@@ -101,6 +105,10 @@ public class Configuration {
 
     public String getOsgiStorageDirectory() {
         return osgiStorageDirectory;
+    }
+
+    public File getOsgiComponentDirectory() {
+        return new File(osgiComponentDirectory);
     }
 
     public String getStorageAddress() {

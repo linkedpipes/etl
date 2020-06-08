@@ -12,6 +12,9 @@ import com.linkedpipes.etl.executor.pipeline.Pipeline;
 import com.linkedpipes.etl.executor.rdf.RdfSourceWrap;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.plugin.loader.PluginJarFile;
+import com.linkedpipes.plugin.loader.PluginLoader;
+import com.linkedpipes.plugin.loader.PluginLoaderException;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
@@ -119,7 +122,8 @@ public class ModuleService implements ApplicationListener<ApplicationEvent> {
     public ManageableComponent getComponent(Pipeline pipeline, String component)
             throws ModuleException {
         String jar = getComponentJar(pipeline, component);
-        BundleContext componentContext = getBundle(jar).getBundleContext();
+        BundleContext componentContext =
+                getComponentBundle(jar).getBundleContext();
         ManageableComponent manageableComponent;
         RdfSourceWrap source = wrapPipeline(pipeline);
         DefaultComponentFactory factory = new DefaultComponentFactory();
@@ -155,21 +159,6 @@ public class ModuleService implements ApplicationListener<ApplicationEvent> {
                 + "> ?jar }}";
     }
 
-    private Bundle getBundle(String path) throws ModuleException {
-        if (!components.containsKey(path)) {
-            String bundleIri = getBundleIri(path);
-            LOG.info("Loading jar file from: {}", path);
-            Bundle bundle = getComponentBundle(bundleIri);
-            try {
-                bundle.start();
-            } catch (BundleException ex) {
-                throw new ModuleException("Can't start bundle!", ex);
-            }
-            components.put(path, bundle);
-        }
-        return components.get(path);
-    }
-
     private String getBundleIri(String path) throws ModuleException {
         try {
             return configuration.getStorageAddress()
@@ -181,11 +170,29 @@ public class ModuleService implements ApplicationListener<ApplicationEvent> {
     }
 
     private Bundle getComponentBundle(String iri) throws ModuleException {
-        try {
-            return framework.getBundleContext().installBundle(iri);
-        } catch (BundleException ex) {
-            throw new ModuleException("Can't load bundle!", ex);
+        if (components.containsKey(iri)) {
+            return components.get(iri);
         }
+        String path = getBundleIri(iri);
+        Bundle bundle = installComponentBundle(path);
+        try {
+            bundle.start();
+        } catch (BundleException ex) {
+            throw new ModuleException("Can't start bundle!", ex);
+        }
+        components.put(iri, bundle);
+        return bundle;
+    }
+
+    private Bundle installComponentBundle(String path) throws ModuleException {
+        Bundle bundle;
+        try {
+            LOG.info("Loading jar file from: {}", path);
+            bundle = framework.getBundleContext().installBundle(path);
+        } catch (BundleException ex) {
+            throw new ModuleException("Can't load bundle for: {}", path, ex);
+        }
+        return bundle;
     }
 
     private RdfSourceWrap wrapPipeline(Pipeline pipeline) {
@@ -266,13 +273,14 @@ public class ModuleService implements ApplicationListener<ApplicationEvent> {
         }
 
         loadLibraries();
+        loadComponents();
     }
 
     private void loadLibraries() {
         BundleContext context = framework.getBundleContext();
         scanDirectory(configuration.getOsgiLibDirectory(), (file) -> {
             if (file.getPath().endsWith(".jar")) {
-                LOG.info("Loading: {}", file);
+                LOG.info("Loading library: {}", file);
                 try {
                     String path = file.toURI().toString();
                     libraries.add(context.installBundle(path));
@@ -331,5 +339,46 @@ public class ModuleService implements ApplicationListener<ApplicationEvent> {
         }
     }
 
+    private void loadComponents() {
+        PluginLoader loader = new PluginLoader();
+        scanDirectory(configuration.getOsgiComponentDirectory(), (file) -> {
+            if (!file.getPath().endsWith(".jar")) {
+                return;
+            }
+            List<PluginJarFile> plugins;
+            try {
+                plugins = loader.loadReferences(file);
+            } catch (PluginLoaderException ex) {
+                LOG.error("Can't load component.", ex);
+                return;
+            }
+            Bundle bundle;
+            try {
+                bundle = installComponentBundle(file.toURI().toString());
+            } catch (ModuleException ex) {
+                LOG.error("Can't load component bundle.", ex);
+                return;
+            }
+            for (PluginJarFile plugin : plugins) {
+                LOG.info(
+                        "Loaded component '{}' from '{}'",
+                        plugin.getIri(), plugin.getJar());
+                // As of now we store under JAR iri as a single
+                // JAr file can contain only one component.
+                components.put(plugin.getJar(), bundle);
+            }
+        });
+        // Start bundles.
+        LOG.info("Starting component bundles ...");
+        components.values().forEach((bundle) -> {
+            try {
+                bundle.start();
+            } catch (BundleException ex) {
+                LOG.error("Can't start component bundle: {}",
+                        bundle.getSymbolicName(), ex);
+            }
+        });
+        LOG.info("Starting component bundles ... done");
+    }
 
 }

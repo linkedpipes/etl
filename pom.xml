@@ -14,6 +14,7 @@
             <modules>
                 <module>pom-backend</module>
                 <module>vocabulary</module>
+                <module>plugin-loader</module>
                 <module>api-executor-v1</module>
                 <module>rdf-utils</module>
                 <module>rdf-utils-rdf4j</module>
@@ -35,6 +36,7 @@
             <modules>
                 <module>pom-backend</module>
                 <module>vocabulary</module>
+                <module>plugin-loader</module>
                 <module>rdf-utils</module>
                 <module>rdf-utils-rdf4j</module>
                 <module>storage</module>
@@ -71,6 +73,7 @@
                 <module>pom-plugin</module>
                 <module>plugin-libraries</module>
                 <module>vocabulary</module>
+                <module>plugin-loader</module>
                 <module>api-executor-v1</module>
                 <module>dataunit-core</module>
                 <module>rdf-utils</module>
@@ -81,7 +84,7 @@
                 <module>test-environment</module>
                 <module>plugins</module>
                 <module>deploy-dependencies</module>
-                <module>frontend</module>
+<!--                <module>frontend</module>-->
             </modules>
         </profile>
     </profiles>
