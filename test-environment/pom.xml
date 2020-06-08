@@ -22,7 +22,6 @@
 		<dependency>
 			<groupId>com.linkedpipes</groupId>
 			<artifactId>vocabulary</artifactId>
-			<version>${lp.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -34,7 +33,6 @@
 		<dependency>
 			<groupId>com.linkedpipes</groupId>
 			<artifactId>dataunit-core</artifactId>
-			<version>${lp.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

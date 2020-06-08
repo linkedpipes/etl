@@ -3,15 +3,20 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.linkedpipes</groupId>
-        <artifactId>pom-backend</artifactId>
+        <artifactId>pom-plugin</artifactId>
         <version>0.0.0</version>
-        <relativePath>../pom-backend/pom.xml</relativePath>
+        <relativePath>../pom-plugin/pom.xml</relativePath>
     </parent>
     <artifactId>api-executor-v1</artifactId>
     <name>LinkedPipes Executor API</name>
     <packaging>jar</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
         <!-- OSGI. -->
         <dependency>
             <groupId>org.osgi</groupId>

@@ -30,6 +30,13 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.openlinksw.virtuoso</groupId>
+            <artifactId>virtjdbc4</artifactId>
+            <scope>system</scope>
+            <version>0</version>
+            <systemPath>${project.basedir}/../x-virtuoso/libs/virtjdbc4.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>

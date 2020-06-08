@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.linkedpipes</groupId>
     <artifactId>pom-plugin</artifactId>
     <version>0.0.0</version>
     <packaging>pom</packaging>
-    <name>lp-pom-plugin</name>
+    <name>LinkedPipes Plugin Pom</name>
 
     <properties>
         <project.build.sourceEncoding>
@@ -22,15 +24,32 @@
         <commons-io.version>2.5</commons-io.version>
         <commons-net.version>3.6</commons-net.version>
         <httpclient-osgi.version>4.5.2</httpclient-osgi.version>
-        <junit.version>4.12</junit.version>
+        <mockito.version>3.0.0</mockito.version>
+        <junit.version>5.5.2</junit.version>
         <lp.version>0.0.0</lp.version>
+        <felix.version>1.2.10</felix.version>
+        <jackson.version>2.9.9</jackson.version>
+        <logback.version>1.2.3</logback.version>
+        <slf4j.version>1.7.28</slf4j.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
                 <groupId>com.linkedpipes</groupId>
                 <artifactId>api-executor-v1</artifactId>
+                <version>${lp.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.linkedpipes</groupId>
+                <artifactId>test-environment</artifactId>
                 <version>${lp.version}</version>
                 <scope>provided</scope>
             </dependency>
@@ -42,15 +61,14 @@
             </dependency>
             <dependency>
                 <groupId>com.linkedpipes</groupId>
-                <artifactId>rdf-utils</artifactId>
+                <artifactId>vocabulary</artifactId>
                 <version>${lp.version}</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>com.linkedpipes</groupId>
-                <artifactId>rdf-utils-rdf4j</artifactId>
+                <artifactId>plugin-test</artifactId>
                 <version>${lp.version}</version>
-                <scope>provided</scope>
+                <scope>test</scope>
             </dependency>
             <!-- RDF4J -->
             <dependency>
@@ -67,7 +85,49 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-rio-api</artifactId>
+                <version>${rdf4j.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-repository-sail</artifactId>
+                <version>${rdf4j.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
                 <artifactId>rdf4j-repository-sparql</artifactId>
+                <version>${rdf4j.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-sail-nativerdf</artifactId>
+                <version>${rdf4j.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-sail-memory</artifactId>
+                <version>${rdf4j.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-rio-jsonld</artifactId>
+                <version>${rdf4j.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-rio-turtle</artifactId>
+                <version>${rdf4j.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-rio-trig</artifactId>
                 <version>${rdf4j.version}</version>
                 <scope>provided</scope>
             </dependency>
@@ -90,17 +150,63 @@
                 <version>${httpclient-osgi.version}</version>
                 <scope>provided</scope>
             </dependency>
-            <!-- Test libraries. -->
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
+                <version>${felix.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.core</artifactId>
+                <version>6.0.0</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.compendium</artifactId>
+                <version>5.0.0</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>com.linkedpipes</groupId>
-                <artifactId>test-environment</artifactId>
-                <version>${lp.version}</version>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency> <!-- For Legacy Support -->
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.13</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -142,6 +248,36 @@
         </profile>
         <!-- Java profiles. -->
         <profile>
+            <id>java-8</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>1.8</maven.compiler.source>
+                <maven.compiler.target>1.8</maven.compiler.target>
+            </properties>
+        </profile>
+        <profile>
+            <id>java-9</id>
+            <activation>
+                <jdk>9</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>1.9</maven.compiler.source>
+                <maven.compiler.target>1.9</maven.compiler.target>
+            </properties>
+        </profile>
+        <profile>
+            <id>java-10</id>
+            <activation>
+                <jdk>10</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>10</maven.compiler.source>
+                <maven.compiler.target>10</maven.compiler.target>
+            </properties>
+        </profile>
+        <profile>
             <id>java-11</id>
             <activation>
                 <jdk>11</jdk>
@@ -149,6 +285,16 @@
             <properties>
                 <maven.compiler.source>11</maven.compiler.source>
                 <maven.compiler.target>11</maven.compiler.target>
+            </properties>
+        </profile>
+        <profile>
+            <id>java-12</id>
+            <activation>
+                <jdk>12</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>12</maven.compiler.source>
+                <maven.compiler.target>12</maven.compiler.target>
             </properties>
         </profile>
         <profile>

@@ -12,4 +12,11 @@
     <artifactId>vocabulary</artifactId>
     <packaging>jar</packaging>
     <name>LinkedPipes Vocabulary</name>
+    <description>
+        Contains definition of RDF vocabulary used in the LinkedPipes ETL,
+        every IRI used in the project (Java code) must be declared here
+        in order to make them easily maintainable.
+        The sole exception is data model migration, that can
+        contains in-place IRI values.
+    </description>
 </project>
