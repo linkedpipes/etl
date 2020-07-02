@@ -32,20 +32,18 @@
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>vocabulary</artifactId>
-            <version>${lp.version}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>rdf-utils</artifactId>
-            <version>${lp.version}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>rdf-utils-rdf4j</artifactId>
-            <version>${lp.version}</version>
-            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>plugin-configuration</artifactId>
         </dependency>
         <!-- Spring. -->
         <dependency>

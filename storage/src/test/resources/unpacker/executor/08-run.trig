@@ -37,7 +37,7 @@
 		    <http://localhost/pipeline/lt/port/OutputRdf> ;
         lp:executionType <http://linkedpipes.com/resources/execution/type/execute> ;
         lp:jar <http://etl.linkedpipes.com/resources/jars/t-sparqlConstruct/0.0.0> ;
-        lp:configurationGraph <http://localhost/pipeline/c67542e2/configuration> ;
+        lp:configurationGraph <http://localhost/pipeline/lt/configuration> ;
         lp:configurationDescription <http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc> ;
         lp:requirement <http://linkedpipes.com/resources/requirement/workingDirectory> ;
         skos:prefLabel "SPARQL Construct" .
@@ -64,7 +64,7 @@
 		    <http://localhost/pipeline/lb/port/OutputRdf> ;
         lp:executionType <http://linkedpipes.com/resources/execution/type/execute> ;
         lp:jar <http://etl.linkedpipes.com/resources/jars/t-sparqlConstruct/0.0.0> ;
-        lp:configurationGraph <http://localhost/pipeline/c67542e2/configuration> ;
+        lp:configurationGraph <http://localhost/pipeline/lb/configuration> ;
         lp:configurationDescription <http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc> ;
         lp:requirement <http://linkedpipes.com/resources/requirement/workingDirectory> ;
         skos:prefLabel "SPARQL Construct" .
@@ -91,7 +91,7 @@
 		    <http://localhost/pipeline/rt/port/OutputRdf> ;
         lp:executionType <http://linkedpipes.com/resources/execution/type/execute> ;
         lp:jar <http://etl.linkedpipes.com/resources/jars/t-sparqlConstruct/0.0.0> ;
-        lp:configurationGraph <http://localhost/pipeline/c67542e2/configuration> ;
+        lp:configurationGraph <http://localhost/pipeline/rt/configuration> ;
         lp:configurationDescription <http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc> ;
         lp:requirement <http://linkedpipes.com/resources/requirement/workingDirectory> ;
         skos:prefLabel "SPARQL Construct" .
@@ -118,7 +118,7 @@
 		    <http://localhost/pipeline/rb/port/OutputRdf> ;
         lp:executionType <http://linkedpipes.com/resources/execution/type/execute> ;
         lp:jar <http://etl.linkedpipes.com/resources/jars/t-sparqlConstruct/0.0.0> ;
-        lp:configurationGraph <http://localhost/pipeline/c67542e2/configuration> ;
+        lp:configurationGraph <http://localhost/pipeline/rb/configuration> ;
         lp:configurationDescription <http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc> ;
         lp:requirement <http://linkedpipes.com/resources/requirement/workingDirectory> ;
         skos:prefLabel "SPARQL Construct" .
@@ -164,9 +164,36 @@
 
 }
 
-<http://localhost/pipeline/c67542e2/configuration> {
+<http://localhost/pipeline/lt/configuration> {
 
-    <http://localhost/pipeline/c67542e2/configuration/1>
+    <http://localhost/pipeline/lt/configuration/1>
+        a sparqlConstruct:Configuration ;
+        sparqlConstruct:query "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}" ;
+        sparqlConstruct:queryControl <http://plugins.linkedpipes.com/resource/configuration/None> .
+
+}
+
+<http://localhost/pipeline/lb/configuration> {
+
+    <http://localhost/pipeline/lb/configuration/1>
+        a sparqlConstruct:Configuration ;
+        sparqlConstruct:query "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}" ;
+        sparqlConstruct:queryControl <http://plugins.linkedpipes.com/resource/configuration/None> .
+
+}
+
+<http://localhost/pipeline/rt/configuration> {
+
+    <http://localhost/pipeline/rt/configuration/1>
+        a sparqlConstruct:Configuration ;
+        sparqlConstruct:query "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}" ;
+        sparqlConstruct:queryControl <http://plugins.linkedpipes.com/resource/configuration/None> .
+
+}
+
+<http://localhost/pipeline/rb/configuration> {
+
+    <http://localhost/pipeline/rb/configuration/1>
         a sparqlConstruct:Configuration ;
         sparqlConstruct:query "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}" ;
         sparqlConstruct:queryControl <http://plugins.linkedpipes.com/resource/configuration/None> .

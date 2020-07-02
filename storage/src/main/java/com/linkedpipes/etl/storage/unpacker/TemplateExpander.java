@@ -73,7 +73,8 @@ class TemplateExpander {
             DesignerComponent srcComponent, JarTemplate template)
             throws BaseException {
         ExecutorComponent component = jarExpander.expand(
-                srcComponent.getIri(), srcComponent.getConfigurationGraph(),
+                srcComponent.getIri(),
+                srcComponent.getConfigurationGraphs(),
                 template);
         copyBasicInformation(srcComponent, component);
         return component;

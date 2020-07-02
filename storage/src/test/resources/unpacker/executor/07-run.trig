@@ -84,7 +84,8 @@
         filesToRdf:commitSize "50000"^^<http://www.w3.org/2001/XMLSchema#integer> ;
         filesToRdf:commitSizeControl <http://plugins.linkedpipes.com/resource/configuration/None> ;
         filesToRdf:mimeType "" ;
-        filesToRdf:mimeTypeControl <http://plugins.linkedpipes.com/resource/configuration/None> .
+        filesToRdf:mimeTypeControl <http://plugins.linkedpipes.com/resource/configuration/None> ;
+        filesToRdf:softFailControl <http://plugins.linkedpipes.com/resource/configuration/None> ;
 
 }
 

@@ -46,8 +46,9 @@ public class ModelLoader {
             throws RdfUtilsException {
         GraphCollection collection = new GraphCollection();
         for (DesignerComponent component : pipeline.getComponents()) {
-            String graph = component.getConfigurationGraph();
-            collection.put(graph, extractGraph(source, graph));
+            for (String graph : component.getConfigurationGraphs()) {
+                collection.put(graph, extractGraph(source, graph));
+            }
         }
         return collection;
     }

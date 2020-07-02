@@ -51,7 +51,7 @@
     component:third "p-3" ;
     component:thirdControl config:Force ;
     # Property with references.
-    component:fourth <http://localhost/object/1>, <http://localhost/object/2> .
+    component:fourth <http://localhost/object/1>, <http://localhost/object/2> ;
     # Missing property.
 
     # Force property without value.
@@ -62,6 +62,12 @@
 <http://localhost/object/2> <http://localhost/value> "p-o-2" .
 
 }
+
+#
+# We do not respect controls here, as they are saved
+# in the parent configuration. If we use controls from parent, we would need
+# to update all configurations when paren change and we do not do that.
+#
 
 <http://expected/jar> {
 
@@ -77,7 +83,9 @@
     component:fifthControl config:None ;
     component:sixthControl config:None .
 
-# As of now referenced resources are not supported.
+<http://localhost/object/1> <http://localhost/value> "p-o-1" .
+
+<http://localhost/object/2> <http://localhost/value> "p-o-2" .
 
 }
 
@@ -95,6 +103,8 @@
     component:fifthControl config:Inherit ;
     component:sixthControl config:Inherit .
 
-# As of now referenced resources are not supported.
+<http://localhost/object/1> <http://localhost/value> "p-o-1" .
+
+<http://localhost/object/2> <http://localhost/value> "p-o-2" .
 
 }

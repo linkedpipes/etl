@@ -20,7 +20,10 @@ public class DesignerComponent implements Loadable {
 
     private List<String> types = new LinkedList<>();
 
-    private String configurationGraph;
+    /**
+     * Starting from instance all configuration graphs used by this component.
+     */
+    private List<String> configurationGraphs = new ArrayList<>();
 
     private String template;
 
@@ -35,7 +38,7 @@ public class DesignerComponent implements Loadable {
         this.iri = component.iri;
         this.types = new ArrayList<>(component.getTypes().size());
         this.types.addAll(component.getTypes());
-        this.configurationGraph = component.configurationGraph;
+        this.configurationGraphs.addAll(component.getConfigurationGraphs());
         this.template = component.template;
         this.label = component.label;
         this.disabled = component.disabled;
@@ -55,7 +58,7 @@ public class DesignerComponent implements Loadable {
                 types.add(value.asString());
                 return null;
             case LP_PIPELINE.HAS_CONFIGURATION_GRAPH:
-                configurationGraph = value.asString();
+                configurationGraphs.add(value.asString());
                 return null;
             case LP_PIPELINE.HAS_TEMPLATE:
                 template = value.asString();
@@ -83,12 +86,8 @@ public class DesignerComponent implements Loadable {
         this.types = types;
     }
 
-    public String getConfigurationGraph() {
-        return configurationGraph;
-    }
-
-    public void setConfigurationGraph(String configurationGraph) {
-        this.configurationGraph = configurationGraph;
+    public List<String> getConfigurationGraphs() {
+        return configurationGraphs;
     }
 
     public String getTemplate() {

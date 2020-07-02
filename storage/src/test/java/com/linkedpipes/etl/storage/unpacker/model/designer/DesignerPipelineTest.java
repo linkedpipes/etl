@@ -51,7 +51,7 @@ public class DesignerPipelineTest {
                 component.getTemplate());
         Assert.assertEquals(
                 "http://localhost/pipeline/3405c1ee/configuration",
-                component.getConfigurationGraph());
+                component.getConfigurationGraphs().get(0));
         Assert.assertEquals(1, component.getTypes().size());
         Assert.assertEquals(
                 "http://linkedpipes.com/ontology/Component",
@@ -84,7 +84,7 @@ public class DesignerPipelineTest {
                 textHolder.getTemplate());
         Assert.assertEquals(
                 "http://localhost/pipeline/9d21ebd5/configuration",
-                textHolder.getConfigurationGraph());
+                textHolder.getConfigurationGraphs().get(0));
 
         DesignerComponent filesToRdf = pipeline.getComponent(
                 "http://localhost/pipeline/b67542e2");
@@ -96,7 +96,7 @@ public class DesignerPipelineTest {
                 filesToRdf.getTemplate());
         Assert.assertEquals(
                 "http://localhost/pipeline/b67542e2/configuration",
-                filesToRdf.getConfigurationGraph());
+                filesToRdf.getConfigurationGraphs().get(0));
 
         DesignerConnection connection = pipeline.getConnections().get(0);
         Assert.assertEquals(

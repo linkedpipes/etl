@@ -1,9 +1,10 @@
 package com.linkedpipes.etl.storage.template;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
+import com.linkedpipes.etl.plugin.configuration.ConfigurationFacade;
+import com.linkedpipes.etl.plugin.configuration.InvalidConfiguration;
 import com.linkedpipes.etl.rdf4j.Statements;
 import com.linkedpipes.etl.storage.BaseException;
-import com.linkedpipes.etl.storage.configuration.ConfigurationFacade;
 import com.linkedpipes.etl.storage.template.mapping.MappingFacade;
 import com.linkedpipes.etl.storage.template.repository.TemplateRepository;
 import com.linkedpipes.etl.storage.unpacker.TemplateSource;
@@ -47,11 +48,10 @@ public class TemplateFacade implements TemplateSource {
     @Autowired
     public TemplateFacade(
             TemplateManager manager,
-            MappingFacade mapping,
-            ConfigurationFacade configuration) {
+            MappingFacade mapping) {
         this.manager = manager;
         this.mapping = mapping;
-        this.configurationFacade = configuration;
+        this.configurationFacade = new ConfigurationFacade();
         this.repository = manager.getRepository();
     }
 
@@ -196,21 +196,24 @@ public class TemplateFacade implements TemplateSource {
      * Configuration of all ancestors are applied.
      */
     public Collection<Statement> getConfigEffective(Template template)
-            throws BaseException {
+            throws BaseException, InvalidConfiguration {
         // TODO Move to extra class and add caching.
         if (!template.isSupportingControl()) {
             // For template without inheritance control, the current
             // configuration is the effective one.
             return getConfig(template);
         }
-        List<Statements> configurations = new ArrayList<>();
+        List<Statement> description =
+                (new Statements(getConfigDescription(template))).asList();
+        SimpleValueFactory valueFactory = SimpleValueFactory.getInstance();
+        List<List<Statement>> configurations = new ArrayList<>();
         for (Template item : getAncestors(template)) {
-            configurations.add(new Statements(getConfig(item)));
+            configurations.add(new ArrayList<>(getConfig(item)));
         }
-        ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        Collections.reverse(configurations);
         return configurationFacade.merge(
                 configurations,
-                new Statements(getConfigDescription(template)),
+                description,
                 template.getIri() + "/effective/",
                 valueFactory.createIRI(template.getIri()));
     }
@@ -227,19 +230,19 @@ public class TemplateFacade implements TemplateSource {
      * Return configuration for instances of given template.
      */
     public Collection<Statement> getConfigInstance(Template template)
-            throws BaseException {
+            throws BaseException, InvalidConfiguration {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
         IRI graph = valueFactory.createIRI(template.getIri() + "/new");
         if (template.getType() == Template.Type.JAR_TEMPLATE) {
             return configurationFacade.createNewFromJarFile(
-                    new Statements(repository.getConfig(template)),
-                    new Statements(getConfigDescription(template)),
+                    (new Statements(repository.getConfig(template))).asList(),
+                    (new Statements(getConfigDescription(template))).asList(),
                     graph.stringValue(),
                     graph);
         } else {
             return configurationFacade.createNewFromTemplate(
-                    new Statements(repository.getConfig(template)),
-                    new Statements(getConfigDescription(template)),
+                    (new Statements(repository.getConfig(template))).asList(),
+                    (new Statements(getConfigDescription(template))).asList(),
                     graph.stringValue(),
                     graph);
         }

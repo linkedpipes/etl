@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.storage.pipeline;
 
+import com.linkedpipes.etl.plugin.configuration.InvalidConfiguration;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.pipeline.info.InfoFacade;
@@ -140,7 +141,11 @@ class PipelineManager {
         }
         rdf.addAll(additionalRdf);
         if (removePrivateConfig) {
-            exportPipeline.removePrivateConfiguration(rdf);
+            try {
+                exportPipeline.removePrivateConfiguration(rdf);
+            } catch (InvalidConfiguration ex) {
+                throw new BaseException(ex);
+            }
         }
         return rdf;
     }

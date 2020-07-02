@@ -1,9 +1,9 @@
 package com.linkedpipes.etl.storage.pipeline;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf4j.Statements;
+import com.linkedpipes.etl.plugin.configuration.ConfigurationFacade;
+import com.linkedpipes.etl.plugin.configuration.InvalidConfiguration;
 import com.linkedpipes.etl.storage.BaseException;
-import com.linkedpipes.etl.storage.configuration.ConfigurationFacade;
 import com.linkedpipes.etl.storage.template.Template;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
 import com.linkedpipes.etl.storage.template.mapping.MappingFacade;
@@ -32,11 +32,10 @@ class ExportPipeline {
 
     @Autowired
     public ExportPipeline(
-            TemplateFacade templates, MappingFacade mapping,
-            ConfigurationFacade configuration) {
+            TemplateFacade templates, MappingFacade mapping) {
         this.templatesFacade = templates;
         this.mappingFacade = mapping;
-        this.configurationFacade = configuration;
+        this.configurationFacade = new ConfigurationFacade();
     }
 
     /**
@@ -82,7 +81,7 @@ class ExportPipeline {
     }
 
     public void removePrivateConfiguration(Collection<Statement> rdf)
-            throws BaseException {
+            throws BaseException, InvalidConfiguration {
         // TODO We should check that we are reading from the right graphs.
         Map<Resource, Resource> configurations = new HashMap<>();
         Map<Resource, Resource> types = new HashMap<>();
@@ -111,8 +110,8 @@ class ExportPipeline {
                             template.getIri());
             Collection<Statement> privateProperties =
                     configurationFacade.selectPrivateStatements(
-                            new Statements(configuration),
-                            new Statements(description));
+                            configuration,
+                            new ArrayList<>(description));
             rdf.removeAll(privateProperties);
         }
     }

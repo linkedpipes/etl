@@ -9,6 +9,7 @@ import com.linkedpipes.etl.storage.unpacker.model.template.JarTemplate;
 import com.linkedpipes.etl.storage.unpacker.model.template.TemplatePort;
 
 import java.util.Arrays;
+import java.util.List;
 
 class JarExpander {
 
@@ -23,21 +24,19 @@ class JarExpander {
     }
 
     public ExecutorComponent expand(
-            String iri, String configuration,
+            String iri, List<String> configurations,
             JarTemplate template) throws BaseException {
 
         component = new ExecutorComponent();
-        setBasicInfo(iri, configuration);
+        component.setIri(iri);
+        component.setConfigGraph(iri + "/configuration");
+
         copyTemplate(template);
 
-        mergeConfigurations(template, configuration);
+        mergeConfigurations(template, configurations);
+
 
         return component;
-    }
-
-    private void setBasicInfo(String iri, String configuration) {
-        component.setIri(iri);
-        component.setConfigGraph(configuration);
     }
 
     private void copyTemplate(JarTemplate template) {
@@ -67,13 +66,14 @@ class JarExpander {
     }
 
     private void mergeConfigurations(
-            JarTemplate template, String configuration) throws BaseException {
-        if (configuration == null) {
+            JarTemplate template,
+            List<String> configurations) throws BaseException {
+        if (configurations.isEmpty()) {
             if (template.getConfigGraph() != null) {
                 copyConfigurationFromTemplate(template);
             }
         } else {
-            mergeWithTemplate(template);
+            mergeWithTemplate(template, configurations);
         }
     }
 
@@ -95,12 +95,12 @@ class JarExpander {
         return merger;
     }
 
-    private void mergeWithTemplate(JarTemplate template) throws BaseException {
+    private void mergeWithTemplate(
+            JarTemplate template, List<String> configurations)
+            throws BaseException {
         ConfigurationMerger merger = createMerger(template);
-        merger.mergerAndReplaceConfiguration(
-                template, component.getConfigGraph());
-        merger.finalizeConfiguration(
-                template, component.getConfigGraph());
+        configurations.add(template.getConfigGraph());
+        merger.merge(template, configurations, component.getConfigGraph());
     }
 
     public void setGraphs(GraphCollection graphs) {
