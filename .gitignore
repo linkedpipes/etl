@@ -39,6 +39,7 @@ deploy/storage
 deploy/frontend
 deploy/jar
 deploy/osg
+data/
 
 # Intellij IDEA
 *.iml

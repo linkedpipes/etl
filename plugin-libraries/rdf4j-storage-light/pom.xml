@@ -1,14 +1,11 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.linkedpipes</groupId>
-		<artifactId>pom-plugin</artifactId>
-		<version>0.0.0</version>
-		<relativePath>../../pom-plugin/pom.xml</relativePath>
-	</parent>
+	<groupId>com.linkedpipes</groupId>
 	<artifactId>rdf4j-storage-light</artifactId>
-	<version>3.0.0</version>
+	<version>3.2.3</version>
 	<packaging>bundle</packaging>
 	<name>LinkedPipes Rdf4j Storage Light</name>
 	<description>Lightweight packaged version of RDF4j storage.</description>
@@ -182,6 +179,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-sparqlbuilder</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-util</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -189,7 +191,7 @@
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-queryalgebra-evaluation</artifactId>
-			<version>${rdf4j.version}</version>
+			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.rdf4j</groupId>
@@ -220,12 +222,12 @@
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-queryalgebra-geosparql</artifactId>
-			<version>${rdf4j.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-repository-dataset</artifactId>
-			<version>${rdf4j.version}</version>
+			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.rdf4j</groupId>
@@ -248,7 +250,7 @@
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-repository-sail</artifactId>
-			<version>${rdf4j.version}</version>
+			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.rdf4j</groupId>
@@ -295,7 +297,7 @@
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-sail-base</artifactId>
-			<version>${rdf4j.version}</version>
+			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.rdf4j</groupId>
@@ -318,7 +320,7 @@
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-sail-federation</artifactId>
-			<version>${rdf4j.version}</version>
+			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.rdf4j</groupId>
@@ -337,7 +339,7 @@
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-sail-inferencer</artifactId>
-			<version>${rdf4j.version}</version>
+			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.rdf4j</groupId>
@@ -376,7 +378,7 @@
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-sail-memory</artifactId>
-			<version>${rdf4j.version}</version>
+			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.rdf4j</groupId>
@@ -399,7 +401,7 @@
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-sail-nativerdf</artifactId>
-			<version>${rdf4j.version}</version>
+			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.rdf4j</groupId>
@@ -422,17 +424,17 @@
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-sail-spin</artifactId>
-			<version>${rdf4j.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-lucene-spin</artifactId>
-			<version>${rdf4j.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-spin</artifactId>
-			<version>${rdf4j.version}</version>
+			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.rdf4j</groupId>
@@ -451,7 +453,7 @@
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-shacl</artifactId>
-			<version>${rdf4j.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -470,7 +472,6 @@
 						</Export-Package>
 						<Import-Package>
 							org.apache.lucene.*;resolution:=optional,
-							com.spatial4j.*;resolution:=optional,
 							*
 						</Import-Package>
 						<Embed-Dependency>
@@ -495,7 +496,8 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<promoteTransitiveDependencies>true</promoteTransitiveDependencies>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<promoteTransitiveDependencies>false</promoteTransitiveDependencies>
 							<artifactSet>
 								<includes>
 									<include>org.eclipse.rdf4j:*</include>
@@ -504,6 +506,20 @@
 							<transformers>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
 							</transformers>
+							<filters>
+								<filter>
+									<!--
+										Exclude java classes as they
+										are included by the shade plugin.
+										Without this we get a lot of warnings
+										about package duplicity.
+									-->
+									<artifact>com.linkedpipes:*</artifact>
+									<excludes>
+										<exclude>org/eclipse/rdf4j/**</exclude>
+									</excludes>
+								</filter>
+							</filters>
 						</configuration>
 					</execution>
 				</executions>

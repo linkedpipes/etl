@@ -20,7 +20,7 @@
             checkstyle.xml
         </checkstyle.config.location>
         <!-- Libraries. -->
-        <rdf4j.version>3.0.0</rdf4j.version>
+        <rdf4j.version>3.2.3</rdf4j.version>
         <commons-io.version>2.5</commons-io.version>
         <commons-net.version>3.6</commons-net.version>
         <httpclient-osgi.version>4.5.2</httpclient-osgi.version>
@@ -28,7 +28,7 @@
         <junit.version>5.5.2</junit.version>
         <lp.version>0.0.0</lp.version>
         <felix.version>1.2.10</felix.version>
-        <jackson.version>2.9.9</jackson.version>
+        <jackson.version>2.10.0</jackson.version>
         <logback.version>1.2.3</logback.version>
         <slf4j.version>1.7.28</slf4j.version>
     </properties>

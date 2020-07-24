@@ -87,7 +87,7 @@
                 <module>test-environment</module>
                 <module>plugins</module>
                 <module>deploy-dependencies</module>
-                <module>frontend</module>
+<!--                <module>frontend</module>-->
             </modules>
         </profile>
     </profiles>

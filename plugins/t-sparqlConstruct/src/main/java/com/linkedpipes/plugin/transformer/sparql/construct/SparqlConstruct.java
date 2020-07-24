@@ -6,6 +6,7 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.query.Dataset;
 import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.query.GraphQueryResult;
@@ -71,7 +72,9 @@ public final class SparqlConstruct implements Component, SequentialExecution {
 
     private void addResultToOutput(GraphQueryResult result) throws LpException {
         outputRdf.execute((connection) -> {
-            connection.add(result, outputRdf.getWriteGraph());
+            connection.add(
+                    (Iterable<? extends Statement>) result,
+                    outputRdf.getWriteGraph());
         });
     }
 
