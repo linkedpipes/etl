@@ -1,0 +1,17 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-shaclJena/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-shaclJena#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-shaclJena/0.0.0/configuration/desc/outputShapes> ,
+        <http://linkedpipes.com/resources/components/t-shaclJena/0.0.0/configuration/desc/failOnError> .
+
+<http://linkedpipes.com/resources/components/t-shaclJena/0.0.0/configuration/desc/outputShapes>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-shaclJena#outputShapes> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-shaclJena#outputShapesControl> .
+
+<http://linkedpipes.com/resources/components/t-shaclJena/0.0.0/configuration/desc/failOnError>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-shaclJena#failOnError> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-shaclJena#failOnErrorControl> .

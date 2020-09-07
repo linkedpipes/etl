@@ -67,8 +67,13 @@
                                         <dependency>
                                             <groupId>org.apache.jena</groupId>
                                             <artifactId>jena-osgi</artifactId>
-                                            <version>3.10.0</version>
+                                            <version>3.16.0</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency> <!-- Used by jena-osgi -->
+                                            <groupId>org.apache.commons</groupId>
+                                            <artifactId>commons-rdf-api</artifactId>
+                                            <version>0.5.0</version>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.github.andrewoma.dexx</groupId>
@@ -79,26 +84,26 @@
                                         <dependency>
                                             <groupId>org.apache.commons</groupId>
                                             <artifactId>commons-csv</artifactId>
-                                            <version>1.6</version>
+                                            <version>1.8</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.apache.thrift</groupId>
                                             <artifactId>libthrift</artifactId>
-                                            <version>0.12.0</version>
+                                            <version>0.13.0</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>org.apache.commons</groupId>
                                             <artifactId>commons-compress</artifactId>
-                                            <version>1.19</version>
+                                            <version>1.20</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- Apache POI (excel) bundle dependencies. -->
                                         <dependency>
                                             <groupId>commons-codec</groupId>
                                             <artifactId>commons-codec</artifactId>
-                                            <version>1.11</version>
+                                            <version>1.15</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
@@ -171,7 +176,7 @@
                                         <dependency>
                                             <groupId>org.apache.commons</groupId>
                                             <artifactId>commons-lang3</artifactId>
-                                            <version>3.9</version>
+                                            <version>3.11</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- HttpClient, for example: l-graphStoreProtocol -->
@@ -866,6 +871,12 @@
                                             <artifactId>t-shacl</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/core/t-shacl/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-shacl-jena</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-shacl-jena/</outputDirectory>
                                         </dependency>
                                     </artifactItems>
                                 </configuration>

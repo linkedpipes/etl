@@ -99,5 +99,6 @@
         <module>t-hdtToRdf</module>
         <module>t-rdfToHdt</module>
         <module>t-shacl</module>
+        <module>t-shacl-jena</module>
     </modules>
 </project>

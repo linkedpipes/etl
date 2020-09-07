@@ -1,0 +1,14 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-shaclJena/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-shaclJena#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-shaclJena#failOnError": true,
+        "http://plugins.linkedpipes.com/ontology/t-shaclJena#failOnErrorControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-shaclJena#outputShapes": true,
+        "http://plugins.linkedpipes.com/ontology/t-shaclJena#outputShapesControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

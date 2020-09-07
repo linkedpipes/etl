@@ -1,0 +1,13 @@
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.failOnError.hide">
+        <md-switch ng-model="dialog.failOnError.value" ng-disabled="dialog.failOnError.disabled || dialog.failOnError.inherit">
+            Fail on a rule violation
+        </md-switch>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.outputShapes.hide">
+        <md-switch ng-model="dialog.outputShapes.value" ng-disabled="dialog.outputShapes.disabled || dialog.outputShapes.inherit">
+            Copy shapes definition to output file
+        </md-switch>
+    </md-input-container>
+</div>
