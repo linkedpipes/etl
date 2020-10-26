@@ -74,6 +74,7 @@
                                             <groupId>org.apache.commons</groupId>
                                             <artifactId>commons-rdf-api</artifactId>
                                             <version>0.5.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
                                             <groupId>com.github.andrewoma.dexx</groupId>
