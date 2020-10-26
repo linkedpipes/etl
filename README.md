@@ -12,7 +12,7 @@ LinkedPipes ETL is an RDF based, lightweight ETL tool.
 - [Docker], [Docker Compose]
 
 ### For building locally
-- [Java] 11 or 13
+- [Java] 11, 13 or 15
 - [Git]
 - [Maven], 3.2.5 or newer
 - [Node.js] & npm
