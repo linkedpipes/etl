@@ -363,36 +363,6 @@
         </profile>
         <!-- Java profiles. -->
         <profile>
-            <id>java-8</id>
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-            <properties>
-                <maven.compiler.source>1.8</maven.compiler.source>
-                <maven.compiler.target>1.8</maven.compiler.target>
-            </properties>
-        </profile>
-        <profile>
-            <id>java-9</id>
-            <activation>
-                <jdk>9</jdk>
-            </activation>
-            <properties>
-                <maven.compiler.source>1.9</maven.compiler.source>
-                <maven.compiler.target>1.9</maven.compiler.target>
-            </properties>
-        </profile>
-        <profile>
-            <id>java-10</id>
-            <activation>
-                <jdk>10</jdk>
-            </activation>
-            <properties>
-                <maven.compiler.source>10</maven.compiler.source>
-                <maven.compiler.target>10</maven.compiler.target>
-            </properties>
-        </profile>
-        <profile>
             <id>java-11</id>
             <activation>
                 <jdk>11</jdk>
@@ -400,16 +370,6 @@
             <properties>
                 <maven.compiler.source>11</maven.compiler.source>
                 <maven.compiler.target>11</maven.compiler.target>
-            </properties>
-        </profile>
-        <profile>
-            <id>java-12</id>
-            <activation>
-                <jdk>12</jdk>
-            </activation>
-            <properties>
-                <maven.compiler.source>12</maven.compiler.source>
-                <maven.compiler.target>12</maven.compiler.target>
             </properties>
         </profile>
         <profile>
@@ -422,6 +382,16 @@
                 <maven.compiler.target>13</maven.compiler.target>
             </properties>
         </profile>
+        <profile>
+            <id>java-15</id>
+            <activation>
+                <jdk>15</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>15</maven.compiler.source>
+                <maven.compiler.target>15</maven.compiler.target>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
@@ -430,10 +400,13 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>4.2.1</version>
+                    <version>5.1.1</version>
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
+                            <Embed-Dependency>
+                                *;scope=compile|system
+                            </Embed-Dependency>
                             <Embed-Transitive>false</Embed-Transitive>
                         </instructions>
                     </configuration>
@@ -441,7 +414,7 @@
                         <dependency>
                             <groupId>biz.aQute.bnd</groupId>
                             <artifactId>biz.aQute.bndlib</artifactId>
-                            <version>4.3.0</version>
+                            <version>5.2.0</version>
                         </dependency>
                     </dependencies>
                 </plugin>
