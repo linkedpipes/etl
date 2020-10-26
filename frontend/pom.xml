@@ -90,7 +90,7 @@
                                 <configuration>
                                     <executable>npm</executable>
                                     <arguments>
-                                        <argument>install</argument>
+                                        <argument>ci</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -117,8 +117,8 @@
                                 <configuration>
                                     <executable>npm</executable>
                                     <arguments>
-                                        <argument>install</argument>
-                                        <argument>--production</argument>
+                                        <argument>ci</argument>
+                                        <argument>--only=production</argument>
                                     </arguments>
                                     <workingDirectory>
                                         ${deploy.directory}
