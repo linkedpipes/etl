@@ -117,8 +117,8 @@
                                 <configuration>
                                     <executable>npm</executable>
                                     <arguments>
-                                        <argument>ci</argument>
-                                        <argument>--only=production</argument>
+                                        <argument>install</argument>
+                                        <argument>--production</argument>
                                     </arguments>
                                     <workingDirectory>
                                         ${deploy.directory}
