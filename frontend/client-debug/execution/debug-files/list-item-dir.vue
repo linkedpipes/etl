@@ -1,5 +1,5 @@
 <template>
-  <v-list
+  <v-list-item
     :key="value.name"
     @click="$emit('onNavigateTo', value)"
   >
@@ -11,7 +11,7 @@
         {{ value.name }}
       </v-list-item-title>
     </v-list-item-content>
-  </v-list>
+  </v-list-item>
 </template>
 
 <script>
