@@ -1,0 +1,7 @@
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.query.hide">
+        SPARQL UPDATE query
+        <lp-yasqe ng-model="dialog.query.value" ng-disabled="dialog.query.disabled || dialog.query.inherit"/>
+    </md-input-container>
+</div>
