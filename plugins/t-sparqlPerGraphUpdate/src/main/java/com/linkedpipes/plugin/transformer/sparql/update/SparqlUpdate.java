@@ -33,17 +33,18 @@ public final class SparqlUpdate implements Component, SequentialExecution {
 
     @Override
     public void execute() throws LpException {
-        copyStatements();
-        executeUpdate();
+        copyStatementsAndProcessQuery();
     }
 
-    private void copyStatements() throws LpException {
+    private void copyStatementsAndProcessQuery() throws LpException {
         Collection<IRI> inputGraphs = inputRdf.getReadGraphs();
         for (final IRI inputGraph : inputGraphs) {
             inputRdf.execute((connection) -> {
+                    IRI outputGraph = outputRdf.createGraph();
                     RepositoryResult<Statement> statement = connection
                         .getStatements(null, null, null, true, inputGraph);
-                    addToOutput(statement, inputGraph);
+                    addToOutput(statement, outputGraph);
+                    executeUpdate(outputGraph);
                 });
         }
     }
@@ -55,16 +56,13 @@ public final class SparqlUpdate implements Component, SequentialExecution {
         });
     }
 
-    private void executeUpdate() throws LpException {
-        Collection<IRI> outputGraphs = inputRdf.getReadGraphs();
-        for (final IRI outputGraph : outputGraphs) {
-            outputRdf.execute((connection) -> {
-                    Update update = connection.prepareUpdate(QueryLanguage.SPARQL,
-                                                             configuration.getQuery());
-                    update.setDataset(createDataset(outputGraph));
-                    update.execute();
-                });
-        }
+    private void executeUpdate(IRI outputGraph) throws LpException {
+        outputRdf.execute((connection) -> {
+                Update update = connection.prepareUpdate(QueryLanguage.SPARQL,
+                                                         configuration.getQuery());
+                update.setDataset(createDataset(outputGraph));
+                update.execute();
+            });
     }
 
     private Dataset createDataset(IRI outputGraph) {
