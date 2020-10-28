@@ -3,7 +3,7 @@ package com.linkedpipes.plugin.transformer.sparql.update;
 public class SparqlUpdateVocabulary {
 
     private static final String PREFIX =
-            "http://plugins.linkedpipes.com/ontology/t-sparqlUpdate#";
+            "http://plugins.linkedpipes.com/ontology/t-sparqlPerGraphUpdate#";
 
     public static final String CONFIG_CLASS = PREFIX + "Configuration";
 

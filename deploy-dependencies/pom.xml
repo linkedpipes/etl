@@ -573,6 +573,12 @@
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/core/t-sparqlUpdate/</outputDirectory>
                                         </dependency>
+                                                                                <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-sparqlPerGraphUpdate</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-sparqlPerGraphUpdate/</outputDirectory>
+                                        </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-sparqlUpdateChunked</artifactId>
