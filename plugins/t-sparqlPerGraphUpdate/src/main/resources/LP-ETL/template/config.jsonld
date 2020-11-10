@@ -1,0 +1,10 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-sparqlPerGraphUpdate/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-sparqlPerGraphUpdate#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-sparqlPerGraphUpdate#query": "INSERT { ?s ?p ?o } WHERE { ?s ?p ?o }",
+        "http://plugins.linkedpipes.com/ontology/t-sparqlPerGraphUpdate#queryControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]
