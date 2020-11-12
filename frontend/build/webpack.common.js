@@ -12,7 +12,7 @@ module.exports = {
   },
   "output": {
     "path": path.join(__dirname, "..", "dist"),
-    "filename": path.join("assets", "scripts", "[name].js"),
+    "filename": "assets/scripts/[name].js",
     "publicPath": "./"
   },
   "optimization": {
@@ -20,21 +20,21 @@ module.exports = {
       "cacheGroups": {
         "angular": {
           "test": /[\\/]node_modules[\\/]angular/,
-          "filename": path.join("assets", "scripts", "[name].[chunkhash].js"),
+          "filename": "assets/scripts/[name].[chunkhash].js",
           "name": "angular",
           "chunks": "all",
           "priority": 10
         },
         "vue": {
           "test": /[\\/]node_modules[\\/]vue/,
-          "filename": path.join("assets", "scripts", "[name].[chunkhash].js"),
+          "filename": "assets/scripts/[name].[chunkhash].js",
           "name": "vue",
           "chunks": "all",
           "priority": 10
         },
         "commons": {
           "test": /[\\/]node_modules[\\/]/,
-          "filename": path.join("assets", "scripts", "[name].[chunkhash].js"),
+          "filename": "assets/scripts/[name].[chunkhash].js",
           "name": "commons",
           "chunks": "all"
         }

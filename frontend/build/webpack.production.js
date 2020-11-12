@@ -11,7 +11,7 @@ module.exports = merge(common, {
   "mode": "production",
   "devtool": "source-map",
   "output": {
-    "filename": path.join("assets", "scripts", "[name].[chunkhash].js"),
+    "filename": "assets/scripts/[name].[chunkhash].js",
   },
   "optimization": {
     "minimizer": [
@@ -39,7 +39,7 @@ module.exports = merge(common, {
   "plugins": [
     new CleanWebpackPlugin({}),
     new MiniCssExtractPlugin({
-      "filename": path.join("assets", "styles", "[name].[chunkhash].css")
+      "filename": "assets/styles/[name].[chunkhash].css"
     }),
     new CopyWebpackPlugin({
       "patterns": [

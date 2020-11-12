@@ -51,7 +51,7 @@ module.exports = merge(common, {
   "plugins": [
     new webpack.HotModuleReplacementPlugin(),
     new MiniCssExtractPlugin({
-      "filename": path.join("assets", "styles", "[name].[hash].css")
+      "filename": "assets/styles/[name].[hash].css"
     }),
   ]
 });
