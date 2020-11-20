@@ -8,6 +8,7 @@ import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.rio.WriterConfig;
 import org.eclipse.rdf4j.rio.helpers.BasicWriterSettings;
 import org.eclipse.rdf4j.rio.turtle.TurtleWriter;
+import org.rdfhdt.hdt.exceptions.ParserException;
 import org.rdfhdt.hdt.triples.TripleString;
 
 import java.io.IOException;
@@ -49,23 +50,23 @@ public class HdtTripleIterator extends TurtleWriter implements Iterator<TripleSt
         if (st == null) {
             return null;
         }
-        String subject;
-        String predicate;
-        String object;
+        TripleString result = new TripleString();
         try {
             writer.getBuffer().setLength(0);
             writeResource(st.getSubject(), false);
-            subject = extractBufferContent();
+            writer.getBuffer().append(" ");
             writeValue(st.getPredicate(), false);
-            predicate = extractBufferContent();
+            writer.getBuffer().append(" ");
             writeValue(st.getObject(), false);
-            object = extractBufferContent();
-        } catch (IOException ex) {
+            //
+            String line = extractBufferContent();
+            result.read(line);
+        } catch (IOException | ParserException ex) {
             throw new RuntimeException(
                     "Can't convert a statement. {}" + st.toString(),
                     ex);
         }
-        return new TripleString(subject, predicate, object);
+        return result;
     }
 
     private String extractBufferContent() {
