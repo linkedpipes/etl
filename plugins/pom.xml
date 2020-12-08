@@ -101,5 +101,6 @@
         <module>t-rdfToHdt</module>
         <module>t-shacl</module>
         <module>t-shacl-jena</module>
+        <module>t-rdfToJsonTemplate</module>
     </modules>
 </project>

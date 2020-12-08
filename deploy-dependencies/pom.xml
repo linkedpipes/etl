@@ -885,6 +885,12 @@
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/core/t-shacl-jena/</outputDirectory>
                                         </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-rdfToJsonTemplate</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-rdfToJsonTemplate/</outputDirectory>
+                                        </dependency>
                                     </artifactItems>
                                 </configuration>
                             </execution>

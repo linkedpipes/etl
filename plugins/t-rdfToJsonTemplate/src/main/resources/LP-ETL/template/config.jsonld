@@ -1,0 +1,10 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-rdfToJsonTemplate/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-rdfToJsonTemplate#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-rdfToJsonTemplate#simpleMapping" : "",
+        "http://plugins.linkedpipes.com/ontology/t-rdfToJsonTemplate#simpleMappingControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

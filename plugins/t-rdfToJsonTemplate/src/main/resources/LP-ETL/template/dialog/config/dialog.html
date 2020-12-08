@@ -1,0 +1,10 @@
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.simpleMapping.hide">
+        <label>Mapping definition</label>
+        <textarea ng-model="dialog.simpleMapping.value"
+               ng-disabled="dialog.simpleMapping.disabled || dialog.simpleMapping.inherit">
+        </textarea>
+    </md-input-container>
+</div>
+
