@@ -10,8 +10,50 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Stack;
 
 public class Transform {
+
+    private enum StepType {
+        Object,
+        Array,
+        Primitive,
+        Reference
+    }
+
+    private static class Step {
+
+        public final Reference reference;
+
+        public final BaseTransformation definition;
+
+        public final StepType type;
+
+        public Step(Reference reference) {
+            this.reference = reference;
+            this.definition = null;
+            this.type = StepType.Reference;
+        }
+
+        public Step(ObjectTransformation definition) {
+            this.reference = null;
+            this.definition = definition;
+            this.type = StepType.Object;
+        }
+
+        public Step(ArrayTransformation definition) {
+            this.reference = null;
+            this.definition = definition;
+            this.type = StepType.Array;
+        }
+
+        public Step(PrimitiveTransformation definition) {
+            this.reference = null;
+            this.definition = definition;
+            this.type = StepType.Primitive;
+        }
+
+    }
 
     private static final Logger LOG = LoggerFactory.getLogger(Transform.class);
 
@@ -20,6 +62,11 @@ public class Transform {
     protected final SelectorContext context;
 
     protected final Output output;
+
+    /**
+     * Store path to currently node the is currently being processed.
+     */
+    protected final Stack<Step> path = new Stack<>();
 
     public Transform(
             TransformationFile definition, SelectorContext context,
@@ -109,17 +156,30 @@ public class Transform {
             BaseTransformation definition, ReferenceSource source)
             throws OperationFailed, IOException {
         if (definition instanceof ArrayTransformation) {
-            transformArray(
-                    (ArrayTransformation) definition, source);
+            ArrayTransformation arrayDefinition =
+                    (ArrayTransformation) definition;
+            path.add(new Step(arrayDefinition));
+            transformArray(arrayDefinition, source);
+            path.pop();
         } else if (definition instanceof ObjectTransformation) {
-            transformObject(
-                    (ObjectTransformation) definition, source);
+            ObjectTransformation objectDefinition =
+                    (ObjectTransformation) definition;
+            path.add(new Step(objectDefinition));
+            transformObject(objectDefinition, source);
+            path.pop();
         } else if (definition instanceof PrimitiveTransformation) {
-            transformPrimitive(
-                    (PrimitiveTransformation) definition, source);
+            PrimitiveTransformation primitiveDefinition =
+                    (PrimitiveTransformation) definition;
+            path.add(new Step(primitiveDefinition));
+            transformPrimitive(primitiveDefinition, source);
+            path.pop();
         } else {
-            throw new OperationFailed("Unknown transformation definition.");
+            throw createError("Unknown transformation definition.");
         }
+    }
+
+    protected OperationFailed createError(String messages, Object... args) {
+        return new OperationFailed(messages, args);
     }
 
     protected void transformArray(
@@ -129,14 +189,11 @@ public class Transform {
         output.openNextArray();
         Reference next;
         while ((next = filteredSource.next()) != null) {
+            path.push(new Step(next));
             for (BaseTransformation itemDefinition : definition.items) {
-                try {
-                    transform(itemDefinition, asSource(next));
-                } catch (OperationFailed ex) {
-                    throw new OperationFailed(
-                            "Error processing: {}", next.asDebugString(), ex);
-                }
+                transform(itemDefinition, asSource(next));
             }
+            path.pop();
         }
         output.closeLastArray();
     }
@@ -187,33 +244,32 @@ public class Transform {
             return definition.defaultValue;
         }
         if (!(reference instanceof PrimitiveReference)) {
-            throw new OperationFailed("Reference must be PrimitiveReference.");
+            throw createError("Reference must be PrimitiveReference.");
         }
         String result = ((PrimitiveReference) reference).getValue();
         // Check there is no next value.
         Reference next = filteredSource.next();
         if (next != null) {
-            String content = collectToString(reference, next, filteredSource);
-            throw new OperationFailed(
-                    "Multiple values detected for primitive: " + content);
+            onMultiplePrimitiveValues(reference, next, filteredSource);
         }
         return result;
     }
 
-    protected String collectToString(
+    protected void onMultiplePrimitiveValues(
             Reference head, Reference next, ReferenceSource source)
             throws OperationFailed {
-        StringBuilder result = new StringBuilder();
-        result.append("\n  ");
-        result.append(head.asDebugString());
-        result.append("\n  ");
-        result.append(next.asDebugString());
+        StringBuilder content = new StringBuilder();
+        content.append("\n  ");
+        content.append(head.asDebugString());
+        content.append("\n  ");
+        content.append(next.asDebugString());
         Reference rest;
         while ((rest = source.next()) != null) {
-            result.append("\n  ");
-            result.append(rest.asDebugString());
+            content.append("\n  ");
+            content.append(rest.asDebugString());
         }
-        return result.toString();
+        throw createError(
+                "Multiple values detected for primitive: {}", content);
     }
 
     protected void closeSources() {

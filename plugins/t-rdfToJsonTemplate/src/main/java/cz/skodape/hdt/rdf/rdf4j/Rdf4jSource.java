@@ -111,7 +111,7 @@ public abstract class Rdf4jSource implements PropertySource {
             Rdf4jResource resourceReference, String property)
             throws OperationFailed {
         Resource graph = resourceReference.getGraph();
-        if ("@id".equals(property)) {
+        if ("@value".equals(property)) {
             String id = resourceReference.getResource().stringValue();
             return new Rdf4jArray(graph, new Rdf4jPrimitive(graph, id));
         }
