@@ -60,7 +60,8 @@ public class RdfToJsonTemplate implements Component, SequentialExecution {
         TransformationFile definition = parseDefinition();
         for (FilesDataUnit.Entry entry : inputFiles) {
             SelectorContext context = createContext(definition, entry.toFile());
-            File outputFile = outputFiles.createFile(entry.getFileName());
+            File outputFile = outputFiles.createFile(
+                    entry.getFileName() + ".json");
             try (FileOutputStream stream = new FileOutputStream(outputFile)) {
                 PrintWriter writer = new PrintWriter(
                         stream, true, StandardCharsets.UTF_8);
