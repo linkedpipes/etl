@@ -70,6 +70,7 @@
                                         </copy>
                                         <copy todir="${deploy.directory}/">
                                             <fileset file="${project.basedir}/package.json"/>
+                                            <fileset file="${project.basedir}/package.lock.json"/>
                                         </copy>
                                     </target>
                                 </configuration>
@@ -117,7 +118,7 @@
                                 <configuration>
                                     <executable>npm</executable>
                                     <arguments>
-                                        <argument>install</argument>
+                                        <argument>ci</argument>
                                         <argument>--production</argument>
                                     </arguments>
                                     <workingDirectory>
