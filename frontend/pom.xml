@@ -42,7 +42,7 @@
                         <executions>
                             <execution>
                                 <id>clean-dist</id>
-                                <phase>compile</phase>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
@@ -55,7 +55,7 @@
                             </execution>
                             <execution>
                                 <id>copy-dependencies</id>
-                                <phase>package</phase>
+                                <phase>install</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
@@ -87,7 +87,7 @@
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
-                                <phase>compile</phase>
+                                <phase>package</phase>
                                 <configuration>
                                     <executable>npm</executable>
                                     <arguments>
@@ -100,7 +100,7 @@
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
-                                <phase>compile</phase>
+                                <phase>package</phase>
                                 <configuration>
                                     <executable>npm</executable>
                                     <arguments>
@@ -114,7 +114,7 @@
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
-                                <phase>package</phase>
+                                <phase>install</phase>
                                 <configuration>
                                     <executable>npm</executable>
                                     <arguments>
