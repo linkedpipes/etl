@@ -1,6 +1,14 @@
 language: java
 jdk:
   - oraclejdk11
-  - oraclejdk13
-  - openjdk11
-  - openjdk13
+  
+env:
+  - NODE_VERSION=15.7.0
+
+script:
+  - nvm use $NODE_VERSION
+
+cache:
+  npm: true
+  directories:
+  - $HOME/.m2
