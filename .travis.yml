@@ -1,15 +1,12 @@
 os: linux
 dist: focal
+
 language: java
 jdk:
   - oraclejdk11
   
 env:
   - NODE_VERSION=15.7.0
-
-script:
-  - nvm install $NODE_VERSION
-  - nvm use $NODE_VERSION
 
 cache:
   npm: true
