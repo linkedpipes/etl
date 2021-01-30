@@ -4,9 +4,9 @@ dist: focal
 language: java
 jdk:
   - oraclejdk11
-  - oraclejdk13
+  - oraclejdk15
   - openjdk11
-  - openjdk13
+  - openjdk15
   
 env:
   - NODE_VERSION=15.7.0
