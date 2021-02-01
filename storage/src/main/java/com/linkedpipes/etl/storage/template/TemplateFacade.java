@@ -210,7 +210,6 @@ public class TemplateFacade implements TemplateSource {
         for (Template item : getAncestors(template)) {
             configurations.add(new ArrayList<>(getConfig(item)));
         }
-        Collections.reverse(configurations);
         return configurationFacade.merge(
                 configurations,
                 description,
