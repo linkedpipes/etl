@@ -4,16 +4,16 @@ define([], function () {
     const DESC = {
         "$namespace" : "http://plugins.linkedpipes.com/ontology/e-textHolder#",
         "$type": "Configuration",
+        "$options" : {
+            "$predicate": "auto",
+            "$control": "auto"
+        },
         "fileName" : {
             "$type" : "str",
-            "$property" : "fileName",
-            "$control": "fileNameControl",
             "$label" : "File name"
         },
         "content" : {
             "$type" : "str",
-            "$property" : "content",
-            "$control": "contentControl",
             "$label" : "Content"
         }
     };

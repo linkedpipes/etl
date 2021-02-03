@@ -4,40 +4,32 @@ define([], function () {
     const DESC = {
         "$namespace" : "http://plugins.linkedpipes.com/ontology/e-httpGetFile#",
         "$type": "Configuration",
+        "$options" : {
+            "$predicate": "auto",
+            "$control": "auto"
+        },
         "uri" : {
             "$type" : "str",
-            "$property" : "fileUri",
-            "$control": "fileUriControl",
             "$label" : "File URL"
         },
         "fileName" : {
             "$type" : "str",
-            "$property" : "fileName",
-            "$control": "fileNameControl",
             "$label" : "File name"
         },
         "hardRedirect" : {
             "$type" : "bool",
-            "$property" : "hardRedirect",
-            "$control": "hardRedirectControl",
             "$label" : "Force to follow redirects"
         },
         "encodeUrl" : {
             "$type" : "bool",
-            "$property" : "encodeUrl",
-            "$control": "encodeUrlControl",
             "$label" : "Encode input URL"
         },
         "userAgent" : {
             "$type" : "str",
-            "$property" : "userAgent",
-            "$control": "userAgentControl",
             "$label" : "User agent"
         },
         "utf8Redirect": {
           "$type" : "bool",
-          "$property" : "utf8Redirect",
-          "$control": "utf8RedirectControl",
           "$label" : "Use UTF-8 encoding for redirect"
         }
     };

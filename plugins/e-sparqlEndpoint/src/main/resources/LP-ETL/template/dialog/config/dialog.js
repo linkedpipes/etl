@@ -4,29 +4,25 @@ define([], function () {
     const DESC = {
         "$namespace" : "http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#",
         "$type": "Configuration",
+        "$options": {
+            "$predicate": "auto",
+            "$control": "auto"
+        },
         "query" : {
             "$type" : "str",
-            "$property" : "query",
-            "$control": "queryControl",
             "$label" : "Endpoint URL"
         },
         "endpoint" : {
             "$type" : "str",
-            "$property" : "endpoint",
-            "$control": "endpointControl",
             "$label" : "SPARQL CONSTRUCT query"
         },
         "defaultGraph" : {
             "$type": "value",
             "$array": true,
-            "$property" : "defaultGraph",
-            "$control": "defaultGraphControl",
             "$label" : "Default graph"
         },
         "headerAccept" : {
             "$type" : "str",
-            "$property" : "headerAccept",
-            "$control": "headerAcceptControl",
             "$label" : "Used MimeType"
         },
         "encodeRdf": {
@@ -99,7 +95,6 @@ define([], function () {
         }
 
         dialogManager.load();
-
     }
 
     controller.$inject = ['$scope', '$service'];
