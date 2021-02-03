@@ -79,12 +79,8 @@ router.get("/:id", function (req, res) {
 });
 
 router.put("/:id", (req, res) => {
-    let body = "";
-    req.on("data", (chunk) => body += chunk);
-    req.on("end", () => {
-        const urlSuffix = getUrlSuffixWithoutParams(req);
-        updatePipeline(res, urlSuffix, body);
-    });
+    const urlSuffix = getUrlSuffixWithoutParams(req);
+    updatePipeline(res, urlSuffix, req);
 });
 
 /**
@@ -96,16 +92,16 @@ function getUrlSuffixWithoutParams(req) {
     return urlSuffix.substring(0, argsIndex !== -1 ? argsIndex : s.length);
 }
 
-function updatePipeline(res, urlSuffix, body) {
+function updatePipeline(res, urlSuffix, bodyStream) {
     const options = {
         "url": storageApiUrl + "?iri="
         + encodeURI(config.storage.domain + urlSuffix),
         "headers": {},
         "formData": {
             "pipeline": {
-                "value": body,
+                "value": bodyStream,
                 "options": {
-                    "contentType": "application/ld+json",
+                    "contentType": "application/ld+json; charset=utf-8",
                     "filename": "pipeline.jsonld"
                 }
             }
