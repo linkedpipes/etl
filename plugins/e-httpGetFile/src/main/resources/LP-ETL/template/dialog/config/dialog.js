@@ -8,7 +8,7 @@ define([], function () {
             "$predicate": "auto",
             "$control": "auto"
         },
-        "uri" : {
+        "fileUri" : {
             "$type" : "str",
             "$label" : "File URL"
         },
