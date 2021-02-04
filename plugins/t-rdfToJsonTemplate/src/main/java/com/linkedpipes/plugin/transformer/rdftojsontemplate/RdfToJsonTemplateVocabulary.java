@@ -9,6 +9,9 @@ public final class RdfToJsonTemplateVocabulary {
 
     public static final String MAPPING = PREFIX + "simpleMapping";
 
+    public static final String MULTIPLE_PRIMITIVES =
+            PREFIX + "ignoreMultiplePrimitives";
+
     private RdfToJsonTemplateVocabulary() {
     }
 

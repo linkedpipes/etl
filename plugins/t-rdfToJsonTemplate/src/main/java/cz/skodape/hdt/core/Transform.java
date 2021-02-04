@@ -63,17 +63,22 @@ public class Transform {
 
     protected final Output output;
 
+    protected final TransformErrorHandler errorHandler;
+
     /**
      * Store path to currently node the is currently being processed.
      */
     protected final Stack<Step> path = new Stack<>();
 
     public Transform(
-            TransformationFile definition, SelectorContext context,
-            Output output) {
+            TransformationFile definition,
+            SelectorContext context,
+            Output output,
+            TransformErrorHandler errorHandler) {
         this.definition = definition;
         this.context = context;
         this.output = output;
+        this.errorHandler = errorHandler;
     }
 
     public void apply() throws OperationFailed, IOException {
@@ -113,7 +118,7 @@ public class Transform {
             transformRootObject(
                     (ObjectTransformation) definition, filteredSource);
         } else {
-            throw new OperationFailed("Unsupported root definition.");
+            errorHandler.onInvalidRoot();
         }
     }
 
@@ -174,12 +179,8 @@ public class Transform {
             transformPrimitive(primitiveDefinition, source);
             path.pop();
         } else {
-            throw createError("Unknown transformation definition.");
+            errorHandler.onUnknownTransformation();
         }
-    }
-
-    protected OperationFailed createError(String messages, Object... args) {
-        return new OperationFailed(messages, args);
     }
 
     protected void transformArray(
@@ -244,32 +245,16 @@ public class Transform {
             return definition.defaultValue;
         }
         if (!(reference instanceof PrimitiveReference)) {
-            throw createError("Reference must be PrimitiveReference.");
+            errorHandler.onReferenceAsPrimitive();
+            return null;
         }
         String result = ((PrimitiveReference) reference).getValue();
         // Check there is no next value.
         Reference next = filteredSource.next();
         if (next != null) {
-            onMultiplePrimitiveValues(reference, next, filteredSource);
+            errorHandler.onMultiplePrimitiveValues(reference, next, source);
         }
         return result;
-    }
-
-    protected void onMultiplePrimitiveValues(
-            Reference head, Reference next, ReferenceSource source)
-            throws OperationFailed {
-        StringBuilder content = new StringBuilder();
-        content.append("\n  ");
-        content.append(head.asDebugString());
-        content.append("\n  ");
-        content.append(next.asDebugString());
-        Reference rest;
-        while ((rest = source.next()) != null) {
-            content.append("\n  ");
-            content.append(rest.asDebugString());
-        }
-        throw createError(
-                "Multiple values detected for primitive: {}", content);
     }
 
     protected void closeSources() {

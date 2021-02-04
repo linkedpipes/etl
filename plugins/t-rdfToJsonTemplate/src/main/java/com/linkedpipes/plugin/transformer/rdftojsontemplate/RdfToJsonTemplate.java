@@ -66,7 +66,7 @@ public class RdfToJsonTemplate implements Component, SequentialExecution {
                 PrintWriter writer = new PrintWriter(
                         stream, true, StandardCharsets.UTF_8);
                 Output output = new JsonOutput(writer, true);
-                (new Transform(definition, context, output)).apply();
+                createTransform(definition, context, output).apply();
             } catch (IOException | OperationFailed ex) {
                 throw new LpException("Can't transform file.", ex);
             }
@@ -107,7 +107,7 @@ public class RdfToJsonTemplate implements Component, SequentialExecution {
         for (var entry : definition.sources.entrySet()) {
             SourceConfiguration sourceConfiguration =
                     updateSources(entry.getValue(), inputFile);
-            sources.put(entry.getKey(),sourceConfiguration.createSource());
+            sources.put(entry.getKey(), sourceConfiguration.createSource());
         }
         return new SelectorContext(
                 sources, sources.get(definition.propertySource));
@@ -124,12 +124,24 @@ public class RdfToJsonTemplate implements Component, SequentialExecution {
         } else if (
                 sourceConfiguration instanceof Rdf4jMemorySourceConfiguration) {
             Rdf4jMemorySourceConfiguration config =
-                    (Rdf4jMemorySourceConfiguration)sourceConfiguration;
+                    (Rdf4jMemorySourceConfiguration) sourceConfiguration;
             config.file = inputFile;
             return config;
         } else {
             throw new LpException("Unsupported source configuration.");
         }
+    }
+
+    protected Transform createTransform(
+            TransformationFile definition,
+            SelectorContext context,
+            Output output
+    ) {
+        ConfigurableErrorHandler handler = new ConfigurableErrorHandler();
+        handler.setIgnoreMultiplePrimitives(
+                configuration.isIgnoreMultiplePrimitives());
+        return new Transform(
+                definition, context, output, handler);
     }
 
 }

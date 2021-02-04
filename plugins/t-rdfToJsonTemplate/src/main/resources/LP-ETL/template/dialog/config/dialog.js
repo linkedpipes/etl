@@ -11,6 +11,10 @@ define([], function () {
         "simpleMapping": {
             "$type": "str",
             "$label": "Mapping definition"
+        },
+        "ignoreMultiplePrimitives": {
+            "$type": "bool",
+            "$label": "Ignore multiple primitives"
         }
     };
 

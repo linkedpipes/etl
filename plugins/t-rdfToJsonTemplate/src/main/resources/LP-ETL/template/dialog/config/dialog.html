@@ -1,5 +1,9 @@
 <lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
 <div>
+    <md-switch ng-model="dialog.ignoreMultiplePrimitives.value"
+               ng-disabled="dialog.ignoreMultiplePrimitives.disabled || dialog.ignoreMultiplePrimitives.inherit"
+               ng-hide="dialog.ignoreMultiplePrimitives.hide">Ignore multiple primitive values
+    </md-switch>
     <md-input-container class="md-block" ng-hide="dialog.simpleMapping.hide">
         <label>Mapping definition</label>
         <textarea ng-model="dialog.simpleMapping.value"

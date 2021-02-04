@@ -3,9 +3,17 @@
 <http://linkedpipes.com/resources/components/t-rdfToJsonTemplate/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/t-rdfToJsonTemplate#Configuration> ;
-    config:member <http://linkedpipes.com/resources/components/t-rdfToJsonTemplate/1.0.0/configuration/desc/simpleMapping> .
+    config:member <http://linkedpipes.com/resources/components/t-rdfToJsonTemplate/1.0.0/configuration/desc/simpleMapping> ,
+        <http://linkedpipes.com/resources/components/t-rdfToJsonTemplate/1.0.0/configuration/desc/ignoreMultiplePrimitives> .
 
 <http://linkedpipes.com/resources/components/t-rdfToJsonTemplate/1.0.0/configuration/desc/simpleMapping>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/t-rdfToJsonTemplate#simpleMapping> ;
     config:control <http://plugins.linkedpipes.com/ontology/t-rdfToJsonTemplate#simpleMappingControl> .
+
+<http://linkedpipes.com/resources/components/t-rdfToJsonTemplate/1.0.0/configuration/desc/ignoreMultiplePrimitives>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-rdfToJsonTemplate#ignoreMultiplePrimitives> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-rdfToJsonTemplate#ignoreMultiplePrimitivesControl> .
+
+
