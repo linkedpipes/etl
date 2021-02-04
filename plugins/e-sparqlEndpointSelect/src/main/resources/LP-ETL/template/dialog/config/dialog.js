@@ -10,11 +10,11 @@ define([], function () {
         },
         "query" : {
             "$type" : "str",
-            "$label" : "Endpoint URL"
+            "$label" : "SPARQL CONSTRUCT query"
         },
         "endpoint" : {
             "$type" : "str",
-            "$label" : "SPARQL CONSTRUCT query"
+            "$label" : "Endpoint URL"
         },
         "defaultGraph" : {
             "$type": "value",

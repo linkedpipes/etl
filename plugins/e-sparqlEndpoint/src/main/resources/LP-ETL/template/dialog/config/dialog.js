@@ -10,11 +10,11 @@ define([], function () {
         },
         "query" : {
             "$type" : "str",
-            "$label" : "Endpoint URL"
+            "$label" : "SPARQL CONSTRUCT query"
         },
         "endpoint" : {
             "$type" : "str",
-            "$label" : "SPARQL CONSTRUCT query"
+            "$label" : "Endpoint URL"
         },
         "defaultGraph" : {
             "$type": "value",
@@ -95,6 +95,7 @@ define([], function () {
         }
 
         dialogManager.load();
+        console.log("onLoad", $scope.dialog);
     }
 
     controller.$inject = ['$scope', '$service'];

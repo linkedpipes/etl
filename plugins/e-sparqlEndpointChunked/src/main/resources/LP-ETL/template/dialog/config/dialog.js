@@ -10,7 +10,7 @@ define([], function () {
         },
         "query" : {
             "$type" : "str",
-            "$label" : "Endpoint URL"
+            "$label" : "SPARQL CONSTRUCT query"
         },
         "skipOnError" : {
             "$type" : "bool",
@@ -18,7 +18,7 @@ define([], function () {
         },
         "endpoint" : {
             "$type" : "str",
-            "$label" : "SPARQL CONSTRUCT query"
+            "$label" : "Endpoint URL"
         },
         "defaultGraph" : {
             "$type": "value",
