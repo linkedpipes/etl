@@ -11,6 +11,7 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFHandler;
 import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
 
@@ -76,7 +77,7 @@ public final class RdfToFile implements Component, SequentialExecution {
         try (FileOutputStream outStream = new FileOutputStream(outputFile);
              OutputStreamWriter outWriter = new OutputStreamWriter(
                      outStream, Charset.forName(FILE_ENCODE))) {
-            RDFWriter writer = createWriter(outWriter);
+            RDFHandler writer = createWriter(outWriter);
             connection.export(writer, inputRdf.getReadGraph());
         } catch (IOException ex) {
             throw exceptionFactory.failure("Can't write data.", ex);
@@ -84,15 +85,19 @@ public final class RdfToFile implements Component, SequentialExecution {
         reportEnd();
     }
 
-    private RDFWriter createWriter(OutputStreamWriter streamWriter) {
-        RDFWriter writer = Rio.createWriter(outputFormat, streamWriter);
+    private RDFHandler createWriter(OutputStreamWriter streamWriter) {
+        RDFWriter writer;
+        if (outputFormat == RDFFormat.JSONLD) {
+            writer = new JsonLdWriter(streamWriter);
+        } else {
+            writer = Rio.createWriter(outputFormat, streamWriter);
+        }
 
         if (outputFormat.supportsContexts()) {
             writer = new ChangeContext(writer, getOutputGraph());
         }
 
         writer = new PerStatementProgressReport(writer, progressReport);
-
         return writer;
     }
 
