@@ -31,7 +31,7 @@
     "cross-env": "^7.0.2",
     "express": "^4.17.1",
     "moment": "^2.26.0",
-    "multiparty": "^4.2.1",
+    "multiparty": "^4.2.2",
     "properties-reader": "2.0.0",
     "request": "^2.88.2",
     "winston": "^3.2.1"
