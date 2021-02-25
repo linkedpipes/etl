@@ -63,7 +63,7 @@
 
 <http://expected/parent_inherit> {
 
-<http://base/1> a component:Configuration ;
+<http://localhost/instance> a component:Configuration ;
     component:first "p-1" ;
     component:firstControl config:None ;
     component:second "p-2" ;
@@ -97,7 +97,7 @@
 
 <http://expected/parent_inheritAndForce> {
 
-<http://base/1> a component:Configuration ;
+<http://localhost/instance> a component:Configuration ;
     component:first "p-1" ;
     component:firstControl config:Forced ;
     component:second "p-2" ;
@@ -127,7 +127,7 @@
 
 <http://expected/parent_noControl> {
 
-<http://base/1> a component:Configuration ;
+<http://localhost/instance> a component:Configuration ;
      component:first "c-1" ;
      component:firstControl config:None ;
      component:second "c-2" ;
@@ -161,7 +161,7 @@
 
 <http://expected/parent_none> {
 
-<http://base/1> a component:Configuration ;
+<http://localhost/instance> a component:Configuration ;
     component:first "c-1" ;
     component:firstControl config:None ;
     component:second "c-2" ;
