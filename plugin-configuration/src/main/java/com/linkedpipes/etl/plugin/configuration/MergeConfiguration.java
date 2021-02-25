@@ -231,9 +231,9 @@ public class MergeConfiguration {
                     parentResource, parentTree,
                     instanceResource, instanceTree));
         }
-        RdfUtils.updateSubject(
-                result, parentResource,
-                valueFactory.createIRI(baseIri + "/1"));
+        // Rename resource to child, so we are not left
+        // with the parent (template) IRI.
+        RdfUtils.updateSubject(result, parentResource, instanceResource);
         return result;
     }
 
