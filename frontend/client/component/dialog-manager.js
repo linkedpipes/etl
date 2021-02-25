@@ -410,7 +410,7 @@ define(["@client/app-service/jsonld/jsonld"], function (jsonld) {
      * @param template
      * @param dialog
      */
-    function merge(desc, instance, template, dialog) {
+    function mergeConfigurations(desc, instance, template, dialog) {
         // Control from instance.
         if (desc.$control !== undefined) {
             dialog.$control = {
@@ -470,7 +470,7 @@ define(["@client/app-service/jsonld/jsonld"], function (jsonld) {
         const template = {};
         loadObject(desc, templateResource, templateConfig, template);
 
-        merge(desc, instance, template, dialog);
+        mergeConfigurations(desc, instance, template, dialog);
     }
 
     /**
