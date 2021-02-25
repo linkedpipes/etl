@@ -210,7 +210,7 @@
 
 <http://localhost/pipeline/lt/configuration> {
 
-    <http://localhost/pipeline/lt/configuration/1>
+    <http://localhost/pipeline/c67542e2/configuration>
         a sparqlConstruct:Configuration ;
         sparqlConstruct:query "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}" ;
         sparqlConstruct:queryControl <http://plugins.linkedpipes.com/resource/configuration/None> .
@@ -219,7 +219,7 @@
 
 <http://localhost/pipeline/lm/configuration> {
 
-    <http://localhost/pipeline/lm/configuration/1>
+    <http://localhost/pipeline/c67542e2/configuration>
         a sparqlConstruct:Configuration ;
         sparqlConstruct:query "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}" ;
         sparqlConstruct:queryControl <http://plugins.linkedpipes.com/resource/configuration/None> .
@@ -228,7 +228,7 @@
 
 <http://localhost/pipeline/lb/configuration> {
 
-    <http://localhost/pipeline/lb/configuration/1>
+    <http://localhost/pipeline/c67542e2/configuration>
         a sparqlConstruct:Configuration ;
         sparqlConstruct:query "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}" ;
         sparqlConstruct:queryControl <http://plugins.linkedpipes.com/resource/configuration/None> .
@@ -237,7 +237,7 @@
 
 <http://localhost/pipeline/rt/configuration> {
 
-    <http://localhost/pipeline/rt/configuration/1>
+    <http://localhost/pipeline/c67542e2/configuration>
         a sparqlConstruct:Configuration ;
         sparqlConstruct:query "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}" ;
         sparqlConstruct:queryControl <http://plugins.linkedpipes.com/resource/configuration/None> .
@@ -246,7 +246,7 @@
 
 <http://localhost/pipeline/rb/configuration> {
 
-    <http://localhost/pipeline/rb/configuration/1>
+    <http://localhost/pipeline/c67542e2/configuration>
         a sparqlConstruct:Configuration ;
         sparqlConstruct:query "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}" ;
         sparqlConstruct:queryControl <http://plugins.linkedpipes.com/resource/configuration/None> .
