@@ -293,6 +293,13 @@
                                             <version>1.5.4</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
+                                        <!-- titanium-json-ld -->
+                                        <dependency>
+                                            <groupId>org.glassfish</groupId>
+                                            <artifactId>jakarta.json</artifactId>
+                                            <version>2.0.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
                                         <!-- Apache service mix. -->
                                         <dependency>
                                             <groupId>org.apache.servicemix.bundles</groupId>
@@ -738,6 +745,12 @@
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-jsonLdFormat</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-jsonLdFormat/</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-jsonLdFormatTitanium</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/core/t-jsonLdFormat/</outputDirectory>
                                         </dependency>
