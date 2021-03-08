@@ -9,6 +9,7 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonException;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonStructure;
@@ -156,19 +157,49 @@ public class TitaniumOperator {
         if (!JsonUtils.isObject(framedJson)) {
             return framedJson;
         }
-        JsonValue graph = framedJson.getValue("/@graph");
-        if (graph == null) {
-            return framedJson;
-        }
-        JsonArrayBuilder resultBuilder = Json.createArrayBuilder();
-        JsonArray graphItems;
+        JsonValue graph;
         try {
-            graphItems = graph.asJsonArray();
+            graph = framedJson.getValue("/@graph");
+        } catch (JsonException ex) {
+            // There is no @graph object.
+            return sanitizeEntityToArray((JsonObject) framedJson, context);
+        }
+        try {
+            return sanitizeGraphToArray(graph.asJsonArray(), context);
         } catch (ClassCastException ex) {
             LOG.info("Can't case @graph to array.");
             return framedJson;
         }
-        for (JsonValue graphItem : graphItems) {
+    }
+
+    /**
+     * Wrap the object in an array and replace context.
+     */
+    private JsonStructure sanitizeEntityToArray(
+            JsonObject entity, Optional<JsonValue> context) {
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder(entity);
+        setJsonLdContext(objectBuilder, context);
+        JsonArrayBuilder resultBuilder = Json.createArrayBuilder();
+        resultBuilder.add(objectBuilder.build());
+        return resultBuilder.build();
+    }
+
+    private void setJsonLdContext(
+            JsonObjectBuilder objectBuilder, Optional<JsonValue> context) {
+        if (context.isEmpty()) {
+            objectBuilder.remove("@context");
+        } else {
+            objectBuilder.add("@context", context.get());
+        }
+    }
+
+    /**
+     * Replace @graph with root array, and add context to each entity.
+     */
+    private JsonStructure sanitizeGraphToArray(
+            JsonArray graph, Optional<JsonValue> context) {
+        JsonArrayBuilder resultBuilder = Json.createArrayBuilder();
+        for (JsonValue graphItem : graph) {
             JsonObject graphItemObject;
             try {
                 graphItemObject = graphItem.asJsonObject();
@@ -177,13 +208,9 @@ public class TitaniumOperator {
                 resultBuilder.add(graphItem);
                 continue;
             }
-            if (context.isEmpty()) {
-                resultBuilder.add(graphItemObject);
-                continue;
-            }
             JsonObjectBuilder objectBuilder =
                     Json.createObjectBuilder(graphItemObject);
-            objectBuilder.add("@context", context.get());
+            setJsonLdContext(objectBuilder, context);
             resultBuilder.add(objectBuilder.build());
         }
         return resultBuilder.build();
