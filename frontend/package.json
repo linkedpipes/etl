@@ -40,7 +40,7 @@
     "@babel/core": "^7.10.2",
     "@babel/preset-env": "^7.10.2",
     "@mdi/font": "^5.3.45",
-    "@triply/yasqe": "^4.0.116",
+    "@triply/yasqe": "^4.2.7",
     "@vue/test-utils": "^1.0.3",
     "angular": "^1.7.9",
     "angular-animate": "^1.7.9",
