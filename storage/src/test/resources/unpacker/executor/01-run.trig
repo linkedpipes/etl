@@ -45,7 +45,7 @@
 
 <http://localhost/pipeline/3405c1ee/configuration> {
 
-	<http://localhost/pipeline/3405c1ee/configuration/1> a textHolder:Configuration ;
+	<http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/new/1> a textHolder:Configuration ;
 		textHolder:content "Pipeline content." ;
 		textHolder:contentControl <http://plugins.linkedpipes.com/resource/configuration/None> ;
 		textHolder:fileName "template-file-name.dat" ;

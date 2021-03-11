@@ -81,7 +81,7 @@
 
 <http://localhost/pipeline/9d21ebd5/configuration> {
 
-    <http://localhost/pipeline/9d21ebd5/configuration/1>
+    <http://localhost/pipeline/9d21ebd5/configuration>
         a textHolder:Configuration ;
         textHolder:content "<http://localhost/value> a  <http://localhost/Object> ."  ;
         textHolder:contentControl <http://plugins.linkedpipes.com/resource/configuration/None> ;
@@ -92,7 +92,7 @@
 
 <http://localhost/pipeline/c67542e2/configuration> {
 
-    <http://localhost/pipeline/c67542e2/configuration/1>
+    <http://localhost/pipeline/c67542e2/configuration>
         a sparqlConstruct:Configuration ;
         sparqlConstruct:query "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}" ;
         sparqlConstruct:queryControl <http://plugins.linkedpipes.com/resource/configuration/None> .

@@ -76,7 +76,7 @@
 
 <http://localhost/pipeline/9d21ebd5/configuration> {
 
-    <http://localhost/pipeline/9d21ebd5/configuration/1>
+    <http://localhost/pipeline/9d21ebd5/configuration>
         a textHolder:Configuration ;
         textHolder:content "<http://localhost/value> a  <http://localhost/Object> ."  ;
         textHolder:contentControl <http://plugins.linkedpipes.com/resource/configuration/None> ;
@@ -87,7 +87,7 @@
 
 <http://localhost/pipeline/b67542e2/configuration> {
 
-    <http://localhost/pipeline/b67542e2/configuration/1>
+    <http://localhost/pipeline/b67542e2/configuration>
         a filesToRdf:Configuration ;
         filesToRdf:commitSize "50000"^^<http://www.w3.org/2001/XMLSchema#integer> ;
         filesToRdf:commitSizeControl <http://plugins.linkedpipes.com/resource/configuration/None> ;
