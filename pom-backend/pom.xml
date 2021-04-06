@@ -24,7 +24,7 @@
         <logback.version>1.2.3</logback.version>
         <jackson.version>2.10.0</jackson.version>
         <springframework.version>5.2.6.RELEASE</springframework.version>
-        <rdf4j.version>3.2.3</rdf4j.version>
+        <rdf4j.version>3.6.2</rdf4j.version>
         <jetty.version>9.4.20.v20190813</jetty.version>
         <mockito.version>3.0.0</mockito.version>
         <junit.version>5.5.2</junit.version>
