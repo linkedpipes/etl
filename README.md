@@ -25,6 +25,8 @@ To start LP-ETL ```master``` branch on ```http://localhost:8080```, you can use 
 ```
 curl https://raw.githubusercontent.com/linkedpipes/etl/master/docker-compose.yml | docker-compose -f - up
 ```
+Note that on Windows, there is an [issue with buildkit](https://github.com/moby/buildkit/issues/1684).
+See the [temporary workaround](https://github.com/linkedpipes/etl/issues/851#issuecomment-814058925).
 
 Alternatively, you can clone the entire repository
 ```sh
