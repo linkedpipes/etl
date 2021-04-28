@@ -20,7 +20,7 @@
             checkstyle.xml
         </checkstyle.config.location>
         <!-- Libraries. -->
-        <rdf4j.version>3.6.2</rdf4j.version>
+        <rdf4j.version>3.6.3</rdf4j.version>
         <commons-io.version>2.7</commons-io.version>
         <commons-net.version>3.6</commons-net.version>
         <httpclient-osgi.version>4.5.2</httpclient-osgi.version>
