@@ -392,6 +392,16 @@
                 <maven.compiler.target>15</maven.compiler.target>
             </properties>
         </profile>
+        <profile>
+            <id>java-16</id>
+            <activation>
+                <jdk>16</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>16</maven.compiler.source>
+                <maven.compiler.target>16</maven.compiler.target>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
