@@ -1,0 +1,11 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-jsonLdToRdfTitanium/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-jsonLdToRdfTitanium#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-jsonLdToRdfTitanium/0.0.0/configuration/desc/softFail> .
+
+<http://linkedpipes.com/resources/components/t-jsonLdToRdfTitanium/0.0.0/configuration/desc/softFail>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-jsonLdToRdfTitanium#softFail> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-jsonLdToRdfTitanium#softFailControl> .

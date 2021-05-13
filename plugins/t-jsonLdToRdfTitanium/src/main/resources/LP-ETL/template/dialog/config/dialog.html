@@ -1,0 +1,12 @@
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
+<div>
+    <div>
+        <b>Note</b>: This component uses the <a href="https://github.com/filip26/titanium-json-ld">titanium-json-ld library</a>.
+    </div>
+    <br/>
+    <md-switch ng-model="dialog.softFail.value"
+               ng-disabled="dialog.softFail.disabled || dialog.softFail.inherit"
+               ng-hide="dialog.softFail.hide">
+        Skip file on failure
+    </md-switch>
+</div>
