@@ -1,8 +1,8 @@
 package com.linkedpipes.etl.executor.api.v1.rdf.pojo;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DescriptionTest {
 
@@ -29,19 +29,19 @@ public class DescriptionTest {
     public void simpleScan()  {
         Descriptor desc = new Descriptor(TestObject.class);
 
-        Assert.assertEquals("http://type", desc.getObjectType());
-        Assert.assertNotNull(desc.getFieldForPredicate("http://label"));
-        Assert.assertNull(desc.getFieldForResource());
+        Assertions.assertEquals("http://type", desc.getObjectType());
+        Assertions.assertNotNull(desc.getFieldForPredicate("http://label"));
+        Assertions.assertNull(desc.getFieldForResource());
     }
 
     @Test
     public void inheritanceScan() {
         Descriptor desc = new Descriptor(TestInheritance.class);
 
-        Assert.assertEquals("http://inheritance", desc.getObjectType());
-        Assert.assertNotNull(desc.getFieldForPredicate("http://name"));
-        Assert.assertNotNull(desc.getFieldForPredicate("http://label"));
-        Assert.assertNotNull(desc.getFieldForResource());
+        Assertions.assertEquals("http://inheritance", desc.getObjectType());
+        Assertions.assertNotNull(desc.getFieldForPredicate("http://name"));
+        Assertions.assertNotNull(desc.getFieldForPredicate("http://label"));
+        Assertions.assertNotNull(desc.getFieldForResource());
     }
 
 }

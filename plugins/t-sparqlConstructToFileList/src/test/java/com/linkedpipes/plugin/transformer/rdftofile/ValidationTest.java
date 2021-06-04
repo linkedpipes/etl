@@ -2,7 +2,7 @@ package com.linkedpipes.plugin.transformer.rdftofile;
 
 import com.linkedpipes.etl.test.suite.TestConfigurationDescription;
 import com.linkedpipes.plugin.transformer.sparql.constructtofilelist.SparqlConstructToFileListConfiguration;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ValidationTest {
 

@@ -2,8 +2,8 @@ package com.linkedpipes.etl.dataunit.core.pipeline;
 
 import com.linkedpipes.etl.dataunit.core.Rdf4jSource;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,11 +17,11 @@ public class PipelineModelTest {
         PipelineModel pipelineModel = new PipelineModel();
         pipelineModel.load("http://pipeline", source);
 
-        Assert.assertEquals("http://repositoryPolicy",
+        Assertions.assertEquals("http://repositoryPolicy",
                 pipelineModel.getRdfRepositoryPolicy());
-        Assert.assertEquals("http://repositoryType",
+        Assertions.assertEquals("http://repositoryType",
                 pipelineModel.getRdfRepositoryType());
-        Assert.assertEquals("http://repository",
+        Assertions.assertEquals("http://repository",
                 pipelineModel.getRdfRepository());
     }
 
@@ -32,11 +32,11 @@ public class PipelineModelTest {
         PipelineModel pipelineModel = new PipelineModel();
         pipelineModel.load("http://pipeline", source);
 
-        Assert.assertEquals(LP_PIPELINE.SINGLE_REPOSITORY,
+        Assertions.assertEquals(LP_PIPELINE.SINGLE_REPOSITORY,
                 pipelineModel.getRdfRepositoryPolicy());
-        Assert.assertEquals(LP_PIPELINE.NATIVE_STORE,
+        Assertions.assertEquals(LP_PIPELINE.NATIVE_STORE,
                 pipelineModel.getRdfRepositoryType());
-        Assert.assertNull(pipelineModel.getRdfRepository());
+        Assertions.assertNull(pipelineModel.getRdfRepository());
     }
 
     @Test
@@ -50,7 +50,7 @@ public class PipelineModelTest {
         List<String> expected = Arrays.asList(
                 "http://comp/s1/1", "http://comp/s2/1");
 
-        Assert.assertArrayEquals(actual.toArray(), expected.toArray());
+        Assertions.assertArrayEquals(actual.toArray(), expected.toArray());
     }
 
 }

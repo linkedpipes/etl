@@ -3,8 +3,8 @@ package com.linkedpipes.etl.executor.monitor.executor;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 public class CheckExecutorTest {
@@ -18,7 +18,7 @@ public class CheckExecutorTest {
         Mockito.when(client.check(executor)).thenThrow(new RuntimeException());
         (new CheckExecutor(listener, client, null)).check(executor);
         //
-        Assert.assertFalse(executor.isAlive());
+        Assertions.assertFalse(executor.isAlive());
     }
 
     @Test
@@ -31,7 +31,7 @@ public class CheckExecutorTest {
         Mockito.when(client.check(executor)).thenThrow(new RuntimeException());
         (new CheckExecutor(listener, client, null)).check(executor);
         //
-        Assert.assertFalse(executor.isAlive());
+        Assertions.assertFalse(executor.isAlive());
         Mockito.verify(listener, Mockito.times(1))
                 .onExecutorUnavailable(executor);
     }
@@ -46,7 +46,7 @@ public class CheckExecutorTest {
         Mockito.when(client.check(executor)).thenReturn(null);
         (new CheckExecutor(listener, client, null)).check(executor);
         //
-        Assert.assertTrue(executor.isAlive());
+        Assertions.assertTrue(executor.isAlive());
         Mockito.verify(listener, Mockito.times(1))
                 .onExecutorWithoutExecution(executor);
     }

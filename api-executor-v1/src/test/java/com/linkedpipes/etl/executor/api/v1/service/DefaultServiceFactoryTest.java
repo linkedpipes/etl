@@ -2,8 +2,8 @@ package com.linkedpipes.etl.executor.api.v1.service;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 public class DefaultServiceFactoryTest {
@@ -13,9 +13,8 @@ public class DefaultServiceFactoryTest {
         DefaultServiceFactory factory = new DefaultServiceFactory();
         ExceptionFactory result = (ExceptionFactory) factory.create(
                 ExceptionFactory.class, null, null, null);
-        Assert.assertNotNull(result);
-        //
-        Assert.assertNotNull(result.failure("Message"));
+        Assertions.assertNotNull(result);
+        Assertions.assertNotNull(result.failure("Message"));
     }
 
     @Test
@@ -24,7 +23,7 @@ public class DefaultServiceFactoryTest {
         DefaultServiceFactory factory = new DefaultServiceFactory();
         ProgressReport result = (ProgressReport) factory.create(
                 ProgressReport.class, null, null, context);
-        Assert.assertNotNull(result);
+        Assertions.assertNotNull(result);
         //
         result.start(2);
         result.entryProcessed();

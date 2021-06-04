@@ -20,17 +20,17 @@
             checkstyle.xml
         </checkstyle.config.location>
         <!-- Libraries. -->
-        <rdf4j.version>3.6.3</rdf4j.version>
-        <commons-io.version>2.7</commons-io.version>
-        <commons-net.version>3.6</commons-net.version>
-        <httpclient-osgi.version>4.5.2</httpclient-osgi.version>
-        <mockito.version>3.0.0</mockito.version>
-        <junit.version>5.5.2</junit.version>
-        <lp.version>0.0.0</lp.version>
-        <felix.version>1.2.10</felix.version>
-        <jackson.version>2.10.0</jackson.version>
+        <slf4j.version>1.7.30</slf4j.version>
         <logback.version>1.2.3</logback.version>
-        <slf4j.version>1.7.28</slf4j.version>
+        <jackson.version>2.12.3</jackson.version>
+        <rdf4j.version>3.7.0</rdf4j.version>
+        <mockito.version>3.11.0</mockito.version>
+        <junit.version>5.7.2</junit.version>
+        <lp.version>0.0.0</lp.version>
+        <commons-io.version>2.8.0</commons-io.version>
+        <commons-net.version>3.8.0</commons-net.version>
+        <httpclient-osgi.version>4.5.13</httpclient-osgi.version>
+        <felix.version>7.0.0</felix.version>
     </properties>
 
     <dependencyManagement>
@@ -171,7 +171,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
-                <version>${felix.version}</version>
+                <version>1.2.10</version>
             </dependency>
             <dependency>
                 <groupId>org.osgi</groupId>
@@ -199,20 +199,8 @@
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-api</artifactId>
+                <artifactId>junit-jupiter</artifactId>
                 <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency> <!-- For Legacy Support -->
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.13</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -224,14 +212,14 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>findbugs-maven-plugin</artifactId>
-                        <version>3.0.5</version>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs-maven-plugin</artifactId>
+                        <version>4.2.3</version>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <version>3.1.2</version>
                         <configuration>
                             <includeTestSourceDirectory>
                                 true
@@ -301,7 +289,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>5.1.1</version>
+                    <version>5.1.2</version>
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
@@ -315,7 +303,7 @@
                         <dependency>
                             <groupId>biz.aQute.bnd</groupId>
                             <artifactId>biz.aQute.bndlib</artifactId>
-                            <version>5.2.0</version>
+                            <version>5.3.0</version>
                         </dependency>
                     </dependencies>
                 </plugin>

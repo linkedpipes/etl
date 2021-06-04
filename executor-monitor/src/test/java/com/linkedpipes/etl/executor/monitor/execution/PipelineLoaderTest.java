@@ -7,8 +7,8 @@ import com.linkedpipes.etl.executor.monitor.TestUtils;
 import com.linkedpipes.etl.rdf4j.Statements;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class PipelineLoaderTest {
 
@@ -30,7 +30,7 @@ public class PipelineLoaderTest {
         expected.addString("http://component", SKOS.PREF_LABEL, "Component");
         //
         Statements actual = new Statements(execution.getPipelineStatements());
-        Assert.assertTrue(actual.containsAllLogMissing(expected));
+        Assertions.assertTrue(actual.containsAllLogMissing(expected));
     }
 
 }

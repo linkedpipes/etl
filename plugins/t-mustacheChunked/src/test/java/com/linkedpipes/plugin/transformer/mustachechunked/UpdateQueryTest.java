@@ -1,7 +1,7 @@
 package com.linkedpipes.plugin.transformer.mustachechunked;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -17,7 +17,8 @@ public class UpdateQueryTest {
         final String expected = "\n\n"
                 + "{{http://default/name}}\n"
                 + "{{http://localhost/local/name}}";
-        Assert.assertEquals(expected, MustacheTemplatePrefixExpander.expand(input));
+        Assertions.assertEquals(
+                expected, MustacheTemplatePrefixExpander.expand(input));
     }
 
     @Test
@@ -29,7 +30,8 @@ public class UpdateQueryTest {
         final String expected = "\n"
                 + "{{http://default/name}}\n"
                 + "{{http://localhost/local/name}}";
-        Assert.assertEquals(expected, MustacheTemplatePrefixExpander.expand(input));
+        Assertions.assertEquals(
+                expected, MustacheTemplatePrefixExpander.expand(input));
     }
 
     @Test
@@ -45,7 +47,8 @@ public class UpdateQueryTest {
         final String expected = "\n"
                 + "{{http://default/name}}\n"
                 + "{{http://localhost/local/name}}";
-        Assert.assertEquals(expected, MustacheTemplatePrefixExpander.expand(input));
+        Assertions.assertEquals(
+                expected, MustacheTemplatePrefixExpander.expand(input));
     }
 
     @Test
@@ -57,7 +60,8 @@ public class UpdateQueryTest {
         final String expected = "\n"
                 + "{{http://default/name}}\n"
                 + "{{http://localhost/local/name}}";
-        Assert.assertEquals(expected, MustacheTemplatePrefixExpander.expand(input));
+        Assertions.assertEquals(
+                expected, MustacheTemplatePrefixExpander.expand(input));
     }
 
     @Test
@@ -70,7 +74,8 @@ public class UpdateQueryTest {
         final String expected = "  \n"
                 + "{{http://default/name}}\n"
                 + "{{http://localhost/local/name}}{{noPrefix}}";
-        Assert.assertEquals(expected, MustacheTemplatePrefixExpander.expand(input));
+        Assertions.assertEquals(
+                expected, MustacheTemplatePrefixExpander.expand(input));
     }
 
 }

@@ -20,16 +20,16 @@
             ${project.basedir}/../checkstyle.xml
         </checkstyle.config.location>
         <!-- Libraries. -->
-        <slf4j.version>1.7.28</slf4j.version>
+        <slf4j.version>1.7.30</slf4j.version>
         <logback.version>1.2.3</logback.version>
-        <jackson.version>2.10.0</jackson.version>
-        <springframework.version>5.2.6.RELEASE</springframework.version>
-        <rdf4j.version>3.6.3</rdf4j.version>
-        <jetty.version>9.4.20.v20190813</jetty.version>
-        <mockito.version>3.0.0</mockito.version>
-        <junit.version>5.5.2</junit.version>
+        <jackson.version>2.12.3</jackson.version>
+        <rdf4j.version>3.7.0</rdf4j.version>
+        <mockito.version>3.11.0</mockito.version>
+        <junit.version>5.7.2</junit.version>
         <lp.version>0.0.0</lp.version>
-        <log4j-over-slf4j.version>1.7.12</log4j-over-slf4j.version>
+        <commons-io.version>2.8.0</commons-io.version>
+        <springframework.version>5.3.6</springframework.version>
+        <jetty.version>9.4.41.v20210516</jetty.version>
     </properties>
 
     <dependencies>
@@ -112,7 +112,7 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>log4j-over-slf4j</artifactId>
-                <version>${log4j-over-slf4j.version}</version>
+                <version>1.7.30</version>
             </dependency>
             <!-- Jackson. -->
             <dependency>
@@ -155,7 +155,7 @@
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>servlet-api</artifactId>
-                <version>2.5</version>
+                <version>4.0.1</version>
                 <scope>provided</scope>
             </dependency>
             <!-- Jetty. -->
@@ -183,24 +183,24 @@
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
-                <version>4.4.1</version>
+                <version>4.5.13</version>
             </dependency>
             <!-- HTTP related, particularly: Multipart file upload. -->
             <dependency>
                 <groupId>commons-fileupload</groupId>
                 <artifactId>commons-fileupload</artifactId>
-                <version>1.3.3</version>
+                <version>1.4</version>
             </dependency>
             <!-- Also used for multipart file. -->
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.4</version>
+                <version>${commons-io.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpmime</artifactId>
-                <version>4.5.1</version>
+                <version>4.5.13</version>
             </dependency>
             <!-- Utilities. -->
             <dependency>
@@ -296,20 +296,8 @@
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-api</artifactId>
+                <artifactId>junit-jupiter</artifactId>
                 <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency> <!-- For Legacy Support -->
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.13</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -323,7 +311,7 @@
                     <plugin>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs-maven-plugin</artifactId>
-                        <version>3.1.12.2</version>
+                        <version>4.2.3</version>
                         <configuration>
                             <excludeFilterFile>
                                 ${project.basedir}/../spotbugs-exclude.xml
@@ -341,7 +329,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <version>3.1.2</version>
                         <configuration>
                             <includeTestSourceDirectory>
                                 true
@@ -410,7 +398,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>5.1.1</version>
+                    <version>5.1.2</version>
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
@@ -424,7 +412,7 @@
                         <dependency>
                             <groupId>biz.aQute.bnd</groupId>
                             <artifactId>biz.aQute.bndlib</artifactId>
-                            <version>5.2.0</version>
+                            <version>5.3.0</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -434,7 +422,8 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
+                <!-- Newer versions fail with the "bundle" build target. -->
+                <version>2.18.1</version>
             </plugin>
         </plugins>
     </build>

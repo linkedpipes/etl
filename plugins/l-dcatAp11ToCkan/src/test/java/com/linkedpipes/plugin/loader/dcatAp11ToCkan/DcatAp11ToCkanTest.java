@@ -3,7 +3,7 @@ package com.linkedpipes.plugin.loader.dcatAp11ToCkan;
 import com.linkedpipes.etl.test.TestEnvironment;
 import com.linkedpipes.etl.test.TestUtils;
 import org.eclipse.rdf4j.rio.RDFFormat;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

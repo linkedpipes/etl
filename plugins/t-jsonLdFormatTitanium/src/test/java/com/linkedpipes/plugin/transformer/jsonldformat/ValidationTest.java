@@ -2,7 +2,7 @@ package com.linkedpipes.plugin.transformer.jsonldformat;
 
 import com.linkedpipes.etl.test.suite.TestConfigurationDescription;
 import com.linkedpipes.plugin.transformer.jsonldformattitanium.JsonLdFormatTitaniumConfiguration;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ValidationTest {
 

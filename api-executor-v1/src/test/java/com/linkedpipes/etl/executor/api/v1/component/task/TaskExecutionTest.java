@@ -4,11 +4,10 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.WorkingDirectory;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.MDC;
 
@@ -68,17 +67,13 @@ public class TaskExecutionTest {
 
     private File workingDirectory;
 
-    @BeforeClass
-    public static void beforeClass() {
-        MDC.setContextMap(Collections.EMPTY_MAP);
-    }
-
-    @Before
+    @BeforeAll
     public void before() throws IOException {
+        MDC.setContextMap(Collections.EMPTY_MAP);
         workingDirectory = Files.createTempDirectory("lp-test-").toFile();
     }
 
-    @After
+    @AfterAll
     public void after() {
         deleteDir(workingDirectory);
     }
@@ -107,7 +102,7 @@ public class TaskExecutionTest {
         Component.Context context = Mockito.mock(Component.Context.class);
         component.execute(context);
 
-        Assert.assertEquals(1, component.consumers.size());
+        Assertions.assertEquals(1, component.consumers.size());
         TaskConsumer<Task> consumer = component.consumers.get(0);
         Mockito.verify(consumer, Mockito.times(2)).accept(Mockito.any());
         Mockito.verify(component.report, Mockito.times(2)).onTaskFinished(
@@ -128,7 +123,7 @@ public class TaskExecutionTest {
         Component.Context context = Mockito.mock(Component.Context.class);
         component.execute(context);
 
-        Assert.assertEquals(2, component.consumers.size());
+        Assertions.assertEquals(2, component.consumers.size());
         Mockito.verify(component.report, Mockito.times(2)).onTaskFinished(
                 Mockito.any(), Mockito.any(), Mockito.any());
     }

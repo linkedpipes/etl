@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.executor.api.v1.component.task;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
@@ -34,11 +34,11 @@ public class GroupTaskSourceTest {
                 new MockedTask(null),
                 new MockedTask(null)),
                 1);
-        Assert.assertNotNull(source.getTask());
-        Assert.assertNotNull(source.getTask());
-        Assert.assertNotNull(source.getTask());
-        Assert.assertNull(source.getTask());
-        Assert.assertFalse(source.doesTaskFailed());
+        Assertions.assertNotNull(source.getTask());
+        Assertions.assertNotNull(source.getTask());
+        Assertions.assertNotNull(source.getTask());
+        Assertions.assertNull(source.getTask());
+        Assertions.assertFalse(source.doesTaskFailed());
     }
 
     @Test
@@ -47,22 +47,22 @@ public class GroupTaskSourceTest {
                 new MockedTask(1), new MockedTask(1), new MockedTask(1)), 2);
 
         MockedTask first = source.getTask();
-        Assert.assertNotNull(first);
+        Assertions.assertNotNull(first);
         MockedTask second = source.getTask();
-        Assert.assertNotNull(second);
+        Assertions.assertNotNull(second);
 
         // We can get another as 2 are running, so return one and get one.
-        Assert.assertNull(source.getTask());
+        Assertions.assertNull(source.getTask());
         source.onTaskFinished(first);
         MockedTask third = source.getTask();
-        Assert.assertNotNull(third);
-        Assert.assertNull(source.getTask());
+        Assertions.assertNotNull(third);
+        Assertions.assertNull(source.getTask());
 
         // Finish execution.
         source.onTaskFinished(second);
         source.onTaskFinished(third);
-        Assert.assertNull(source.getTask());
-        Assert.assertFalse(source.doesTaskFailed());
+        Assertions.assertNull(source.getTask());
+        Assertions.assertFalse(source.doesTaskFailed());
     }
 
     @Test
@@ -72,16 +72,16 @@ public class GroupTaskSourceTest {
         source.setSkipOnError(true);
 
         MockedTask first = source.getTask();
-        Assert.assertNotNull(first);
+        Assertions.assertNotNull(first);
 
         MockedTask second = source.getTask();
-        Assert.assertNotNull(second);
+        Assertions.assertNotNull(second);
 
         source.onTaskFailed(first);
         MockedTask third = source.getTask();
-        Assert.assertNotNull(third);
-        Assert.assertNull(source.getTask());
-        Assert.assertTrue(source.doesTaskFailed());
+        Assertions.assertNotNull(third);
+        Assertions.assertNull(source.getTask());
+        Assertions.assertTrue(source.doesTaskFailed());
     }
 
     @Test
@@ -91,16 +91,16 @@ public class GroupTaskSourceTest {
         source.setSkipOnError(false);
 
         MockedTask first = source.getTask();
-        Assert.assertNotNull(first);
+        Assertions.assertNotNull(first);
 
         MockedTask second = source.getTask();
-        Assert.assertNotNull(second);
+        Assertions.assertNotNull(second);
 
         // After failure we do not get any more tasks.
         source.onTaskFailed(first);
         source.onTaskFinished(second);
-        Assert.assertNull(source.getTask());
-        Assert.assertTrue(source.doesTaskFailed());
+        Assertions.assertNull(source.getTask());
+        Assertions.assertTrue(source.doesTaskFailed());
     }
 
 }

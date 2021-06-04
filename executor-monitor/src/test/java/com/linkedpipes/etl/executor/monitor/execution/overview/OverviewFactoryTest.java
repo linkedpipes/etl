@@ -4,8 +4,8 @@ import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionStatus;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Date;
@@ -23,10 +23,10 @@ public class OverviewFactoryTest {
         OverviewObject overview = OverviewObject.fromJson(
                 overviewFactory.createDeleted(execution, date));
         //
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 ExecutionStatus.DELETED.asStr(),
                 overview.getStatus());
-        Assert.assertEquals(date, overview.getLastChange());
+        Assertions.assertEquals(date, overview.getLastChange());
     }
 
     @Test
@@ -40,10 +40,10 @@ public class OverviewFactoryTest {
         OverviewObject overview = OverviewObject.fromJson(
                 overviewFactory.createQueued(execution));
         //
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 ExecutionStatus.QUEUED.asStr(),
                 overview.getStatus());
-        Assert.assertEquals(pipeline.stringValue(), overview.getPipeline());
+        Assertions.assertEquals(pipeline.stringValue(), overview.getPipeline());
     }
 
     @Test
@@ -56,11 +56,11 @@ public class OverviewFactoryTest {
         OverviewObject overview = OverviewObject.fromJson(
                 overviewFactory.createQueued(execution));
         //
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 ExecutionStatus.QUEUED.asStr(),
                 overview.getStatus());
-        Assert.assertNull(overview.getPipeline());
-        Assert.assertEquals(date, overview.getLastChange());
+        Assertions.assertNull(overview.getPipeline());
+        Assertions.assertEquals(date, overview.getLastChange());
     }
 
 }

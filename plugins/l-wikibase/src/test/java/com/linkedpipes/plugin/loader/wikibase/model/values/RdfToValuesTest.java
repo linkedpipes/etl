@@ -6,8 +6,8 @@ import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.wikidata.wdtk.datamodel.helpers.Datamodel;
 import org.wikidata.wdtk.datamodel.implementation.PropertyIdValueImpl;
@@ -58,10 +58,10 @@ public class RdfToValuesTest {
         EntityIdValue actual = reverse.getValue(
                 value, DatatypeIdValue.DT_ITEM);
 
-        Assert.assertEquals(expected.getEntityType(), actual.getEntityType());
-        Assert.assertEquals(expected.getId(), actual.getId());
-        Assert.assertEquals(expected.getSiteIri(), actual.getSiteIri());
-        Assert.assertEquals(expected.getIri(), actual.getIri());
+        Assertions.assertEquals(expected.getEntityType(), actual.getEntityType());
+        Assertions.assertEquals(expected.getId(), actual.getId());
+        Assertions.assertEquals(expected.getSiteIri(), actual.getSiteIri());
+        Assertions.assertEquals(expected.getIri(), actual.getIri());
     }
 
     @Test
@@ -86,10 +86,10 @@ public class RdfToValuesTest {
         EntityIdValue actual = reverse.getValue(
                 value, DatatypeIdValue.DT_PROPERTY);
 
-        Assert.assertEquals(expected.getEntityType(), actual.getEntityType());
-        Assert.assertEquals(expected.getId(), actual.getId());
-        Assert.assertEquals(expected.getSiteIri(), actual.getSiteIri());
-        Assert.assertEquals(expected.getIri(), actual.getIri());
+        Assertions.assertEquals(expected.getEntityType(), actual.getEntityType());
+        Assertions.assertEquals(expected.getId(), actual.getId());
+        Assertions.assertEquals(expected.getSiteIri(), actual.getSiteIri());
+        Assertions.assertEquals(expected.getIri(), actual.getIri());
     }
 
     @Test
@@ -113,16 +113,16 @@ public class RdfToValuesTest {
         GlobeCoordinatesValue actual = reverse.getValue(
                 value, DatatypeIdValue.DT_GLOBE_COORDINATES);
 
-        Assert.assertEquals(expected.getGlobe(), actual.getGlobe());
-        Assert.assertEquals(
+        Assertions.assertEquals(expected.getGlobe(), actual.getGlobe());
+        Assertions.assertEquals(
                 expected.getLatitude(), actual.getLatitude(), 0.001);
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 expected.getLongitude(), actual.getLongitude(), 0.001);
         // Precision is not stored.
-        Assert.assertEquals(1, actual.getPrecision(), 0.001);
+        Assertions.assertEquals(1, actual.getPrecision(), 0.001);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void globalCoordinatesConversionShort() throws IOException {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         RdfWriter writer = new RdfWriter(RDFFormat.NTRIPLES, stream);
@@ -143,12 +143,12 @@ public class RdfToValuesTest {
         GlobeCoordinatesValue actual = reverse.getValue(
                 value, DatatypeIdValue.DT_GLOBE_COORDINATES);
 
-        Assert.assertEquals(expected.getGlobe(), actual.getGlobe());
-        Assert.assertEquals(
+        Assertions.assertEquals(expected.getGlobe(), actual.getGlobe());
+        Assertions.assertEquals(
                 expected.getLatitude(), actual.getLatitude(), 0.001);
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 expected.getLongitude(), actual.getLongitude(), 0.001);
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 expected.getPrecision(), actual.getPrecision(), 0.001);
     }
 
@@ -181,12 +181,12 @@ public class RdfToValuesTest {
         RdfToGlobeCoordinatesValue reverse = new RdfToGlobeCoordinatesValue();
         GlobeCoordinatesValue actual = reverse.getValue(model, resource, null);
 
-        Assert.assertEquals(expected.getGlobe(), actual.getGlobe());
-        Assert.assertEquals(
+        Assertions.assertEquals(expected.getGlobe(), actual.getGlobe());
+        Assertions.assertEquals(
                 expected.getLatitude(), actual.getLatitude(), 0.001);
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 expected.getLongitude(), actual.getLongitude(), 0.001);
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 expected.getPrecision(), actual.getPrecision(), 0.001);
     }
 
@@ -212,8 +212,8 @@ public class RdfToValuesTest {
         MonolingualTextValue actual = reverse.getValue(
                 value, DatatypeIdValue.DT_MONOLINGUAL_TEXT);
 
-        Assert.assertEquals(expected.getLanguageCode(), actual.getLanguageCode());
-        Assert.assertEquals(expected.getText(), actual.getText());
+        Assertions.assertEquals(expected.getLanguageCode(), actual.getLanguageCode());
+        Assertions.assertEquals(expected.getText(), actual.getText());
     }
 
     @Test
@@ -237,14 +237,14 @@ public class RdfToValuesTest {
                 value, DatatypeIdValue.DT_QUANTITY);
 
         // It store only value - without bounds.
-        Assert.assertEquals(expected.getNumericValue(), actual.getLowerBound());
-        Assert.assertEquals(expected.getNumericValue(), actual.getUpperBound());
-        Assert.assertEquals(expected.getNumericValue(), actual.getNumericValue());
-        Assert.assertEquals(expected.getUnit(), actual.getUnit());
-        Assert.assertEquals(expected.getUnitItemId(), actual.getUnitItemId());
+        Assertions.assertEquals(expected.getNumericValue(), actual.getLowerBound());
+        Assertions.assertEquals(expected.getNumericValue(), actual.getUpperBound());
+        Assertions.assertEquals(expected.getNumericValue(), actual.getNumericValue());
+        Assertions.assertEquals(expected.getUnit(), actual.getUnit());
+        Assertions.assertEquals(expected.getUnitItemId(), actual.getUnitItemId());
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void quantityConversionShort() throws IOException {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         RdfWriter writer = new RdfWriter(RDFFormat.NTRIPLES, stream);
@@ -264,11 +264,16 @@ public class RdfToValuesTest {
         QuantityValue actual = reverse.getValue(
                 value, DatatypeIdValue.DT_QUANTITY);
 
-        Assert.assertEquals(expected.getLowerBound(), actual.getLowerBound());
-        Assert.assertEquals(expected.getUpperBound(), actual.getUpperBound());
-        Assert.assertEquals(expected.getNumericValue(), actual.getNumericValue());
-        Assert.assertEquals(expected.getUnit(), actual.getUnit());
-        Assert.assertEquals(expected.getUnitItemId(), actual.getUnitItemId());
+        Assertions.assertEquals(
+                expected.getLowerBound(), actual.getLowerBound());
+        Assertions.assertEquals(
+                expected.getUpperBound(), actual.getUpperBound());
+        Assertions.assertEquals(
+                expected.getNumericValue(), actual.getNumericValue());
+        Assertions.assertEquals(
+                expected.getUnit(), actual.getUnit());
+        Assertions.assertEquals(
+                expected.getUnitItemId(), actual.getUnitItemId());
     }
 
     @Test
@@ -299,11 +304,11 @@ public class RdfToValuesTest {
         RdfToQuantityValue reverse = new RdfToQuantityValue();
         QuantityValue actual = reverse.getValue(model, resource, null);
 
-        Assert.assertEquals(expected.getLowerBound(), actual.getLowerBound());
-        Assert.assertEquals(expected.getUpperBound(), actual.getUpperBound());
-        Assert.assertEquals(expected.getNumericValue(), actual.getNumericValue());
-        Assert.assertEquals(expected.getUnit(), actual.getUnit());
-        Assert.assertEquals(expected.getUnitItemId(), actual.getUnitItemId());
+        Assertions.assertEquals(expected.getLowerBound(), actual.getLowerBound());
+        Assertions.assertEquals(expected.getUpperBound(), actual.getUpperBound());
+        Assertions.assertEquals(expected.getNumericValue(), actual.getNumericValue());
+        Assertions.assertEquals(expected.getUnit(), actual.getUnit());
+        Assertions.assertEquals(expected.getUnitItemId(), actual.getUnitItemId());
     }
 
     @Test
@@ -326,7 +331,7 @@ public class RdfToValuesTest {
         StringValue actual = reverse.getValue(
                 value, DatatypeIdValue.DT_STRING);
 
-        Assert.assertEquals(expected.getString(), actual.getString());
+        Assertions.assertEquals(expected.getString(), actual.getString());
     }
 
     @Test
@@ -349,7 +354,7 @@ public class RdfToValuesTest {
         StringValue actual = reverse.getValue(
                 value, DatatypeIdValue.DT_EXTERNAL_ID);
 
-        Assert.assertEquals(expected.getString(), actual.getString());
+        Assertions.assertEquals(expected.getString(), actual.getString());
     }
 
     @Test
@@ -372,7 +377,7 @@ public class RdfToValuesTest {
         StringValue actual = reverse.getValue(
                 value, DatatypeIdValue.DT_MATH);
 
-        Assert.assertEquals(expected.getString(), actual.getString());
+        Assertions.assertEquals(expected.getString(), actual.getString());
     }
 
     @Test
@@ -397,7 +402,7 @@ public class RdfToValuesTest {
         StringValue actual = reverse.getValue(
                 value, DatatypeIdValue.DT_COMMONS_MEDIA);
 
-        Assert.assertEquals(expected.getString(), actual.getString());
+        Assertions.assertEquals(expected.getString(), actual.getString());
     }
 
     @Test
@@ -422,7 +427,7 @@ public class RdfToValuesTest {
         StringValue actual = reverse.getValue(
                 value, DatatypeIdValue.DT_URL);
 
-        Assert.assertEquals(expected.getString(), actual.getString());
+        Assertions.assertEquals(expected.getString(), actual.getString());
     }
 
     @Test
@@ -447,7 +452,7 @@ public class RdfToValuesTest {
         StringValue actual = reverse.getValue(
                 value, DatatypeIdValue.DT_GEO_SHAPE);
 
-        Assert.assertEquals(expected.getString(), actual.getString());
+        Assertions.assertEquals(expected.getString(), actual.getString());
     }
 
     @Test
@@ -472,10 +477,10 @@ public class RdfToValuesTest {
         StringValue actual = reverse.getValue(
                 value, DatatypeIdValue.DT_TABULAR_DATA);
 
-        Assert.assertEquals(expected.getString(), actual.getString());
+        Assertions.assertEquals(expected.getString(), actual.getString());
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void timeValueConversionShort() throws IOException {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         RdfWriter writer = new RdfWriter(RDFFormat.NTRIPLES, stream);
@@ -497,12 +502,12 @@ public class RdfToValuesTest {
         RdfToTimeValue reverse = new RdfToTimeValue();
         TimeValue actual = reverse.getValue(value, DatatypeIdValue.DT_TIME);
 
-        Assert.assertEquals(expected.getYear(), actual.getYear());
-        Assert.assertEquals(expected.getMonth(), actual.getMonth());
-        Assert.assertEquals(expected.getDay(), actual.getDay());
-        Assert.assertEquals(expected.getHour(), actual.getHour());
-        Assert.assertEquals(expected.getMinute(), actual.getMinute());
-        Assert.assertEquals(expected.getSecond(), actual.getSecond());
+        Assertions.assertEquals(expected.getYear(), actual.getYear());
+        Assertions.assertEquals(expected.getMonth(), actual.getMonth());
+        Assertions.assertEquals(expected.getDay(), actual.getDay());
+        Assertions.assertEquals(expected.getHour(), actual.getHour());
+        Assertions.assertEquals(expected.getMinute(), actual.getMinute());
+        Assertions.assertEquals(expected.getSecond(), actual.getSecond());
     }
 
     @Test
@@ -527,12 +532,12 @@ public class RdfToValuesTest {
         RdfToTimeValue reverse = new RdfToTimeValue();
         TimeValue actual = reverse.getValue(value, DatatypeIdValue.DT_TIME);
 
-        Assert.assertEquals(expected.getYear(), actual.getYear());
-        Assert.assertEquals(expected.getMonth(), actual.getMonth());
-        Assert.assertEquals(expected.getDay(), actual.getDay());
-        Assert.assertEquals(expected.getHour(), actual.getHour());
-        Assert.assertEquals(expected.getMinute(), actual.getMinute());
-        Assert.assertEquals(expected.getSecond(), actual.getSecond());
+        Assertions.assertEquals(expected.getYear(), actual.getYear());
+        Assertions.assertEquals(expected.getMonth(), actual.getMonth());
+        Assertions.assertEquals(expected.getDay(), actual.getDay());
+        Assertions.assertEquals(expected.getHour(), actual.getHour());
+        Assertions.assertEquals(expected.getMinute(), actual.getMinute());
+        Assertions.assertEquals(expected.getSecond(), actual.getSecond());
     }
 
     @Test
@@ -562,18 +567,18 @@ public class RdfToValuesTest {
         RdfToTimeValue reverse = new RdfToTimeValue();
         TimeValue actual = reverse.getValue(model, resource, null);
 
-        Assert.assertEquals(expected.getYear(), actual.getYear());
-        Assert.assertEquals(expected.getMonth(), actual.getMonth());
-        Assert.assertEquals(expected.getDay(), actual.getDay());
-        Assert.assertEquals(expected.getHour(), actual.getHour());
-        Assert.assertEquals(expected.getMinute(), actual.getMinute());
-        Assert.assertEquals(expected.getSecond(), actual.getSecond());
-        Assert.assertEquals(expected.getPrecision(), actual.getPrecision());
-        Assert.assertEquals(expected.getPreferredCalendarModel(),
+        Assertions.assertEquals(expected.getYear(), actual.getYear());
+        Assertions.assertEquals(expected.getMonth(), actual.getMonth());
+        Assertions.assertEquals(expected.getDay(), actual.getDay());
+        Assertions.assertEquals(expected.getHour(), actual.getHour());
+        Assertions.assertEquals(expected.getMinute(), actual.getMinute());
+        Assertions.assertEquals(expected.getSecond(), actual.getSecond());
+        Assertions.assertEquals(expected.getPrecision(), actual.getPrecision());
+        Assertions.assertEquals(expected.getPreferredCalendarModel(),
                 actual.getPreferredCalendarModel());
-        Assert.assertEquals(expected.getPreferredCalendarModelItemId(),
+        Assertions.assertEquals(expected.getPreferredCalendarModelItemId(),
                 actual.getPreferredCalendarModelItemId());
-        Assert.assertEquals(expected.getTimezoneOffset(),
+        Assertions.assertEquals(expected.getTimezoneOffset(),
                 actual.getTimezoneOffset());
     }
 

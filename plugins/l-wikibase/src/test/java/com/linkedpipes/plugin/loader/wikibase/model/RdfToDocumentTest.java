@@ -6,9 +6,9 @@ import com.linkedpipes.etl.test.TestUtils;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -44,7 +44,7 @@ public class RdfToDocumentTest {
     public static PropertyRegister register =
             Mockito.mock(PropertyRegister.class);
 
-    @BeforeClass
+    @BeforeAll
     public static void onBefore() {
         String prefix = "https://wikibase.opendata.cz/prop/";
         String prefixWiki = "http://www.wikidata.org/prop/";
@@ -146,10 +146,10 @@ public class RdfToDocumentTest {
                 model, "https://wikibase.opendata.cz/entity/Q2077");
 
         List<Statement> statements = asList(document.getAllStatements());
-        Assert.assertEquals(1, statements.size());
+        Assertions.assertEquals(1, statements.size());
         Statement statement = statements.get(0);
 
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 Datamodel.makeStringValue("103064"),
                 statement.getValue());
     }
@@ -178,19 +178,19 @@ public class RdfToDocumentTest {
                 model, "urn:NewItem");
 
         List<Statement> statements = asList(document.getAllStatements());
-        Assert.assertEquals(1, statements.size());
+        Assertions.assertEquals(1, statements.size());
         Statement statement = statements.get(0);
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 Datamodel.makeTimeValue(
                         1990, (byte) 11, (byte) 1,
                         "http://www.wikidata.org/entity/Q1985727"),
                 statement.getValue());
 
         List<Snak> qualifiers = asList(statement.getAllQualifiers());
-        Assert.assertEquals(1, qualifiers.size());
+        Assertions.assertEquals(1, qualifiers.size());
         ValueSnak qualifier = (ValueSnak) qualifiers.get(0);
-        Assert.assertEquals(qualifier.getPropertyId().getId(), "P11");
-        Assert.assertEquals(
+        Assertions.assertEquals(qualifier.getPropertyId().getId(), "P11");
+        Assertions.assertEquals(
                 Datamodel.makeTimeValue(
                         2020, (byte) 1, (byte) 1,
                         "http://www.wikidata.org/entity/Q1985727"),
@@ -206,9 +206,9 @@ public class RdfToDocumentTest {
                 model, "urn:NewItem");
 
         List<Statement> statements = asList(document.getAllStatements());
-        Assert.assertEquals(1, statements.size());
+        Assertions.assertEquals(1, statements.size());
         Statement statement = statements.get(0);
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 null,
                 statement.getValue());
     }
@@ -222,9 +222,9 @@ public class RdfToDocumentTest {
                 model, "urn:NewItem");
 
         List<Statement> statements = asList(document.getAllStatements());
-        Assert.assertEquals(1, statements.size());
+        Assertions.assertEquals(1, statements.size());
         Statement statement = statements.get(0);
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 Datamodel.makeQuantityValue(
                         BigDecimal.valueOf(362.0),
                         BigDecimal.valueOf(362.0),
@@ -233,10 +233,10 @@ public class RdfToDocumentTest {
                 statement.getValue());
 
         List<Snak> qualifiers = asList(statement.getAllQualifiers());
-        Assert.assertEquals(1, qualifiers.size());
+        Assertions.assertEquals(1, qualifiers.size());
         ValueSnak qualifier = (ValueSnak) qualifiers.get(0);
-        Assert.assertEquals(qualifier.getPropertyId().getId(), "P8");
-        Assert.assertEquals(
+        Assertions.assertEquals(qualifier.getPropertyId().getId(), "P8");
+        Assertions.assertEquals(
                 Datamodel.makeQuantityValue(
                         BigDecimal.valueOf(3.62),
                         BigDecimal.valueOf(3.62),
@@ -254,9 +254,9 @@ public class RdfToDocumentTest {
                 model, "urn:NewItem");
 
         List<Statement> statements = asList(document.getAllStatements());
-        Assert.assertEquals(1, statements.size());
+        Assertions.assertEquals(1, statements.size());
         Statement statement = statements.get(0);
-        Assert.assertTrue(statement.getMainSnak() instanceof SomeValueSnak);
+        Assertions.assertTrue(statement.getMainSnak() instanceof SomeValueSnak);
     }
 
     @Test
@@ -268,19 +268,19 @@ public class RdfToDocumentTest {
                 model, "urn:NewItem");
 
         List<Statement> statements = asList(document.getAllStatements());
-        Assert.assertEquals(1, statements.size());
+        Assertions.assertEquals(1, statements.size());
         Statement statement = statements.get(0);
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 Datamodel.makeGlobeCoordinatesValue(
                         12.933333333333, 35.3, 0.000277778,
                         "http://www.wikidata.org/entity/Q2"),
                 statement.getValue());
 
         List<Snak> qualifiers = asList(statement.getAllQualifiers());
-        Assert.assertEquals(1, qualifiers.size());
+        Assertions.assertEquals(1, qualifiers.size());
         ValueSnak qualifier = (ValueSnak) qualifiers.get(0);
-        Assert.assertEquals(qualifier.getPropertyId().getId(), "P12");
-        Assert.assertEquals(
+        Assertions.assertEquals(qualifier.getPropertyId().getId(), "P12");
+        Assertions.assertEquals(
                 Datamodel.makeGlobeCoordinatesValue(
                         50.675546897005, 15.538850308905, 0.000001,
                         "http://www.wikidata.org/entity/Q2"),
@@ -296,9 +296,9 @@ public class RdfToDocumentTest {
                 model, "urn:NewItem");
 
         List<Statement> statements = asList(document.getAllStatements());
-        Assert.assertEquals(1, statements.size());
+        Assertions.assertEquals(1, statements.size());
         Statement statement = statements.get(0);
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 Datamodel.makeQuantityValue(
                         BigDecimal.valueOf(362.0),
                         BigDecimal.valueOf(362.0),
@@ -307,12 +307,12 @@ public class RdfToDocumentTest {
                 statement.getValue());
 
         List<Reference> references = statement.getReferences();
-        Assert.assertEquals(1, references.size());
+        Assertions.assertEquals(1, references.size());
         Reference reference = references.get(0);
         List<Snak> refs = asList(reference.getAllSnaks());
-        Assert.assertEquals(1, refs.size());
+        Assertions.assertEquals(1, refs.size());
 
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 Datamodel.makeQuantityValue(
                         BigDecimal.valueOf(3.62),
                         BigDecimal.valueOf(3.62),
@@ -330,23 +330,23 @@ public class RdfToDocumentTest {
                 model, "http://www.wikidata.org/entity/Q10768607");
 
         List<Statement> statements = asList(document.getAllStatements());
-        Assert.assertEquals(1, statements.size());
+        Assertions.assertEquals(1, statements.size());
         Statement statement = statements.get(0);
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 Datamodel.makeItemIdValue(
                         "Q811534", "http://www.wikidata.org/entity/"),
                 statement.getValue());
 
-        Assert.assertEquals(1, statement.getReferences().size());
+        Assertions.assertEquals(1, statement.getReferences().size());
         Snak reference = statement.getReferences().get(0).getAllSnaks().next();
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 Datamodel.makeItemIdValue(
                         "Q26778346", "http://www.wikidata.org/entity/"),
                 ((ValueSnak) reference).getValue());
 
-        Assert.assertEquals(1, statement.getQualifiers().size());
+        Assertions.assertEquals(1, statement.getQualifiers().size());
         Snak qualifier = asList(statement.getAllQualifiers()).get(0);
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 Datamodel.makeTimeValue(
                         1985, (byte) 11, (byte) 21, (byte) 0, (byte) 0, (byte) 0,
                         (byte) 11, 0, 0, 0,
@@ -370,7 +370,7 @@ public class RdfToDocumentTest {
                 model, "http://www.wikidata.org/entity/Q10768607");
         // Assert also count revision which we can not load from RDF.
         // Also some references are missing in RDF.
-//        Assert.assertEquals(expected, actual);
+//        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -401,7 +401,7 @@ public class RdfToDocumentTest {
                 model, "http://www.wikidata.org/entity/Q10768607");
         // Assert also count revision which we can not load from RDF.
         // Also some references are missing in RDF.
-//        Assert.assertEquals(expected, actual);
+//        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -412,20 +412,20 @@ public class RdfToDocumentTest {
         ItemDocument document = rdfToDocument.loadItemDocument(
                 model, "urn:item");
         //
-        Assert.assertEquals(1, document.getLabels().size());
+        Assertions.assertEquals(1, document.getLabels().size());
         List<Statement> statements = asList(document.getAllStatements());
-        Assert.assertEquals(1, statements.size());
+        Assertions.assertEquals(1, statements.size());
         Statement statement = statements.get(0);
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 Datamodel.makeGlobeCoordinatesValue(
                         28, 20, 0.000277778,
                         "http://www.wikidata.org/entity/Q2"),
                 statement.getValue());
         List<Snak> qualifiers = asList(statement.getAllQualifiers());
-        Assert.assertEquals(1, qualifiers.size());
+        Assertions.assertEquals(1, qualifiers.size());
         ValueSnak qualifier = (ValueSnak) qualifiers.get(0);
-        Assert.assertEquals(qualifier.getPropertyId().getId(), "P19");
-        Assert.assertEquals(
+        Assertions.assertEquals(qualifier.getPropertyId().getId(), "P19");
+        Assertions.assertEquals(
                 Datamodel.makeItemIdValue(
                         "Q2212", "https://wikibase.opendata.cz/entity/"),
                 qualifier.getValue());

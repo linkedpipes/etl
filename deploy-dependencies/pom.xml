@@ -177,7 +177,7 @@
                                         <dependency>
                                             <groupId>org.apache.commons</groupId>
                                             <artifactId>commons-lang3</artifactId>
-                                            <version>3.11</version>
+                                            <version>3.12.0</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
@@ -325,7 +325,6 @@
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>dataunit-core</artifactId>
-                                            <version>${lp.version}</version>
                                             <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
                                         </dependency>
                                         <!-- LinkedPipes Libraries -->

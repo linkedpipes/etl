@@ -1,8 +1,8 @@
 package com.linkedpipes.etl.executor.api.v1.rdf.pojo;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 
@@ -39,11 +39,13 @@ public class FieldUtilsTest {
         FieldUtils.setValue(entity, field, "string");
     }
 
-    @Test(expected = RdfException.class)
+    @Test
     public void setFailed() throws Exception {
         TestClass entity = new TestClass();
         Field field = TestClass.class.getDeclaredField("inaccessible");
-        FieldUtils.setValue(entity, field, "string");
+        Assertions.assertThrows(RdfException.class, () -> {
+            FieldUtils.setValue(entity, field, "string");
+        });
     }
 
     @Test
@@ -52,7 +54,7 @@ public class FieldUtilsTest {
         entity.publicValue = "value";
         Field field = TestClass.class.getDeclaredField("publicValue");
         String actualValue = (String)FieldUtils.getValue(entity, field);
-        Assert.assertEquals(entity.publicValue, actualValue);
+        Assertions.assertEquals(entity.publicValue, actualValue);
     }
 
     @Test
@@ -62,14 +64,16 @@ public class FieldUtilsTest {
         Field field = TestClass.class.getDeclaredField("protectedValue");
         FieldUtils.getValue(entity, field);
         String actualValue = (String)FieldUtils.getValue(entity, field);
-        Assert.assertEquals(entity.getProtectedValue(), actualValue);
+        Assertions.assertEquals(entity.getProtectedValue(), actualValue);
     }
 
-    @Test(expected = RdfException.class)
+    @Test
     public void getFailed() throws Exception {
         TestClass entity = new TestClass();
         Field field = TestClass.class.getDeclaredField("inaccessible");
-        FieldUtils.getValue(entity, field);
+        Assertions.assertThrows(RdfException.class, () -> {
+            FieldUtils.getValue(entity, field);
+        });
     }
 
 }
