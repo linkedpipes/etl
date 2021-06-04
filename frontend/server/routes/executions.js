@@ -16,13 +16,29 @@ router.get("", (req, res) => {
   if (req.query["changedSince"]) {
     uri += "changedSince=" + req.query["changedSince"];
   }
-  pipeGet(uri, res);
+  pipeGet(uri, req.headers, res);
 });
 
-function pipeGet(uri, res) {
-  request.get(uri)
+function pipeGet(uri, headers, res) {
+  const options = {
+    "url": uri,
+    "headers": updateHeaders(headers),
+  };
+  request.get(options)
     .on("error", (error) => handleConnectionError(res, error))
     .pipe(res);
+}
+
+function updateHeaders(headers) {
+  // We use json-ld as default to make it easy to see pipelines from
+  // browsers.
+  if (headers.accept === "*/*") {
+    return {
+      ...headers,
+      "accept": "application/ld+json"
+    }
+  }
+  return headers;
 }
 
 function handleConnectionError(res, error) {
@@ -37,7 +53,7 @@ function handleConnectionError(res, error) {
 
 router.get("/:id", (req, res) => {
   const uri = monitorApiUrl + "/" + req.params["id"];
-  pipeGet(uri, res);
+  pipeGet(uri, req.headers, res);
 });
 
 router.post("/:id/cancel", (req, res) => {
@@ -56,17 +72,17 @@ router.delete("/:id", (req, res) => {
 
 router.get("/:id/pipeline", (req, res) => {
   const uri = monitorApiUrl + "/" + req.params["id"] + "/pipeline";
-  pipeGet(uri, res);
+  pipeGet(uri, req.headers, res);
 });
 
 router.get("/:id/overview", (req, res) => {
   const uri = monitorApiUrl + "/" + req.params["id"] + "/overview";
-  pipeGet(uri, res);
+  pipeGet(uri, req.headers, res);
 });
 
 router.get("/:id/logs", (req, res) => {
   const uri = monitorApiUrl + "/" + req.params["id"] + "/logs";
-  pipeGet(uri, res);
+  pipeGet(uri, req.headers, res);
 });
 
 router.get("/:id/logs-tail", (req, res) => {
@@ -74,14 +90,14 @@ router.get("/:id/logs-tail", (req, res) => {
   if (req.query["n"] !== undefined) {
     uri += "?n=" + req.query["n"];
   }
-  pipeGet(uri, res);
+  pipeGet(uri, req.headers, res);
 });
 
 router.get("/:id/messages/component", (req, res) => {
   const uri =
     monitorApiUrl + "/" + req.params["id"] +
     "/messages/component?iri=" + encodeURIComponent(req.query["iri"]);
-  pipeGet(uri, res);
+  pipeGet(uri, req.headers, res);
 });
 
 router.post('', (req, res) => {

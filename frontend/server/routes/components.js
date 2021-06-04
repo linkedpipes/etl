@@ -12,14 +12,24 @@ const storageApiUrlPrefix = config.storage.url + "/api/v1/components";
 router.get("", (req, res) => {
   const options = {
     "url": storageApiUrlPrefix + "/list",
-    "headers": {
-      "Accept": "application/ld+json"
-    }
+    "headers": updateHeaders(req.headers),
   };
   request.get(options)
     .on("error", (error) => handleConnectionError(res, error))
     .pipe(res);
 });
+
+function updateHeaders(headers) {
+  // We use json-ld as default to make it easy to see pipelines from
+  // browsers.
+  if (headers.accept === "*/*") {
+    return {
+      ...headers,
+      "accept": "application/ld+json"
+    }
+  }
+  return headers;
+}
 
 function handleConnectionError(res, error) {
   console.error("Request failed:\n", error);
@@ -35,9 +45,7 @@ router.get("/definition", (req, res) => {
   const options = {
     "url": config.storage.url +
     "/api/v1/components/definition?iri=" + req.query.iri,
-    "headers": {
-      "Accept": "application/ld+json"
-    }
+    "headers": updateHeaders(req.headers),
   };
   request.get(options)
     .on("error", (error) => handleConnectionError(res, error))
