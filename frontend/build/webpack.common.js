@@ -2,7 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 const {VueLoaderPlugin} = require("vue-loader");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const GitRevisionPlugin = require("git-revision-webpack-plugin");
+const {GitRevisionPlugin} = require("git-revision-webpack-plugin");
 const gitRevisionPlugin = new GitRevisionPlugin();
 
 module.exports = {
