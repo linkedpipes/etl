@@ -167,7 +167,13 @@
   function loadLocal($http, iri) {
     const serviceUrl =
       iri + "&templates=false&mappings=false&removePrivateConfig=false";
-    return $http.get(serviceUrl).then(response => response.data);
+    return $http({
+      "method": "GET",
+      "url": serviceUrl,
+      "headers": {
+        "Accept": "application/ld+json",
+      },
+    }).then(response => response.data);
   }
 
   function deletePipeline($http, iri) {
@@ -182,7 +188,10 @@
       "method": "PUT",
       "url": iri,
       "params": {"unchecked": unchecked},
-      "headers": {"Content-Type": "application/json"},
+      "headers": {
+        "Content-Type": "application/json",
+        "Accept": "application/ld+json",
+      },
       "data": jsonld
     });
   }

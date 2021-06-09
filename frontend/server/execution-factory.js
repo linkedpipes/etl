@@ -67,12 +67,15 @@ function createFromNonMultipartRequest(req, res) {
         "url": monitorApiUrl,
         "formData": formData,
         "headers": {
-          "Accept": "application/json"
+          "Accept": "application/ld+json"
         }
       };
       request.post(options)
         .on("error", (error) => handleConnectionError(res, error))
-        .on("response", () => console.timeEnd("[POST] /executions"))
+        .on("response", (response) => {
+          console.timeEnd("[POST] /executions");
+          console.log("response", response.statusCode, response.headers);
+        })
         .pipe(res);
     });
   });

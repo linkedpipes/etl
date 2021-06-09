@@ -46,8 +46,8 @@ define([
     } else {
       _status.loading = true;
     }
-
-    $http.get("resources/pipelines/info").then(function (response) {
+    const options = {"headers": {"Accept": "application/ld+json"}};
+    $http.get("resources/pipelines/info", options).then(function (response) {
       const parsedResponse = jsonldToJson(
         response.data, INFO_TYPE, INFO_TEMPLATE)[0];
       if (Array.isArray(parsedResponse.tags)) {
