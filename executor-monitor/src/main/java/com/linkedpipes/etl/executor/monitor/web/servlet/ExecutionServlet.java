@@ -184,7 +184,8 @@ public class ExecutionServlet {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public PostCreateExecutionHandler.Response createExecution(
             @RequestParam("pipeline") MultipartFile pipeline,
-            @RequestParam("input") List<MultipartFile> inputs)
+            @RequestParam(value = "input", required = false) List<MultipartFile> inputs
+    )
             throws MonitorException {
         PostCreateExecutionHandler handler = new PostCreateExecutionHandler(
                 this.executions, this.executor);
