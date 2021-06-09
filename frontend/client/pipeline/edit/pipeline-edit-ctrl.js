@@ -18,8 +18,6 @@
 
     $scope.onPipelineDetail = $service.onPipelineDetail;
 
-    $scope.onOpenMenu = ($mdOpenMenu, event) => $mdOpenMenu(event);
-
     $scope.onDisableAllLoaders = $service.onDisableAllLoaders;
 
     $scope.onEnableAllLoaders = $service.onEnableAllLoaders;

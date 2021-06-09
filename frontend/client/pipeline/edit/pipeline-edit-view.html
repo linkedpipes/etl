@@ -20,7 +20,7 @@
 
     <md-menu style="padding-top: 4px;padding-bottom: 4px" ng-show="isEditMode">
       <md-button class="md-icon-button"
-                 ng-click="onOpenMenu($mdOpenMenu, $event)">
+                 ng-click="$mdMenu.open($event)">
         <md-icon md-menu-origin class="material-icons lp-icon">
           settings
         </md-icon>
@@ -43,7 +43,7 @@
 
     <md-menu style="padding-top: 4px;padding-bottom: 4px" ng-show="!isEditMode">
       <md-button class="md-icon-button"
-                 ng-click="onOpenMenu($mdOpenMenu, $event)">
+                 ng-click="$mdMenu.open($event)">
         <md-icon md-menu-origin class="material-icons">more_vert</md-icon>
       </md-button>
       <md-menu-content width="3">
@@ -72,7 +72,7 @@
 
     <md-menu style="padding-top: 4px;padding-bottom: 4px" ng-show="isEditMode">
       <md-button class="md-icon-button"
-                 ng-click="onOpenMenu($mdOpenMenu, $event)">
+                 ng-click="$mdMenu.open($event)">
         <md-icon md-menu-origin class="material-icons">more_vert</md-icon>
       </md-button>
       <md-menu-content width="3">
