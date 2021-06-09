@@ -8,7 +8,7 @@
     "dev": "cross-env configFileLocation=../deploy/configuration.properties node ./server/server.develop.js",
     "pretest": "eslint --ext .js,.vue --ignore-path .gitignore . --fix",
     "test": "jest",
-    "build": "cross-env NODE_ENV=production webpack --config build/webpack.production.js",
+    "build": "cross-env NODE_ENV=production NODE_OPTIONS='--max-old-space-size=2048' webpack --config build/webpack.production.js",
     "start": "node server/server.production.js"
   },
   "jest": {
