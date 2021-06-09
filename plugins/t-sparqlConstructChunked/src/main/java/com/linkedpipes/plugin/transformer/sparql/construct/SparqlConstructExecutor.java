@@ -54,7 +54,7 @@ class SparqlConstructExecutor implements Runnable {
                 if (!executeTask()) {
                     break;
                 }
-            } catch (Exception ex) {
+            } catch (Throwable ex) {
                 LOG.error("Transformation failed for: {}", this.chunk, ex);
                 if (!this.isSoftFail) {
                     failed = true;
