@@ -71,7 +71,6 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>frontend</module>
                 <module>pom-backend</module>
                 <module>pom-plugin</module>
                 <module>plugin-libraries</module>
@@ -88,6 +87,7 @@
                 <module>test-environment</module>
                 <module>plugins</module>
                 <module>deploy-dependencies</module>
+                <module>frontend</module>
             </modules>
         </profile>
     </profiles>
