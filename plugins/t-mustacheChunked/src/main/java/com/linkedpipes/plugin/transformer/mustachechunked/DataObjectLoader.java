@@ -21,10 +21,14 @@ class DataObjectLoader {
 
     private final boolean includeFirstFlag;
 
-
     private Map<Resource, ObjectDataHolder> objectsInfo = new HashMap<>();
 
     private Map<Resource, Map<IRI, List<Value>>> objects = new HashMap<>();
+
+    /**
+     * Cache for building projects to handle cycles.
+     */
+    private Map<Resource, Map<String, Object>> buildCache = new HashMap<>();
 
     private EscapeForJson escapeForJson;
 
@@ -38,8 +42,7 @@ class DataObjectLoader {
 
     }
 
-    public List<ObjectDataHolder> loadData(Collection<Statement> statements)
-            throws LpException {
+    public List<ObjectDataHolder> loadData(Collection<Statement> statements) {
         objectsInfo = new HashMap<>();
         objects = new HashMap<>();
         for (Statement statement : statements) {
@@ -113,14 +116,24 @@ class DataObjectLoader {
     }
 
     private Map<String, Object> buildEmptyDataObject(Resource resource) {
+        if (buildCache.containsKey(resource)) {
+            return buildCache.get(resource);
+        }
         Map<String, Object> result = new HashMap<>();
+        buildCache.put(resource, result);
+        //
         result.put("@id", escapeString(resource.stringValue()));
         return result;
     }
 
-    private Map<String, Object> buildNonEmptyDataObject(Resource resource,
-                                                        Map<IRI, List<Value>> objectData) {
+    private Map<String, Object> buildNonEmptyDataObject(
+            Resource resource, Map<IRI, List<Value>> objectData) {
+        if (buildCache.containsKey(resource)) {
+            return buildCache.get(resource);
+        }
         Map<String, Object> result = new HashMap<>();
+        buildCache.put(resource, result);
+        //
         result.put("@id", escapeString(resource.stringValue()));
         for (Map.Entry<IRI, List<Value>> entry : objectData.entrySet()) {
             if (entry.getValue().isEmpty()) {
@@ -134,7 +147,6 @@ class DataObjectLoader {
         }
         return result;
     }
-
     private String escapeString(String string) {
         if (escapeForJson == null) {
             return string;

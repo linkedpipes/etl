@@ -27,15 +27,22 @@ class DataObjectLoader {
 
     private final boolean includeFirstFlag;
 
-
     private Map<Resource, ObjectDataHolder> objectsInfo = new HashMap<>();
 
+    /**
+     * For each object we store it's properties.
+     */
     private Map<Resource, Map<IRI, List<Value>>> objects = new HashMap<>();
+
+    /**
+     * Cache for building projects to handle cycles.
+     */
+    private Map<Resource, Map<String, Object>> buildCache = new HashMap<>();
 
     private EscapeForJson escapeForJson;
 
-    public DataObjectLoader(SingleGraphDataUnit dataUnit,
-                            MustacheConfiguration configuration) {
+    public DataObjectLoader(
+            SingleGraphDataUnit dataUnit, MustacheConfiguration configuration) {
         repository = dataUnit.getRepository();
         graph = dataUnit.getReadGraph();
         objectClass = SimpleValueFactory.getInstance().createIRI(
@@ -48,22 +55,22 @@ class DataObjectLoader {
     }
 
     public List<ObjectDataHolder> loadData() {
-        try (RepositoryConnection connection = repository.getConnection()) {
-            try (RepositoryResult<Statement> result
-                         = connection.getStatements(null, null, null, graph)) {
-                parseStatements(result);
-            }
-        }
+        collectStatementsToObjects();
         return buildObjectHolderList();
     }
 
-    private void parseStatements(RepositoryResult<Statement> statements) {
-        while (statements.hasNext()) {
-            parseStatement(statements.next());
+    private void collectStatementsToObjects() {
+        try (RepositoryConnection connection = repository.getConnection()) {
+            try (RepositoryResult<Statement> statements
+                         = connection.getStatements(null, null, null, graph)) {
+                while (statements.hasNext()) {
+                    addStatementToObjects(statements.next());
+                }
+            }
         }
     }
 
-    private void parseStatement(Statement st) {
+    private void addStatementToObjects(Statement st) {
         Resource resource = st.getSubject();
         switch (st.getPredicate().stringValue()) {
             case "http://www.w3.org/1999/02/22-rdf-syntax-ns#type":
@@ -128,14 +135,24 @@ class DataObjectLoader {
     }
 
     private Map<String, Object> buildEmptyDataObject(Resource resource) {
+        if (buildCache.containsKey(resource)) {
+            return buildCache.get(resource);
+        }
         Map<String, Object> result = new HashMap<>();
+        buildCache.put(resource, result);
+        //
         result.put("@id", escapeString(resource.stringValue()));
         return result;
     }
 
-    private Map<String, Object> buildNonEmptyDataObject(Resource resource,
-                                                        Map<IRI, List<Value>> objectData) {
+    private Map<String, Object> buildNonEmptyDataObject(
+            Resource resource, Map<IRI, List<Value>> objectData) {
+        if (buildCache.containsKey(resource)) {
+            return buildCache.get(resource);
+        }
         Map<String, Object> result = new HashMap<>();
+        buildCache.put(resource, result);
+        //
         result.put("@id", escapeString(resource.stringValue()));
         for (Map.Entry<IRI, List<Value>> entry : objectData.entrySet()) {
             if (entry.getValue().isEmpty()) {
