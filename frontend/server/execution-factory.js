@@ -72,10 +72,7 @@ function createFromNonMultipartRequest(req, res) {
       };
       request.post(options)
         .on("error", (error) => handleConnectionError(res, error))
-        .on("response", (response) => {
-          console.timeEnd("[POST] /executions");
-          console.log("response", response.statusCode, response.headers);
-        })
+        .on("response", () => console.timeEnd("[POST] /executions"))
         .pipe(res);
     });
   });
