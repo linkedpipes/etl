@@ -104,6 +104,7 @@
                                 <configuration>
                                     <executable>npm</executable>
                                     <arguments>
+                                        <argument>--max-old-space-size=2048</argument>
                                         <argument>run</argument>
                                         <argument>build</argument>
                                     </arguments>
