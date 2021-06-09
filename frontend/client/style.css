@@ -1,14 +1,7 @@
-/*
-Wrap content of a notifications.
-*/
 
 .ui-notification>.message {
     word-break: break-word;
 }
-
-/*
-Custom style for icons, used mainly in application lists. Designed to make it look more responsive.
-*/
 
 .lp-icon {
     color: #9E9E9E;
@@ -22,13 +15,8 @@ Custom style for icons, used mainly in application lists. Designed to make it lo
     width: 1.1em !important;
     height: 1.1em !important;
     font-size: 48px;
-    margin-top: 0px;
+    margin-top: 0;
 }
-
-/*
-Custom style used to format list. What is special here is that we need to line-heigh slightly smaller than in
-Angular Material.
-*/
 
 .lp-font-list-label {
     font-size: 16px;
@@ -45,16 +33,10 @@ Angular Material.
     color:grey;
 }
 
-/**
-YASQE editor, support for read-only mode.
-*/
+/* YASQE editor */
 lp-yasqe.readOnly > .yasqe > .CodeMirror {
     background-color: #E0E0E0;
 }
-
-/**
-scroll-watch
-*/
 
 .scroll-watch-list-tail {
     margin-top: 2REM;
@@ -72,3 +54,104 @@ scroll-watch
 .scroll-watch-list-tail:focus {
     outline: none;
 }
+
+/* Pipeline list. */
+
+.sub-menu {
+    display: none;
+    position:fixed;
+    bottom:70px;
+    right:30px;
+    padding-top: 10px;
+    padding-bottom: 40px;
+}
+
+.pipelines_list_add {
+    position:fixed;
+    bottom:30px;
+    right:30px;
+}
+
+.pipelines_list_add:hover .sub-menu {
+    display: block;
+}
+
+/* Pipeline canvas. */
+
+.no-left-right-padding {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.no-margin {
+    margin: 0;
+}
+
+#canvas {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#canvas svg {
+    background-color: white;
+    border-style: solid;
+    border-width: 1px;
+    height: -moz-calc(100vh - 169px); /* Firefox */
+    height: -webkit-calc(100vh - 169px); /* Chrome, Safari */
+    height: calc(100vh - 169px); /* IE9+ and future browsers */
+}
+
+/* Joint modification. */
+
+.available-magnet {
+    fill: yellow;
+}
+
+.available-cell rect {
+    stroke-dasharray: 5, 2;
+}
+
+.component-selection {
+    position:fixed;
+    pointer-events:none;
+    border:1px dashed #000;
+    border-radius:5px;
+    -moz-user-select:none;
+    -webkit-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+    -webkit-user-drag:none;
+    user-drag:none;
+    z-index: 1;
+}
+
+.component-selection .action {
+    pointer-events:auto;
+    cursor: pointer;
+}
+
+.joint-paper > svg {
+    position: relative;
+}
+
+/* Execution list. */
+
+.table_row_wait_for_delete {
+    opacity: 0.2;
+    transition: opacity 2s linear;
+}
+
+/* Center text in progress bar. */
+
+.progress {
+    position: relative;
+}
+
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+    color: black;
+    text-align: center;
+}
+

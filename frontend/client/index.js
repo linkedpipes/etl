@@ -11,9 +11,6 @@ import ngNotification from "angular-ui-notification";
 import configureNavigation from "./navigation";
 import appLayout from "./app-layout/layout-directive";
 
-import "./executions.css";
-import "./pipeline-canvas.css";
-import "./pipelines.css";
 import "./style.css";
 import "angular-material/angular-material.css";
 import "angular-ui-notification/dist/angular-ui-notification.css";
