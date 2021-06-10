@@ -243,6 +243,9 @@ class DefaultControl implements MergeControl {
 
     private Set<String> loadControlledExistingProperties(
             EntityReference reference) throws RdfUtilsException {
+        if (controlledPredicates.isEmpty()) {
+            return new HashSet<>();
+        }
         String query = buildLoadExistingControlledPropertiesQuery(
                 controlledPredicates, reference.getGraph(),
                 reference.getResource());
@@ -261,6 +264,9 @@ class DefaultControl implements MergeControl {
      */
     private Map<String, Configuration.Status> loadControl(
             EntityReference reference) throws RdfUtilsException {
+        if (controlledPredicates.isEmpty()) {
+            return new HashMap<>();
+        }
         String query = buildLoadControlsQuery(controlledPredicates,
                 reference.getGraph(), reference.getResource());
         List<Map<String, String>> queryResult = RdfUtils.sparqlSelect(
