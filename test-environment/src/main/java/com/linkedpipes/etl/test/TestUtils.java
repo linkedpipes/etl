@@ -2,6 +2,7 @@ package com.linkedpipes.etl.test;
 
 import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.util.RDFInserter;
 import org.eclipse.rdf4j.repository.util.Repositories;
@@ -13,6 +14,8 @@ import org.eclipse.rdf4j.rio.Rio;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestUtils {
 
@@ -87,6 +90,15 @@ public class TestUtils {
      */
     public static File getTempDirectory() throws IOException {
         return Files.createTempDirectory("lp-test-dpu-").toFile();
+    }
+
+    public static List<Statement> statementsFromResource(String fileName)
+            throws IOException {
+        File file = fileFromResource(fileName);
+        try (InputStream stream = new FileInputStream(file)) {
+            RDFFormat format = Rio.getParserFormatForFileName(fileName).get();
+            return new ArrayList<>(Rio.parse(stream, "http://base", format));
+        }
     }
 
 }
