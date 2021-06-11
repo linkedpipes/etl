@@ -53,9 +53,8 @@ public final class MustacheComponent implements Component, SequentialExecution {
     }
 
     private List<ObjectDataHolder> loadData() throws LpException {
-        DataObjectLoader dataObjectLoader = new DataObjectLoader(
-                input, configuration);
-        return dataObjectLoader.loadData();
+        DataObjectLoader dataObjectLoader = new DataObjectLoader(configuration);
+        return dataObjectLoader.loadData(input);
     }
 
     private Mustache createMustache() {
