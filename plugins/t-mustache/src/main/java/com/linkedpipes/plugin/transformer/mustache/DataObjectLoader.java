@@ -271,8 +271,12 @@ class DataObjectLoader {
         newVisited.add(identifier);
         //
         for (var entry : map.entrySet()) {
+            // Set flag to children.
             Object value = addFirstFlagsForObject(newVisited, entry.getValue());
-            map.put(entry.getKey(), value);
+            // If the object is map, then following will set the first,
+            // to true, else nothing happen.
+            Object valueWithFirst = setFirstToFirstObject(value);
+            map.put(entry.getKey(), valueWithFirst);
         }
         return map;
     }

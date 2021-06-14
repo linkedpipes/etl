@@ -1,7 +1,5 @@
 package com.linkedpipes.plugin.transformer.mustachechunked;
 
-import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
-import com.linkedpipes.etl.executor.api.v1.LpException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
@@ -9,9 +7,6 @@ import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.repository.RepositoryConnection;
-import org.eclipse.rdf4j.repository.RepositoryResult;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -258,8 +253,12 @@ class DataObjectLoader {
         newVisited.add(identifier);
         //
         for (var entry : map.entrySet()) {
+            // Set flag to children.
             Object value = addFirstFlagsForObject(newVisited, entry.getValue());
-            map.put(entry.getKey(), value);
+            // If the object is map, then following will set the first,
+            // to true, else nothing happen.
+            Object valueWithFirst = setFirstToFirstObject(value);
+            map.put(entry.getKey(), valueWithFirst);
         }
         return map;
     }
