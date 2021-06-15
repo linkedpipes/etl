@@ -82,19 +82,20 @@ public class DataObjectLoaderTest {
         Assertions.assertEquals(
                 true, dataset1.get(MustacheVocabulary.HAS_IS_FIRST));
         var dataset2 = (Map) datasets.get(1);
-        Assertions.assertNull(dataset2.get(MustacheVocabulary.HAS_IS_FIRST));
+        Assertions.assertEquals(
+                false, dataset2.get(MustacheVocabulary.HAS_IS_FIRST));
         var dataset1s = (List) dataset1.get("urn:dataset");
         Assertions.assertEquals(2, dataset1s.size());
         var dataset11 = (Map) dataset1s.get(0);
         Assertions.assertEquals(
                 true, dataset11.get(MustacheVocabulary.HAS_IS_FIRST));
         var dataset12 = (Map) dataset1s.get(1);
-        Assertions.assertNull(dataset12.get(MustacheVocabulary.HAS_IS_FIRST));
+        Assertions.assertEquals(
+                false, dataset12.get(MustacheVocabulary.HAS_IS_FIRST));
         var resource = (Map) root.get("urn:resource");
         Assertions.assertNotNull(resource);
         Assertions.assertEquals(
                 true, resource.get(MustacheVocabulary.HAS_IS_FIRST));
     }
-
 
 }

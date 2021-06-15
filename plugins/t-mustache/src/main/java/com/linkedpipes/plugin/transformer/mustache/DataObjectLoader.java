@@ -275,7 +275,7 @@ class DataObjectLoader {
             Object value = addFirstFlagsForObject(newVisited, entry.getValue());
             // If the object is map, then following will set the first,
             // to true, else nothing happen.
-            Object valueWithFirst = setFirstToFirstObject(value);
+            Object valueWithFirst = setFirstToFirstObject(value, true);
             map.put(entry.getKey(), valueWithFirst);
         }
         return map;
@@ -287,23 +287,25 @@ class DataObjectLoader {
             return list;
         }
         // We add first to the first flag to the first one.
-        Object first = setFirstToFirstObject(list.get(0));
+        Object first = setFirstToFirstObject(list.get(0), true);
         addFirstFlagsForObject(visited, first);
         list.set(0, first);
-        // Then we just iterate other.
+        // Then we just iterate other, and set flag to false, as otherwise the
+        // flag is inherited from parent object.
         for (int index = 1; index < list.size(); ++index) {
-            list.set(index, addFirstFlagsForObject(visited, list.get(index)));
+            Object next = setFirstToFirstObject(list.get(index), false);
+            list.set(index, addFirstFlagsForObject(visited, next));
         }
         return list;
     }
 
-    protected Object setFirstToFirstObject(Object input) {
+    protected Object setFirstToFirstObject(Object input, boolean value) {
         if (!(input instanceof Map)) {
             return input;
         }
         Map<String, Object> map = (Map<String, Object>) input;
         Map<String, Object> result = new HashMap<>(map);
-        result.put(MustacheVocabulary.HAS_IS_FIRST, true);
+        result.put(MustacheVocabulary.HAS_IS_FIRST, value);
         return result;
     }
 
