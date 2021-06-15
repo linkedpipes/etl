@@ -1,0 +1,88 @@
+#
+# Environment variables:
+# * LP_ETL_BUILD_BRANCH [optional] - build branch
+# * LP_ETL_BUILD_JAVA [optional] - set to allow tests
+# * LP_ETL_DOMAIN - URL prefix, for example http://localhost:9080
+# * LP_ETL_PORT - port number to expose LP-ETL on
+# * LP_ETL_USER - user number of the user LP-ETL runs as
+#
+# Example:
+#  LP_ETL_PORT=9080 LP_ETL_DOMAIN=http://localhost:9080 LP_ETL_USER=1001 docker-compose up
+#
+# Build from GitHub sources.
+#
+
+version: '3'
+services:
+  storage:
+    build:
+      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-master}:storage
+      args:
+        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-master}
+        LP_ETL_BUILD_JAVA_TEST: ${LP_ETL_BUILD_JAVA_TEST--DskipTests}
+        LP_ETL_USER: ${LP_ETL_USER-5987}
+    image: lp/etl/storage
+    volumes:
+       - data-storage:/data/lp/etl/storage
+       - configuration:/data/lp/etl/configuration
+       - data-logs:/data/lp/etl/logs
+    environment:
+      - LP_ETL_DOMAIN
+    restart: always
+  frontend:
+    build:
+      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-master}:frontend
+      args:
+        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-master}
+        LP_ETL_USER: ${LP_ETL_USER-5987}
+    image: lp/etl/frontend
+    volumes:
+      - configuration:/data/lp/etl/configuration
+    ports:
+      - ${LP_ETL_PORT-8080}:8080
+    environment:
+      - LP_ETL_DOMAIN
+    restart: always
+  executor-monitor:
+    build:
+      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-master}:executor-monitor
+      args:
+        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-master}
+        LP_ETL_BUILD_JAVA_TEST: ${LP_ETL_BUILD_JAVA_TEST--DskipTests}
+        LP_ETL_USER: ${LP_ETL_USER-5987}
+    image: lp/etl/executor-monitor
+    volumes:
+      - data-execution:/data/lp/etl/executor
+      - data-logs:/data/lp/etl/logs
+      - configuration:/data/lp/etl/configuration
+    environment:
+      - LP_ETL_DOMAIN
+    restart: always
+  executor:
+    build:
+      context: https://github.com/linkedpipes/etl.git#${LP_ETL_BUILD_BRANCH-master}:executor
+      args:
+        LP_ETL_BUILD_BRANCH: ${LP_ETL_BUILD_BRANCH-master}
+        LP_ETL_BUILD_JAVA_TEST: ${LP_ETL_BUILD_JAVA_TEST--DskipTests}
+        LP_ETL_USER: ${LP_ETL_USER-5987}
+    image: lp/etl/executor
+    volumes:
+      - data-execution:/data/lp/etl/executor
+      - data-logs:/data/lp/etl/logs
+      - configuration:/data/lp/etl/configuration
+    environment:
+      - LP_ETL_DOMAIN
+    restart: always
+volumes:
+  data-logs:
+  data-execution:
+# Uncomment following lines to allow local data binding.
+#    driver_opts:
+#      type: none
+#      device: /opt/lp/etl-docker/data
+#      o: bind
+  data-storage:
+  configuration:
+# When binding configuration it need to contain file configuration.properties .
+# Do not forget that LP_ETL_DOMAIN will overwrite domain.uri in the
+# configuration file.
