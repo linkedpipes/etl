@@ -9,4 +9,8 @@ public class SparqlUpdateVocabulary {
 
     public static final String CONFIG_SPARQL = PREFIX + "query";
 
+    public static final String HAS_NUMBER_OF_THREADS = PREFIX + "threads";
+
+    public static final String HAS_SKIP_ON_FAILURE = PREFIX + "softFail";
+
 }
