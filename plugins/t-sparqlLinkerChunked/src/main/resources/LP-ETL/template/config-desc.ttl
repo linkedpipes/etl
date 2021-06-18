@@ -20,10 +20,10 @@
 
 <http://linkedpipes.com/resources/components/t-sparqlLinkerChunked/1.0.0/configuration/desc/threads>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlLinkerChunked#threads> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlLinkerChunked#threadsControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#threads> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#threadsControl> .
 
 <http://linkedpipes.com/resources/components/t-sparqlLinkerChunked/1.0.0/configuration/desc/softFail>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlLinkerChunked#softFail> ;
-    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlLinkerChunked#softFailControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#softFail> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#softFailControl> .
