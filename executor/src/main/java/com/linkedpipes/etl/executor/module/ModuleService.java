@@ -85,6 +85,7 @@ public class ModuleService implements ApplicationListener<ApplicationEvent> {
             + "" // core API
             + LP_PACKAGE + ";version=\"0.0.0\","
             + LP_PACKAGE + ".component;version=\"0.0.0\","
+            + LP_PACKAGE + ".component.chunk;version=\"0.0.0\","
             + LP_PACKAGE + ".component.task;version=\"0.0.0\","
             + LP_PACKAGE + ".dataunit;version=\"0.0.0\","
             + LP_PACKAGE + ".event;version=\"0.0.0\","
