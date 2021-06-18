@@ -3,7 +3,7 @@ package com.linkedpipes.plugin.transformer.sparql.update;
 import com.linkedpipes.etl.dataunit.core.rdf.ChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.chunk.ChunkExecution;
-import com.linkedpipes.etl.executor.api.v1.component.chunk.ChunkExecutor;
+import com.linkedpipes.etl.executor.api.v1.component.chunk.ChunkTransformer;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
@@ -15,14 +15,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class ChunkTransformer
-        extends ChunkExecutor<ChunkedTriples.Chunk, Collection<Statement>> {
+public class SparqlUpdateChunkedTransformer
+        extends ChunkTransformer<ChunkedTriples.Chunk, Collection<Statement>> {
 
     protected final String query;
 
     protected List<Statement> outputBuffer = new ArrayList<>(10000);
 
-    public ChunkTransformer(
+    public SparqlUpdateChunkedTransformer(
             ChunkExecution<ChunkedTriples.Chunk, Collection<Statement>> owner,
             String query) {
         super(owner);

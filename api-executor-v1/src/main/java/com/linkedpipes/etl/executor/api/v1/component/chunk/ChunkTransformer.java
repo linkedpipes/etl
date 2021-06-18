@@ -7,10 +7,10 @@ import org.slf4j.MDC;
 
 import java.util.Map;
 
-public abstract class ChunkExecutor <Chunk, Product> implements Runnable {
+public abstract class ChunkTransformer<Chunk, Product> implements Runnable {
 
     private static final Logger LOG =
-            LoggerFactory.getLogger(ChunkExecutor.class);
+            LoggerFactory.getLogger(ChunkTransformer.class);
 
     protected final Map<String,String> contextMap = MDC.getCopyOfContextMap();
 
@@ -18,7 +18,7 @@ public abstract class ChunkExecutor <Chunk, Product> implements Runnable {
 
     private boolean finished = false;
 
-    public ChunkExecutor(ChunkExecution<Chunk, Product> owner) {
+    public ChunkTransformer(ChunkExecution<Chunk, Product> owner) {
         this.owner = owner;
     }
 

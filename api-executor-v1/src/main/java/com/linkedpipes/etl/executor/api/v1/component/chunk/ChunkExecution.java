@@ -37,7 +37,7 @@ public abstract class ChunkExecution<Chunk, Product>
         chunkSource = chunks();
         ExecutorService executor = createExecutorService();
         progressReport.start(getChunkCount());
-        List<ChunkExecutor<Chunk, Product>> executors = createExecutors();
+        List<ChunkTransformer<Chunk, Product>> executors = createExecutors();
         LOG.info("Using {} executors (threads)", executors.size());
         startExecutors(executor, executors);
         awaitTermination(executor);
@@ -45,6 +45,9 @@ public abstract class ChunkExecution<Chunk, Product>
         progressReport.done();
     }
 
+    /**
+     * Access to the iterator is synchronized.
+     */
     protected abstract Iterator<Chunk> chunks() throws LpException;
 
     protected ExecutorService createExecutorService() {
@@ -56,22 +59,22 @@ public abstract class ChunkExecution<Chunk, Product>
 
     protected abstract long getChunkCount();
 
-    protected List<ChunkExecutor<Chunk, Product>> createExecutors() {
-        List<ChunkExecutor<Chunk, Product>> result = new ArrayList<>();
+    protected List<ChunkTransformer<Chunk, Product>> createExecutors() {
+        List<ChunkTransformer<Chunk, Product>> result = new ArrayList<>();
         int threadCount = getThreadCount();
         for (int i = 0; i < threadCount; ++i) {
-            ChunkExecutor<Chunk, Product> executor = createExecutor();
+            ChunkTransformer<Chunk, Product> executor = createExecutor();
             result.add(executor);
         }
         return result;
     }
 
-    protected abstract ChunkExecutor<Chunk, Product> createExecutor();
+    protected abstract ChunkTransformer<Chunk, Product> createExecutor();
 
     protected void startExecutors(
             ExecutorService executor,
-            List<ChunkExecutor<Chunk, Product>> executors) {
-        for (ChunkExecutor<Chunk, Product> constructExecutor : executors) {
+            List<ChunkTransformer<Chunk, Product>> executors) {
+        for (ChunkTransformer<Chunk, Product> constructExecutor : executors) {
             executor.submit(constructExecutor);
         }
     }
@@ -91,12 +94,12 @@ public abstract class ChunkExecution<Chunk, Product>
         LOG.info("Waiting for executors to finish ... done");
     }
 
-    protected void checkExecutors(List<ChunkExecutor<Chunk, Product>> executors)
+    protected void checkExecutors(List<ChunkTransformer<Chunk, Product>> executors)
             throws LpException {
         if (terminateExecution) {
             throw new LpException("At least chunk execution failed.");
         }
-        for (ChunkExecutor<Chunk, Product> executor : executors) {
+        for (ChunkTransformer<Chunk, Product> executor : executors) {
             if (!executor.isFinished()) {
                 throw new LpException("At least executor was terminated.");
             }

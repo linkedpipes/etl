@@ -6,7 +6,7 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.chunk.ChunkExecution;
-import com.linkedpipes.etl.executor.api.v1.component.chunk.ChunkExecutor;
+import com.linkedpipes.etl.executor.api.v1.component.chunk.ChunkTransformer;
 import org.eclipse.rdf4j.model.Statement;
 
 import java.util.Collection;
@@ -48,9 +48,9 @@ public final class SparqlUpdateChunked
     }
 
     @Override
-    protected ChunkExecutor<ChunkedTriples.Chunk, Collection<Statement>>
+    protected ChunkTransformer<ChunkedTriples.Chunk, Collection<Statement>>
     createExecutor() {
-        return new ChunkTransformer(this, configuration.getQuery());
+        return new SparqlUpdateChunkedTransformer(this, configuration.getQuery());
     }
 
     @Override
