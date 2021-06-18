@@ -7,7 +7,8 @@
         <http://linkedpipes.com/resources/components/t-filesToRdfChunked/1.0.0/configuration/desc/mimeType> ,
         <http://linkedpipes.com/resources/components/t-filesToRdfChunked/0.0.0/configuration/desc/softFail> ,
         <http://linkedpipes.com/resources/components/t-filesToRdfChunked/0.0.0/configuration/desc/fileReference> ,
-        <http://linkedpipes.com/resources/components/t-filesToRdfChunked/0.0.0/configuration/desc/filePredicate> .
+        <http://linkedpipes.com/resources/components/t-filesToRdfChunked/0.0.0/configuration/desc/filePredicate> ,
+        <http://linkedpipes.com/resources/components/t-filesToRdfChunked/1.0.0/configuration/desc/threads> .
 
 <http://linkedpipes.com/resources/components/t-filesToRdfChunked/1.0.0/configuration/desc/commitSize>
     a config:ConfigurationMember ;
@@ -33,3 +34,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#filePredicate> ;
     config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#filePredicateControl> .
+
+<http://linkedpipes.com/resources/components/t-filesToRdfChunked/1.0.0/configuration/desc/threads>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#threads> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#threadsControl> .

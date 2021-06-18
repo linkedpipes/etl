@@ -7,22 +7,30 @@ import org.eclipse.rdf4j.rio.RDFHandlerException;
 
 import java.util.Date;
 
+/**
+ * Make sure that each blank node is prefixed by a time when the file is parsed
+ * and given prefix. As a result blanks nodes from different files should
+ * not collide.
+ */
 class BlankNodePrefixUpdater implements RDFHandler {
 
     private final RDFHandler handler;
 
-    private ValueFactory valueFactory = SimpleValueFactory.getInstance();
+    private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
-    private String prefix;
+    private String filePrefix;
 
-    public BlankNodePrefixUpdater(RDFHandler writer) {
+    private final String prefix;
+
+    public BlankNodePrefixUpdater(RDFHandler writer, String identifier) {
         this.handler = writer;
+        this.prefix = identifier;
     }
 
     @Override
     public void startRDF() throws RDFHandlerException {
         handler.startRDF();
-        prefix = Long.toString((new Date()).getTime()) + "_";
+        filePrefix = prefix + "_" + (new Date()).getTime() + "_";
     }
 
     @Override
@@ -58,7 +66,7 @@ class BlankNodePrefixUpdater implements RDFHandler {
     }
 
     private BNode prefixBlankNode(BNode node) {
-        return valueFactory.createBNode(prefix + node.getID());
+        return valueFactory.createBNode(filePrefix + node.getID());
     }
 
     @Override

@@ -20,6 +20,9 @@ public class FilesToRdfConfiguration {
     @RdfToPojo.Property(iri = FilesToRdfVocabulary.HAS_FILE_PREDICATE)
     private String filePredicate;
 
+    @RdfToPojo.Property(iri = FilesToRdfVocabulary.HAS_NUMBER_OF_THREADS)
+    private int threadCount = 1;
+
     public FilesToRdfConfiguration() {
     }
 
@@ -62,4 +65,13 @@ public class FilesToRdfConfiguration {
     public void setFileReference(boolean fileReference) {
         this.fileReference = fileReference;
     }
+
+    public int getThreadCount() {
+        return threadCount;
+    }
+
+    public void setThreadCount(int threadCount) {
+        this.threadCount = threadCount;
+    }
+
 }

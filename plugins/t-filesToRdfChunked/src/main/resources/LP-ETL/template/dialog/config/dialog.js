@@ -41,7 +41,11 @@ define([], function () {
         "filePredicate": {
             "$type": "iri",
             "$label" : "File name predicate"
-        }
+        },
+        "threads" : {
+            "$type": "int",
+            "$label": "Number of threads to use"
+        },
     };
 
     function controller($scope, $service) {
