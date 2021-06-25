@@ -24,7 +24,7 @@ router.get("", (req, res) => {
 function updateHeaders(headers) {
   // We use json-ld as default to make it easy to see pipelines from
   // browsers.
-  if (headers.accept === "*/*") {
+  if (headers.accept === undefined || headers.accept === "*/*") {
     return {
       ...headers,
       "accept": "application/ld+json"
@@ -61,7 +61,6 @@ router.get("/info", (req, res) => {
 });
 
 router.get("/:id", function (req, res) {
-
   // Parse query IRI.
   let queryIri;
   let queryParams = "";
