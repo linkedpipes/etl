@@ -222,8 +222,13 @@
         "?templates=true" +
         "&mappings=true" +
         "&removePrivateConfig=false";
+      const request = {
+        "headers": {
+          "Accept": "application/ld+json",
+        },
+      };
       actions.savePipeline().then(() => {
-        $http.get(url).then((response) => {
+        $http.get(url, request).then((response) => {
           saveAs(createPipelineBlob(response.data),
             $scope.pipelineLabel + ".jsonld");
         });
@@ -235,8 +240,13 @@
         "?templates=true" +
         "&mappings=true" +
         "&removePrivateConfig=true";
+      const request = {
+        "headers": {
+          "Accept": "application/ld+json",
+        },
+      };
       actions.savePipeline().then(() => {
-        $http.get(url).then((response) => {
+        $http.get(url, request).then((response) => {
           saveAs(createPipelineBlob(response.data),
             $scope.pipelineLabel + ".jsonld");
         });
