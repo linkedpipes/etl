@@ -231,6 +231,10 @@ public class MergeConfiguration {
                     parentResource, parentTree,
                     instanceResource, instanceTree));
         }
+        // It can happen, that there is no instance configuration.
+        if (instanceResource == null) {
+            instanceResource = valueFactory.createIRI(baseIri);
+        }
         // Rename resource to child, so we are not left
         // with the parent (template) IRI.
         RdfUtils.updateSubject(result, parentResource, instanceResource);
