@@ -1,0 +1,26 @@
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.location.hide" flex>
+        <label>Output directory</label>
+        <input type="text" ng-model="dialog.location.value"
+               ng-disabled="dialog.location.disabled || dialog.location.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.location.hide" flex>
+        <label>Loader type</label>
+        <md-select ng-model="dialog.loader.value"
+                   ng-disabled="dialog.loader.disabled || dialog.loader.inherit">
+            <md-option value="basic">
+                Basic
+            </md-option>
+            <md-option value="sequential">
+                Sequential
+            </md-option>
+            <md-option value="phased">
+                Phased
+            </md-option>
+            <md-option value="parallel">
+                Parallel
+            </md-option>
+        </md-select>
+    </md-input-container>
+</div>

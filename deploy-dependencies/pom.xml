@@ -917,6 +917,12 @@
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/core/t-jsonLdToRdfTitanium/</outputDirectory>
                                         </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>t-jenaTdbLoader</artifactId>
+                                            <version>0.0.0</version>
+                                            <outputDirectory>${deploy.directory}/jars/core/t-jenaTdbLoader/</outputDirectory>
+                                        </dependency>
                                     </artifactItems>
                                 </configuration>
                             </execution>
