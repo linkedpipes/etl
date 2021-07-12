@@ -6,7 +6,8 @@
     <div flex layout-padding style="padding-top: 4px;padding-bottom: 4px">
       <div ng-show="!isEditMode"
            style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis;position:relative;text-align:left;width:100%;margin:0px;line-height:normal;text-transform: none;font-size:14px">
-        <md-icon class="material-icons md-avatar" ng-style="executionIcon.style">
+        <md-icon class="material-icons md-avatar"
+                 ng-style="executionIcon.style">
           {{executionIcon.name}}
         </md-icon>
         Execution of {{pipelineLabel}}
@@ -104,7 +105,8 @@
         </md-menu-item>
         <md-menu-item>
           <md-button ng-click="onExecuteWithoutDebugData($event)">
-            <md-icon class="material-icons lp-icon">play_circle_outline</md-icon>
+            <md-icon class="material-icons lp-icon">play_circle_outline
+            </md-icon>
             Execute without debug data
           </md-button>
         </md-menu-item>
@@ -151,15 +153,26 @@
       </md-icon>
       Execute
     </md-button>
+    <md-button ng-click="onCancel()"
+               ng-show="isExecutionCancelable && !isEditMode"
+               class="md-warn">
+      <md-icon class="material-icons">stop</md-icon>
+      Cancel
+    </md-button>
+    <md-button ng-click="onEditMode()"
+               ng-show="isExecutionFinished && !isEditMode"
+               class="md-primary">
+      Edit mode
+    </md-button>
+    <md-button ng-click="onExecutionMode()"
+               ng-show="isExecutionFinished && isEditMode">
+      Execution mode
+    </md-button>
     <md-button ng-click="onClose()" class="md-warn">
       <md-icon md-menu-origin class="material-icons">
         close
-      </md-icon>      
+      </md-icon>
       Close
-    </md-button>
-    <md-button ng-click="onEditMode()"
-               ng-show="isExecutionFinished && !isEditMode">
-      Edit mode
     </md-button>
   </md-content>
 
@@ -175,14 +188,18 @@
         play_circle_outline
       </md-icon>
     </md-button>
+    <md-button ng-click="onEditMode()"
+               ng-show="isExecutionFinished && !isEditMode">
+      Edit mode
+    </md-button>
+    <md-button ng-click="onExecutionMode()"
+               ng-show="isExecutionFinished && isEditMode">
+      Execution mode
+    </md-button>
     <md-button ng-click="onClose()" class="md-warn">
       <md-icon md-menu-origin class="material-icons">
         close
       </md-icon>
-    </md-button>
-    <md-button ng-click="onEditMode()"
-               ng-show="isExecutionFinished && !isEditMode">
-      Edit mode
     </md-button>
   </md-content>
 

@@ -12,17 +12,22 @@
       "@client/app-service/vocabulary",
       "./default-visual",
       "./pipeline-events",
-      "../pipeline-api"
+      "../pipeline-api",
+      "../../execution/execution-api"
     ], definition);
   }
 })((jQuery, jsonld, pplModel, execModel, loader, vocabulary,
-    defaultVisual, pipelineEvents, pipelinesApi) => {
+    defaultVisual, pipelineEvents, pipelinesApi, executionApi) => {
 
   const LP = vocabulary.LP;
 
   let $pipeline;
 
   let $execution;
+
+  let $executionStatus = {
+    "cancelWasRequested" : false
+  };
 
   let $canvasService;
 
@@ -298,6 +303,25 @@
     options["resume"] = resume;
   }
 
+  function cancelExecution(executionIri) {
+    const status = execModel.getExecutionStatus($execution);
+    if (status === undefined) {
+      // It is queued, so we can just delete it.
+      return $httpService.delete(executionIri)
+        .then(() => {
+          $executionStatus.cancelWasRequested = true;
+          return true;
+        });
+    } else {
+      // It is running we need to cancel the execution.
+      return executionApi.cancel($httpService, executionIri, "User request")
+        .then(() => {
+          $executionStatus.cancelWasRequested = true;
+          return false;
+        });
+    }
+  }
+
   const eventsActions = {
     "getTemplate": getTemplate,
     "getComponentConfiguration": getComponentConfiguration,
@@ -382,6 +406,10 @@
     "isExecutionFinished": () => {
       return execModel.isExecutionFinished($execution);
     },
+    "isExecutionCancelable": () => {
+      return execModel.isExecutionCancelable($execution) &&
+        !$executionStatus.cancelWasRequested;
+    },
     "getExecutionStatus": () => {
       return execModel.getExecutionStatus($execution);
     },
@@ -389,7 +417,9 @@
       return pplModel.asJsonLd($pipeline);
     },
     "savePipeline": savePipeline,
+    // Execution API.
     "executePipeline": executePipeline,
+    "cancelExecution": cancelExecution,
     //
     "bind": (canvas, templates, dialogs, status, http, location,
              serviceCallbacks) => {

@@ -59,6 +59,19 @@
     return !model.execution.status.running;
   };
 
+  service.isExecutionCancelable = (model) => {
+    if (model.execution.iri === undefined) {
+      // There execution has not been yet started.
+      return true;
+    }
+    if (model.execution.status.running === undefined) {
+      return false;
+    }
+    const status = model.execution.status.iri;
+    // We can cancel only running and queued.
+    return status === "http://etl.linkedpipes.com/resources/status/running";
+  };
+
   service.getExecutionStatus = (model) => {
     return model.execution.status.iri;
   };

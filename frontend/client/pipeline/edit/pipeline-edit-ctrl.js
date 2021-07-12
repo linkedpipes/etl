@@ -48,6 +48,10 @@
 
     $scope.onCopyNoSave = $service.onCopyNoSave;
 
+    $scope.onCancel = $service.onCancel;
+
+    $scope.onExecutionMode = $service.onExecutionMode;
+
     $timeout($service.onHtmlReady);
 
   }
