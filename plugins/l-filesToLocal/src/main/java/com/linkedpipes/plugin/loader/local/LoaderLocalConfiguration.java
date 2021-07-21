@@ -8,6 +8,9 @@ public class LoaderLocalConfiguration {
     @RdfToPojo.Property(iri = LoaderLocalVocabulary.HAS_PATH)
     private String path;
 
+    @RdfToPojo.Property(iri = LoaderLocalVocabulary.HAS_PERMISSIONS)
+    private String permissions = null;
+
     public LoaderLocalConfiguration() {
     }
 
@@ -17,6 +20,14 @@ public class LoaderLocalConfiguration {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(String permissions) {
+        this.permissions = permissions;
     }
 
 }
