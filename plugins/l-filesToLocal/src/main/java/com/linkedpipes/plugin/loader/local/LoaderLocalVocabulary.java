@@ -9,7 +9,11 @@ public final class LoaderLocalVocabulary {
 
     public static final String HAS_PATH = PREFIX + "path";
 
-    public static final String HAS_PERMISSIONS = PREFIX + "permissions";
+    public static final String HAS_FILE_PERMISSIONS =
+            PREFIX + "filePermissions";
+
+    public static final String HAS_DIRECTORY_PERMISSIONS =
+            PREFIX + "directoryPermissions";
 
     private LoaderLocalVocabulary() {
     }

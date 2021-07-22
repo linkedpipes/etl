@@ -12,9 +12,13 @@ define([], function () {
             "$type": "str",
             "$label": "Target path"
         },
-        "permissions": {
+        "filePermissions": {
             "$type": "str",
-            "$label": "Permissions"
+            "$label": "File permissions"
+        },
+        "directoryPermissions": {
+            "$type": "str",
+            "$label": "Directory permissions"
         },
     };
 

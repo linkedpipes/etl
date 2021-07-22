@@ -74,12 +74,10 @@ public final class LoaderLocal implements Component, SequentialExecution {
     }
 
     private void setPermissions(Path directory) throws LpException {
-        String permissionsString = configuration.getPermissions();
-        if (permissionsString == null || permissionsString.isBlank()) {
-            return;
-        }
-        Set<PosixFilePermission> permissions =
-                PosixFilePermissions.fromString(permissionsString);
+        Set<PosixFilePermission> filePermissions =
+                createPermissions(configuration.getFilePermissions());
+        Set<PosixFilePermission> directoryPermissions =
+                createPermissions(configuration.getDirectoryPermissions());
         try {
             Files.walkFileTree(directory, new SimpleFileVisitor<>() {
 
@@ -87,7 +85,11 @@ public final class LoaderLocal implements Component, SequentialExecution {
                 public FileVisitResult preVisitDirectory(
                         Path directory, BasicFileAttributes attributes
                 ) throws IOException {
-                    Files.setPosixFilePermissions(directory, permissions);
+                    if (directoryPermissions == null) {
+                        return FileVisitResult.CONTINUE;
+                    }
+                    Files.setPosixFilePermissions(
+                            directory, directoryPermissions);
                     return FileVisitResult.CONTINUE;
                 }
 
@@ -95,7 +97,11 @@ public final class LoaderLocal implements Component, SequentialExecution {
                 public FileVisitResult visitFile(
                         Path file, BasicFileAttributes attributes
                 ) throws IOException {
-                    Files.setPosixFilePermissions(file, permissions);
+                    if (filePermissions == null) {
+                        return FileVisitResult.CONTINUE;
+                    }
+                    Files.setPosixFilePermissions(
+                            file, filePermissions);
                     return FileVisitResult.CONTINUE;
                 }
 
@@ -105,6 +111,14 @@ public final class LoaderLocal implements Component, SequentialExecution {
         } catch (UnsupportedOperationException ex) {
             LOG.warn("File system does not support file permissions.");
         }
+    }
+
+    private Set<PosixFilePermission> createPermissions(
+            String permissionsString) {
+        if (permissionsString == null || permissionsString.isBlank()) {
+            return null;
+        }
+        return PosixFilePermissions.fromString(permissionsString);
     }
 
 }
