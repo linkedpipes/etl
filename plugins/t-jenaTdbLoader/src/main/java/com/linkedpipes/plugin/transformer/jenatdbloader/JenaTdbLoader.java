@@ -12,7 +12,9 @@ import org.apache.jena.sparql.core.DatasetGraph;
 import org.apache.jena.tdb2.TDB2Factory;
 import org.apache.jena.tdb2.loader.DataLoader;
 import org.apache.jena.tdb2.loader.LoaderFactory;
+import org.apache.jena.tdb2.loader.base.LoaderOps;
 import org.apache.jena.tdb2.loader.base.MonitorOutput;
+import org.apache.jena.tdb2.loader.base.ProgressMonitorOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +46,8 @@ public final class JenaTdbLoader implements Component, SequentialExecution {
         checkConfiguration();
 
         Dataset dataset = TDB2Factory.connectDataset(getOutputPath());
-        DataLoader loader = createLoader(dataset.asDatasetGraph(), LOG::info);
+        DataLoader loader = createLoader(
+                dataset.asDatasetGraph(), LoaderOps.outputToLog(LOG));
 
         List<String> filesToLoad = collectInputFiles();
 
@@ -79,7 +82,7 @@ public final class JenaTdbLoader implements Component, SequentialExecution {
     private List<String> collectInputFiles() {
         List<String> result = new ArrayList<>();
         Iterator<FilesDataUnit.Entry> iterator = inputFiles.iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             FilesDataUnit.Entry entry = iterator.next();
             String absolutePath = entry.toFile().getAbsolutePath();
             result.add(absolutePath);
