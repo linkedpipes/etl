@@ -3,9 +3,8 @@ package com.linkedpipes.etl.executor.api.v1.component.task;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.MDC;
 
@@ -28,13 +27,9 @@ public class TaskExecutorTest {
 
     private Component.Context context;
 
-    @BeforeClass
-    public static void initializeMdcContext() {
-        MDC.setContextMap(Collections.EMPTY_MAP);
-    }
-
-    @Before
+    @BeforeAll
     public void before() {
+        MDC.setContextMap(Collections.EMPTY_MAP);
         consumer = Mockito.mock(TaskConsumer.class);
         report = Mockito.mock(ReportWriter.class);
         context = Mockito.mock(Component.Context.class);

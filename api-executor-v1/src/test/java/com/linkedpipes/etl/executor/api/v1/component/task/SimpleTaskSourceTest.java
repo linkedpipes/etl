@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.executor.api.v1.component.task;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
@@ -20,11 +20,11 @@ public class SimpleTaskSourceTest {
         SimpleTaskSource<MockedTask> source = new SimpleTaskSource<>(
                 Arrays.asList(
                         new MockedTask(), new MockedTask(), new MockedTask()));
-        Assert.assertNotNull(source.getTask());
-        Assert.assertNotNull(source.getTask());
-        Assert.assertNotNull(source.getTask());
-        Assert.assertNull(source.getTask());
-        Assert.assertFalse(source.doesTaskFailed());
+        Assertions.assertNotNull(source.getTask());
+        Assertions.assertNotNull(source.getTask());
+        Assertions.assertNotNull(source.getTask());
+        Assertions.assertNull(source.getTask());
+        Assertions.assertFalse(source.doesTaskFailed());
     }
 
     @Test
@@ -33,18 +33,18 @@ public class SimpleTaskSourceTest {
                 Arrays.asList(
                         new MockedTask(), new MockedTask(), new MockedTask()));
         MockedTask firstTask = source.getTask();
-        Assert.assertNotNull(firstTask);
+        Assertions.assertNotNull(firstTask);
         source.onTaskFinished(firstTask);
 
         MockedTask secondTask = source.getTask();
-        Assert.assertNotNull(secondTask);
+        Assertions.assertNotNull(secondTask);
         source.onTaskFinished(secondTask);
 
         MockedTask thirdTask = source.getTask();
-        Assert.assertNotNull(thirdTask);
+        Assertions.assertNotNull(thirdTask);
         source.onTaskFinished(thirdTask);
 
-        Assert.assertFalse(source.doesTaskFailed());
+        Assertions.assertFalse(source.doesTaskFailed());
     }
 
     @Test
@@ -52,13 +52,13 @@ public class SimpleTaskSourceTest {
         SimpleTaskSource<MockedTask> source = new SimpleTaskSource<>(
                 Arrays.asList(new MockedTask(), new MockedTask()));
         MockedTask firstTask = source.getTask();
-        Assert.assertNotNull(firstTask);
+        Assertions.assertNotNull(firstTask);
         source.onTaskFailed(firstTask);
 
         MockedTask secondTask = source.getTask();
-        Assert.assertNull(secondTask);
+        Assertions.assertNull(secondTask);
 
-        Assert.assertTrue(source.doesTaskFailed());
+        Assertions.assertTrue(source.doesTaskFailed());
     }
 
     @Test
@@ -67,13 +67,13 @@ public class SimpleTaskSourceTest {
                 Arrays.asList(new MockedTask(), new MockedTask()));
         source.setSkipOnError(true);
         MockedTask firstTask = source.getTask();
-        Assert.assertNotNull(firstTask);
+        Assertions.assertNotNull(firstTask);
         source.onTaskFailed(firstTask);
 
         MockedTask secondTask = source.getTask();
-        Assert.assertNotNull(secondTask);
+        Assertions.assertNotNull(secondTask);
 
-        Assert.assertTrue(source.doesTaskFailed());
+        Assertions.assertTrue(source.doesTaskFailed());
     }
 
 

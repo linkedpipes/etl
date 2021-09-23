@@ -1,6 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
-const merge = require("webpack-merge");
+const {merge} = require("webpack-merge");
 const common = Object.assign({}, require("./webpack.common"));
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
@@ -14,7 +14,7 @@ const vueStyleDirectories = [
   path.join(__dirname, "..", "node_modules", "vuetify")
 ];
 
-module.exports = merge(common, {
+module.exports = merge({
   "mode": "development",
   "devtool": "inline-source-map",
   "entry": {
@@ -54,4 +54,4 @@ module.exports = merge(common, {
       "filename": "assets/styles/[name].[hash].css"
     }),
   ]
-});
+}, common);

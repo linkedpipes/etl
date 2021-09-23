@@ -12,8 +12,8 @@ import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerPipeline;
 import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorPipeline;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.util.Models;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -214,7 +214,7 @@ public class DesignerToExecutorTest {
 
         Rdf4jUtils.rdfEqual(expected, collector.getStatements());
 
-        Assert.assertTrue(Models.isomorphic(expected,
+        Assertions.assertTrue(Models.isomorphic(expected,
                 collector.getStatements()));
     }
 

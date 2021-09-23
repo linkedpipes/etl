@@ -9,8 +9,8 @@ import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.Models;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
@@ -49,7 +49,7 @@ public class TransformationFacadeTest {
                 this.valueFactory.createIRI("http://localhost/ppl"));
 
         Rdf4jUtils.rdfEqual(expected, actual);
-        Assert.assertTrue(Models.isomorphic(expected, actual));
+        Assertions.assertTrue(Models.isomorphic(expected, actual));
     }
 
 
@@ -76,7 +76,7 @@ public class TransformationFacadeTest {
                 this.valueFactory.createIRI("http://localhost/ppl"));
 
         Rdf4jUtils.rdfEqual(expected, actual);
-        Assert.assertTrue(Models.isomorphic(expected, actual));
+        Assertions.assertTrue(Models.isomorphic(expected, actual));
     }
 
 }

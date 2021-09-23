@@ -17,6 +17,8 @@ public final class FilesToRdfVocabulary {
 
     public static final String HAS_FILE_PREDICATE = PREFIX + "filePredicate";
 
+    public static final String HAS_NUMBER_OF_THREADS = PREFIX + "threads";
+
     private FilesToRdfVocabulary() {
     }
 

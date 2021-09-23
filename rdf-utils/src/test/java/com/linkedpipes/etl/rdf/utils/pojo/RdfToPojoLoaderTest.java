@@ -5,8 +5,8 @@ import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.model.SimpleStore;
 import com.linkedpipes.etl.rdf.utils.model.SimpleTriple;
 import com.linkedpipes.etl.rdf.utils.model.SimpleValue;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
@@ -57,11 +57,11 @@ public class RdfToPojoLoaderTest {
         TestObject testObject = new TestObject();
         loader.loadResource("resource", "", testObject);
 
-        Assert.assertEquals("resource", testObject.resource);
-        Assert.assertEquals("TestObjectTitle", testObject.title);
-        Assert.assertNotNull(testObject.object);
-        Assert.assertEquals("ref", testObject.object.resource);
-        Assert.assertEquals("InnerObject", testObject.object.title);
+        Assertions.assertEquals("resource", testObject.resource);
+        Assertions.assertEquals("TestObjectTitle", testObject.title);
+        Assertions.assertNotNull(testObject.object);
+        Assertions.assertEquals("ref", testObject.object.resource);
+        Assertions.assertEquals("InnerObject", testObject.object.title);
     }
 
     @Test
@@ -97,11 +97,11 @@ public class RdfToPojoLoaderTest {
         loader.loadResourceByReflection("resource", "", testObject,
                 descriptorFactory);
 
-        Assert.assertEquals("resource", testObject.resource);
-        Assert.assertEquals("TestObjectTitle", testObject.title);
-        Assert.assertNotNull(testObject.object);
-        Assert.assertEquals("ref", testObject.object.resource);
-        Assert.assertEquals("InnerObject", testObject.object.title);
+        Assertions.assertEquals("resource", testObject.resource);
+        Assertions.assertEquals("TestObjectTitle", testObject.title);
+        Assertions.assertNotNull(testObject.object);
+        Assertions.assertEquals("ref", testObject.object.resource);
+        Assertions.assertEquals("InnerObject", testObject.object.title);
     }
 
 }

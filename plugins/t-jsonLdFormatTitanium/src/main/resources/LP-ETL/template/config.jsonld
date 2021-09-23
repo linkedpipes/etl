@@ -1,0 +1,16 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-jsonLdFormatTitanium/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-jsonLdFormatTitanium#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-jsonLdFormatTitanium#format" : {
+            "@id" : "http://plugins.linkedpipes.com/ontology/t-jsonLdFormatTitanium#Flat"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-jsonLdFormatTitanium#formatControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/t-jsonLdFormatTitanium#context" : "{}",
+        "http://plugins.linkedpipes.com/ontology/t-jsonLdFormatTitanium#contextControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

@@ -1,0 +1,25 @@
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.format.hide">
+        <label>Operation</label>
+        <md-select ng-model="dialog.format.value"
+                   ng-disabled="dialog.format.disabled || dialog.format.inherit">
+            <md-option value="http://plugins.linkedpipes.com/ontology/t-jsonLdFormatTitanium#Flat">Flatten</md-option>
+            <md-option value="http://plugins.linkedpipes.com/ontology/t-jsonLdFormatTitanium#Expanded">Expand</md-option>
+            <md-option value="http://plugins.linkedpipes.com/ontology/t-jsonLdFormatTitanium#Compact">Compact</md-option>
+            <md-option value="http://plugins.linkedpipes.com/ontology/t-jsonLdFormatTitanium#Frame">Frame</md-option>
+            <md-option value="http://plugins.linkedpipes.com/ontology/t-jsonLdFormatTitanium#FrameAsArray">Frame as array</md-option>
+        </md-select>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.context.hide">
+        <label>JSON-LD context:</label>
+        <textarea id="query" ng-model="dialog.context.value"
+                  ng-disabled="dialog.context.disabled || dialog.context.inherit"/>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.frame.hide">
+        <label>JSON-LD frame:</label>
+        <textarea id="frame" ng-model="dialog.frame.value"
+                  ng-disabled="dialog.frame.disabled || dialog.frame.inherit"/>
+    </md-input-container>
+</div>
+

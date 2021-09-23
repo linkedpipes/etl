@@ -5,36 +5,32 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
-import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import com.linkedpipes.etl.executor.api.v1.component.chunk.ChunkExecution;
+import com.linkedpipes.etl.executor.api.v1.component.chunk.ChunkTransformer;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.query.GraphQueryResult;
-import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.repository.sail.SailRepository;
-import org.eclipse.rdf4j.repository.util.Repositories;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
-import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Linker is designed to solve problems, where links SPARQL construct
  * is execute on two big datasets, while it can be executed in isolation
  * on their chunks.
- *
+ * <p>
  * For each reference chunk and each data chunk are put together,
  * over these data the given query is executed.
- *
+ * <p>
  * Use the same vocabulary as SPARQL construct.
  */
-public final class SparqlLinkerChunked implements Component,
-        SequentialExecution {
+public final class SparqlLinkerChunked
+        extends ChunkExecution<ChunkedTriples.Chunk, Collection<Statement>>
+        implements Component {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(SparqlLinkerChunked.class);
@@ -55,23 +51,17 @@ public final class SparqlLinkerChunked implements Component,
     @Component.Configuration
     public SparqlConstructConfiguration configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
-    @Component.Inject
-    public ProgressReport progressReport;
+    protected List<Statement> reference = new ArrayList<>(10000);
 
     @Override
-    public void execute() throws LpException {
-        if (configuration.getQuery() == null
-                || configuration.getQuery().isEmpty()) {
-            throw exceptionFactory.failure("Missing property: {}",
-                    SparqlConstructVocabulary.HAS_QUERY);
-        }
-        progressReport.start(dataRdf.size());
-        final List<Statement> outputBuffer = new ArrayList<>(10000);
-        // Load reference data.
-        final List<Statement> reference = new ArrayList<>(10000);
+    public void execute(Context context) throws LpException {
+        checkConfiguration();
+        collectReferenceStatements();
+        super.execute(context);
+        reference.clear();
+    }
+
+    protected void collectReferenceStatements() throws LpException {
         referenceRdf.execute((connection) -> {
             connection.export(new AbstractRDFHandler() {
                 @Override
@@ -81,48 +71,50 @@ public final class SparqlLinkerChunked implements Component,
                 }
             }, referenceRdf.getReadGraph());
         });
-        //
-        boolean isAddToChunk = SparqlConstructVocabulary.ADD_TO_CHUNK.equals(
-                configuration.getOutputMode());
-
-        LOG.info("Output mode (add to chunk: {}) : {}", isAddToChunk,
-                configuration.getOutputMode());
-
-        for (ChunkedTriples.Chunk data : dataRdf) {
-            LOG.info("processing ..");
-            // Prepare repository and load data.
-            final Repository repository =
-                    new SailRepository(new MemoryStore());
-            repository.initialize();
-            LOG.info("\tloading ..");
-            final Collection<Statement> statements = data.toCollection();
-            Repositories.consume(repository, (connection) -> {
-                connection.add(statements);
-                connection.add(reference);
-            });
-            LOG.info("\tquerying ..");
-            // Execute query and store result.
-            Repositories.consume(repository, (connection) -> {
-                final GraphQueryResult result =
-                        connection.prepareGraphQuery(
-                                configuration.getQuery()).evaluate();
-                while (result.hasNext()) {
-                    outputBuffer.add(result.next());
-                }
-            });
-            if (isAddToChunk) {
-                outputBuffer.addAll(statements);
-            }
-            outputRdf.submit(outputBuffer);
-            LOG.info("\tcleanup ..");
-            // Cleanup.
-            outputBuffer.clear();
-            repository.shutDown();
-            progressReport.entryProcessed();
-            LOG.info("\tdone ..");
-        }
-        progressReport.done();
     }
 
+    protected void checkConfiguration() throws LpException {
+        String query = configuration.getQuery();
+        if (query == null || query.isEmpty()) {
+            throw new LpException("Missing query: {}",
+                    SparqlConstructVocabulary.HAS_QUERY);
+        }
+    }
+
+    @Override
+    protected Iterator<ChunkedTriples.Chunk> chunks() throws LpException {
+        return dataRdf.iterator();
+    }
+
+    @Override
+    protected int getThreadCount() {
+        return configuration.getThreadCount();
+    }
+
+    @Override
+    protected long getChunkCount() {
+        return dataRdf.size();
+    }
+
+    @Override
+    protected ChunkTransformer<ChunkedTriples.Chunk, Collection<Statement>>
+    createExecutor() {
+        boolean isAddToChunk = SparqlConstructVocabulary.ADD_TO_CHUNK.equals(
+                configuration.getOutputMode());
+        return new SparqlLinkerChunkedTransformer(
+                this, configuration.getQuery(), isAddToChunk, reference);
+    }
+
+    @Override
+    protected boolean shouldSkipFailures() {
+        return configuration.isSkipOnFailure();
+    }
+
+    @Override
+    protected void submitInternal(Collection<Statement> statements)
+            throws LpException {
+        outputRdf.submit(statements);
+        statements.clear();
+    }
 
 }

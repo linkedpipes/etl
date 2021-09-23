@@ -102,5 +102,8 @@
         <module>t-shacl</module>
         <module>t-shacl-jena</module>
         <module>t-rdfToJsonTemplate</module>
+        <module>t-jsonLdFormatTitanium</module>
+        <module>t-jsonLdToRdfTitanium</module>
+        <module>t-jenaTdbLoader</module>
     </modules>
 </project>

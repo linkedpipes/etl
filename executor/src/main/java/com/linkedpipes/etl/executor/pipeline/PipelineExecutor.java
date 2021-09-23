@@ -366,9 +366,10 @@ public class PipelineExecutor {
             dataUnitManager.close();
         }
         pipeline.closeRepository();
+        deleteDebugData();
         execution.onExecutionEnd();
         loggerFacade.destroyExecutionAppenders();
-        afterExecutionCleanUp();
+        deleteLogFiles();
     }
 
     private void notifyObserversOnEnding() {
@@ -382,7 +383,7 @@ public class PipelineExecutor {
         }
     }
 
-    private void afterExecutionCleanUp() {
+    private void deleteDebugData() {
         if (pipeline.getModel().isDeleteWorkingData()) {
             try {
                 FileUtils.deleteDirectory(resources.getRootWorkingDirectory());
@@ -390,6 +391,9 @@ public class PipelineExecutor {
                 LOG.error("Can't delete working directory.", ex);
             }
         }
+    }
+
+    private void deleteLogFiles() {
         if (pipeline.getModel().isDeleteLogDataOnSuccess()
                 && execution.isExecutionSuccessful()) {
             try {

@@ -1,0 +1,17 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/t-jenaTdbLoader/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/t-jenaTdbLoader#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/t-jenaTdbLoader/0.0.0/configuration/desc/location> ,
+        <http://linkedpipes.com/resources/components/t-jenaTdbLoader/0.0.0/configuration/desc/loader> .
+
+<http://linkedpipes.com/resources/components/t-jenaTdbLoader/0.0.0/configuration/desc/location>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-jenaTdbLoader#location> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-jenaTdbLoader#locationControl> .
+
+<http://linkedpipes.com/resources/components/t-jenaTdbLoader/0.0.0/configuration/desc/loader>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-jenaTdbLoader#loader> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-jenaTdbLoader#loaderControl> .

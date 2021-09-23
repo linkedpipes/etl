@@ -4,7 +4,9 @@
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration> ;
     config:member <http://linkedpipes.com/resources/components/t-sparqlLinkerChunked/1.0.0/configuration/desc/query> ,
-        <http://linkedpipes.com/resources/components/t-sparqlLinkerChunked/1.0.0/configuration/desc/outputMode> .
+        <http://linkedpipes.com/resources/components/t-sparqlLinkerChunked/1.0.0/configuration/desc/outputMode> ,
+        <http://linkedpipes.com/resources/components/t-sparqlLinkerChunked/1.0.0/configuration/desc/threads> ,
+        <http://linkedpipes.com/resources/components/t-sparqlLinkerChunked/1.0.0/configuration/desc/softFail> .
 
 <http://linkedpipes.com/resources/components/t-sparqlLinkerChunked/1.0.0/configuration/desc/query>
     a config:ConfigurationMember ;
@@ -15,3 +17,13 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#outputMode> ;
     config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#outputModeControl> .
+
+<http://linkedpipes.com/resources/components/t-sparqlLinkerChunked/1.0.0/configuration/desc/threads>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#threads> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#threadsControl> .
+
+<http://linkedpipes.com/resources/components/t-sparqlLinkerChunked/1.0.0/configuration/desc/softFail>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#softFail> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#softFailControl> .

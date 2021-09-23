@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 class ExecutionFactory {
@@ -31,6 +32,9 @@ class ExecutionFactory {
         }
 
         // Save resources.
+        if (inputs == null) {
+            inputs = Collections.emptyList();
+        }
         File inputDirectory = new File(directory, "input");
         for (MultipartFile input : inputs) {
             String originalFileName = input.getOriginalFilename();

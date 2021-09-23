@@ -1,13 +1,13 @@
 const path = require("path");
-const merge = require("webpack-merge");
+const {merge} = require("webpack-merge");
 const common = Object.assign({}, require("./webpack.common"));
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const OptimizeCSSPlugin = require("css-minimizer-webpack-plugin");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
-module.exports = merge(common, {
+module.exports = merge({
   "mode": "production",
   "devtool": "source-map",
   "output": {
@@ -15,10 +15,8 @@ module.exports = merge(common, {
   },
   "optimization": {
     "minimizer": [
-      new OptimizeCSSAssetsPlugin({}),
+      new OptimizeCSSPlugin(),
       new TerserPlugin({
-        "parallel": true,
-        "sourceMap": true,
         "terserOptions": {
           "ecma": 6,
         },
@@ -50,4 +48,4 @@ module.exports = merge(common, {
       ],
     }),
   ]
-});
+}, common);

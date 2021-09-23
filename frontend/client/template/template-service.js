@@ -62,8 +62,9 @@
   }
 
   function forceLoad() {
+    const options = {"headers": {"Accept": "application/ld+json"}};
     serviceData.loaded = false;
-    return $http.get("resources/components").then((response) => {
+    return $http.get("resources/components", options).then((response) => {
       console.time("Loading components");
       clearData(serviceData);
       loader.parseResponse(serviceData, response);

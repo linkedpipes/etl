@@ -3,13 +3,11 @@ dist: focal
 
 language: java
 jdk:
-  - oraclejdk11
-  - oraclejdk15
   - openjdk11
-  - openjdk15
+  - openjdk16
   
 env:
-  - NODE_VERSION=15.7.0
+  - NODE_VERSION=16.3.0
 
 cache:
   directories:

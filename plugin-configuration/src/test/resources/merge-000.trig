@@ -88,7 +88,7 @@
 
 <http://expected> {
 
-<http://base/1> a component:Configuration ;
+<http://localhost/instance> a component:Configuration ;
     component:first "l-2" ;
     component:firstControl config:None ;
     component:second "l-1" ;

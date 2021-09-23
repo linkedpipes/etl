@@ -8,8 +8,8 @@ import com.linkedpipes.etl.rdf.utils.pojo.LangString;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.util.LinkedList;
@@ -138,12 +138,12 @@ public class RdfUtilsTest {
         builder.commit();
         RdfUtils.load(source, "http://e", "http://graph", entity);
 
-        Assert.assertEquals("1", entity.value);
-        Assert.assertNotNull(entity.ref);
-        Assert.assertEquals("3", entity.ref.value);
-        Assert.assertEquals(2, entity.labelList.size());
-        Assert.assertEquals("lbl-en", entity.labelList.get(0).value);
-        Assert.assertEquals("lbl", entity.labelList.get(1).value);
+        Assertions.assertEquals("1", entity.value);
+        Assertions.assertNotNull(entity.ref);
+        Assertions.assertEquals("3", entity.ref.value);
+        Assertions.assertEquals(2, entity.labelList.size());
+        Assertions.assertEquals("lbl-en", entity.labelList.get(0).value);
+        Assertions.assertEquals("lbl", entity.labelList.get(1).value);
 
         source.close();
     }
@@ -167,14 +167,14 @@ public class RdfUtilsTest {
         RdfUtils.loadByType(source, "http://graph",
                 entity, descriptorFactory);
 
-        Assert.assertEquals("1", entity.value);
-        Assert.assertNotNull(entity.ref);
-        Assert.assertEquals("3", entity.ref.value);
-        Assert.assertEquals(2, entity.labelList.size());
-        Assert.assertEquals("lbl-en", entity.labelList.get(0).value);
-        Assert.assertEquals("lbl", entity.labelList.get(1).value);
-        Assert.assertEquals("en", entity.labelList.get(0).lang);
-        Assert.assertNull(entity.labelList.get(1).lang);
+        Assertions.assertEquals("1", entity.value);
+        Assertions.assertNotNull(entity.ref);
+        Assertions.assertEquals("3", entity.ref.value);
+        Assertions.assertEquals(2, entity.labelList.size());
+        Assertions.assertEquals("lbl-en", entity.labelList.get(0).value);
+        Assertions.assertEquals("lbl", entity.labelList.get(1).value);
+        Assertions.assertEquals("en", entity.labelList.get(0).lang);
+        Assertions.assertNull(entity.labelList.get(1).lang);
 
         source.close();
     }

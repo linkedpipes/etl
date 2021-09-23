@@ -6,6 +6,7 @@ import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -13,64 +14,95 @@ import org.eclipse.rdf4j.repository.RepositoryResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 class DataObjectLoader {
 
-    private final Repository repository;
+    protected Repository repository = null;
 
-    private final IRI graph;
+    protected IRI graph = null;
 
-    private final IRI objectClass;
+    protected final IRI objectClass;
 
-    private final boolean includeFirstFlag;
+    protected final boolean includeFirstFlag;
 
+    protected final EscapeForJson escapeForJson;
 
-    private Map<Resource, ObjectDataHolder> objectsInfo = new HashMap<>();
+    /**
+     * Holds object metadata.
+     */
+    protected Map<Resource, ObjectDataHolder> objectsInfo = new HashMap<>();
 
-    private Map<Resource, Map<IRI, List<Value>>> objects = new HashMap<>();
+    /**
+     * For each object we store it's properties.
+     */
+    protected Map<Resource, Map<IRI, List<Value>>> objects = new HashMap<>();
 
-    private EscapeForJson escapeForJson;
+    /**
+     * Cache for building object to handle cycles, the cache store
+     * only values loaded from the statements, not properties added
+     * based on the object info, such as first.
+     */
+    protected Map<Resource, Map<String, Object>> buildCache = new HashMap<>();
 
-    public DataObjectLoader(SingleGraphDataUnit dataUnit,
-                            MustacheConfiguration configuration) {
-        repository = dataUnit.getRepository();
-        graph = dataUnit.getReadGraph();
-        objectClass = SimpleValueFactory.getInstance().createIRI(
-                configuration.getResourceClass());
+    public DataObjectLoader(MustacheConfiguration configuration) {
+        ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        objectClass = valueFactory.createIRI(configuration.getResourceClass());
         includeFirstFlag = configuration.isAddFirstToCollection();
         if (configuration.isEscapeForJson()) {
             escapeForJson = new EscapeForJson();
+        } else {
+            escapeForJson = null;
         }
-
     }
 
-    public List<ObjectDataHolder> loadData() {
+    public List<ObjectDataHolder> loadData(SingleGraphDataUnit dataUnit) {
+        return loadData(dataUnit.getRepository(), dataUnit.getReadGraph());
+    }
+
+    public List<ObjectDataHolder> loadData(Repository repository, IRI graph) {
+        this.repository = repository;
+        this.graph = graph;
+        clearLocalState();
+        parseStatements();
+        List<ObjectDataHolder> result = collectObjects();
+        if (includeFirstFlag) {
+            addFirstFlags(result);
+        }
+        clearLocalState();
+        return result;
+    }
+
+    protected void clearLocalState() {
+        objectsInfo.clear();
+        objects.clear();
+        buildCache.clear();
+    }
+
+    protected void parseStatements() {
         try (RepositoryConnection connection = repository.getConnection()) {
-            try (RepositoryResult<Statement> result
+            try (RepositoryResult<Statement> statements
                          = connection.getStatements(null, null, null, graph)) {
-                parseStatements(result);
+                while (statements.hasNext()) {
+                    parseStatement(statements.next());
+                }
             }
         }
-        return buildObjectHolderList();
     }
 
-    private void parseStatements(RepositoryResult<Statement> statements) {
-        while (statements.hasNext()) {
-            parseStatement(statements.next());
-        }
-    }
-
-    private void parseStatement(Statement st) {
+    protected void parseStatement(Statement st) {
         Resource resource = st.getSubject();
         switch (st.getPredicate().stringValue()) {
             case "http://www.w3.org/1999/02/22-rdf-syntax-ns#type":
                 if (st.getObject().equals(objectClass)) {
                     getOrCreate(resource).output = true;
                 }
-                addStatement(st);
+                addStatementToObject(st);
                 break;
             case MustacheVocabulary.HAS_ORDER:
                 Literal literal = (Literal) st.getObject();
@@ -80,19 +112,19 @@ class DataObjectLoader {
                 getOrCreate(resource).fileName = st.getObject().stringValue();
                 break;
             default:
-                addStatement(st);
+                addStatementToObject(st);
                 break;
         }
     }
 
-    private ObjectDataHolder getOrCreate(Resource resource) {
+    protected ObjectDataHolder getOrCreate(Resource resource) {
         if (!objectsInfo.containsKey(resource)) {
             objectsInfo.put(resource, new ObjectDataHolder());
         }
         return objectsInfo.get(resource);
     }
 
-    private void addStatement(Statement statement) {
+    protected void addStatementToObject(Statement statement) {
         Resource subject = statement.getSubject();
         if (!objects.containsKey(subject)) {
             objects.put(subject, new HashMap<>());
@@ -106,133 +138,100 @@ class DataObjectLoader {
         values.add(statement.getObject());
     }
 
-    private List<ObjectDataHolder> buildObjectHolderList() {
-        List<ObjectDataHolder> objectsOutput = new LinkedList<>();
-        for (Resource resource : objectsInfo.keySet()) {
-            ObjectDataHolder object = objectsInfo.get(resource);
+    protected List<ObjectDataHolder> collectObjects() {
+        List<ObjectDataHolder> result = new ArrayList<>();
+        for (var entry : objectsInfo.entrySet()) {
+            ObjectDataHolder object = entry.getValue();
             if (!object.output) {
                 continue;
             }
-            object.data = createDataObject(resource);
-            objectsOutput.add(object);
+            object.data = buildObject(entry.getKey());
+            result.add(object);
         }
-        return objectsOutput;
+        return result;
     }
 
-    private Map<String, Object> createDataObject(Resource resource) {
-        Map<IRI, List<Value>> data = objects.get(resource);
-        if (data == null || data.isEmpty()) {
-            return buildEmptyDataObject(resource);
+    protected Map<String, Object> buildObject(Resource resource) {
+        Map<IRI, List<Value>> objectData = objects.get(resource);
+        if (objectData == null || objectData.isEmpty()) {
+            return buildEmptyObject(resource);
         }
-        return buildNonEmptyDataObject(resource, data);
+        return buildNonEmptyObject(resource, objectData);
     }
 
-    private Map<String, Object> buildEmptyDataObject(Resource resource) {
+    protected Map<String, Object> buildEmptyObject(Resource resource) {
         Map<String, Object> result = new HashMap<>();
         result.put("@id", escapeString(resource.stringValue()));
         return result;
     }
 
-    private Map<String, Object> buildNonEmptyDataObject(Resource resource,
-                                                        Map<IRI, List<Value>> objectData) {
+    protected Map<String, Object> buildNonEmptyObject(
+            Resource resource, Map<IRI, List<Value>> objectData) {
+        if (buildCache.containsKey(resource)) {
+            return buildCache.get(resource);
+        }
         Map<String, Object> result = new HashMap<>();
+        buildCache.put(resource, result);
+        //
         result.put("@id", escapeString(resource.stringValue()));
         for (Map.Entry<IRI, List<Value>> entry : objectData.entrySet()) {
             if (entry.getValue().isEmpty()) {
                 continue;
             }
-            if (entry.getValue().get(0) instanceof Resource) {
-                result.putAll(transformResource(entry));
-            } else {
-                result.putAll(transformValue(entry));
-            }
+            String key = escapeString(entry.getKey().stringValue());
+            Object value = buildObjectProperty(entry.getValue());
+            result.put(key, value);
         }
         return result;
     }
 
-    private String escapeString(String string) {
+    protected String escapeString(String string) {
         if (escapeForJson == null) {
             return string;
         }
         return escapeForJson.escape(string);
     }
 
-    private String escapeString(Value value) {
-        if (escapeForJson == null) {
-            return value.stringValue();
-        }
-        return escapeForJson.escape(value.stringValue());
-    }
-
-    private Map<String, Object> transformResource(
-            Map.Entry<IRI, List<Value>> entry) {
-        Map<String, Object> output = new HashMap<>();
-        if (entry.getValue().size() == 1) {
-            Resource resource = (Resource) entry.getValue().get(0);
-            Map<String, Object> resourceObject = createDataObject(resource);
-            if (includeFirstFlag) {
-                addFirstFlag(resourceObject);
-            }
-            output.put(escapeString(entry.getKey()), resourceObject);
+    protected Object buildObjectProperty(List<Value> values) {
+        // We assume that all the data are the same in the array,
+        // so we decide based on the first one and them apply the
+        // transformation for all of them.
+        boolean isResource = values.get(0) instanceof Resource;
+        List<Object> transformed = values.stream()
+                .sorted(this::compareValues)
+                .map(value -> {
+                    if (isResource) {
+                        return transformResource((Resource) value);
+                    } else {
+                        return transformValue(value);
+                    }
+                }).collect(Collectors.toList());
+        if (transformed.size() == 1) {
+            return transformed.get(0);
         } else {
-            output.put(escapeString(entry.getKey()),
-                    transformResourceList(entry));
-        }
-        return output;
-    }
-
-    private Object transformResourceList(Map.Entry<IRI, List<Value>> entry) {
-        List<Value> values = new LinkedList<>();
-        values.addAll(entry.getValue());
-        sortValues(values);
-        // Load new objects.
-        List<Object> outputData = new ArrayList<>(entry.getValue().size());
-        for (Value value : values) {
-            Object dataObject = createDataObject((Resource) value);
-            outputData.add(dataObject);
-        }
-        if (includeFirstFlag) {
-            addFirstFlagToList(outputData);
-        }
-        return outputData;
-    }
-
-    private void sortValues(List<Value> values) {
-        values.sort((Value left, Value right) -> {
-            ObjectDataHolder leftMeta = objectsInfo.get(left);
-            ObjectDataHolder rightMeta = objectsInfo.get(right);
-            if (leftMeta == null || rightMeta == null
-                    || leftMeta.order == null || rightMeta.order == null) {
-                return 0;
-            } else if (leftMeta.order < rightMeta.order) {
-                return -1;
-            } else if (leftMeta.order > rightMeta.order) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
-    }
-
-    private Map<String, Object> transformValue(
-            Map.Entry<IRI, List<Value>> entry) {
-        String predicate = escapeString(entry.getKey());
-        if (entry.getValue().size() == 1) {
-            Map<String, Object> output = new HashMap<>();
-            output.put(predicate, getValue(entry.getValue().get(0)));
-            return output;
-        } else {
-            Map<String, Object> output = new HashMap<>();
-            List<Object> newData = new ArrayList<>(entry.getValue().size());
-            for (Value value : entry.getValue()) {
-                newData.add(getValue(value));
-            }
-            output.put(predicate, newData);
-            return output;
+            return transformed;
         }
     }
 
-    private Object getValue(Value value) {
+    protected int compareValues(Value left, Value right) {
+        ObjectDataHolder leftMeta = objectsInfo.get(left);
+        ObjectDataHolder rightMeta = objectsInfo.get(right);
+        // We need to have the metadata.
+        if (leftMeta == null || rightMeta == null) {
+            return 0;
+        }
+        // We need to have the values.
+        if (leftMeta.order == null || rightMeta.order == null) {
+            return 0;
+        }
+        return leftMeta.order.compareTo(rightMeta.order);
+    }
+
+    protected Map<String, Object> transformResource(Resource resource) {
+        return buildObject(resource);
+    }
+
+    protected Object transformValue(Value value) {
         if (value instanceof Literal) {
             Literal literal = (Literal) value;
             switch (literal.getDatatype().stringValue()) {
@@ -240,24 +239,74 @@ class DataObjectLoader {
                     return literal.booleanValue();
             }
         }
-        return escapeString(value);
+        return escapeString(value.stringValue());
     }
 
-    private void addFirstFlag(Object object) {
-        if (object instanceof Map) {
-            ((Map) object).put(MustacheVocabulary.HAS_IS_FIRST, true);
+    protected void addFirstFlags(List<ObjectDataHolder> list) {
+        for (ObjectDataHolder item : list) {
+            item.data = addFirstFlagsForObject(new HashSet<>(), item.data);
         }
     }
 
-    private void addFirstFlagToList(List<Object> objects) {
-        boolean isFirst = true;
-        for (Object object : objects) {
-            if (object instanceof Map) {
-                ((Map) object).put(MustacheVocabulary.HAS_IS_FIRST, isFirst);
-                isFirst = false;
-            }
+    protected Object addFirstFlagsForObject(Set<Object> visited, Object data) {
+        if (data instanceof Map) {
+            return addFirstFlagsForMap(visited, (Map<String, Object>) data);
         }
+        if (data instanceof List) {
+            return addFirstFlagsForList(visited, (List<Object>) data);
+        }
+        return data;
     }
 
+    /**
+     * For maps we just need to search all properties recursively.
+     */
+    protected Map<String, Object> addFirstFlagsForMap(
+            Set<Object> visited, Map<String, Object> map) {
+        Object identifier = map.get("@id");
+        if (visited.contains(identifier)) {
+            return map;
+        }
+        Set<Object> newVisited = new HashSet<>(visited);
+        newVisited.add(identifier);
+        //
+        for (var entry : map.entrySet()) {
+            // Set flag to children.
+            Object value = addFirstFlagsForObject(newVisited, entry.getValue());
+            // If the object is map, then following will set the first,
+            // to true, else nothing happen.
+            Object valueWithFirst = setFirstToFirstObject(value, true);
+            map.put(entry.getKey(), valueWithFirst);
+        }
+        return map;
+    }
+
+    protected List<Object> addFirstFlagsForList(
+            Set<Object> visited, List<Object> list) {
+        if (list.isEmpty()) {
+            return list;
+        }
+        // We add first to the first flag to the first one.
+        Object first = setFirstToFirstObject(list.get(0), true);
+        addFirstFlagsForObject(visited, first);
+        list.set(0, first);
+        // Then we just iterate other, and set flag to false, as otherwise the
+        // flag is inherited from parent object.
+        for (int index = 1; index < list.size(); ++index) {
+            Object next = setFirstToFirstObject(list.get(index), false);
+            list.set(index, addFirstFlagsForObject(visited, next));
+        }
+        return list;
+    }
+
+    protected Object setFirstToFirstObject(Object input, boolean value) {
+        if (!(input instanceof Map)) {
+            return input;
+        }
+        Map<String, Object> map = (Map<String, Object>) input;
+        Map<String, Object> result = new HashMap<>(map);
+        result.put(MustacheVocabulary.HAS_IS_FIRST, value);
+        return result;
+    }
 
 }

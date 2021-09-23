@@ -11,7 +11,15 @@ define([], function () {
         "path": {
             "$type": "str",
             "$label": "Target path"
-        }
+        },
+        "filePermissions": {
+            "$type": "str",
+            "$label": "File permissions"
+        },
+        "directoryPermissions": {
+            "$type": "str",
+            "$label": "Directory permissions"
+        },
     };
 
     function controller($scope, $service) {

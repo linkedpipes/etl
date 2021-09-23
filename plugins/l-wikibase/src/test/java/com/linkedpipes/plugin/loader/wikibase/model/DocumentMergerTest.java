@@ -1,7 +1,7 @@
 package com.linkedpipes.plugin.loader.wikibase.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.wikidata.wdtk.datamodel.helpers.Datamodel;
 import org.wikidata.wdtk.datamodel.helpers.ItemDocumentBuilder;
 import org.wikidata.wdtk.datamodel.helpers.ReferenceBuilder;
@@ -76,9 +76,9 @@ public class DocumentMergerTest {
         // With no strategy, ie. merge by default we should get merged results.
         DocumentMerger merger = new DocumentMerger(
                 local.build(), remote.build(), strategy, SnakEqual.strict());
-        Assert.assertTrue(merger.canUpdateExisting());
+        Assertions.assertTrue(merger.canUpdateExisting());
         ItemDocument actual = merger.assembleMergeDocument();
-        Assert.assertEquals(expected.build(), actual);
+        Assertions.assertEquals(expected.build(), actual);
     }
 
 }

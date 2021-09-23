@@ -8,8 +8,8 @@ import com.linkedpipes.etl.executor.rdf.entity.MergeType;
 import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -59,15 +59,15 @@ public class DefaultControlTest {
         control.init(refs);
 
         control.onReference("http://config", "http://config/1");
-        Assert.assertEquals(MergeType.SKIP,
+        Assertions.assertEquals(MergeType.SKIP,
                 control.onProperty("http://value/1"));
-        Assert.assertEquals(MergeType.LOAD,
+        Assertions.assertEquals(MergeType.LOAD,
                 control.onProperty("http://value/2"));
 
         control.onReference("http://config", "http://config/2");
-        Assert.assertEquals(MergeType.LOAD,
+        Assertions.assertEquals(MergeType.LOAD,
                 control.onProperty("http://value/1"));
-        Assert.assertEquals(MergeType.SKIP,
+        Assertions.assertEquals(MergeType.SKIP,
                 control.onProperty("http://value/2"));
 
         source.close();

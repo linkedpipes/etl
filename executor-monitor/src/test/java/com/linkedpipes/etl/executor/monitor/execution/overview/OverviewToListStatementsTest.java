@@ -10,8 +10,8 @@ import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionStatus;
 import com.linkedpipes.etl.rdf4j.Statements;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.text.DateFormat;
@@ -43,7 +43,7 @@ public class OverviewToListStatementsTest {
         Statements expected = Statements.arrayList();
         expected.setDefaultGraph(graph);
         expected.addIri(iri, RDF.TYPE, LP_LIST.TOMBSTONE);
-        Assert.assertTrue(actual.containsAllLogMissing(expected));
+        Assertions.assertTrue(actual.containsAllLogMissing(expected));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class OverviewToListStatementsTest {
         expected.addIri(
                 iri, LP_OVERVIEW.HAS_STATUS, ExecutionStatus.QUEUED.asStr());
         Statements actual = this.toStatements.asStatements(execution, root);
-        Assert.assertTrue(actual.containsAllLogMissing(expected));
+        Assertions.assertTrue(actual.containsAllLogMissing(expected));
     }
 
     @Test
@@ -135,7 +135,7 @@ public class OverviewToListStatementsTest {
         expected.addIri(
                 iri, LP_OVERVIEW.HAS_STATUS, ExecutionStatus.QUEUED.asStr());
         Statements actual = this.toStatements.asStatements(execution, root);
-        Assert.assertTrue(actual.containsAllLogMissing(expected));
+        Assertions.assertTrue(actual.containsAllLogMissing(expected));
     }
 
 }

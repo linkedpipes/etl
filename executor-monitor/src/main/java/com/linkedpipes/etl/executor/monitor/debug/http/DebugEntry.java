@@ -3,6 +3,7 @@ package com.linkedpipes.etl.executor.monitor.debug.http;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 public abstract class DebugEntry {
 
@@ -24,7 +25,7 @@ public abstract class DebugEntry {
     }
 
     public void write(OutputStream outputStream) throws IOException {
-        outputStream.write(contentAsString.getBytes("utf-8"));
+        outputStream.write(contentAsString.getBytes(StandardCharsets.UTF_8));
     }
 
 }

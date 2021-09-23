@@ -2,7 +2,7 @@ package com.linkedpipes.etl.rdf.utils;
 
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
 import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 public class RdfBuilderTest {

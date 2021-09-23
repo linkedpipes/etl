@@ -55,6 +55,7 @@
         "name": "",
         "style": {}
       };
+      $scope.isExecutionCancelable = false;
       //
       data["pipelineIri"] = pipeline;
       data["executionIri"] = execution;
@@ -140,6 +141,7 @@
     function updateExecutionFromJsonld(jsonld) {
       actions.executionFromJsonLd(jsonld, data.executionIri);
       $scope.isExecutionFinished = actions.isExecutionFinished();
+      $scope.isExecutionCancelable = actions.isExecutionCancelable();
       $scope.executionIcon =
         statusToIcon(actions.getExecutionStatus(), true);
     }
@@ -222,8 +224,13 @@
         "?templates=true" +
         "&mappings=true" +
         "&removePrivateConfig=false";
+      const request = {
+        "headers": {
+          "Accept": "application/ld+json",
+        },
+      };
       actions.savePipeline().then(() => {
-        $http.get(url).then((response) => {
+        $http.get(url, request).then((response) => {
           saveAs(createPipelineBlob(response.data),
             $scope.pipelineLabel + ".jsonld");
         });
@@ -235,8 +242,13 @@
         "?templates=true" +
         "&mappings=true" +
         "&removePrivateConfig=true";
+      const request = {
+        "headers": {
+          "Accept": "application/ld+json",
+        },
+      };
       actions.savePipeline().then(() => {
-        $http.get(url).then((response) => {
+        $http.get(url, request).then((response) => {
           saveAs(createPipelineBlob(response.data),
             $scope.pipelineLabel + ".jsonld");
         });
@@ -316,6 +328,29 @@
         .search({"pipeline": iri});
     }
 
+    function onCancel() {
+      actions.cancelExecution(data.executionIri)
+        .then((executionDeleted) => {
+          if (executionDeleted) {
+            // Execution no longer exists, so we leave the execution edit mode.
+            $location.path("/pipelines/edit/canvas")
+              .search({"pipeline": data.pipelineIri});
+          } else {
+            // This is just to hide the button for now,
+            // the value will be updated by pipeline-actions on next
+            // execution update list.
+            $scope.isExecutionCancelable = false;
+          }
+        })
+        .catch((error) => {
+          $status.error("Can't cancel execution.", error);
+        });
+    }
+
+    function onExecutionMode() {
+      activateExecutionMode();
+    }
+
     return {
       "initialize": initialize,
       "onHtmlReady": onHtmlReady,
@@ -334,7 +369,9 @@
       "onEnableAllLoaders": actions.onEnableAllLoaders,
       "onDownloadNoSave": onDownloadNoSave,
       "onDownloadNoCredentialsNoSave": onDownloadNoCredentialsNoSave,
-      "onCopyNoSave": onCopyPipelineNoSave
+      "onCopyNoSave": onCopyPipelineNoSave,
+      "onCancel": onCancel,
+      "onExecutionMode": onExecutionMode,
     };
   }
 

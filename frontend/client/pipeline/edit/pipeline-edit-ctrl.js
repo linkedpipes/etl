@@ -18,8 +18,6 @@
 
     $scope.onPipelineDetail = $service.onPipelineDetail;
 
-    $scope.onOpenMenu = ($mdOpenMenu, event) => $mdOpenMenu(event);
-
     $scope.onDisableAllLoaders = $service.onDisableAllLoaders;
 
     $scope.onEnableAllLoaders = $service.onEnableAllLoaders;
@@ -49,6 +47,10 @@
     $scope.onDownloadNoCredentialsNoSave = $service.onDownloadNoCredentialsNoSave;
 
     $scope.onCopyNoSave = $service.onCopyNoSave;
+
+    $scope.onCancel = $service.onCancel;
+
+    $scope.onExecutionMode = $service.onExecutionMode;
 
     $timeout($service.onHtmlReady);
 

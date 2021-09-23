@@ -1,0 +1,5 @@
+<urn:root> a <urn:Root>;
+  <urn:dataset> <https://data.gov.cz/zdroj/datové-sady/00006947/833106130/a37a3249701decde33b60568333e547e> .
+
+<https://data.gov.cz/zdroj/datové-sady/00006947/833106130/a37a3249701decde33b60568333e547e>
+  <urn:keywords_en> <https://data.gov.cz/zdroj/datové-sady/00006947/833106130/a37a3249701decde33b60568333e547e> .

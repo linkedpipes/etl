@@ -6,4 +6,14 @@
                ng-disabled="dialog.path.disabled || dialog.path.inherit"
                required>
     </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.filePermissions.hide">
+        <label>Permissions to set to files</label>
+        <input ng-model="dialog.filePermissions.value"
+               ng-disabled="dialog.filePermissions.disabled || dialog.filePermissions.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.directoryPermissions.hide">
+        <label>Permissions to set to directories</label>
+        <input ng-model="dialog.directoryPermissions.value"
+               ng-disabled="dialog.directoryPermissions.disabled || dialog.directoryPermissions.inherit">
+    </md-input-container>
 </div>

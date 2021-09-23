@@ -12,7 +12,7 @@ LinkedPipes ETL is an RDF based, lightweight ETL tool.
 - [Docker], [Docker Compose]
 
 ### For building locally
-- [Java] 11, 13 or 15
+- [Java] 11 or 16
 - [Git]
 - [Maven], 3.2.5 or newer
 - [Node.js] & npm
@@ -28,15 +28,12 @@ curl https://raw.githubusercontent.com/linkedpipes/etl/master/docker-compose.yml
 Note that on Windows, there is an [issue with buildkit](https://github.com/moby/buildkit/issues/1684).
 See the [temporary workaround](https://github.com/linkedpipes/etl/issues/851#issuecomment-814058925).
 
-Alternatively, you can clone the entire repository
-```sh
-git clone https://github.com/linkedpipes/etl.git
+When running this on Windows, you might get a build error. There is a [workaround](https://github.com/linkedpipes/etl/issues/851) for that.
+
+Alternatively, you can build docker images from GitHub sources using a one-liner:
 ```
-and run
-```sh
-docker-compose up
+curl https://raw.githubusercontent.com/linkedpipes/etl/master/docker-compose-github.yml | docker-compose -f - up
 ```
-Note that this uses just the ```docker-compose.yml``` file, so the rest of the cloned repository is useless.
 
 You may need to run the commands as ```sudo``` or be in the ```docker``` group.
 
@@ -55,7 +52,7 @@ This does NOT have to be the same as port in ```LP_ETL_DOMAIN``` in case of reve
 
 For example to run LP-ETL from ```develop``` branch on ```http://localhost:9080``` use can use following command:
 ```
-curl https://raw.githubusercontent.com/linkedpipes/etl/develop/docker-compose.yml | LP_ETL_PORT=9080 LP_ETL_DOMAIN=http://localhost:9080 docker-compose -f - up
+curl https://raw.githubusercontent.com/linkedpipes/etl/develop/docker-compose-github.yml | LP_ETL_PORT=9080 LP_ETL_DOMAIN=http://localhost:9080 LP_ETL_BUILD_BRANCH=develop docker-compose -f - up
 ```
 
 ```docker-compose``` utilizes several volumes that can be used to access/provide data.

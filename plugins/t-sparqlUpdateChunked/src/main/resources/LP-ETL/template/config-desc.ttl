@@ -3,9 +3,21 @@
 <http://linkedpipes.com/resources/components/t-sparqlUpdateChunked/0.0.0/configuration/desc>
     a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
     config:type <http://plugins.linkedpipes.com/ontology/t-sparqlUpdateChunked#Configuration> ;
-    config:member <http://linkedpipes.com/resources/components/t-sparqlUpdateChunked/0.0.0/configuration/desc/query> .
+    config:member <http://linkedpipes.com/resources/components/t-sparqlUpdateChunked/0.0.0/configuration/desc/query> ,
+        <http://linkedpipes.com/resources/components/t-sparqlUpdateChunked/1.0.0/configuration/desc/threads> ,
+        <http://linkedpipes.com/resources/components/t-sparqlUpdateChunked/1.0.0/configuration/desc/softFail> .
 
 <http://linkedpipes.com/resources/components/t-sparqlUpdateChunked/0.0.0/configuration/desc/query>
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/t-sparqlUpdateChunked#query> ;
     config:control <http://plugins.linkedpipes.com/ontology/t-sparqlUpdateChunked#queryControl> .
+
+<http://linkedpipes.com/resources/components/t-sparqlUpdateChunked/1.0.0/configuration/desc/threads>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlUpdateChunked#threads> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlUpdateChunked#threadsControl> .
+
+<http://linkedpipes.com/resources/components/t-sparqlUpdateChunked/1.0.0/configuration/desc/softFail>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/t-sparqlUpdateChunked#softFail> ;
+    config:control <http://plugins.linkedpipes.com/ontology/t-sparqlUpdateChunked#softFailControl> .

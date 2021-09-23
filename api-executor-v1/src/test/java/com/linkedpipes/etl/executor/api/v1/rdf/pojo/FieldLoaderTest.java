@@ -3,8 +3,8 @@ package com.linkedpipes.etl.executor.api.v1.rdf.pojo;
 import com.linkedpipes.etl.executor.api.v1.rdf.LanguageString;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.lang.reflect.Field;
@@ -91,7 +91,7 @@ public class FieldLoaderTest {
         FieldLoader loader = new FieldLoader();
         loader.set(instance, field, value, true);
 
-        Assert.assertEquals(12, instance.intValue);
+        Assertions.assertEquals(12, instance.intValue);
     }
 
     @Test
@@ -104,7 +104,7 @@ public class FieldLoaderTest {
         FieldLoader loader = new FieldLoader();
         loader.set(instance, field, value, true);
 
-        Assert.assertEquals("value", instance.stringValue);
+        Assertions.assertEquals("value", instance.stringValue);
     }
 
     @Test
@@ -117,7 +117,7 @@ public class FieldLoaderTest {
         FieldLoader loader = new FieldLoader();
         loader.set(instance, field, value, true);
 
-        Assert.assertEquals(true, instance.booleanValue);
+        Assertions.assertEquals(true, instance.booleanValue);
     }
 
     @Test
@@ -127,12 +127,12 @@ public class FieldLoaderTest {
         RdfValue value = Mockito.mock(RdfValue.class);
         Mockito.when(value.asString()).thenReturn("http://localhost");
 
-        Assert.assertNull(instance.reference);
+        Assertions.assertNull(instance.reference);
 
         FieldLoader loader = new FieldLoader();
         loader.set(instance, field, value, true);
 
-        Assert.assertNotNull(instance.reference);
+        Assertions.assertNotNull(instance.reference);
     }
 
     @Test
@@ -146,7 +146,7 @@ public class FieldLoaderTest {
         Object firstReference = loader.set(instance, field, value, true);
         Object secondReference = loader.set(instance, field, value, false);
 
-        Assert.assertNotEquals(firstReference, secondReference);
+        Assertions.assertNotEquals(firstReference, secondReference);
     }
 
     @Test
@@ -160,7 +160,7 @@ public class FieldLoaderTest {
         Object firstReference = loader.set(instance, field, value, true);
         Object secondReference = loader.set(instance, field, value, true);
 
-        Assert.assertEquals(firstReference, secondReference);
+        Assertions.assertEquals(firstReference, secondReference);
     }
 
     @Test
@@ -174,10 +174,10 @@ public class FieldLoaderTest {
         loader.set(instance, field, value, true);
         loader.set(instance, field, value, true);
 
-        Assert.assertEquals(2, instance.list.size());
+        Assertions.assertEquals(2, instance.list.size());
     }
 
-    @Test(expected = RdfException.class)
+    @Test
     public void loadNullCollection() throws Exception {
         TestClass instance = new TestClass();
         instance.list = null;
@@ -186,7 +186,9 @@ public class FieldLoaderTest {
         Mockito.when(value.asBoolean()).thenReturn(true);
 
         FieldLoader loader = new FieldLoader();
-        loader.set(instance, field, value, true);
+        Assertions.assertThrows(RdfException.class, () -> {
+            loader.set(instance, field, value, true);
+        });
     }
 
     @Test
@@ -200,10 +202,10 @@ public class FieldLoaderTest {
         loader.set(instance, field, value, true);
         loader.set(instance, field, value, false);
 
-        Assert.assertEquals(1, instance.list.size());
+        Assertions.assertEquals(1, instance.list.size());
     }
 
-    @Test(expected = RdfException.class)
+    @Test
     public void loadArray() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("array");
@@ -211,7 +213,9 @@ public class FieldLoaderTest {
         Mockito.when(value.asBoolean()).thenReturn(true);
 
         FieldLoader loader = new FieldLoader();
-        loader.set(instance, field, value, true);
+        Assertions.assertThrows(RdfException.class, () -> {
+            loader.set(instance, field, value, true);
+        });
     }
 
     @Test
@@ -227,9 +231,9 @@ public class FieldLoaderTest {
         Mockito.when(value.asLong()).thenReturn(12L);
         loader.set(instance, field, value, true);
 
-        Assert.assertEquals(2, instance.intList.size());
-        Assert.assertTrue(11 == instance.intList.get(0));
-        Assert.assertTrue(12 == instance.intList.get(1));
+        Assertions.assertEquals(2, instance.intList.size());
+        Assertions.assertTrue(11 == instance.intList.get(0));
+        Assertions.assertTrue(12 == instance.intList.get(1));
     }
 
     @Test
@@ -242,7 +246,7 @@ public class FieldLoaderTest {
         FieldLoader loader = new FieldLoader();
         loader.set(instance, field, value, true);
 
-        Assert.assertEquals(TestEnum.VALUE_A, instance.enumValue);
+        Assertions.assertEquals(TestEnum.VALUE_A, instance.enumValue);
     }
 
     @Test
@@ -256,9 +260,9 @@ public class FieldLoaderTest {
         FieldLoader loader = new FieldLoader();
         loader.set(instance, field, value, true);
 
-        Assert.assertNotNull(instance.langString);
-        Assert.assertEquals("value", instance.langString.getValue());
-        Assert.assertEquals("cs", instance.langString.getLanguage());
+        Assertions.assertNotNull(instance.langString);
+        Assertions.assertEquals("value", instance.langString.getValue());
+        Assertions.assertEquals("cs", instance.langString.getLanguage());
     }
 
     @Test
@@ -274,13 +278,13 @@ public class FieldLoaderTest {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(instance.dateValue);
 
-        Assert.assertEquals(2010, calendar.get(Calendar.YEAR));
-        Assert.assertEquals(1, calendar.get(Calendar.MONTH));
-        Assert.assertEquals(20, calendar.get(Calendar.DAY_OF_MONTH));
+        Assertions.assertEquals(2010, calendar.get(Calendar.YEAR));
+        Assertions.assertEquals(1, calendar.get(Calendar.MONTH));
+        Assertions.assertEquals(20, calendar.get(Calendar.DAY_OF_MONTH));
     }
 
 
-    @Test(expected = RdfException.class)
+    @Test
     public void loadNestedCollection() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("nestedCollection");
@@ -288,7 +292,9 @@ public class FieldLoaderTest {
         Mockito.when(value.asBoolean()).thenReturn(true);
 
         FieldLoader loader = new FieldLoader();
-        loader.set(instance, field, value, true);
+        Assertions.assertThrows(RdfException.class, () -> {
+            loader.set(instance, field, value, true);
+        });
     }
 
     @Test
@@ -301,11 +307,11 @@ public class FieldLoaderTest {
         FieldLoader loader = new FieldLoader();
         loader.set(instance, field, value, true);
 
-        Assert.assertEquals(1, instance.enumCollection.size());
-        Assert.assertEquals(TestEnum.VALUE_A, instance.enumCollection.get(0));
+        Assertions.assertEquals(1, instance.enumCollection.size());
+        Assertions.assertEquals(TestEnum.VALUE_A, instance.enumCollection.get(0));
     }
 
-    @Test(expected = RdfException.class)
+    @Test
     public void loadArrayCollection() throws Exception {
         TestClass instance = new TestClass();
         Field field = TestClass.class.getDeclaredField("arrayCollection");
@@ -313,7 +319,9 @@ public class FieldLoaderTest {
         Mockito.when(value.asBoolean()).thenReturn(true);
 
         FieldLoader loader = new FieldLoader();
-        loader.set(instance, field, value, true);
+        Assertions.assertThrows(RdfException.class, () -> {
+            loader.set(instance, field, value, true);
+        });
     }
 
     @Test
@@ -327,10 +335,10 @@ public class FieldLoaderTest {
         FieldLoader loader = new FieldLoader();
         loader.set(instance, field, value, true);
 
-        Assert.assertEquals(1, instance.langStringCollection.size());
+        Assertions.assertEquals(1, instance.langStringCollection.size());
         TestLangString langString = instance.langStringCollection.get(0);
-        Assert.assertEquals("value", langString.getValue());
-        Assert.assertEquals("cs", langString.getLanguage());
+        Assertions.assertEquals("value", langString.getValue());
+        Assertions.assertEquals("cs", langString.getLanguage());
     }
 
 }

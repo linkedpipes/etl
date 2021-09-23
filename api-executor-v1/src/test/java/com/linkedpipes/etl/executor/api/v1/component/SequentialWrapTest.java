@@ -9,8 +9,8 @@ import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.service.WorkingDirectory;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
@@ -72,18 +72,18 @@ public class SequentialWrapTest {
                 new DefaultServiceFactory());
         //
         wrap.initialize(dataUnits, null);
-        Assert.assertNotNull(component.input);
-        Assert.assertEquals(input, component.input);
-        Assert.assertEquals(output, component.output);
-        Assert.assertNotNull(component.exceptionFactory);
-        Assert.assertNotNull(component.progressReport);
-        Assert.assertNotNull(component.workingDirectory);
-        Assert.assertEquals(path.getAbsolutePath(),
+        Assertions.assertNotNull(component.input);
+        Assertions.assertEquals(input, component.input);
+        Assertions.assertEquals(output, component.output);
+        Assertions.assertNotNull(component.exceptionFactory);
+        Assertions.assertNotNull(component.progressReport);
+        Assertions.assertNotNull(component.workingDirectory);
+        Assertions.assertEquals(path.getAbsolutePath(),
                 component.workingDirectory.getAbsolutePath());
         //
-        Assert.assertFalse(component.executed);
+        Assertions.assertFalse(component.executed);
         wrap.execute(null);
-        Assert.assertTrue(component.executed);
+        Assertions.assertTrue(component.executed);
         //
         path.delete();
     }

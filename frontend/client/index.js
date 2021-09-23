@@ -11,13 +11,10 @@ import ngNotification from "angular-ui-notification";
 import configureNavigation from "./navigation";
 import appLayout from "./app-layout/layout-directive";
 
-import "./executions.css";
-import "./pipeline-canvas.css";
-import "./pipelines.css";
-import "./style.css";
 import "angular-material/angular-material.css";
 import "angular-ui-notification/dist/angular-ui-notification.css";
 import "jointjs/dist/joint.core.css";
+import "./style.css";
 
 const APP_NAME = "lp-application";
 
@@ -56,9 +53,17 @@ function configurePathHashPrefix(app) {
 
 function configureTheme(app) {
   app.config(["$mdThemingProvider", ($mdThemingProvider) => {
+
+    const customPalette = $mdThemingProvider.extendPalette('blue', {
+      'contrastDarkColors': [],
+    });
+
+    $mdThemingProvider.definePalette("light-blue", customPalette);
+
     $mdThemingProvider.theme("default")
-      .primaryPalette("blue")
+      .primaryPalette("light-blue")
       .accentPalette("orange");
+    
   }]);
 }
 

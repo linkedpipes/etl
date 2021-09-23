@@ -1,0 +1,10 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/t-jenaTdbLoader/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/t-jenaTdbLoader#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/t-jenaTdbLoader#location" : "",
+        "http://plugins.linkedpipes.com/ontology/t-jenaTdbLoader#locationControl": true,
+        "http://plugins.linkedpipes.com/ontology/t-jenaTdbLoader#loader" : "phased",
+        "http://plugins.linkedpipes.com/ontology/t-jenaTdbLoader#loaderControl": true
+    }
+]

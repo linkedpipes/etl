@@ -67,7 +67,7 @@ function createFromNonMultipartRequest(req, res) {
         "url": monitorApiUrl,
         "formData": formData,
         "headers": {
-          "Accept": "application/json"
+          "Accept": "application/ld+json"
         }
       };
       request.post(options)

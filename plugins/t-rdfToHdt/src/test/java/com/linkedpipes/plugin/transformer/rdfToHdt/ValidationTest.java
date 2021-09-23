@@ -1,7 +1,7 @@
 package com.linkedpipes.plugin.transformer.rdfToHdt;
 
 import com.linkedpipes.etl.test.suite.TestConfigurationDescription;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ValidationTest {
 

@@ -11,6 +11,14 @@ define([], function () {
         "query": {
             "$type": "str",
             "$label": "SPARQL UPDATE query"
+        },
+        "threads" : {
+            "$type": "int",
+            "$label": "Number of threads to use"
+        },
+        "softFail": {
+            "$type": "bool",
+            "$label": "Skip file on failure"
         }
     };
 

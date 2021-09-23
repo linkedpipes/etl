@@ -7,8 +7,8 @@ import com.linkedpipes.etl.rdf.utils.RdfBuilder;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
@@ -41,13 +41,13 @@ public class RequirementProcessorTest {
                 "SELECT ?v WHERE { GRAPH <http://graph> { "
                         + " ?s <" + LP_EXEC.HAS_WORKING_DIRECTORY + "> ?v "
                         + " }}", "v");
-        Assert.assertEquals(workingFile, new File(URI.create(working)));
+        Assertions.assertEquals(workingFile, new File(URI.create(working)));
         //
         String input = RdfUtils.sparqlSelectSingle(source,
                 "SELECT ?v WHERE { GRAPH <http://graph> { "
                         + " ?s <" + LP_EXEC.HAS_INPUT_DIRECTORY + "> ?v "
                         + " }}", "v");
-        Assert.assertEquals(inputFile, new File(URI.create(input)));
+        Assertions.assertEquals(inputFile, new File(URI.create(input)));
         //
         source.close();
     }

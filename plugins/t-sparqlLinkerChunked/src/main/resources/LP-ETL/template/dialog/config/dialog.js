@@ -16,6 +16,14 @@ define([], function () {
             "$type": "iri",
             "$label": "Output mode",
             "$onLoad": defaultOutputMode
+        },
+        "threads" : {
+            "$type": "int",
+            "$label": "Number of threads to use"
+        },
+        "softFail": {
+            "$type": "bool",
+            "$label": "Skip file on failure"
         }
     };
 

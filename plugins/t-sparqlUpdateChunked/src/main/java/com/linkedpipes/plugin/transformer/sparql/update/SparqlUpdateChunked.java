@@ -5,26 +5,19 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
-import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
-import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import com.linkedpipes.etl.executor.api.v1.component.chunk.ChunkExecution;
+import com.linkedpipes.etl.executor.api.v1.component.chunk.ChunkTransformer;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.repository.sail.SailRepository;
-import org.eclipse.rdf4j.repository.util.Repositories;
-import org.eclipse.rdf4j.rio.RDFHandlerException;
-import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
-import org.eclipse.rdf4j.sail.memory.MemoryStore;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Iterator;
 
 /**
  * Chunked version of SparqlUpdate.
  */
-public final class SparqlUpdateChunked implements Component,
-        SequentialExecution {
+public final class SparqlUpdateChunked
+        extends ChunkExecution<ChunkedTriples.Chunk, Collection<Statement>>
+        implements Component {
 
     @Component.InputPort(iri = "InputRdf")
     public ChunkedTriples inputRdf;
@@ -39,52 +32,37 @@ public final class SparqlUpdateChunked implements Component,
     @Component.Configuration
     public SparqlUpdateConfiguration configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
-    @Component.Inject
-    public ProgressReport progressReport;
+    @Override
+    protected Iterator<ChunkedTriples.Chunk> chunks() {
+        return inputRdf.iterator();
+    }
 
     @Override
-    public void execute() throws LpException {
-        if (configuration.getQuery() == null
-                || configuration.getQuery().isEmpty()) {
-            throw exceptionFactory.failure("Missing property: {}",
-                    SparqlUpdateVocabulary.CONFIG_SPARQL);
-        }
-        // We always perform inserts.
-        progressReport.start(inputRdf.size());
-        List<Statement> outputBuffer = new ArrayList<>(10000);
-        for (ChunkedTriples.Chunk chunk : inputRdf) {
-            // Prepare repository and load data.
-            final Repository repository = new SailRepository(new MemoryStore());
-            repository.initialize();
-            final Collection<Statement> statements = chunk.toCollection();
-            Repositories.consume(repository, (connection) -> {
-                connection.add(statements);
-            });
-            // Execute query.
-            Repositories.consume(repository, (connection) -> {
-                connection.prepareUpdate(
-                        configuration.getQuery()).execute();
-            });
-            // Store data.
-            Repositories.consume(repository, (connection) -> {
-                connection.export(new AbstractRDFHandler() {
-                    @Override
-                    public void handleStatement(Statement st)
-                            throws RDFHandlerException {
-                        outputBuffer.add(st);
-                    }
-                });
-            });
-            outputRdf.submit(outputBuffer);
-            // Cleanup.
-            outputBuffer.clear();
-            repository.shutDown();
-            progressReport.entryProcessed();
-        }
-        progressReport.done();
+    protected int getThreadCount() {
+        return configuration.getThreadCount();
+    }
+
+    @Override
+    protected long getChunkCount() {
+        return inputRdf.size();
+    }
+
+    @Override
+    protected ChunkTransformer<ChunkedTriples.Chunk, Collection<Statement>>
+    createExecutor() {
+        return new SparqlUpdateChunkedTransformer(this, configuration.getQuery());
+    }
+
+    @Override
+    protected boolean shouldSkipFailures() {
+        return configuration.isSkipOnFailure();
+    }
+
+    @Override
+    protected void submitInternal(Collection<Statement> statements)
+            throws LpException {
+        outputRdf.submit(statements);
+        statements.clear();
     }
 
 }

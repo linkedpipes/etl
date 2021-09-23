@@ -1,0 +1,6 @@
+<urn:root> a <urn:Root>;
+  <urn:dataset> <https://data.gov.cz/zdroj/datové-sady/1>, <https://data.gov.cz/zdroj/datové-sady/2> ;
+  <urn:resource> <https://data.gov.cz/zdroj/datové-sady/3> .
+
+<https://data.gov.cz/zdroj/datové-sady/1>
+  <urn:dataset> <https://data.gov.cz/zdroj/datové-sady/2>, <https://data.gov.cz/zdroj/datové-sady/1> .
