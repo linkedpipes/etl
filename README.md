@@ -102,12 +102,29 @@ In the ```deploy``` folder, run
  * ```storage.bat```
  * ```frontend.bat```
 
+## Data import
+You can copy pipelines, templates and mapping data from one instance to another directly iff both instance runs on the same domain.
+As this is, mostly, not the case you need to utilize special script to update the resources.
+
+Assume that you have copy of a data directory ```./data-source``` with ```knowledge```, ```pipelines``` and ```templates``` sub-directories. 
+You can obtain the directory from any running instance, you can even merge content of multiple of those directories together.
+In the next step you would like to import the data into a new instance. 
+The new instance has a data directory ```./data-target``` and the domain, set in configuration as ```domain.uri``` is ```https://example.com```.
+
+In that case you can utilize a Python script from ```script``` directory.
+The script is called ```change_domain.py``` and requires [installation of rdflib](https://rdflib.readthedocs.io/en/stable/gettingstarted.html#installation),
+Once rdflib is installed you can run the script using the following command:
+```
+python change_domain.py --input ./data-source --domain https://example.com --output ./data-target
+```
+After the script is finished you can start the target instance of LinkedPipes ETL and all the data should be available there.
+
 ## Plugins - Components
 The components live in the ```jars``` directory.
-Detailed description of how to create your own is coming soon, in the meantime, you can copy an existing component and change it.
+If you need to create your own component, you can copy an existing component and change it.
  
 ## Update notes
-> Update note 5: 2019-09-03 breaking changes in the configuration file. Remove ```/api/v1``` from the ```executor-monitor.webserver.uri```, so it loolks like: ```executor-monitor.webserver.uri = http://localhost:8081```. You can also remove ```executor.execution.uriPrefix``` as the value is derived from ```domain.uri```.
+> Update note 5: 2019-09-03 breaking changes in the configuration file. Remove ```/api/v1``` from the ```executor-monitor.webserver.uri```, so it looks like: ```executor-monitor.webserver.uri = http://localhost:8081```. You can also remove ```executor.execution.uriPrefix``` as the value is derived from ```domain.uri```.
 
 > Update note 4: 2019-07-03 we changed the way frontend is run. If you do not use our script to run it, you need to update yours. 
 
