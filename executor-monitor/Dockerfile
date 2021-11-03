@@ -1,4 +1,4 @@
-FROM openjdk:13-jdk-alpine as lp-etl-build
+FROM openjdk:17.0.1-jdk-slim as lp-etl-build
 ARG LP_ETL_BUILD_BRANCH=master
 ARG LP_ETL_BUILD_JAVA_TEST=-DskipTests
 LABEL lp_project=etl
@@ -7,7 +7,7 @@ WORKDIR /opt/lp/etl
 RUN git clone --single-branch --branch $LP_ETL_BUILD_BRANCH https://github.com/linkedpipes/etl.git .
 RUN mvn install $LP_ETL_BUILD_JAVA_TEST -P "install-executor,install-executor-monitor,install-storage,install-plugins"
 
-FROM openjdk:13-jdk-alpine
+FROM openjdk:17.0.1-slim
 ARG LP_ETL_USER=5987
 LABEL lp_project=etl
 LABEL component=executor-monitor
