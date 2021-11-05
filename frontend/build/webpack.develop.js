@@ -3,6 +3,7 @@ const webpack = require("webpack");
 const {merge} = require("webpack-merge");
 const common = Object.assign({}, require("./webpack.common"));
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const ESLintPlugin = require("eslint-webpack-plugin");
 
 // We need to use vue-style-loader for Vue but not for AngularJS.
 // If we use vue-style-loader in AngularJS the content after import is not
@@ -39,12 +40,6 @@ module.exports = merge({
           "vue-style-loader",
           "css-loader"
         ]
-      }, {
-        // Apply linter during run development.
-        "enforce": "pre",
-        "test": /\.(js|vue)$/,
-        "loader": "eslint-loader",
-        "exclude": /node_modules/
       }
     ]
   },
@@ -53,5 +48,8 @@ module.exports = merge({
     new MiniCssExtractPlugin({
       "filename": "assets/styles/[name].[hash].css"
     }),
+    // new ESLintPlugin({
+    //   "extensions": ["js", "vue"],
+    // }),
   ]
 }, common);
