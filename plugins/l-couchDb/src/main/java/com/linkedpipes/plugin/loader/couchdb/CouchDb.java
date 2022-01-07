@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
 public class CouchDb {
@@ -36,7 +37,7 @@ public class CouchDb {
 
     public void setCredentials(String userName, String password) {
         String auth = userName + ":" + password;
-        byte[] authBytes = auth.getBytes(Charset.forName("ISO-8859-1"));
+        byte[] authBytes = auth.getBytes(StandardCharsets.ISO_8859_1);
         byte[] encodedAuth = Base64.encodeBase64(authBytes);
         this.authorizationHeader = "Basic " + new String(encodedAuth);
     }
@@ -97,7 +98,7 @@ public class CouchDb {
         try (InputStream errorStream = connection.getErrorStream()) {
             StringWriter writer = new StringWriter();
             IOUtils.copy(errorStream, writer, "utf-8");
-            LOG.error("Error stream: {}", writer.toString());
+            LOG.info("Response: {}", writer);
         } catch (Exception ex) {
             // Do nothing.
         }
@@ -147,14 +148,16 @@ public class CouchDb {
         HttpURLConnection httpConnection = (HttpURLConnection) connection;
         httpConnection.setRequestMethod("POST");
         httpConnection.setDoOutput(true);
+        httpConnection.addRequestProperty("Accept", "application/json");
         httpConnection.addRequestProperty("Content-Type", "application/json");
+        addAuthorizationHeader(connection);
         return httpConnection;
     }
 
     private void writeFilesAsBulkDocument(
             OutputStream stream, Collection<File> files) throws IOException {
         PrintWriter writer = new PrintWriter(
-                new OutputStreamWriter(stream, "UTF-8"),
+                new OutputStreamWriter(stream, StandardCharsets.UTF_8),
                 true);
         writer.write("{\"docs\":[");
         writer.flush();
@@ -191,7 +194,7 @@ public class CouchDb {
             // Ignore.
         }
         throw exceptionFactory.failure(
-                "Can't execute request: {}\nError: {}",
+                "Can't execute request, response code: {}\nResponse: {}",
                 responseCode, error);
     }
 
