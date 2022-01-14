@@ -63,6 +63,7 @@ public final class CouchDbLoader implements Component, SequentialExecution {
     private void recreateDatabase() throws LpException {
         couchDb.deleteDatabase(configuration.getDatabase());
         couchDb.createDatabase(configuration.getDatabase());
+        couchDb.removeUsersForDatabase(configuration.getDatabase());
     }
 
     private void uploadData() throws LpException {

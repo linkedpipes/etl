@@ -12,11 +12,13 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
 public class CouchDb {
+
+    private static final String EMPTY_USER_LIST =
+            "{\"members\":{\"roles\":[]},\"admins\":{\"roles\":[]}}";
 
     private static final Logger LOG = LoggerFactory.getLogger(CouchDb.class);
 
@@ -72,7 +74,7 @@ public class CouchDb {
         }
         if (responseCode < 200 || responseCode > 299) {
             throw exceptionFactory.failure(
-                    "Request failed with status: {}", responseCode);
+                    "Can't create database, status: {}", responseCode);
         }
     }
 
@@ -121,11 +123,44 @@ public class CouchDb {
         connection.setRequestProperty("Authorization", authorizationHeader);
     }
 
-    public void uploadDocuments(String database, Collection<File> documents)
-            throws LpException {
+    public void removeUsersForDatabase(String database) throws LpException {
+        String url = this.server + database + "/_security";
         HttpURLConnection connection = null;
         try {
-            connection = createBulkLoadConnection(database);
+            connection = createHttpConnectionForJson(url, "PUT");
+            connection.connect();
+            try (OutputStream stream = connection.getOutputStream()) {
+                stream.write(EMPTY_USER_LIST.getBytes(StandardCharsets.UTF_8));
+                stream.flush();
+            }
+            checkStatus(connection);
+        } catch (IOException ex) {
+            throw exceptionFactory.failure("Can't set users connection.", ex);
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
+    private HttpURLConnection createHttpConnectionForJson(
+            String url, String method) throws IOException {
+        URLConnection connection = (new URL(url)).openConnection();
+        HttpURLConnection httpConnection = (HttpURLConnection) connection;
+        httpConnection.setRequestMethod(method);
+        httpConnection.setDoOutput(true);
+        httpConnection.addRequestProperty("Accept", "application/json");
+        httpConnection.addRequestProperty("Content-Type", "application/json");
+        addAuthorizationHeader(connection);
+        return httpConnection;
+    }
+
+    public void uploadDocuments(String database, Collection<File> documents)
+            throws LpException {
+        String url = this.server + database + "/_bulk_docs";
+        HttpURLConnection connection = null;
+        try {
+            connection = createHttpConnectionForJson(url, "POST");
             connection.connect();
             try (OutputStream stream = connection.getOutputStream()) {
                 writeFilesAsBulkDocument(stream, documents);
@@ -139,19 +174,6 @@ public class CouchDb {
                 connection.disconnect();
             }
         }
-    }
-
-    private HttpURLConnection createBulkLoadConnection(String database)
-            throws IOException {
-        String url = this.server + database + "/_bulk_docs";
-        URLConnection connection = (new URL(url)).openConnection();
-        HttpURLConnection httpConnection = (HttpURLConnection) connection;
-        httpConnection.setRequestMethod("POST");
-        httpConnection.setDoOutput(true);
-        httpConnection.addRequestProperty("Accept", "application/json");
-        httpConnection.addRequestProperty("Content-Type", "application/json");
-        addAuthorizationHeader(connection);
-        return httpConnection;
     }
 
     private void writeFilesAsBulkDocument(
