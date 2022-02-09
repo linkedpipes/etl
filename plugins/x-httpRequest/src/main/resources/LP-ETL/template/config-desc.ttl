@@ -33,8 +33,8 @@
 
 <http://linkedpipes.com/resources/components/x-httpRequest/0.0.0/configuration/desc/encodeUrl>
     a config:ConfigurationMember ;
-    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFile#encodeUrl> ;
-    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFile#encodeUrlControl> .
+    config:property <http://plugins.linkedpipes.com/ontology/x-httpRequest#encodeUrl> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-httpRequest#encodeUrlControl> .
 
 <http://linkedpipes.com/resources/components/x-httpRequest/0.0.0/configuration/desc/timeout>
     a config:ConfigurationMember ;
