@@ -1,26 +1,23 @@
-FROM openjdk:17.0.1-jdk-slim as lp-etl-build
-ARG LP_ETL_BUILD_BRANCH=master
-ARG LP_ETL_BUILD_JAVA_TEST=-DskipTests
-LABEL lp_project=etl
-RUN apk add --no-cache maven git
-WORKDIR /opt/lp/etl
-RUN git clone --single-branch --branch $LP_ETL_BUILD_BRANCH https://github.com/linkedpipes/etl.git .
-RUN mvn install $LP_ETL_BUILD_JAVA_TEST -P "install-executor,install-executor-monitor,install-storage,install-plugins"
+FROM openjdk:17.0.1-jdk-slim-bullseye as lp-etl-build
+ARG LP_ETL_BUILD=-DskipTests
 
-FROM openjdk:17.0.1-slim
+WORKDIR /opt/lp-etl/
+COPY ./ ./
+RUN ./mvnw install  $LP_ETL_BUILD -P "install-executor,install-plugins"
+
+FROM openjdk:17.0.1-slim-bullseye
 ARG LP_ETL_USER=5987
-LABEL lp_project=etl
-LABEL component=executor
-RUN addgroup --gid "$LP_ETL_USER" "linkedpipes" \
-    && adduser -D --home /opt/lp --ingroup "linkedpipes" --uid "$LP_ETL_USER" "etl"
-WORKDIR /opt/lp/etl
-COPY --from=lp-etl-build /opt/lp/etl/deploy/configuration.docker.properties /data/lp/etl/configuration/configuration.properties
-COPY --from=lp-etl-build /opt/lp/etl/deploy/executor /opt/lp/etl/executor
-COPY --from=lp-etl-build /opt/lp/etl/deploy/osgi /opt/lp/etl/osgi
-RUN mkdir -p /data/lp/etl/executor \
-    && mkdir -p /data/lp/etl/logs \
-    && chown -R $LP_ETL_USER:$LP_ETL_USER /data/lp/etl
-VOLUME ["/data/lp/etl/executor", "/data/lp/etl/logs","/data/lp/etl/configuration"]
+RUN addgroup --gid $LP_ETL_USER "linkedpipes" \
+    && useradd --gid "linkedpipes" --uid $LP_ETL_USER "linkedpipes"
+RUN mkdir -p /data/lp-etl/executor \
+    && mkdir -p /data/lp-etl/logs \
+    && chown -R $LP_ETL_USER:$LP_ETL_USER /data/lp-etl
+COPY --from=lp-etl-build --chown=linkedpipes /opt/lp-etl/deploy/configuration.docker.properties /opt/lp-etl/configuration/configuration.properties
+COPY --from=lp-etl-build --chown=linkedpipes /opt/lp-etl/deploy/executor /opt/lp-etl/executor
+COPY --from=lp-etl-build --chown=linkedpipes /opt/lp-etl/deploy/jars /opt/lp-etl/components
+COPY --from=lp-etl-build --chown=linkedpipes /opt/lp-etl/deploy/osgi /opt/lp-etl/osgi
+
+WORKDIR /opt/lp-etl
 USER $LP_ETL_USER
 EXPOSE 8085
-CMD ["java", "-DconfigFileLocation=/data/lp/etl/configuration/configuration.properties", "-jar" ,"./executor/executor.jar"]
+CMD ["java", "-DconfigFileLocation=/opt/lp-etl/configuration/configuration.properties", "-jar" ,"./executor/executor.jar"]
