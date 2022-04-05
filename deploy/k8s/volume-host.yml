@@ -1,0 +1,22 @@
+# This is cluster specific. You probably should use different definition
+# based on your cluster. This definition assume existence of cluster shared
+# directory /data/lp-etl/ with proper permissions.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: volume-host
+  labels:
+    app.kubernetes.io/name: lp-etl
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 4Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: volume-claim
+    namespace: default
+  hostPath:
+    path: /data/lp-etl-v1/
+    type: DirectoryOrCreate

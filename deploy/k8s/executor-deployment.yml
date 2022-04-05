@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: executor-deployment
+  labels:
+    app.kubernetes.io/name: lp-etl
+    app.kubernetes.io/component: executor
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: lp-etl
+      app.kubernetes.io/component: executor
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: lp-etl
+        app.kubernetes.io/component: executor
+    spec:
+      volumes:
+        - name: executor-volume
+          persistentVolumeClaim:
+            claimName: volume-claim
+      containers:
+        - name: executor-volume
+          image: linkedpipes/etl-executor:develop
+          imagePullPolicy: Always
+          env:
+            - name: LP_ETL_DOMAIN
+              value: "http://localhost:8080"
+          ports:
+            - containerPort: 8085
+          volumeMounts:
+            - mountPath: "/data/lp-etl/"
+              name: executor-volume
