@@ -21,19 +21,16 @@ LinkedPipes ETL is an RDF based, lightweight ETL tool.
 You can run LP-ETL in Docker, or build it from the source.
 
 ### Docker
-To start LP-ETL ```master``` branch on ```http://localhost:8080```, you can use a one-liner:
+To start LP-ETL you can use:
 ```
-curl https://raw.githubusercontent.com/linkedpipes/etl/master/docker-compose.yml | docker-compose -f - up
+git clone https://github.com/linkedpipes/etl.git
+cd etl
+docker-compose up
 ```
 
 When running this on Windows, you might get a build error. There is a [workaround](https://github.com/linkedpipes/etl/issues/851) for that.
 
-Alternatively, you can build docker images from GitHub sources using a one-liner:
-```
-curl https://raw.githubusercontent.com/linkedpipes/etl/master/docker-compose-github.yml | docker-compose -f - up
-```
-
-You may need to run the commands as ```sudo``` or be in the ```docker``` group.
+You may need to run the ```docker-compose``` command as ```sudo``` or be in the ```docker``` group.
 
 #### Configuration
 Each component (executor, executor-monitor, storage, frontend) has separate ```Dockerfile```.
