@@ -11,7 +11,7 @@
     </parent>
     <artifactId>plugin-configuration</artifactId>
     <packaging>jar</packaging>
-    <name>LinkedPipes Plugin Loader</name>
+    <name>LinkedPipes Plugin Configuration</name>
     <description>
         Functionality of component configuration preparation.
     </description>
