@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: lp-etl
     app.kubernetes.io/component: executor-monitor
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app.kubernetes.io/name: lp-etl
     app.kubernetes.io/component: executor-monitor
