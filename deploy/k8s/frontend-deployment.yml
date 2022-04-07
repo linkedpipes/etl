@@ -21,5 +21,8 @@ spec:
         - name: lp-etl-frontend
           image: linkedpipes/etl-frontend:develop
           imagePullPolicy: Always
+          env:
+            - name: LP_ETL_DOMAIN
+              value: "http://localhost:8080"
           ports:
             - containerPort: 8080
