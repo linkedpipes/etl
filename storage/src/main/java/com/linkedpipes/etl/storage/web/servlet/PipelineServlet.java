@@ -61,7 +61,7 @@ public class PipelineServlet {
     private Pipeline getPipeline(String iri) throws MissingResource {
         Pipeline pipeline = pipelines.getPipeline(iri);
         if (pipeline == null) {
-            throw new MissingResource("Missing template: {}", iri);
+            throw new MissingResource("Missing pipeline: {}", iri);
         }
         return pipeline;
     }
