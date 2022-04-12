@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+title: "LinkedPipes ETL in Use: Practical Publication and Consumption of Linked Data"
+message: Please cite this software using these metadata.
+authors:
+  - given-names: Jakub
+    family-names: Klímek
+    email: jakub.klimek@matfyz.cuni.cz
+    affiliation: Charles University
+    orcid: 'https://orcid.org/0000-0001-7234-3051'
+  - given-names: Petr
+    family-names: Škoda
+    email: petr.skoda@matfyz.cuni.cz
+    affiliation: Charles University
+    orcid: 'https://orcid.org/0000-0002-2732-9370'
+preferred-citation:
+ title: "LinkedPipes ETL in Use: Practical Publication and Consumption of Linked Data"
+ type: conference-paper
+ conference:
+  name: "19th International Conference on Information Integration and Web-based Applications & Services iiWAS2017"
+ collection-title: "Proceedings of the 19th International Conference on Information Integration and Web-based Applications & Services iiWAS2017"
+ collection-type: proceedings
+ doi: 10.1145/3151759.3151809
+ isbn: 978-1-4503-5299-4
+ start: 441
+ end: 445
+ volume-title: "ACM International Conference Proceedings Series"
+ publisher:
+  name: "ACM"
+ authors:
+  - given-names: Jakub
+    family-names: Klímek
+    email: jakub.klimek@matfyz.cuni.cz
+    affiliation: Charles University
+    orcid: 'https://orcid.org/0000-0001-7234-3051'
+  - given-names: Petr
+    family-names: Škoda
+    email: petr.skoda@matfyz.cuni.cz
+    affiliation: Charles University
+    orcid: 'https://orcid.org/0000-0002-2732-9370'
+ url: "https://doi.org/10.1145/3151759.3151809"
+ year: 2017
