@@ -16,6 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.IDN;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 class TaskExecutor implements TaskConsumer<HttpRequestTask> {
@@ -184,9 +185,17 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
             throws Exception {
         String location = connection.getResponseHeader("Location");
         if (task.isHasUtf8Redirect()) {
-            location = new String(location.getBytes("ISO-8859-1"), "UTF-8");
+            location = new String(
+                    location.getBytes(StandardCharsets.ISO_8859_1),
+                    StandardCharsets.UTF_8);
         }
-        URL urlToFollow = new URL(location);
+        URL urlToFollow;
+        if (location.startsWith("/")) {
+            // Resolve relative path.
+            urlToFollow = new URL(connection.getConnection().getURL(), location);
+        } else {
+            urlToFollow = new URL(location);
+        }
         connection.close();
         performRequest(urlToFollow);
     }
