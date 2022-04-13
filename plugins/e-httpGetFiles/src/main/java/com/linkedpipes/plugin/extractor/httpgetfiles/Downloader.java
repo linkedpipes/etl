@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
+import java.net.IDN;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
@@ -125,15 +126,28 @@ class Downloader {
         }
     }
 
-    private URL createUrl(String stringAsUrl) throws IOException {
+    private URL createUrl(String urlAsString) throws IOException {
+        URL url;
+        try {
+            // Parse so we have access to parts.
+            url = new URL(urlAsString);
+            // Encode the host to support IDN.
+            url = new URL(
+                    url.getProtocol(),
+                    IDN.toASCII(url.getHost()),
+                    url.getPort(),
+                    url.getFile());
+        } catch (IOException ex) {
+            throw new IOException("Can't create URL: " + urlAsString, ex);
+        }
         if (configuration.encodeUrl) {
             try {
-                stringAsUrl = (new URL(stringAsUrl)).toURI().toASCIIString();
-            } catch (URISyntaxException ex) {
-                throw new IOException("Can't convert to URI:" + stringAsUrl, ex);
+                url = new URL(url.toURI().toASCIIString());
+            } catch (IOException | URISyntaxException ex) {
+                throw new IOException("Can't convert to URI: " + url, ex);
             }
         }
-        return new URL(stringAsUrl);
+        return url;
     }
 
     private HttpURLConnection connect(URL target) throws IOException {

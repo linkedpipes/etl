@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.IDN;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
@@ -65,20 +66,28 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         }
     }
 
-    private URL createUrl(String url) throws LpException {
-        String stringAsUrl = task.getUrl();
+    private URL createUrl(String urlAsString) throws LpException {
+        URL url;
+        try {
+            // Parse so we have access to parts.
+            url = new URL(urlAsString);
+            // Encode the host to support IDN.
+            url = new URL(
+                    url.getProtocol(),
+                    IDN.toASCII(url.getHost()),
+                    url.getPort(),
+                    url.getFile());
+        } catch (IOException ex) {
+            throw new LpException("Can't create URL: {}", urlAsString, ex);
+        }
         if (encodeUrl) {
             try {
-                stringAsUrl = (new URL(stringAsUrl)).toURI().toASCIIString();
+                url = new URL(url.toURI().toASCIIString());
             } catch (IOException | URISyntaxException ex) {
-                throw new LpException("Can't convert to URI:" + stringAsUrl, ex);
+                throw new LpException("Can't convert to URI: {}", url, ex);
             }
         }
-        try {
-            return new URL(stringAsUrl);
-        } catch (IOException ex) {
-            throw new LpException("Invalid URL: {}", url);
-        }
+        return url;
     }
 
     private void performRequest(URL url) throws LpException {
