@@ -25,6 +25,10 @@ public final class GraphStoreProtocolVocabulary {
 
     public static final String HAS_REPLACE = PREFIX + "replace";
 
+    public static final String ENTRY = PREFIX + "Entry";
+
+    public static final String HAS_FILE_NAME = PREFIX + "fileName";
+
     private GraphStoreProtocolVocabulary() {
     }
 

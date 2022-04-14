@@ -5,10 +5,11 @@ import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 @RdfToPojo.Type(iri = GraphStoreProtocolVocabulary.CONFIG)
 public class GraphStoreProtocolConfiguration {
 
-    public static enum RepositoryType {
+    public enum RepositoryType {
         VIRTUOSO,
         FUSEKI,
-        BLAZEGRAPH
+        BLAZEGRAPH,
+        GRAPHDB
     }
 
     @RdfToPojo.Property(iri = GraphStoreProtocolVocabulary.HAS_GRAPH)
