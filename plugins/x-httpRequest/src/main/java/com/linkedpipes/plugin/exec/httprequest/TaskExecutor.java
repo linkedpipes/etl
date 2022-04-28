@@ -17,7 +17,9 @@ import java.net.IDN;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 class TaskExecutor implements TaskConsumer<HttpRequestTask> {
 
@@ -32,9 +34,11 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
 
     private final boolean encodeUrl;
 
-    private HeaderReporter headerReporter;
+    private final HeaderReporter headerReporter;
 
-    private ProgressReport progressReport;
+    private final ProgressReport progressReport;
+
+    private final Set<URL> visited = new HashSet<>();
 
     private HttpRequestTask task;
 
@@ -61,6 +65,7 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         this.task = task;
         URL url = createUrl(task.getUrl());
         try {
+            visited.clear();
             performRequest(url);
         } finally {
             progressReport.entryProcessed();
@@ -93,6 +98,10 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
 
     private void performRequest(URL url) throws LpException {
         LOG.debug("Creating connection {} ...", url);
+        if (visited.contains(url)) {
+            throw exceptionFactory.failure("Cycle detected.");
+        }
+        visited.add(url);
         try (Connection connection = createConnection(url)) {
             LOG.debug("Requesting response {} ...", url);
             connection.finishRequest();
