@@ -7,7 +7,8 @@
         <http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/endpoint> ,
         <http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/username> ,
         <http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/password> ,
-        <http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/useAuthentication> .
+        <http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/useAuthentication> ,
+        <http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/repository> .
 
 <http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/endpoint>
     a config:ConfigurationMember ;
@@ -30,4 +31,9 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#useAuthentication> ;
     config:control <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#useAuthenticationControl> .
+
+<http://linkedpipes.com/resources/components/x-graphStorePurger/0.0.0/configuration/desc/repository>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#repository> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#repositoryControl> .
 

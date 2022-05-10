@@ -20,6 +20,9 @@ public class GraphStorePurgerConfiguration {
     @RdfToPojo.Property(iri = GraphStorePurgerVocabulary.HAS_AUTHENTICATION)
     private boolean useAuthentication = false;
 
+    @RdfToPojo.Property(iri = GraphStorePurgerVocabulary.HAS_REPOSITORY)
+    private String repository = GraphStorePurgerVocabulary.REPOSITORY_DEFAULT;
+
     public GraphStorePurgerConfiguration() {
     }
 
@@ -54,4 +57,13 @@ public class GraphStorePurgerConfiguration {
     public void setUseAuthentication(boolean useAuthentication) {
         this.useAuthentication = useAuthentication;
     }
+
+    public String getRepository() {
+        return repository;
+    }
+
+    public void setRepository(String repository) {
+        this.repository = repository;
+    }
+
 }

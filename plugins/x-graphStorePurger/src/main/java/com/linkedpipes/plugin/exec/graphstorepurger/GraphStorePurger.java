@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,7 +96,7 @@ public class GraphStorePurger implements Component, SequentialExecution {
         }
     }
 
-    private void createHttpClient() throws LpException {
+    private void createHttpClient() {
         if (configuration.isUseAuthentication()) {
             final RequestConfig requestConfig = RequestConfig.custom()
                     .setAuthenticationEnabled(true).build();
@@ -122,8 +123,8 @@ public class GraphStorePurger implements Component, SequentialExecution {
     /**
      * Do an empty request just to get the validation into a cache.
      * This is requires as for example Virtuoso will refuse the first
-     * request and ask for authorization. However as the first request
-     * can be too big - it would looks like a failure to us
+     * request and ask for authorization. However, as the first request
+     * can be too big - it would look like a failure to us
      * (as Virtuoso just close the connection before reading all the data).
      */
     private void requestForPreemptiveAuthentication(
@@ -138,14 +139,24 @@ public class GraphStorePurger implements Component, SequentialExecution {
     }
 
     private void deleteGraph(
-            HttpClientContext context,
-            String graph) throws LpException {
-        String url = configuration.getEndpoint() + "?graph-uri=";
-        try {
-            url += URLEncoder.encode(graph, "UTF-8");
-        } catch (IOException ex) {
-            throw exceptionFactory.failure("Unknown encoding.", ex);
+            HttpClientContext context,String graph) throws LpException {
+        if (GraphStorePurgerVocabulary.REPOSITORY_GRAPHDB.equals(
+                configuration.getRepository())) {
+            deleteGraphGraphDB(context, graph);
+        } else {
+            deleteGraphDefault(context, graph);
         }
+    }
+
+    private void deleteGraphGraphDB(
+            HttpClientContext context,String graph) throws LpException {
+        String url = configuration.getEndpoint() + "?graph=";
+        url += URLEncoder.encode(graph, StandardCharsets.UTF_8);
+        executeHttpDelete(context, url);
+    }
+
+    private void executeHttpDelete(
+            HttpClientContext context, String url) throws LpException {
         HttpDelete httpMethod = new HttpDelete(url);
         try {
             executeHttpRequest(context, httpMethod);
@@ -153,6 +164,13 @@ public class GraphStorePurger implements Component, SequentialExecution {
             throw exceptionFactory.failure("Delete request failed on: {}",
                     url, ex);
         }
+    }
+
+    private void deleteGraphDefault(
+            HttpClientContext context,String graph) throws LpException {
+        String url = configuration.getEndpoint() + "?graph-uri=";
+        url += URLEncoder.encode(graph, StandardCharsets.UTF_8);
+        executeHttpDelete(context, url);
     }
 
     private void executeHttpRequest(

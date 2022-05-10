@@ -20,4 +20,10 @@ public final class GraphStorePurgerVocabulary {
 
     public static final String HAS_GRAPH = PREFIX + "graph";
 
+    public static final String HAS_REPOSITORY = PREFIX + "repository";
+
+    public static final String REPOSITORY_DEFAULT = "DEFAULT";
+
+    public static final String REPOSITORY_GRAPHDB = "GRAPHDB";
+
 }

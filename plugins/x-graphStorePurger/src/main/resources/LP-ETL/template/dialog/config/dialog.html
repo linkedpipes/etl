@@ -1,5 +1,15 @@
 <lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
 <div>
+    <div class="row">
+        <md-input-container class="md-block" ng-hide="dialog.repository.hide" flex>
+            <label>Repository</label>
+            <md-select ng-model="dialog.repository.value"
+                       ng-disabled="dialog.repository.disabled || dialog.repository.inherit">
+                <md-option value="DEFAULT">Default</md-option>
+                <md-option value="GRAPHDB">GraphDB</md-option>
+            </md-select>
+        </md-input-container>
+    </div>
     <md-input-container class="md-block"
                         ng-hide="dialog.endpoint.hide" flex>
         <label>Graph store protocol endpoint</label>

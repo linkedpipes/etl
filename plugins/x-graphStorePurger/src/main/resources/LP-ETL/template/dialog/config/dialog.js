@@ -23,7 +23,11 @@ define([], function () {
         "endpoint": {
             "$type": "str",
             "$label": "Graph store protocol endpoint"
-        }
+        },
+        "repository": {
+            "$type": "str",
+            "$label": "Repository"
+        },
     };
 
     function controller($scope, $service) {
