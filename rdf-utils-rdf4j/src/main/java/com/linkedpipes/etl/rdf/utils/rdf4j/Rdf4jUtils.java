@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -34,7 +36,8 @@ public class Rdf4jUtils {
     public static void save(Collection<Statement> statements, File file)
             throws IOException {
         RDFFormat format = getFormat(file.getName());
-        try (OutputStream stream = new FileOutputStream(file)) {
+        File swap = new File(file + ".swp");
+        try (OutputStream stream = new FileOutputStream(swap)) {
             RDFWriter writer = Rio.createWriter(format, stream);
             writer.startRDF();
             for (Statement statement : statements) {
@@ -42,6 +45,8 @@ public class Rdf4jUtils {
             }
             writer.endRDF();
         }
+        Files.move(swap.toPath(), file.toPath(),
+                StandardCopyOption.REPLACE_EXISTING);
     }
 
     public static ClosableRdf4jSource loadAsSource(String resourceName)

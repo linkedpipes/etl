@@ -57,21 +57,21 @@ public class WritableTemplateRepository extends TemplateRepository {
             RepositoryReference ref, Collection<Statement> statements)
             throws RdfUtils.RdfException {
         File path = new File(getDirectory(ref), "interface.trig");
-        RdfUtils.write(path, RDFFormat.TRIG, statements);
+        RdfUtils.atomicWrite(path, RDFFormat.TRIG, statements);
     }
 
     public void setDefinition(
             RepositoryReference ref, Collection<Statement> statements)
             throws RdfUtils.RdfException {
         File path = new File(getDirectory(ref), "definition.trig");
-        RdfUtils.write(path, RDFFormat.TRIG, statements);
+        RdfUtils.atomicWrite(path, RDFFormat.TRIG, statements);
     }
 
     public void setConfig(
             RepositoryReference ref, Collection<Statement> statements)
             throws RdfUtils.RdfException {
         File path = new File(getDirectory(ref), "configuration.trig");
-        RdfUtils.write(path, RDFFormat.TRIG, statements);
+        RdfUtils.atomicWrite(path, RDFFormat.TRIG, statements);
     }
 
     public void setConfigDescription(
@@ -79,7 +79,7 @@ public class WritableTemplateRepository extends TemplateRepository {
             throws RdfUtils.RdfException {
         File path = new File(getDirectory(ref),
                 "configuration-description.trig");
-        RdfUtils.write(path, RDFFormat.TRIG, statements);
+        RdfUtils.atomicWrite(path, RDFFormat.TRIG, statements);
     }
 
     public void remove(RepositoryReference ref) {

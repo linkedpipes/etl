@@ -66,7 +66,7 @@ class PipelineStorage {
             return;
         }
         for (File file : files) {
-            if (!file.isFile() || isBackupFile(file)) {
+            if (!file.isFile() || isBackupFile(file) || isSwapFile(file)) {
                 continue;
             }
             try {
@@ -80,6 +80,11 @@ class PipelineStorage {
     private boolean isBackupFile(File file) {
         String fileName = file.getName().toLowerCase();
         return fileName.endsWith(".backup");
+    }
+
+    private boolean isSwapFile(File file) {
+        String fileName = file.getName().toLowerCase();
+        return fileName.endsWith(".swp");
     }
 
     /**
@@ -140,7 +145,7 @@ class PipelineStorage {
             Pipeline pipeline, Collection<Statement> rdf)
             throws OperationFailed {
         try {
-            RdfUtils.write(pipeline.getFile(), RDFFormat.TRIG, rdf);
+            RdfUtils.atomicWrite(pipeline.getFile(), RDFFormat.TRIG, rdf);
         } catch (RdfUtils.RdfException ex) {
             throw new OperationFailed(
                     "Can't save pipeline: {}", pipeline.getFile(), ex);

@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -70,8 +72,11 @@ public class ExecutionObserver {
     private void writeOverviewToDisk() {
         ObjectMapper objectMapper = new ObjectMapper();
         File file = resourceManager.getOverviewFile();
-        try (OutputStream stream = new FileOutputStream(file)) {
+        File swap = new File(file + ".swp");
+        try (OutputStream stream = new FileOutputStream(swap)) {
             objectMapper.writeValue(stream, overview.toJsonLd(objectMapper));
+            Files.move(swap.toPath(), file.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ex) {
             LOG.error("Can't save execution overview.", ex);
         }

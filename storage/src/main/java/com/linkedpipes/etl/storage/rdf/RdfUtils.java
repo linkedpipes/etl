@@ -23,6 +23,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -261,6 +263,19 @@ public final class RdfUtils {
             }
         }
         return statements;
+    }
+
+    public static void atomicWrite(
+            File file, RDFFormat format, Collection<Statement> statements)
+            throws RdfException {
+        File swap = new File(file + ".swp");
+        try {
+            write(new FileOutputStream(swap), format, statements);
+            Files.move(swap.toPath(), file.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ex) {
+            throw new RdfException(ex);
+        }
     }
 
     /**
