@@ -1,5 +1,5 @@
 
-.ui-notification>.message {
+.ui-notification > .message {
     word-break: break-word;
 }
 
@@ -30,7 +30,7 @@
     font-weight: 400;
     letter-spacing: 0.010em;
     line-height: 20px;
-    color:grey;
+    color: grey;
 }
 
 /* YASQE editor */
@@ -59,17 +59,17 @@ lp-yasqe.readOnly > .yasqe > .CodeMirror {
 
 .sub-menu {
     display: none;
-    position:fixed;
-    bottom:70px;
-    right:30px;
+    position: fixed;
+    bottom: 70px;
+    right: 30px;
     padding-top: 10px;
     padding-bottom: 40px;
 }
 
 .pipelines_list_add {
-    position:fixed;
-    bottom:30px;
-    right:30px;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
 }
 
 .pipelines_list_add:hover .sub-menu {
@@ -112,21 +112,21 @@ lp-yasqe.readOnly > .yasqe > .CodeMirror {
 }
 
 .component-selection {
-    position:fixed;
-    pointer-events:none;
-    border:1px dashed #000;
-    border-radius:5px;
-    -moz-user-select:none;
-    -webkit-user-select:none;
-    -ms-user-select:none;
-    user-select:none;
-    -webkit-user-drag:none;
-    user-drag:none;
+    position: fixed;
+    pointer-events: none;
+    border: 1px dashed #000;
+    border-radius: 5px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    user-drag: none;
     z-index: 1;
 }
 
 .component-selection .action {
-    pointer-events:auto;
+    pointer-events: auto;
     cursor: pointer;
 }
 
@@ -153,4 +153,10 @@ lp-yasqe.readOnly > .yasqe > .CodeMirror {
     width: 100%;
     color: black;
     text-align: center;
+}
+
+/* Pipeline edit. */
+
+#componentMenu .top-line .delete {
+    background-color: #FF2020;
 }
