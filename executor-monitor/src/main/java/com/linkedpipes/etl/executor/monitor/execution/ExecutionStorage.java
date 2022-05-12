@@ -16,11 +16,9 @@ import org.eclipse.rdf4j.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +30,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -46,7 +45,9 @@ class ExecutionStorage
 
     private static final int TOMBSTONE_TTL = 5 * 60;
 
-    private final Configuration configuration;
+    private Configuration configuration = null;
+
+    private EventListener eventListener = null;
 
     private final List<Execution> executions = new ArrayList<>(64);
 
@@ -54,21 +55,21 @@ class ExecutionStorage
 
     private final Map<Executor, Execution> executors = new HashMap<>();
 
-    private final EventListener eventListener;
+    @Autowired
+    private void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
 
     @Autowired
-    public ExecutionStorage(
-            Configuration configuration, EventListener eventListener) {
-        this.configuration = configuration;
+    private void setEventListener(EventListener eventListener) {
         this.eventListener = eventListener;
     }
 
-    @PostConstruct
-    public void onInit() throws MonitorException {
+    public void initialize() throws MonitorException {
         File executionsDirectory = getExecutionsDirectory();
-        Arrays.stream(executionsDirectory.listFiles())
-                .filter(file -> file.isDirectory())
-                .forEach(directory -> loadExecutionForFirstTime(directory));
+        Arrays.stream(Objects.requireNonNull(executionsDirectory.listFiles()))
+                .filter(File::isDirectory)
+                .forEach(this::loadExecutionForFirstTime);
     }
 
     private File getExecutionsDirectory() throws MonitorException {
@@ -95,9 +96,8 @@ class ExecutionStorage
             return null;
         }
 
-        LoadOverview overviewLoader = new LoadOverview();
         try {
-            overviewLoader.load(execution);
+            (new LoadOverview()).load(execution);
         } catch (Throwable ex) {
             LOG.error("Can't load overview for: {}", directory, ex);
             return null;
@@ -132,7 +132,7 @@ class ExecutionStorage
 
     private void updateDebugData(Execution execution) throws MonitorException {
         ExecutionLoader executionLoader = new ExecutionLoader();
-        updateFromExecution(
+        updateExecutionDebugData(
                 execution, executionLoader.loadStatements(execution));
     }
 
@@ -178,19 +178,19 @@ class ExecutionStorage
      * Perform full execution update from directory.
      */
     public void update(Execution execution) {
+        ExecutionStatus oldStatus = execution.getStatus();
         if (!(shouldUpdate(execution))) {
             // We do not reload dangling or invalid executions.
             return;
         }
-        LoadOverview overviewLoader = new LoadOverview();
         try {
-            overviewLoader.load(execution);
+            (new LoadOverview()).load(execution);
         } catch (MonitorException ex) {
             LOG.error("Can't update execution overview for: {}",
                     execution.getId(), ex);
         }
         if (ExecutionStatus.QUEUED == execution.getStatus()) {
-            // There is nothing more then the overview.
+            // We have only the overview.
             return;
         }
         try {
@@ -198,9 +198,7 @@ class ExecutionStorage
         } catch (MonitorException ex) {
             LOG.error("Can't update debug data for: {}",
                     execution.getId(), ex);
-            return;
         }
-        ExecutionStatus oldStatus = execution.getStatus();
         if (oldStatus != execution.getStatus()) {
             eventListener.onExecutionStatusDidChange(execution, oldStatus);
         }
@@ -212,8 +210,7 @@ class ExecutionStorage
 
     private void updateFromOverview(Execution execution, JsonNode overview) {
         ExecutionStatus oldStatus = execution.getStatus();
-        LoadOverview overviewLoader = new LoadOverview();
-        overviewLoader.load(execution, overview);
+        (new LoadOverview()).load(execution, overview);
         if (oldStatus != execution.getStatus()) {
             eventListener.onExecutionStatusDidChange(execution, oldStatus);
         }
@@ -222,7 +219,7 @@ class ExecutionStorage
     /**
      * Updates only from execution data (debug data).
      */
-    public void updateFromExecution(
+    public void updateExecutionDebugData(
             Execution execution, Statements statements) {
         execution.setDebugData(DebugDataFactory.create(execution, statements));
     }
@@ -282,7 +279,6 @@ class ExecutionStorage
         return calendar.getTime();
     }
 
-    @Scheduled(fixedDelay = 15000, initialDelay = 200)
     public void updateExecutions() {
         for (Execution execution : executions) {
             if (shouldUpdate(execution)) {
@@ -329,8 +325,6 @@ class ExecutionStorage
 
     @Override
     public void onExecutorHasExecution(Execution execution, Executor executor) {
-        LOG.info("onExecutorHasExecution: {}",
-                execution == null ? "null" : execution.getId());
         Execution oldExecution = executors.get(executor);
         if (oldExecution == null) {
             executors.put(executor, execution);
@@ -381,6 +375,24 @@ class ExecutionStorage
     @Override
     public void onOverview(Execution execution, JsonNode overview) {
         updateFromOverview(execution, overview);
+    }
+
+    public Execution cloneAsNewExecution(Execution source)
+            throws MonitorException {
+        String uuid = createExecutionGuid();
+        File directory = new File(configuration.getWorkingDirectory(), uuid);
+        try {
+            ExecutionFactory.cloneExecution(
+                    source.getDirectory(), directory);
+        } catch (MonitorException ex) {
+            deleteDirectory(directory);
+            throw ex;
+        }
+        Execution execution = loadExecutionForFirstTime(directory);
+        if (execution == null) {
+            throw new MonitorException("Can't load new execution");
+        }
+        return execution;
     }
 
 }

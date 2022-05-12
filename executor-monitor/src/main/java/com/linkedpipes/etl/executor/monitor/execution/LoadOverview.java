@@ -8,6 +8,8 @@ import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewFactory;
 import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewObject;
 import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewToListStatements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,17 +38,29 @@ public class LoadOverview {
     }
 
     public void load(Execution execution, JsonNode overview) {
-        Date oldLastUpdate = execution.getLastOverviewChange();
-        if (oldLastUpdate != null) {
-            Date newLastUpdate = OverviewObject.getLastChange(overview);
-            if (oldLastUpdate.after(newLastUpdate)) {
-                // We have never version, do not update.
-                return;
-            }
+        if (shouldSkipUpdate(execution, overview)) {
+            return;
         }
-        addMonitorInformation(execution, overview);
+        addMonitorInformationToOverview(execution, overview);
         execution.setOverviewJson(overview);
         updateExecutionFromOverview(execution);
+    }
+
+    private boolean shouldSkipUpdate(Execution execution, JsonNode overview) {
+        Date oldLastUpdate = execution.getLastOverviewChange();
+        if (oldLastUpdate == null) {
+            return false;
+        }
+        Date newLastUpdate = OverviewObject.getLastChange(overview);
+        if (oldLastUpdate.before(newLastUpdate)) {
+            return false;
+        }
+        if (!execution.isExecutor() || !execution.isExecutorResponsive()) {
+            // We may use older data here, but since there is no
+            // connection to executor we need to do update anyway.
+            return false;
+        }
+        return true;
     }
 
     private File getOverviewFile(Execution execution) {
@@ -61,7 +75,12 @@ public class LoadOverview {
         }
     }
 
-    public void addMonitorInformation(Execution execution, JsonNode node) {
+    /**
+     * To make loading uniform we add some data to overview, that we load
+     * later but are not produced by the executor.
+     */
+    public void addMonitorInformationToOverview(
+            Execution execution, JsonNode node) {
         ObjectNode root = (ObjectNode) node;
         ObjectNode context = (ObjectNode) root.get("@context");
         context.put("finalData", LP_MONITOR.HAS_FINAL_DATA);

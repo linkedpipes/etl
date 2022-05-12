@@ -46,7 +46,7 @@ class UpdateExecutionStatus {
                 }
             case CANCELLING:
             case RUNNING:
-                return newStatusRunning(execution, status);
+                return statusForRunningExecution(execution, status);
             default:
                 return status;
         }
@@ -56,7 +56,7 @@ class UpdateExecutionStatus {
         return overview.getFinish() != null;
     }
 
-    private ExecutionStatus newStatusRunning(
+    private ExecutionStatus statusForRunningExecution(
             Execution execution, ExecutionStatus status) {
         // No executor.
         if (!execution.isExecutor()) {

@@ -47,6 +47,16 @@ public class Configuration {
 
     private String publicWorkingDataUrlPrefix;
 
+    /**
+     * If true dangling executions should be re-executed.
+     */
+    private boolean retryExecution = false;
+
+    /**
+     * Mull for no limit.
+     */
+    private Integer retryLimit = null;
+
     @PostConstruct
     public void init() {
         String propertiesFile = System.getProperty("configFileLocation");
@@ -89,6 +99,11 @@ public class Configuration {
         executionPrefix = localUrl + "/resources/executions/";
         publicWorkingDataUrlPrefix = getOptionalProperty(
                 "executor-monitor.public_working_data_url_prefix");
+
+        retryLimit = getOptionalPropertyInteger(
+                "executor-monitor.retry.limit");
+        retryExecution = retryLimit != null;
+
         //
         validateUri(executorUri, "executor.execution.working_directory");
         validateDirectory(workingDirectoryPath);
@@ -194,6 +209,25 @@ public class Configuration {
         return value;
     }
 
+    protected Integer getOptionalPropertyInteger(String name) {
+        String value;
+        try {
+            value = properties.getProperty(name);
+        } catch (RuntimeException ex) {
+            LOG.error("Invalid configuration property: '{}'", name);
+            throw ex;
+        }
+        if (value == null) {
+            return null;
+        }
+        try {
+            return Integer.parseInt(value);
+        } catch (Exception ex) {
+            LOG.error("Invalid configuration property: '{}'", name);
+            throw new RuntimeException(ex);
+        }
+    }
+
     protected int getPropertyInteger(String name) {
         String value = getProperty(name);
         try {
@@ -218,6 +252,14 @@ public class Configuration {
 
     public String getPublicWorkingDataUrlPrefix() {
         return publicWorkingDataUrlPrefix;
+    }
+
+    public boolean isRetryExecution() {
+        return retryExecution;
+    }
+
+    public Integer getRetryLimit() {
+        return retryLimit;
     }
 
 }

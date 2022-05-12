@@ -65,7 +65,9 @@ public enum ExecutionStatus {
     }
 
     public static boolean isFinished(ExecutionStatus status) {
-        return status == FINISHED || status == FAILED;
+        // For DANGLING we know the execution is no longer executed, so
+        // we can view it as finished.
+        return status == FINISHED || status == FAILED || status == DANGLING;
     }
 
 }

@@ -1,15 +1,19 @@
 package com.linkedpipes.etl.executor.monitor.execution;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.linkedpipes.etl.executor.monitor.Configuration;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
 import com.linkedpipes.etl.executor.monitor.debug.DebugDataSource;
+import com.linkedpipes.etl.executor.monitor.events.EventListener;
 import com.linkedpipes.etl.rdf4j.Statements;
 import org.eclipse.rdf4j.model.Statement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -20,15 +24,28 @@ import java.util.stream.Collectors;
 @Service
 public class ExecutionFacade implements DebugDataSource {
 
-    private ExecutionStorage storage;
+    private ExecutionStorage storage = null;
+
+    private EventListener eventListener = null;
 
     private final MessagesLoader messageLoader = new MessagesLoader();
 
     private final ExecutionLoader executionLoader = new ExecutionLoader();
 
     @Autowired
-    public ExecutionFacade(ExecutionStorage storage) {
+    private void setExecutionStorage(ExecutionStorage storage) {
         this.storage = storage;
+    }
+
+    @Autowired
+    private void setEventListener(EventListener eventListener) {
+        this.eventListener = eventListener;
+    }
+
+    @PostConstruct
+    public void onInit() throws MonitorException {
+        storage.initialize();
+        eventListener.onExecutionFacadeReady(this);
     }
 
     public Execution getExecution(String id) {
@@ -85,7 +102,7 @@ public class ExecutionFacade implements DebugDataSource {
         // We use the date obtained to update, in this way we can be sure,
         // that we have the latest data.
         if (!statements.isEmpty() && !execution.isHasFinalData()) {
-            this.storage.updateFromExecution(execution, statements);
+            this.storage.updateExecutionDebugData(execution, statements);
         }
         return statements;
     }
@@ -102,6 +119,16 @@ public class ExecutionFacade implements DebugDataSource {
             return null;
         }
         return execution.getDebugData();
+    }
+
+    public Execution cloneAsNewExecution(Execution execution)
+            throws MonitorException {
+        return storage.cloneAsNewExecution(execution);
+    }
+
+    @Scheduled(fixedDelay = 15000, initialDelay = 1000)
+    public void updateExecutions() {
+        storage.updateExecutions();
     }
 
 }

@@ -81,10 +81,9 @@ class CheckExecutor {
 
     private void onHttpCheckFail(Executor executor, Exception ex) {
         if (!executor.isAlive()) {
+            // Ignore as we know it is not alive.
             return;
         }
-        LOG.error("Can't connect to: {}",
-                executor.getAddress(), ex.getLocalizedMessage());
         executor.setAlive(false);
         listener.onExecutorUnavailable(executor);
     }

@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.executor.monitor.execution;
 
 import com.linkedpipes.etl.executor.monitor.MonitorException;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
@@ -10,11 +11,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 class ExecutionFactory {
+
+    private static final String DEFINITION_FILE =
+            "definition" + File.separator + "definition.trig";
 
     public static void prepareExecutionInDirectory(
             File directory,
@@ -22,8 +27,7 @@ class ExecutionFactory {
             List<MultipartFile> inputs) throws MonitorException {
 
         // Save pipeline definition.
-        File definitionFile = new File(
-                directory, "definition" + File.separator + "definition.trig");
+        File definitionFile = getDefinitionFile(directory);
         definitionFile.getParentFile().mkdirs();
         try (OutputStream stream = new FileOutputStream(definitionFile)) {
             Rio.write(pipeline, stream, RDFFormat.TRIG);
@@ -35,7 +39,7 @@ class ExecutionFactory {
         if (inputs == null) {
             inputs = Collections.emptyList();
         }
-        File inputDirectory = new File(directory, "input");
+        File inputDirectory = getInputsDirectory(directory);
         for (MultipartFile input : inputs) {
             String originalFileName = input.getOriginalFilename();
             if (originalFileName == null) {
@@ -51,6 +55,36 @@ class ExecutionFactory {
             }
         }
 
+    }
+
+    private static File getDefinitionFile(File directory) {
+        return new File(directory, DEFINITION_FILE);
+    }
+
+    private static File getInputsDirectory(File directory) {
+        return new File(directory, "input");
+    }
+
+    public static void cloneExecution(File source, File target)
+            throws MonitorException {
+        File sourceDefinition = getDefinitionFile(source);
+        File targetDefinition = getDefinitionFile(target);
+        targetDefinition.getParentFile().mkdirs();
+        try {
+            Files.copy(sourceDefinition.toPath(), targetDefinition.toPath());
+        } catch (IOException ex) {
+            throw new MonitorException("Can't copy definition.", ex);
+        }
+        File sourceInputs = getInputsDirectory(source);
+        if (!sourceInputs.exists()) {
+            return;
+        }
+        File targetInputs = getInputsDirectory(target);
+        try {
+            FileUtils.copyDirectory(sourceInputs, targetInputs);
+        } catch (IOException ex) {
+            throw new MonitorException("Can't copy inputs.", ex);
+        }
     }
 
 }
