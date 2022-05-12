@@ -7,6 +7,7 @@ import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.auth.AuthScope;
@@ -186,8 +187,14 @@ public class GraphStorePurger implements Component, SequentialExecution {
 
     private void checkResponse(HttpResponse response) throws LpException {
         try {
-            LOG.debug("Response:\n {} ",
-                    EntityUtils.toString(response.getEntity()));
+            HttpEntity entity = response.getEntity();
+            if (entity == null) {
+                LOG.debug("Status line: {}",response.getStatusLine());
+            } else {
+                LOG.debug("Status line: {} \n  Entity: {}",
+                        response.getStatusLine(),
+                        EntityUtils.toString(entity));
+            }
         } catch (IOException ex) {
             LOG.error("Can't read response.", ex);
         }
