@@ -160,3 +160,7 @@ lp-yasqe.readOnly > .yasqe > .CodeMirror {
 #componentMenu .top-line .delete {
     background-color: #FF2020;
 }
+
+#componentMenu .top-line .delete md-icon {
+    color: white;
+}
