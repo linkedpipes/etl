@@ -141,15 +141,18 @@ public class GraphStorePurger implements Component, SequentialExecution {
 
     private void deleteGraph(
             HttpClientContext context,String graph) throws LpException {
-        if (GraphStorePurgerVocabulary.REPOSITORY_GRAPHDB.equals(
-                configuration.getRepository())) {
-            deleteGraphGraphDB(context, graph);
-        } else {
-            deleteGraphDefault(context, graph);
+        switch (configuration.getRepository()) {
+            default:
+            case DEFAULT:
+                deleteGraphDefault(context, graph);
+                break;
+            case VIRTUOSO:
+                deleteGraphVirtuoso(context, graph);
+                break;
         }
     }
 
-    private void deleteGraphGraphDB(
+    private void deleteGraphDefault(
             HttpClientContext context,String graph) throws LpException {
         String url = configuration.getEndpoint() + "?graph=";
         url += URLEncoder.encode(graph, StandardCharsets.UTF_8);
@@ -167,7 +170,7 @@ public class GraphStorePurger implements Component, SequentialExecution {
         }
     }
 
-    private void deleteGraphDefault(
+    private void deleteGraphVirtuoso(
             HttpClientContext context,String graph) throws LpException {
         String url = configuration.getEndpoint() + "?graph-uri=";
         url += URLEncoder.encode(graph, StandardCharsets.UTF_8);

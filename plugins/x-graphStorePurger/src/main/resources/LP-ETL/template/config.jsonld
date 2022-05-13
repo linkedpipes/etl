@@ -5,6 +5,7 @@
         "http://plugins.linkedpipes.com/ontology/x-graphStorePurger#endpoint": "",
         "http://plugins.linkedpipes.com/ontology/x-graphStorePurger#username": "",
         "http://plugins.linkedpipes.com/ontology/x-graphStorePurger#password": "",
-        "http://plugins.linkedpipes.com/ontology/x-graphStorePurger#useAuthentication": false
+        "http://plugins.linkedpipes.com/ontology/x-graphStorePurger#useAuthentication": false,
+        "http://plugins.linkedpipes.com/ontology/x-graphStorePurger#repository": "VIRTUOSO"
     }
 ]

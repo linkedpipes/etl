@@ -5,6 +5,11 @@ import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 @RdfToPojo.Type(iri = GraphStorePurgerVocabulary.CONFIG_CLASS)
 public class GraphStorePurgerConfiguration {
 
+    public enum RepositoryType {
+        VIRTUOSO,
+        DEFAULT,
+    }
+
     /**
      * Graph store endpoint.
      */
@@ -21,7 +26,7 @@ public class GraphStorePurgerConfiguration {
     private boolean useAuthentication = false;
 
     @RdfToPojo.Property(iri = GraphStorePurgerVocabulary.HAS_REPOSITORY)
-    private String repository = GraphStorePurgerVocabulary.REPOSITORY_DEFAULT;
+    private RepositoryType repository = RepositoryType.VIRTUOSO;
 
     public GraphStorePurgerConfiguration() {
     }
@@ -58,11 +63,11 @@ public class GraphStorePurgerConfiguration {
         this.useAuthentication = useAuthentication;
     }
 
-    public String getRepository() {
+    public RepositoryType getRepository() {
         return repository;
     }
 
-    public void setRepository(String repository) {
+    public void setRepository(RepositoryType repository) {
         this.repository = repository;
     }
 
