@@ -9,7 +9,7 @@ public final class GraphStoreProtocolVocabulary {
 
     public static final String HAS_GRAPH = PREFIX + "graph";
 
-    public static final String HAS_TYPE = PREFIX + "repository";
+    public static final String HAS_REPOSITORY = PREFIX + "repository";
 
     public static final String HAS_AUTH = PREFIX + "authentification";
 

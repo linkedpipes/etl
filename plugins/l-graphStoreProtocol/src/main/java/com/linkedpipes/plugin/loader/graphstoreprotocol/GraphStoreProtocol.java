@@ -59,7 +59,7 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
     public void execute() throws LpException {
         checkConfiguration();
         httpClient = new HttpService(
-                configuration.isUseAuthentification(),
+                configuration.isUseAuthentication(),
                 configuration.getUserName(),
                 configuration.getPassword(),
                 configuration.getEndpoint());
@@ -76,7 +76,7 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
                     GraphStoreProtocolVocabulary.HAS_CRUD);
         }
         if (inputFiles.size() > 1 && configuration.isReplace()) {
-            throw exceptionFactory.failure("Only one file can be uploaded"
+            throw exceptionFactory.failure("Only one file can be uploaded "
                     + "with replace mode.");
         }
     }

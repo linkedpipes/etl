@@ -43,7 +43,7 @@ define([], function () {
         "replace": {
             "$type": "bool",
             "$label": "Clear target graph before loading"
-        }
+        },
     };
 
     function controller($scope, $service) {

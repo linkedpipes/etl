@@ -15,11 +15,11 @@ public class GraphStoreProtocolConfiguration {
     @RdfToPojo.Property(iri = GraphStoreProtocolVocabulary.HAS_GRAPH)
     private String targetGraph;
 
-    @RdfToPojo.Property(iri = GraphStoreProtocolVocabulary.HAS_TYPE)
-    private RepositoryType repository = RepositoryType.FUSEKI;
+    @RdfToPojo.Property(iri = GraphStoreProtocolVocabulary.HAS_REPOSITORY)
+    private RepositoryType repository = RepositoryType.VIRTUOSO;
 
     @RdfToPojo.Property(iri = GraphStoreProtocolVocabulary.HAS_AUTH)
-    private boolean useAuthentification = false;
+    private boolean useAuthentication = false;
 
     @RdfToPojo.Property(iri = GraphStoreProtocolVocabulary.HAS_USER)
     private String userName = "";
@@ -58,12 +58,12 @@ public class GraphStoreProtocolConfiguration {
         this.repository = repository;
     }
 
-    public boolean isUseAuthentification() {
-        return useAuthentification;
+    public boolean isUseAuthentication() {
+        return useAuthentication;
     }
 
-    public void setUseAuthentification(boolean useAuthentification) {
-        this.useAuthentification = useAuthentification;
+    public void setUseAuthentication(boolean useAuthentication) {
+        this.useAuthentication = useAuthentication;
     }
 
     public String getUserName() {
