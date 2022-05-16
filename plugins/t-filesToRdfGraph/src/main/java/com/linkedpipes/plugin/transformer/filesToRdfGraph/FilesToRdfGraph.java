@@ -85,7 +85,7 @@ public final class FilesToRdfGraph implements Component, SequentialExecution {
         RDFParser parser = createParser(format);
         try (InputStream fileStream = new FileInputStream(entry.toFile())) {
             parser.parse(fileStream, "http://localhost/base/");
-        } catch (IOException | RDFHandlerException | RDFParseException ex) {
+        } catch (Exception ex) {
             handleLoadingException(entry.getFileName(), ex);
         }
     }
