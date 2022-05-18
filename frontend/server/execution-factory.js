@@ -148,7 +148,7 @@ function createFromMultipartRequest(req, res) {
   const postUrl = parseUrl(monitorApiUrl);
   const boundaryString = "------------------------a76d7ee9b9b2b7ef";
   const postOptions = {
-    "host": postUrl.postname,
+    "host": postUrl.hostname,
     "port": postUrl.port,
     "path": postUrl.path,
     "method": "POST",
