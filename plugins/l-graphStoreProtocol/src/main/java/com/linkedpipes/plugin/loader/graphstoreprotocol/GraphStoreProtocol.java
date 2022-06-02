@@ -106,8 +106,10 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
             throw exceptionFactory.failure(
                     "Quad-based formats are not supported.");
         }
-        String graph = configuration.getTargetGraph();
-        if (entry != null) {
+        String graph;
+        if (isBlankString(entry.targetGraph)) {
+            graph = configuration.getTargetGraph();
+        } else {
             graph = entry.targetGraph;
         }
         Long beforeSize = null;
@@ -159,6 +161,10 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
         }
     }
 
+    boolean isBlankString(String string) {
+        return string == null || string.trim().isEmpty();
+    }
+
     protected long getGraphSize(String graph) throws LpException, IOException {
         try (CloseableHttpClient httpclient = HttpClients.custom().build()) {
             long result = GraphSize.getGraphSize(
@@ -173,15 +179,13 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
             String graph, boolean replace) throws LpException {
         LOG.info("Blazegraph: {} {} {} {} {}", url, file.getName(), mimeType,
                 graph, replace);
-        url += "?graph=" + URLEncoder.encode(
-                graph, StandardCharsets.UTF_8);
+        url += encodeForUrlQuery("graph", graph);
         HttpEntityEnclosingRequestBase httpMethod;
         if (replace) {
             // Blaze graph delete statements based on provided query.
             String query = "CONSTRUCT{ ?s ?p ?o} FROM <" + graph
                     + "> WHERE { ?s ?p ?o }";
-            url += "&query=" + URLEncoder.encode(
-                    query, StandardCharsets.UTF_8);
+            url += encodeForUrlQuery("query", query);
             //
             httpMethod = new HttpPut(url);
         } else {
@@ -193,13 +197,21 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
         httpClient.executeHttp(httpMethod);
     }
 
+    protected String encodeForUrlQuery(String key, String value) {
+        if (value == null) {
+            return "";
+        }
+        String encodedValue = URLEncoder.encode(value, StandardCharsets.UTF_8);
+        return "&" + key + "=" + encodedValue;
+    }
+
     protected void uploadFuseki(
             String url, File file, String mimeType,
             String graph, boolean replace) throws LpException {
         LOG.info("Fuseki: {} {} {} {} {}", url, file.getName(), mimeType,
                 graph, replace);
         //
-        url += "?graph=" + URLEncoder.encode(graph, StandardCharsets.UTF_8);
+        url += encodeForUrlQuery("graph", graph);
         HttpEntityEnclosingRequestBase httpMethod;
         if (replace) {
             httpMethod = new HttpPut(url);
@@ -222,7 +234,7 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
         LOG.info("Virtuoso: {} {} {} {} {}", url, file.getName(), mimeType,
                 graph, replace);
         //
-        url += "?graph=" + URLEncoder.encode(graph, StandardCharsets.UTF_8);
+        url += encodeForUrlQuery("graph", graph);
         HttpEntityEnclosingRequestBase httpMethod;
         if (replace) {
             httpMethod = new HttpPut(url);
@@ -242,7 +254,7 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
         LOG.info("GraphDB: {} {} {} {} {}", url, file.getName(), mimeType,
                 graph, replace);
         //
-        url += "?graph=" + URLEncoder.encode(graph, StandardCharsets.UTF_8);
+        url += encodeForUrlQuery("graph", graph);
         HttpEntityEnclosingRequestBase httpMethod;
         if (replace) {
             httpMethod = new HttpPut(url);

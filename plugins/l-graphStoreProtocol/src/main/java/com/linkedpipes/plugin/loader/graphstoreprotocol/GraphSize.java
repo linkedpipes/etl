@@ -36,8 +36,12 @@ class GraphSize {
     }
 
     protected static String getQuery(String graph) {
-        return "SELECT (count(*) as ?count) WHERE { "
-                + "GRAPH <" + graph + "> { ?s ?p ?o } }";
+        if (graph == null) {
+            return "SELECT (count(*) as ?count) WHERE { ?s ?p ?o }";
+        } else {
+            return "SELECT (count(*) as ?count) WHERE { "
+                    + "GRAPH <" + graph + "> { ?s ?p ?o } }";
+        }
     }
 
 }
