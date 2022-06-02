@@ -179,13 +179,16 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
             String graph, boolean replace) throws LpException {
         LOG.info("Blazegraph: {} {} {} {} {}", url, file.getName(), mimeType,
                 graph, replace);
-        url += encodeForUrlQuery("graph", graph);
+        if (graph == null) {
+            throw new LpException("Blazegraph require2 graph to be set!");
+        }
+        url += encodeForUrlQuery("?graph", graph);
         HttpEntityEnclosingRequestBase httpMethod;
         if (replace) {
             // Blaze graph delete statements based on provided query.
             String query = "CONSTRUCT{ ?s ?p ?o} FROM <" + graph
                     + "> WHERE { ?s ?p ?o }";
-            url += encodeForUrlQuery("query", query);
+            url += encodeForUrlQuery("&query", query);
             //
             httpMethod = new HttpPut(url);
         } else {
@@ -197,12 +200,12 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
         httpClient.executeHttp(httpMethod);
     }
 
-    protected String encodeForUrlQuery(String key, String value) {
+    protected String encodeForUrlQuery(String prefix, String value) {
         if (value == null) {
             return "";
         }
         String encodedValue = URLEncoder.encode(value, StandardCharsets.UTF_8);
-        return "&" + key + "=" + encodedValue;
+        return prefix + "=" + encodedValue;
     }
 
     protected void uploadFuseki(
@@ -211,7 +214,7 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
         LOG.info("Fuseki: {} {} {} {} {}", url, file.getName(), mimeType,
                 graph, replace);
         //
-        url += encodeForUrlQuery("graph", graph);
+        url += encodeForUrlQuery("?graph", graph);
         HttpEntityEnclosingRequestBase httpMethod;
         if (replace) {
             httpMethod = new HttpPut(url);
@@ -234,7 +237,7 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
         LOG.info("Virtuoso: {} {} {} {} {}", url, file.getName(), mimeType,
                 graph, replace);
         //
-        url += encodeForUrlQuery("graph", graph);
+        url += encodeForUrlQuery("?graph", graph);
         HttpEntityEnclosingRequestBase httpMethod;
         if (replace) {
             httpMethod = new HttpPut(url);
@@ -254,7 +257,7 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
         LOG.info("GraphDB: {} {} {} {} {}", url, file.getName(), mimeType,
                 graph, replace);
         //
-        url += encodeForUrlQuery("graph", graph);
+        url += encodeForUrlQuery("?graph", graph);
         HttpEntityEnclosingRequestBase httpMethod;
         if (replace) {
             httpMethod = new HttpPut(url);
