@@ -107,7 +107,7 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
                     "Quad-based formats are not supported.");
         }
         String graph;
-        if (isBlankString(entry.targetGraph)) {
+        if (entry == null || isBlankString(entry.targetGraph)) {
             graph = configuration.getTargetGraph();
         } else {
             graph = entry.targetGraph;
