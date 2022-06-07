@@ -360,6 +360,16 @@
                 <maven.compiler.target>17</maven.compiler.target>
             </properties>
         </profile>
+        <profile>
+            <id>java-18</id>
+            <activation>
+                <jdk>18</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>18</maven.compiler.source>
+                <maven.compiler.target>18</maven.compiler.target>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
