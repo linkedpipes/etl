@@ -2,6 +2,7 @@ package com.linkedpipes.etl.storage.pipeline.transformation;
 
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jUtils;
 import com.linkedpipes.etl.rdf4j.Statements;
+import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.TestUtils;
 import com.linkedpipes.etl.storage.template.Template;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
@@ -42,7 +43,8 @@ public class TransformationFacadeTest {
                 .thenReturn(sparqlEndpoint);
 
         TransformationFacade transformation =
-                new TransformationFacade(templateFacade, null);
+                new TransformationFacade(
+                        new Configuration(),templateFacade, null);
 
         Collection<Statement> actual = transformation.localizeAndMigrate(
                 input, options,
@@ -69,7 +71,8 @@ public class TransformationFacadeTest {
                 true);
 
         TransformationFacade transformation =
-                new TransformationFacade(null, null);
+                new TransformationFacade(
+                        new Configuration(), null, null);
 
         Collection<Statement> actual = transformation.localizeAndMigrate(
                 input, options,
