@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Contains settings for pipeline operations.
  */
-class ImportOptions implements PojoLoader.Loadable {
+public class ImportOptions implements PojoLoader.Loadable {
 
     public static final IRI TYPE;
 
@@ -29,13 +29,15 @@ class ImportOptions implements PojoLoader.Loadable {
 
     /**
      * If true pipeline is local and there is no need to update anything.
-     * If false the templates alignment need to be done.
+     * If false template alignment need to be done.
      */
     private boolean local = true;
 
     private boolean importTemplates = false;
 
     private boolean updateTemplates = false;
+
+    private boolean keepPipelineSuffix = false;
 
     public List<Literal> getLabels() {
         return labels;
@@ -51,6 +53,10 @@ class ImportOptions implements PojoLoader.Loadable {
 
     public boolean isUpdateTemplates() {
         return updateTemplates;
+    }
+
+    public boolean isKeepPipelineSuffix() {
+        return keepPipelineSuffix;
     }
 
     @Override
@@ -74,6 +80,11 @@ class ImportOptions implements PojoLoader.Loadable {
             case "http://etl.linkedpipes.com/ontology/updateTemplates":
                 if (value instanceof Literal) {
                     updateTemplates = ((Literal) value).booleanValue();
+                }
+                break;
+            case "http://etl.linkedpipes.com/ontology/keepPipelineSuffix":
+                if (value instanceof Literal) {
+                    keepPipelineSuffix = ((Literal) value).booleanValue();
                 }
                 break;
             default:

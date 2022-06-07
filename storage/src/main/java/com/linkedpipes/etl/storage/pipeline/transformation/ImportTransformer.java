@@ -30,7 +30,7 @@ class ImportTransformer {
 
     private ImportOptions options;
 
-    private ImportTemplates importTemplates;
+    private final ImportTemplates importTemplates;
 
     public ImportTransformer(
             TemplateFacade templatesFacade,
@@ -41,7 +41,7 @@ class ImportTransformer {
 
     public Collection<Statement> localizePipeline(
             Collection<Statement> pipelineRdf, Collection<Statement> optionsRdf,
-            PipelineInfo pipelineInfo, IRI pipelineIri)
+            PipelineInfo pipelineInfo, IRI pipelineIri, String pipelinePrefix)
             throws TransformationFailed {
         if (pipelineRdf.isEmpty()) {
             return Collections.emptyList();
@@ -56,13 +56,19 @@ class ImportTransformer {
             // we remove them.
             pipelineRdf = this.removeTemplates(pipelineRdf);
         }
-
-        if (pipelineIri != null) {
+        if (options.isKeepPipelineSuffix()) {
+            String sourceUrl =pipelineInfo.getIri();
+            String suffix = sourceUrl.substring(sourceUrl.lastIndexOf("/") + 1);
+            pipelineIri = this.valueFactory.createIRI(
+                    pipelinePrefix + suffix);
+        }
+        if (pipelineIri == null) {
+            // We employ IRI from the pipeline definition, we do not need
+            // to update the pipeline.
+            pipelineIri = this.valueFactory.createIRI(pipelineInfo.getIri());
+        } else {
             String targetIri = pipelineIri.stringValue();
             pipelineRdf = this.updateResources(pipelineRdf, targetIri);
-        } else {
-            // We have not translate pipeline IRI, so just use the current one.
-            pipelineIri = this.valueFactory.createIRI(pipelineInfo.getIri());
         }
         pipelineRdf = this.replacePipelineLabel(pipelineRdf, pipelineIri);
         return pipelineRdf;

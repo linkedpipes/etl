@@ -13,6 +13,10 @@
         <md-switch ng-model="updateTemplates">
           Update existing templates
         </md-switch>
+        <md-switch ng-model="keepPipelineSuffix">
+          Keep pipeline suffix.<br/>
+          <b>Warning</b> this may replace existing pipeline.
+        </md-switch>
       </div>
       <div ng-show="type === 'file'">
         <div class="md-padding">

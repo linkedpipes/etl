@@ -1,11 +1,14 @@
 package com.linkedpipes.etl.storage.pipeline;
 
 import com.linkedpipes.etl.plugin.configuration.InvalidConfiguration;
+import com.linkedpipes.etl.rdf4j.Statements;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.pipeline.info.InfoFacade;
+import com.linkedpipes.etl.storage.pipeline.transformation.ImportOptions;
 import com.linkedpipes.etl.storage.pipeline.transformation.TransformationFacade;
 import com.linkedpipes.etl.storage.pipeline.transformation.TransformationFailed;
+import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import com.linkedpipes.etl.storage.template.Template;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -70,7 +73,29 @@ class PipelineManager {
         return storage.getPipelines();
     }
 
-    public IRI reservePipelineIri() {
+
+    /**
+     * Import pipeline from given statements, if no data are given create
+     * an empty pipeline.
+     */
+    public Pipeline createPipeline(
+            Collection<Statement> pipelineRdf, Collection<Statement> optionsRdf)
+            throws OperationFailed {
+        IRI reservedIri = reservePipelineIri();
+        if (pipelineRdf.isEmpty()) {
+            pipelineRdf = EmptyPipelineFactory.create(reservedIri);
+        } else {
+            pipelineRdf = localizePipeline(
+                    pipelineRdf, optionsRdf, reservedIri);
+        }
+        Pipeline pipeline = storage.createPipeline(
+                selectPipelineIRI(pipelineRdf), pipelineRdf);
+        infoFacade.onPipelineCreate(pipeline, pipelineRdf);
+        reserved.remove(reservedIri.stringValue());
+        return pipeline;
+    }
+
+    private IRI reservePipelineIri() {
         String iri;
         synchronized (lock) {
             do {
@@ -83,22 +108,16 @@ class PipelineManager {
         return valueFactory.createIRI(iri);
     }
 
-    /**
-     * Import pipeline from given statements, if no data are given create
-     * an empty pipeline.
-     */
-    public Pipeline createPipeline(
-            Collection<Statement> pipelineRdf, Collection<Statement> optionsRdf)
+    private IRI selectPipelineIRI(Collection<Statement> pipeline)
             throws OperationFailed {
-        IRI iri = reservePipelineIri();
-        if (pipelineRdf.isEmpty()) {
-            pipelineRdf = EmptyPipelineFactory.create(iri);
-        } else {
-            pipelineRdf = localizePipeline(pipelineRdf, optionsRdf, iri);
+        PipelineInfo info = new PipelineInfo();
+        try {
+            PojoLoader.loadOfType(pipeline, Pipeline.TYPE, info);
+        } catch (PojoLoader.CantLoadException ex) {
+            throw new OperationFailed(
+                    "Can't load pipeline info.", ex);
         }
-        Pipeline pipeline = storage.createPipeline(iri, pipelineRdf);
-        infoFacade.onPipelineCreate(pipeline, pipelineRdf);
-        return pipeline;
+        return valueFactory.createIRI(info.getIri());
     }
 
     public void updatePipeline(

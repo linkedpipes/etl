@@ -20,6 +20,7 @@
       $scope.type = "file";
       $scope.importTemplates = true;
       $scope.updateTemplates = false;
+      $scope.keepPipelineSuffix = false;
     }
 
     function onWatchFile() {
@@ -64,7 +65,8 @@
         "@type": "http://linkedpipes.com/ontology/UpdateOptions",
         "http://etl.linkedpipes.com/ontology/local": "false",
         "http://etl.linkedpipes.com/ontology/importTemplates": $scope.importTemplates,
-        "http://etl.linkedpipes.com/ontology/updateTemplates": $scope.updateTemplates
+        "http://etl.linkedpipes.com/ontology/updateTemplates": $scope.updateTemplates,
+        "http://etl.linkedpipes.com/ontology/keepPipelineSuffix": $scope.keepPipelineSuffix
       };
     }
 

@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.storage.pipeline.transformation;
 
+import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.template.mapping.MappingFacade;
 import com.linkedpipes.etl.storage.pipeline.Pipeline;
 import com.linkedpipes.etl.storage.pipeline.PipelineInfo;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Date;
 
 @Service
 public class TransformationFacade {
@@ -19,11 +21,17 @@ public class TransformationFacade {
 
     private final MappingFacade mappingFacade;
 
+    private final String localPipelinePrefix;
+
     @Autowired
     public TransformationFacade(
-            TemplateFacade templates, MappingFacade mappings) {
+            Configuration configuration, TemplateFacade templates,
+            MappingFacade mappings) {
         this.templateFacade = templates;
         this.mappingFacade = mappings;
+        //
+        this.localPipelinePrefix =
+                configuration.getDomainName() + "/resources/pipelines/";
     }
 
     /**
@@ -51,7 +59,7 @@ public class TransformationFacade {
         ImportTransformer transformer = new ImportTransformer(
                 templateFacade, mappingFacade);
         pipeline = transformer.localizePipeline(
-                pipeline, options, info, newIri);
+                pipeline, options, info, newIri, localPipelinePrefix);
 
         if (info.getVersion() != Pipeline.VERSION_NUMBER) {
             Migration migration = new Migration(templateFacade);
