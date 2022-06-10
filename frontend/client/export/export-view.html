@@ -1,0 +1,59 @@
+<div layout="row" layout-align="space-around">
+  <md-content flex layout-padding style="max-width: 66em;">
+
+    <div ng-show="working">
+      <p>Preparing for export ...</p>
+      <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+    </div>
+
+    <md-content>
+      <md-switch ng-model="exportPipelines">
+        Export selected pipelines
+      </md-switch>
+      <md-switch ng-model="exportTemplates">
+        Export all templates
+      </md-switch>
+      <md-switch ng-model="removePrivateConfiguration">
+        Remove private configuration
+      </md-switch>
+      <md-button ng-click="onExport()" class="md-raised md-primary">
+        Export
+      </md-button>
+    </md-content>
+
+    <md-content layout="column" ng-show="exportPipelines">
+      Select pipelines to export
+      <md-input-container class="md-block">
+        <label>Filter</label>
+        <input ng-model="pipelineFilter.labelSearch"/>
+      </md-input-container>
+      <div ng-show="!pipelineRepository.areDataReady && !pipelineRepository.error"
+           layout="column" layout-align="center center">
+        <img src="assets/images/loading.gif" class="center-block"
+             title="Loading..." style="padding-top: 5rem"/>
+      </div>
+      <div ng-show="!pipelineRepository.areDataReady && pipelineRepository.error"
+           layout="column" layout-align="center center">
+        <div style="margin-top: 2rem;font-size: 2rem">Can't load data
+        </div>
+        <br/>
+        <div>{{pipelineRepository.error}}</div>
+        <br/>
+        <div>Please try it later.</div>
+      </div>
+      <md-list ng-show="pipelineRepository.areDataReady">
+        <md-list-item
+            ng-repeat="item in pipelineRepository.visibleItems track by $index"
+            ng-show="item.isVisible">
+          <p> {{ item.label }} </p>
+          <md-checkbox class="md-secondary"
+                       ng-model="item.selected"></md-checkbox>
+        </md-list-item>
+      </md-list>
+      <lp-scroll-watch-list-tail
+        ng-show="pipelineRepository.areDataReady"
+        total="repository.filteredItemCount"
+        limit="repository.visibleItemLimit"/>
+    </md-content>
+  </md-content>
+</div>

@@ -6,10 +6,11 @@ define([
   "./template/list/template-list-view",
   "./pipeline/upload/pipeline-upload-ctrl",
   "./pipeline/edit/pipeline-edit-ctrl",
-  "./template/detail/template-detail-ctrl"
+  "./template/detail/template-detail-ctrl",
+  "./export/export-ctrl"
 ], function (
   _about, _personalization, _pipelineList, _executionList, _templateList,
-  _pipelineUpload, _pipelineEdit, _templateDetail) {
+  _pipelineUpload, _pipelineEdit, _templateDetail, _export) {
 
   function configureNavigation($routeProvider) {
     $routeProvider
@@ -68,6 +69,13 @@ define([
         "activeView": "pipelines",
         "pageTitle": "Pipeline"
       })
+      .when("/export", {
+        "template": require("./export/export-view.html"),
+        "controller": "view-export",
+        "activeView": "export",
+        "pageTitle": "Export",
+        "color": "#999999"
+      })
       .otherwise({
         "redirectTo": "/executions"
       });
@@ -83,6 +91,7 @@ define([
     _pipelineUpload(app);
     _pipelineEdit(app);
     _templateDetail(app);
+    _export(app);
     app.config(["$routeProvider", configureNavigation])
   };
 });

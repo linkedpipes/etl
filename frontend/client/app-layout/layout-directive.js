@@ -75,6 +75,11 @@ define([
       $location.path("/personalization").search({});
     };
 
+    $scope.onExport = () => {
+      $scope.closeSidenav();
+      $location.path("/export").search({});
+    };
+
     $scope.onHelp = () => {
       $scope.closeSidenav();
       $location.path("/help").search({});

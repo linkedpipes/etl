@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 @Service
 public class PipelineFacade {
@@ -22,6 +23,10 @@ public class PipelineFacade {
 
     public Pipeline getPipeline(String iri) {
         return pipelines.getPipelines().get(iri);
+    }
+
+    public Collection<Pipeline> getPipelines() {
+        return pipelines.getPipelines().values();
     }
 
     public Collection<Statement> getReferenceAsRdf() {

@@ -11,8 +11,7 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
  * Represent a thin template that can modify basic component
  * properties and configuration.
  */
-class ReferenceTemplate extends Template
-        implements PojoLoader.Loadable {
+public class ReferenceTemplate extends Template implements PojoLoader.Loadable {
 
     public static final IRI TYPE;
 

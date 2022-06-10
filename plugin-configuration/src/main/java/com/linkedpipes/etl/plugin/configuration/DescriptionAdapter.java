@@ -11,6 +11,7 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 class DescriptionAdapter {
@@ -22,7 +23,7 @@ class DescriptionAdapter {
         TYPE = valueFactory.createIRI(LP.CONFIG_DESCRIPTION);
     }
 
-    public Description fromStatements(List<Statement> statements)
+    public Description fromStatements(Collection<Statement> statements)
             throws InvalidConfiguration {
         List<Resource> resources = findDescription(statements);
         if (resources.size() != 1) {
@@ -33,7 +34,7 @@ class DescriptionAdapter {
         return loadDescription(resources.get(0), statements);
     }
 
-    private List<Resource> findDescription(List<Statement> statements) {
+    private List<Resource> findDescription(Collection<Statement> statements) {
         List<Resource> result = new ArrayList<>();
         for (Statement statement : statements) {
             if (!statement.getPredicate().equals(RDF.TYPE)) {
@@ -48,7 +49,7 @@ class DescriptionAdapter {
     }
 
     private Description loadDescription(
-            Resource resource, List<Statement> statements) {
+            Resource resource, Collection<Statement> statements) {
         Description result = new Description();
         for (Statement statement : statements) {
             if (!statement.getSubject().equals(resource)) {
@@ -80,7 +81,7 @@ class DescriptionAdapter {
     }
 
     private Description.Member loadMember(
-            Resource resource, List<Statement> statements) {
+            Resource resource, Collection<Statement> statements) {
         Description.Member result = new Description.Member();
         for (Statement statement : statements) {
             if (!statement.getSubject().equals(resource)) {

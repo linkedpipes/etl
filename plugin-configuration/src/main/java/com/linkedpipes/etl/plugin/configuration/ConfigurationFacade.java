@@ -4,6 +4,7 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ConfigurationFacade {
@@ -20,7 +21,7 @@ public class ConfigurationFacade {
                 configurationRdf, description, baseIri, graph);
     }
 
-    private Description loadDescription(List<Statement> statements)
+    private Description loadDescription(Collection<Statement> statements)
             throws InvalidConfiguration {
         return descriptionAdapter.fromStatements(statements);
     }
@@ -61,8 +62,8 @@ public class ConfigurationFacade {
      * Return private configuration properties.
      */
     public List<Statement> selectPrivateStatements(
-            List<Statement> configurationRdf,
-            List<Statement> descriptionRdf) throws InvalidConfiguration {
+            Collection<Statement> configurationRdf,
+            Collection<Statement> descriptionRdf) throws InvalidConfiguration {
         Description description = loadDescription(descriptionRdf);
         SelectPrivateStatements selectPrivate = new SelectPrivateStatements();
         return selectPrivate.selectPrivate(configurationRdf, description);
