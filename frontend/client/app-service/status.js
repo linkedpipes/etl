@@ -13,12 +13,12 @@
     }
 
     function error(actionLabel, error) {
-        // Check if it's not a HTTP error.
+        // Check if it's not an HTTP error.
         if (error["data"] && error["data"]["error"] && error["status"]) {
             httpError(actionLabel, error);
             return;
         }
-        console.log("Error: ", actionLabel, error);
+        console.error("Error: ", actionLabel, error);
         $notification.error({
             "title": actionLabel,
             "message": error ? error.message : "",
@@ -28,7 +28,7 @@
     }
 
     function httpError(actionLabel, response) {
-        console.log("HTTP error: ", actionLabel, response);
+        console.error("HTTP error: ", actionLabel, response);
         //
         let message;
         const error = response["data"]["error"];
@@ -65,7 +65,7 @@
                     return "Missing resource."
                 }
             case "ERROR":
-                // The error message have same structure.
+                // The error message have same structured.
                 return prepareFromErrorMessage(error);
             default:
                 return "Undefined error type: " + error["type"] + "</br>" +
@@ -77,7 +77,9 @@
         let errorMessage = error["message"] ? error["message"] : "";
         //
         let output = "Message: " + errorMessage + "<br/>";
-        output += "Source: " + error["source"].toLowerCase() + "<br/>";
+        if (error["source"]) {
+            output += "Source: " + error["source"].toLowerCase() + "<br/>";
+        }
         if (error["status"]) {
             output += "Status: " + error["status"].toLowerCase() + "<br/>";
         }
