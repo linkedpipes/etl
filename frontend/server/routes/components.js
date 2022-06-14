@@ -40,29 +40,3 @@ function handleConnectionError(res, error) {
     }
   });
 }
-
-router.get("/definition", (req, res) => {
-  const options = {
-    "url": config.storage.url +
-    "/api/v1/components/definition?iri=" + req.query.iri,
-    "headers": updateHeaders(req.headers),
-  };
-  request.get(options)
-    .on("error", (error) => handleConnectionError(res, error))
-    .pipe(res);
-});
-
-router.post("", (req, res) => {
-  const url = storageApiUrlPrefix + "/";
-  req.pipe(request.post(url, {"form": req.body}), {"end": false})
-    .on("error", (error) => handleConnectionError(res, error))
-    .pipe(res);
-});
-
-router.delete("/:id", (req, res) => {
-  const url = storageApiUrlPrefix + "?iri="
-    + encodeURI(config.storage.domain + req.originalUrl);
-  request.del(url)
-    .on("error", (error) => handleConnectionError(res, error))
-    .pipe(res);
-});

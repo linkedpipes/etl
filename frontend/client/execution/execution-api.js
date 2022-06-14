@@ -5,13 +5,13 @@
 })(() => {
 
   function loadLocal($http, iri) {
-    return $http.get(iri).then(response => response.data);
+    const url = "./api/v1/executions?iri=" + encodeURIComponent(iri);
+    return $http.get(url).then(response => response.data);
   }
 
   function cancelExecution($http, iri, message) {
-    const id = iri.substring(iri.lastIndexOf("/") + 1)
     const body = {"reason": message};
-    const url = "./resources/executions/" + id + "/cancel";
+    const url = "./api/v1/executions/cancel?iri=" + encodeURIComponent(iri);
     return $http.post(url, body);
   }
 

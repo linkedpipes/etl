@@ -70,7 +70,7 @@
               </md-menu-item>
               <md-menu-item>
                 <md-button ng-click=""
-                           ng-href="{{item.iri}}?templates=true&mappings=true&removePrivateConfig=false"
+                           ng-href="{{item.downloadUrl}}"
                            target="_blank" download="{{item.label}}.jsonld"
                            aria-label="Download">
                   <md-icon class="material-icons lp-icon">
@@ -81,7 +81,7 @@
               </md-menu-item>
               <md-menu-item>
                 <md-button ng-click=""
-                           ng-href="{{item.iri}}?templates=true&mappings=true&removePrivateConfig=true"
+                           ng-href="{{item.downloadUrlPublic}}"
                            target="_blank" download="{{item.label}}.jsonld"
                            aria-label="Download without credentials">
                   <md-icon class="material-icons lp-icon">file_download

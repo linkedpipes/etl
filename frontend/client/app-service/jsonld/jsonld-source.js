@@ -38,7 +38,7 @@
   function createWithIncrementalUpdateSupport(config) {
     return {
       "fetch": (changedSince) => fetchChangedSince(changedSince, config),
-      "deleteById": deleteById,
+      "deleteById": (id) => deleteById(config, id),
       "incrementalUpdateSupport": true
     };
   }
@@ -84,7 +84,7 @@
   function create(config) {
     return {
       "fetch": () => fetch(config),
-      "deleteById": deleteById,
+      "deleteById": (id) => deleteById(config, id),
       "incrementalUpdateSupport": false
     };
   }
@@ -97,8 +97,8 @@
       config.itemTemplate);
   }
 
-  function deleteById(id) {
-    const url = id;
+  function deleteById(config, iri) {
+    const url = config.deleteUrl + encodeURIComponent(iri);
     return http.delete(url);
   }
 
@@ -118,6 +118,8 @@
     builder["supportIncrementalUpdate"] =
       () => config["incrementalUpdateSupport"] = true;
     builder["build"] = () => createJsonLdSource(config);
+    builder["deleteUrl"] =
+      (url) => config["deleteUrl"] = url;
     return builder;
   };
 

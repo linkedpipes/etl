@@ -294,11 +294,12 @@
 
     function createRepository(filters) {
       const builder = jsonLdSource.createBuilder();
-      builder.url("resources/executions");
+      builder.url("api/v1/executions-list");
       builder.itemType(LP.EXECUTION);
       builder.tombstoneType(LP.TOMBSTONE);
       builder.itemTemplate(REPOSITORY_TEMPLATE);
       builder.supportIncrementalUpdate();
+      builder.deleteUrl("api/v1/executions?iri=");
       return repositoryService.createWithInfiniteScroll({
         "itemSource": builder.build(),
         "newItemDecorator": decorateItem,

@@ -71,13 +71,13 @@ public class ExecutionServlet {
                 request.getHeader("Content-Type")).orElse(RDFFormat.JSONLD);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     @ResponseBody
     public void getExecution(
-            @PathVariable String id,
+            @RequestParam String iri,
             HttpServletRequest request, HttpServletResponse response)
             throws MonitorException, IOException {
-        Execution execution = getLivingExecution(id);
+        Execution execution = getLivingExecution(iri);
         //
         RDFFormat format = this.getFormat(request);
         response.setHeader("Content-Type", format.getDefaultMIMEType());
@@ -91,44 +91,44 @@ public class ExecutionServlet {
         }
     }
 
-    private Execution getLivingExecution(String id) throws MissingResource {
-        Execution execution = executions.getLivingExecution(id);
+    private Execution getLivingExecution(String iri) throws MissingResource {
+        Execution execution = executions.getLivingExecutionByIri(iri);
         if (execution == null) {
-            throw new MissingResource("Missing execution: {}", id);
+            throw new MissingResource("Missing execution: {}", iri);
         }
         return execution;
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/", method = RequestMethod.DELETE)
     @ResponseBody
     public void deleteExecution(
-            @PathVariable String id,
+            @RequestParam String iri,
             HttpServletResponse response) throws MissingResource {
-        Execution execution = getLivingExecution(id);
+        Execution execution = getLivingExecution(iri);
         this.executions.deleteExecution(execution);
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
-    @RequestMapping(value = "/{id}/cancel", method = RequestMethod.POST,
+    @RequestMapping(value = "/cancel", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void cancelExecution(
-            @PathVariable String id,
+            @RequestParam String iri,
             @RequestBody String body,
             HttpServletResponse response)
             throws MonitorException {
-        Execution execution = executions.getLivingExecution(id);
+        Execution execution = executions.getLivingExecutionByIri(iri);
         executor.cancelExecution(execution, body);
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
-    @RequestMapping(value = "/{id}/logs", method = RequestMethod.GET,
+    @RequestMapping(value = "/logs", method = RequestMethod.GET,
             produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public FileSystemResource getExecutionLogs(
-            @PathVariable String id,
+            @RequestParam String iri,
             HttpServletResponse response) throws MissingResource {
-        Execution execution = getLivingExecution(id);
+        Execution execution = getLivingExecution(iri);
         File file = this.executions.getExecutionDebugLogFile(execution);
         if (file == null || !file.exists()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -138,14 +138,14 @@ public class ExecutionServlet {
         return new FileSystemResource(file);
     }
 
-    @RequestMapping(value = "/{id}/logs-tail", method = RequestMethod.GET,
+    @RequestMapping(value = "/logs-tail", method = RequestMethod.GET,
             produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public void getExecutionLogsTail(
-            @PathVariable String id,
+            @RequestParam String iri,
             @RequestParam(value = "n", defaultValue = "32") int count,
             HttpServletResponse response) throws IOException, MissingResource {
-        Execution execution = getLivingExecution(id);
+        Execution execution = getLivingExecution(iri);
         File file = this.executions.getExecutionDebugLogFile(execution);
         if (file == null || !file.exists()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -156,15 +156,15 @@ public class ExecutionServlet {
     }
 
     @RequestMapping(
-            value = "/{id}/messages/component",
+            value = "/messages/component",
             method = RequestMethod.GET)
     public void getComponentMessages(
-            @PathVariable String id,
-            @RequestParam(value = "iri") String component,
+            @RequestParam String iri,
+            @RequestParam String component,
             HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, MissingResource {
-        Execution execution = getLivingExecution(id);
+        Execution execution = getLivingExecution(iri);
         Statements statements =
                 this.executions.getMessages(execution, component);
         RDFFormat format = this.getFormat(request);
@@ -192,14 +192,14 @@ public class ExecutionServlet {
         return handler.handle(pipeline, inputs);
     }
 
-    @RequestMapping(value = "/{id}/overview", method = RequestMethod.GET,
+    @RequestMapping(value = "/overview", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void getExecutionOverview(
-            @PathVariable String id,
+            @RequestParam String iri,
             HttpServletResponse response)
             throws IOException, MissingResource {
-        Execution execution = getLivingExecution(id);
+        Execution execution = getLivingExecution(iri);
         //
         response.setHeader("Content-Type", "application/ld+json");
         JsonNode overview = this.executions.getOverview(execution);

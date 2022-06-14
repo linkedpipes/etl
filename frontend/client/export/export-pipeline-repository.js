@@ -52,7 +52,7 @@
 
     function createRepository(filters) {
       const builder = jsonLdSource.createBuilder();
-      builder.url("resources/pipelines");
+      builder.url("api/v1/pipelines-list");
       builder.itemType(LP.PIPELINE);
       builder.itemTemplate(REPOSITORY_TEMPLATE);
       return repositoryService.createWithInfiniteScroll({

@@ -47,7 +47,7 @@ define([
       _status.loading = true;
     }
     const options = {"headers": {"Accept": "application/ld+json"}};
-    $http.get("resources/pipelines/info", options).then(function (response) {
+    $http.get("./api/v1/designer", options).then(function (response) {
       const parsedResponse = jsonldToJson(
         response.data, INFO_TYPE, INFO_TEMPLATE)[0];
       if (Array.isArray(parsedResponse.tags)) {

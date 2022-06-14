@@ -55,14 +55,14 @@
   }
 
   function postPipelineExecution($http, iri, config) {
-    const url = "./resources/executions?pipeline=" + iri;
+    const url = "./api/v1/executions?pipeline=" + iri;
     return $http.post(url, config);
   }
 
   function createPipeline($http) {
     const data = createPipelineCreatePostData();
     const config = createPostConfigWithJsonLd();
-    const url = "./resources/pipelines/";
+    const url = "./api/v1/pipelines";
     return $http.post(url, data, config);
   }
 
@@ -100,8 +100,8 @@
   function copyPipeline($http, pipeline) {
     const data = createPipelineCopyPostData(pipeline);
     const config = createPostConfigWithJsonLd();
-    const url =
-      "./resources/pipelines?fromLocal=true&pipeline=" + pipeline.iri;
+    const url = "./api/v1/pipelines-copy?fromLocal=true&iri=" +
+      encodeURIComponent(pipeline.iri);
     return $http.post(url, data, config);
   }
 
@@ -125,7 +125,8 @@
   function asLocalFromIri($http, pipelineIri, updateTemplates) {
     const formData = new FormData();
     addTransformOptions(formData, true, updateTemplates);
-    const iri = "./resources/pipelines/localize?pipeline=" + pipelineIri;
+    const iri = "./api/v1/pipelines-localize?iri=" +
+      encodeURIComponent(pipelineIri);
     return $http.post(iri, formData, noTransformConfiguration())
       .then((data) => data["data"]);
   }
@@ -134,7 +135,7 @@
     const formData = new FormData();
     formData.append("pipeline", fileWithPipeline);
     addTransformOptions(formData, true, updateTemplates);
-    const iri = "./resources/pipelines/localize";
+    const iri = "./api/v1/pipelines-localize";
     return $http.post(iri, formData, noTransformConfiguration())
       .then((data) => data["data"]);
   }
@@ -165,11 +166,12 @@
   }
 
   function loadLocal($http, iri) {
-    const serviceUrl =
-      iri + "&templates=false&mappings=false&removePrivateConfig=false";
+    const url = "./api/v1/pipelines?" +
+      "templates=false&mappings=false&removePrivateConfig=false" +
+      "&iri=" + encodeURIComponent(iri);
     return $http({
       "method": "GET",
-      "url": serviceUrl,
+      "url": url,
       "headers": {
         "Accept": "application/ld+json",
       },
@@ -177,16 +179,18 @@
   }
 
   function deletePipeline($http, iri) {
+    const url = "./api/v1/Pipelines?iri=" + encodeURIComponent(iri);
     return $http({
       "method": "DELETE",
-      "url": iri
+      "url": url
     });
   }
 
   function savePipeline($http, iri, jsonld, unchecked) {
+    const url = "./api/v1/Pipelines?iri=" + encodeURIComponent(iri);
     return $http({
       "method": "PUT",
-      "url": iri,
+      "url": url,
       "params": {"unchecked": unchecked},
       "headers": {
         "Content-Type": "application/json",
@@ -220,7 +224,7 @@
         "accept": "application/ld+json"
       }
     };
-    return $http.post("./resources/pipelines", form, config)
+    return $http.post("./api/v1/pipelines", form, config)
       .then((response) => {
         const jsonld = response.data;
         return jsonld[0]["@graph"][0]["@id"];

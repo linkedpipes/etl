@@ -43,21 +43,11 @@ function handleConnectionError(res, error) {
   });
 }
 
+// TODO Remove this.
 router.delete("/:id", (req, res) => {
   const url = storageApiUrl + "?iri="
-    + encodeURI(config.storage.domain + req.originalUrl);
+    + encodeURIComponent(config.storage.domain + req.originalUrl);
   request.del(url).pipe(res);
-});
-
-// TODO This is more part of the API.
-router.get("/info", (req, res) => {
-  const options = {
-    "url": storageApiUrl + "/info",
-    "headers": updateHeaders(req.headers),
-  };
-  request.get(options)
-    .on("error", (error) => handleConnectionError(res, error))
-    .pipe(res);
 });
 
 router.get("/:id", function (req, res) {
@@ -74,7 +64,7 @@ router.get("/:id", function (req, res) {
 
   const options = {
     "url": storageApiUrl + "?iri="
-      + encodeURI(config.storage.domain + queryIri) + queryParams,
+      + encodeURIComponent(config.storage.domain + queryIri) + queryParams,
     "headers": updateHeaders(req.headers),
   };
 
@@ -83,6 +73,7 @@ router.get("/:id", function (req, res) {
     .pipe(res);
 });
 
+// TODO Remove this.
 router.put("/:id", (req, res) => {
   const urlSuffix = getUrlSuffixWithoutParams(req);
   updatePipeline(res, urlSuffix, req);
@@ -100,7 +91,7 @@ function getUrlSuffixWithoutParams(req) {
 function updatePipeline(res, urlSuffix, bodyStream) {
   const options = {
     "url": storageApiUrl + "?iri="
-      + encodeURI(config.storage.domain + urlSuffix),
+      + encodeURIComponent(config.storage.domain + urlSuffix),
     "headers": {},
     "formData": {
       "pipeline": {
@@ -117,6 +108,7 @@ function updatePipeline(res, urlSuffix, bodyStream) {
     .pipe(res);
 }
 
+// TODO Remove this.
 router.post("", (req, res) => {
   const url = storageApiUrl + "";
   if (req.query["pipeline"]) {
@@ -127,18 +119,6 @@ router.post("", (req, res) => {
     req.pipe(request.post(url))
       .on("error", (error) => handleConnectionError(res, error))
       .pipe(res);
-  }
-});
-
-// TODO This is more part of the API.
-router.post("/localize", (req, res) => {
-  const url = storageApiUrl + "/localize";
-  if (req.query["pipeline"]) {
-    // We need to fetch pipeline from user given location.
-    addPipelineAndPipe(req, res, url);
-  } else {
-    // Pipeline is provided, we can just pipe the content to the storage.
-    req.pipe(request.post(url)).pipe(res);
   }
 });
 
@@ -204,9 +184,9 @@ function resolvePipeline(req, callback) {
   if (isTrue(req.query["fromLocal"])) {
     // Load directly from local storage, useful when public URL is
     // has restricted access.
-    url = storageApiUrl + "?iri=" + encodeURI(req.query["pipeline"]);
+    url = pipelinesBaseUrl + "?iri=" + encodeURIComponent(req.query["iri"]);
   } else {
-    url = req.query["pipeline"];
+    url = req.query["iri"];
   }
   request.get({
     "url": url,

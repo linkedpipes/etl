@@ -143,9 +143,18 @@ class ExecutionStorage
     /**
      * Return last part of the execution IRI after the last '/'.
      */
-    public Execution getExecution(String id) {
+    public Execution getExecutionById(String id) {
         for (Execution execution : executions) {
             if (execution.getId().equals(id)) {
+                return execution;
+            }
+        }
+        return null;
+    }
+
+    public Execution getExecutionByIri(String iri) {
+        for (Execution execution : executions) {
+            if (execution.getIri().equals(iri)) {
                 return execution;
             }
         }

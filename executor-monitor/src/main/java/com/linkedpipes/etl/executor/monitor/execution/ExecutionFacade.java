@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.monitor.execution;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.linkedpipes.etl.executor.monitor.Configuration;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
 import com.linkedpipes.etl.executor.monitor.debug.DebugDataSource;
@@ -48,12 +47,12 @@ public class ExecutionFacade implements DebugDataSource {
         eventListener.onExecutionFacadeReady(this);
     }
 
-    public Execution getExecution(String id) {
-        return storage.getExecution(id);
+    public Execution getExecutionById(String id) {
+        return storage.getExecutionById(id);
     }
 
-    public Execution getLivingExecution(String id) {
-        Execution execution = storage.getExecution(id);
+    public Execution getLivingExecutionByIri(String iri) {
+        Execution execution = storage.getExecutionByIri(iri);
         if (execution == null) {
             return null;
         }
@@ -114,7 +113,7 @@ public class ExecutionFacade implements DebugDataSource {
 
     @Override
     public DebugData getDebugData(String id) {
-        Execution execution = getExecution(id);
+        Execution execution = getExecutionById(id);
         if (execution == null) {
             return null;
         }

@@ -158,7 +158,7 @@ define([
       new Blob([JSON.stringify(configuration)], {
         "type": "application/ld+json"
       }), "configuration.jsonld");
-    return $http.post("./resources/components", form, postConfiguration)
+    return $http.post("./api/v1/components", form, postConfiguration)
   }
 
 

@@ -151,7 +151,7 @@ public class VirtualFileSystem {
                 dataUnit.updateDebugDirectories(
                         debugData.getExecutionDirectory());
             } else {
-                final Execution execution = executions.getExecution(
+                final Execution execution = executions.getExecutionById(
                         dataUnit.getExecutionId());
                 if (execution == null) {
                     LOG.warn("Missing referenced execution: {}",
@@ -211,7 +211,7 @@ public class VirtualFileSystem {
             return ROOT_PATH;
         }
         // Search for an execution.
-        Execution execution = executions.getExecution(parsedPath.removeFirst());
+        Execution execution = executions.getExecutionById(parsedPath.removeFirst());
         if (execution == null || execution.getDebugData() == null) {
             return null;
         }
@@ -231,7 +231,7 @@ public class VirtualFileSystem {
         }
         // The execution can be change here.
         if (dataUnit.isMapped()) {
-            execution = executions.getExecution(dataUnit.getExecutionId());
+            execution = executions.getExecutionById(dataUnit.getExecutionId());
             if (execution == null) {
                 // Missing execution.
                 return null;

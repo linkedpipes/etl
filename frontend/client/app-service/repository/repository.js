@@ -308,7 +308,7 @@
     "create": createRepository,
     /**
      * Use to fetch data for the first time, once the data are loaded
-     * it does not nothing.
+     * this function shoild take no action.
      */
     "initialFetch": initialFetch,
     /**

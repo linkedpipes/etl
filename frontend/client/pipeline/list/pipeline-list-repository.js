@@ -38,6 +38,12 @@
     item["searchLabel"] = item["label"].toLowerCase();
     item["filterLabel"] = true;
     item["filterTags"] = true;
+    item["downloadUrl"] = "./api/v1/pipelines?" +
+      "templates=true&mappings=true&removePrivateConfig=false&iri=" +
+      encodeURIComponent(item.iri);
+    item["downloadUrlPublic"] = "./api/v1/pipelines?" +
+      "templates=true&mappings=true&removePrivateConfig=true&iri=" +
+      encodeURIComponent(item.iri);
   }
 
   function addTagsToTagList(item, allTagList) {
@@ -100,10 +106,11 @@
 
     function createRepository(filters) {
       const builder = jsonLdSource.createBuilder();
-      builder.url("resources/pipelines");
+      builder.url("api/v1/pipelines-list");
       builder.itemType(LP.PIPELINE);
       builder.tombstoneType(LP.TOMBSTONE);
       builder.itemTemplate(REPOSITORY_TEMPLATE);
+      builder.deleteUrl("api/v1/pipelines?iri=");
       const repository = repositoryService.createWithInfiniteScroll({
         "itemSource": builder.build(),
         "onNewItem": (item) => addTagsToTagList(item, filters.tagsAll),

@@ -64,7 +64,7 @@
   function forceLoad() {
     const options = {"headers": {"Accept": "application/ld+json"}};
     serviceData.loaded = false;
-    return $http.get("resources/components", options).then((response) => {
+    return $http.get("api/v1/components-list", options).then((response) => {
       console.time("Loading components");
       clearData(serviceData);
       loader.parseResponse(serviceData, response);
@@ -149,7 +149,7 @@
    * Configuration of a template instance.
    */
   function fetchTemplateConfig(iri) {
-    const url = "./api/v1/components/config?iri=" + encodeURI(iri);
+    const url = "./api/v1/components/config?iri=" + encodeURIComponent(iri);
     return fetchJsonLd(iri, url);
   }
 
@@ -182,7 +182,7 @@
    */
   function fetchConfigForNewInstance(iri) {
     const id = "new:" + iri;
-    const url = "./api/v1/components/configTemplate?iri=" + encodeURI(iri);
+    const url = "./api/v1/components/configTemplate?iri=" + encodeURIComponent(iri);
     return fetchJsonLd(id, url);
   }
 
@@ -192,7 +192,7 @@
     const core = getCoreTemplate(iri);
     const id = "desc:" + core.id;
     const url = "./api/v1/components/configDescription?iri=" +
-      encodeURI(core.id);
+      encodeURIComponent(core.id);
     return fetchJsonLd(id, url);
   }
 
@@ -202,14 +202,15 @@
    */
   function fetchEffectiveConfig(iri) {
     const id = "effective:" + iri;
-    const url = "api/v1/components/effective?iri=" + encodeURI(iri);
+    const url = "./api/v1/components/effective?iri=" + encodeURIComponent(iri);
     return fetchJsonLd(id, url);
   }
 
   function deleteTemplate(iri) {
+    const url = "./api/v1/components?iri=" + encodeURIComponent(iri);
     return $http({
       "method": "DELETE",
-      "url": iri
+      "url": url
     }).then(() => {
       // TODO Update only affected templates
       return forceLoad(true);
@@ -324,7 +325,7 @@
    * Return usage of the template and all its descendants in pipelines.
    */
   function getUsage(iri) {
-    const url = "api/v1/usage?iri=" + encodeURI(iri);
+    const url = "api/v1/usage?iri=" + encodeURIComponent(iri);
     const options = {"headers": {"Accept": "application/ld+json"}};
     return $http.get(url, options).then((response) => {
       const pipelines = {};

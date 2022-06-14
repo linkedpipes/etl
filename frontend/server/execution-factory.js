@@ -1,6 +1,6 @@
 "use strict";
 
-const request = require("request"); // https://github.com/request/request
+const request = require("request");
 const httpRequest = require("http").request;
 const parseUrl = require("url").parse;
 const multiparty = require("multiparty");
@@ -13,7 +13,7 @@ module.exports = {
   "create": handleCreateRequest
 };
 
-const monitorApiUrl = config.executor.monitor.url + "executions";
+const monitorApiUrl = config.executor.monitor.url + "/api/v1/executions";
 
 function handleCreateRequest(req, res) {
   const contentType = req.headers["content-type"];
@@ -71,7 +71,8 @@ function createFromNonMultipartRequest(req, res) {
         }
       };
       request.post(options)
-        .on("error", (error) => handleConnectionError(res, error))
+        .on("error", (error) => handleConnectionError(
+          res, error, "URL:" + options.url))
         .on("response", () => console.timeEnd("[POST] /executions"))
         .pipe(res);
     });
@@ -79,8 +80,8 @@ function createFromNonMultipartRequest(req, res) {
 
 }
 
-function handleConnectionError(res, error) {
-  console.error("Request failed:\n", error);
+function handleConnectionError(res, error, message) {
+  console.error("Request failed:\n", message, "\n", error);
   console.trace();
   res.status(503).json({
     "error": {

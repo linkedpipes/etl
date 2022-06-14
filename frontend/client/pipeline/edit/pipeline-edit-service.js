@@ -220,10 +220,9 @@
     }
 
     function onDownload() {
-      const url = actions.getPipelineIri() +
-        "?templates=true" +
-        "&mappings=true" +
-        "&removePrivateConfig=false";
+      const url = "./api/v1/pipelines?" +
+        "templates=true&mappings=true&removePrivateConfig=false&iri=" +
+        encodeURIComponent(actions.getPipelineIri());
       const request = {
         "headers": {
           "Accept": "application/ld+json",
@@ -238,10 +237,9 @@
     }
 
     function onDownloadNoCredentials() {
-      const url = actions.getPipelineIri() +
-        "?templates=true" +
-        "&mappings=true" +
-        "&removePrivateConfig=true";
+      const url = "./api/v1/pipelines?" +
+        "templates=true&mappings=true&removePrivateConfig=true&iri=" +
+        encodeURIComponent(actions.getPipelineIri());
       const request = {
         "headers": {
           "Accept": "application/ld+json",
@@ -291,10 +289,9 @@
     }
 
     function onDownloadNoSave() {
-      const url = actions.getPipelineIri() +
-        "?templates=true" +
-        "&mappings=true" +
-        "&removePrivateConfig=false";
+      const url = "./api/v1/pipelines?" +
+        "templates=true&mappings=true&removePrivateConfig=false&iri=" +
+        encodeURIComponent(actions.getPipelineIri());
       const request = {
         "headers": {
           "Accept": "application/ld+json",
@@ -307,10 +304,9 @@
     }
 
     function onDownloadNoCredentialsNoSave() {
-      const url = actions.getPipelineIri() +
-        "?templates=true" +
-        "&mappings=true" +
-        "&removePrivateConfig=true";
+      const url = "./api/v1/pipelines?" +
+        "templates=true&mappings=true&removePrivateConfig=true&iri=" +
+        encodeURIComponent(actions.getPipelineIri());
       const request = {
         "headers": {
           "Accept": "application/ld+json",
