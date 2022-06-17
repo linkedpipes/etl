@@ -4,7 +4,7 @@ on:
     branches:
       - 'develop'
 jobs:
-  publich-docker:
+  publish-docker:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
