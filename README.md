@@ -27,6 +27,8 @@ git clone https://github.com/linkedpipes/etl.git
 cd etl
 docker-compose up
 ```
+Note that on Windows, there is an [issue with buildkit](https://github.com/moby/buildkit/issues/1684).
+See the [temporary workaround](https://github.com/linkedpipes/etl/issues/851#issuecomment-814058925).
 
 When running this on Windows, you might get a build error. There is a [workaround](https://github.com/linkedpipes/etl/issues/851) for that.
 
