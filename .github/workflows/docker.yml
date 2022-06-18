@@ -2,7 +2,7 @@ name: docker
 on:
   push:
     branches:
-      - 'develop'
+      - 'main'
 jobs:
   publish-docker:
     runs-on: ubuntu-20.04
