@@ -71,7 +71,7 @@ public class Configuration {
         knowledgeDirectory = storageDirectory + File.separator + "knowledge";
 
         executorMonitorUrl = getEnvOrProperty(
-                "LP_ETL_STORAGE_URL", "executor-monitor.webserver.uri")
+                "LP_ETL_MONITOR_URL", "executor-monitor.webserver.uri")
                 + "/api/v1/";
     }
 

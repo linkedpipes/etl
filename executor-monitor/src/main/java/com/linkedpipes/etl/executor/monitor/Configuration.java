@@ -78,14 +78,15 @@ public class Configuration {
     }
 
     protected void loadProperties() {
-        executorUri = getProperty("executor.webserver.uri");
-        workingDirectoryPath =
-                getProperty("executor.execution.working_directory");
+        executorUri = getEnvOrProperty(
+                "LP_ETL_EXECUTOR_URL","executor.webserver.uri");
+        workingDirectoryPath = getProperty(
+                "executor.execution.working_directory");
         webServerPort = getPropertyInteger("executor-monitor.webserver.port");
         logDirectoryPath = getProperty("executor-monitor.log.directory");
         logFilter = getProperty("executor-monitor.log.core.level");
-        ftpCommandPort =
-                getPropertyInteger("executor-monitor.ftp.command_port");
+        ftpCommandPort = getPropertyInteger(
+                "executor-monitor.ftp.command_port");
         //
         ftpDataPortsStart = getPropertyInteger(
                 "executor-monitor.ftp.data_ports_interval.start");
