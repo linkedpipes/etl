@@ -70,8 +70,9 @@ public class Configuration {
         pipelinesDirectory = storageDirectory + File.separator + "pipelines";
         knowledgeDirectory = storageDirectory + File.separator + "knowledge";
 
-        executorMonitorUrl =
-                getProperty("executor-monitor.webserver.uri") + "/api/v1/";
+        executorMonitorUrl = getEnvOrProperty(
+                "LP_ETL_STORAGE_URL", "executor-monitor.webserver.uri")
+                + "/api/v1/";
     }
 
     public int getStoragePort() {

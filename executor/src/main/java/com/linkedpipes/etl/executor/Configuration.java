@@ -65,7 +65,7 @@ public class Configuration {
         osgiLibDirectoryPath = getProperty("executor.osgi.lib.directory");
         osgiStorageDirectory = getProperty("executor.osgi.working.directory");
         osgiComponentDirectory = getProperty("storage.jars.directory");
-        storageAddress = getProperty("storage.uri");
+        storageAddress = getEnvOrProperty("LP_ETL_STORAGE_URL", "storage.uri");
         //
         try {
             String value = properties.getProperty(
@@ -117,6 +117,14 @@ public class Configuration {
 
     public List<String> getBannedJarPatterns() {
         return bannedJarPatterns;
+    }
+
+    private String getEnvOrProperty(String env, String property) {
+        String result = System.getProperty(env);
+        if (result == null || result.isEmpty()) {
+            result = getProperty(property);
+        }
+        return result;
     }
 
     private String getProperty(String name) {
