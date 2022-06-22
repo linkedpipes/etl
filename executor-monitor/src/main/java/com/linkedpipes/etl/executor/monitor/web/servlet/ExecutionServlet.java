@@ -27,6 +27,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
@@ -156,7 +158,7 @@ public class ExecutionServlet {
     }
 
     @RequestMapping(
-            value = "/messages/component",
+            value = "/messages",
             method = RequestMethod.GET)
     public void getComponentMessages(
             @RequestParam String iri,
@@ -164,6 +166,11 @@ public class ExecutionServlet {
             HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, MissingResource {
+        // Make sure components are decoded, for some reason the
+        // second one is sometimes not.
+        iri = URLDecoder.decode(iri, StandardCharsets.UTF_8);
+        component = URLDecoder.decode(component, StandardCharsets.UTF_8);
+        //
         Execution execution = getLivingExecution(iri);
         Statements statements =
                 this.executions.getMessages(execution, component);

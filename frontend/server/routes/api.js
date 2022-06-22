@@ -392,7 +392,7 @@ router.get("/executions-pipeline", (req, res) => {
     "headers": updateAcceptHeader(req.headers),
     "qs": req.query,
   };
-  request.del(options)
+  request.get(options)
     .on("error", (error) => handleConnectionError(res, error))
     .pipe(res);
 });
@@ -403,7 +403,7 @@ router.get("/executions-overview", (req, res) => {
     "headers": updateAcceptHeader(req.headers),
     "qs": req.query,
   };
-  request.del(options)
+  request.get(options)
     .on("error", (error) => handleConnectionError(res, error))
     .pipe(res);
 });
@@ -414,7 +414,7 @@ router.get("/executions-logs", (req, res) => {
     "headers": updateAcceptHeader(req.headers),
     "qs": req.query,
   };
-  request.del(options)
+  request.get(options)
     .on("error", (error) => handleConnectionError(res, error))
     .pipe(res);
 });
@@ -425,7 +425,7 @@ router.get("/executions-logs-tail", (req, res) => {
     "headers": updateAcceptHeader(req.headers),
     "qs": req.query,
   };
-  request.del(options)
+  request.get(options)
     .on("error", (error) => handleConnectionError(res, error))
     .pipe(res);
 });
@@ -436,7 +436,7 @@ router.get("/executions-messages", (req, res) => {
     "headers": updateAcceptHeader(req.headers),
     "qs": req.query, // execution, component
   };
-  request.del(options)
+  request.get(options)
     .on("error", (error) => handleConnectionError(res, error))
     .pipe(res);
 });

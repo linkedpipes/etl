@@ -115,6 +115,7 @@
     updateExecutionMetadata(item);
     item["searchLabel"] = item["label"].toLowerCase();
     item["filterLabel"] = true;
+    item["logsUrl"] = "./api/v1/executions-logs?iri=" + encodeURIComponent(item["iri"]);
     if (item["size"] === undefined) {
       item["size"] = "?";
     } else {

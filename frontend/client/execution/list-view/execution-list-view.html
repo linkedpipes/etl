@@ -114,14 +114,14 @@
                   </md-button>
                 </md-menu-item>
                 <md-menu-item>
-                  <md-button ng-href="{{item.iri}}/logs" target="_blank">
+                  <md-button ng-href="{{item.logsUrl}}" target="_blank">
                     <md-icon class="material-icons">visibility</md-icon>
                     See logs
                   </md-button>
                 </md-menu-item>
                 <md-menu-item>
                   <md-button
-                    ng-href="{{item.iri}}/logs"
+                    ng-href="{{item.logsUrl}}"
                     target="_blank"
                     download="{{item.label}}_{{item.start|date:'yyyy-MM-dd_HH-mm-ss'}}.log">
                     <md-icon class="material-icons">file_download</md-icon>
