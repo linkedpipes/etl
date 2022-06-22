@@ -21,7 +21,8 @@ define(["angular"], function (angular) {
         $refresh.remove("log-tail");
         return;
       }
-      const url = execution.iri + "/logs-tail?n=100";
+      const url = "./api/v1/executions-logs-tail?n=100&iri="
+        + encodeURIComponent(execution.iri);
       $http.get(url).then((response) => {
           const lastSize = element.textContent.length;
           element.textContent = response.data;
