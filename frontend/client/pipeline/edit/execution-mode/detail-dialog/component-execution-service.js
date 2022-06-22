@@ -103,9 +103,11 @@
     }
 
     function fetchMessages() {
-      let url = getComponentExecution() +
-        "/messages/component?iri=" +
-        encodeURIComponent(execution.iri);
+      let url =
+        "./api/v1/executions-messages?iri="
+        + encodeURIComponent(getComponentExecution())
+        + "&component="
+        + encodeURIComponent(encodeURIComponent(execution.iri));
       return http.getJsonLd(url);
     }
 
