@@ -14,6 +14,8 @@ import org.eclipse.rdf4j.rio.Rio;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
 class HttpExecutionSource {
@@ -43,8 +45,8 @@ class HttpExecutionSource {
     }
 
     private String getExecutionSourceUrl(String iri) {
-        String id = iri.substring(iri.lastIndexOf("/") + 1);
-        return configuration.getExecutorMonitorUrl() + "executions/" + id;
+        return configuration.getExecutorMonitorUrl() + "executions/?iri="
+                + URLEncoder.encode(iri, StandardCharsets.UTF_8);
     }
 
     private void checkResponse(HttpResponse response, String iri)
