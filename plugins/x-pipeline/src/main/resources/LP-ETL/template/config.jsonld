@@ -1,0 +1,20 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/x-pipeline#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/x-pipeline#saveDebugData": true,
+        "http://plugins.linkedpipes.com/ontology/x-pipeline#saveDebugDataControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/x-pipeline#deleteWorkingData": false,
+        "http://plugins.linkedpipes.com/ontology/x-pipeline#deleteWorkingDataControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/x-pipeline#logPolicy": {
+            "@id": "http://plugins.linkedpipes.com/ontology/x-pipeline#PreserveLogs"
+        },
+        "http://plugins.linkedpipes.com/ontology/x-pipeline#logPolicyControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        }
+    }
+]

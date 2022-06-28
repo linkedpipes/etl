@@ -1,0 +1,35 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/x-pipeline#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/instance> ,
+        <http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/pipeline> ,
+        <http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/saveDebugData> ,
+        <http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/deleteWorkingData> ,
+        <http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/logPolicy> .
+
+<http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/instance>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-pipeline#instance> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-pipeline#instanceControl> .
+
+<http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/pipeline>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-pipeline#pipeline> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-pipeline#pipelineControl> .
+
+<http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/saveDebugData>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-pipeline#saveDebugData> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-pipeline#saveDebugDataControl> .
+
+<http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/deleteWorkingData>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-pipeline#deleteWorkingData> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-pipeline#deleteWorkingDataControl> .
+
+<http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/logPolicy>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-pipeline#logPolicy> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-pipeline#logPolicyControl> .

@@ -105,5 +105,6 @@
         <module>t-jsonLdFormatTitanium</module>
         <module>t-jsonLdToRdfTitanium</module>
         <module>t-jenaTdbLoader</module>
+        <module>x-pipeline</module>
     </modules>
 </project>

@@ -1,0 +1,33 @@
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.instance.hide">
+        <label>URL of LinkedPipes instance (must not end with '/')</label>
+        <input ng-model="dialog.instance.value"
+               placeholder=""
+               ng-disabled="dialog.instance.disabled || dialog.instance.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.pipeline.hide">
+        <label>Pipeline URL</label>
+        <input ng-model="dialog.pipeline.value"
+               placeholder=""
+               ng-disabled="dialog.pipeline.disabled || dialog.pipeline.inherit">
+    </md-input-container>
+    <md-switch ng-model="dialog.saveDebugData.value"
+               ng-disabled="dialog.saveDebugData.disabled || dialog.saveDebugData.inherit"
+               ng-hide="dialog.saveDebugData.hide">
+        Save debug data
+    </md-switch>
+    <md-switch ng-model="dialog.deleteWorkingData.value"
+               ng-disabled="dialog.deleteWorkingData.disabled || dialog.deleteWorkingData.inherit"
+               ng-hide="dialog.deleteWorkingData.hide">
+        Delete working data, including saved debug data, after execution
+    </md-switch>
+    <md-input-container class="md-block" ng-hide="dialog.logPolicy.hide" flex>
+        <label>What to do with execution logs</label>
+        <md-select ng-model="dialog.logPolicy.value"
+                   ng-disabled="dialog.logPolicy.disabled || dialog.logPolicy.inherit">
+            <md-option value="http://plugins.linkedpipes.com/ontology/x-pipeline#PreserveLogs">Preserve</md-option>
+            <md-option value="http://plugins.linkedpipes.com/ontology/x-pipeline#DeleteOnSuccess">Delete on success</md-option>
+        </md-select>
+    </md-input-container>
+</div>
