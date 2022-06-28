@@ -30,4 +30,14 @@
             <md-option value="http://plugins.linkedpipes.com/ontology/x-pipeline#DeleteOnSuccess">Delete on success</md-option>
         </md-select>
     </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.logLevel.hide" flex>
+        <label>What to do with execution logs</label>
+        <md-select ng-model="dialog.logLevel.value"
+                   ng-disabled="dialog.logLevel.disabled || dialog.logLevel.inherit">
+            <md-option value="DEBUG">Debug</md-option>
+            <md-option value="INFO">Info</md-option>
+            <md-option value="WARN">Warning</md-option>
+            <md-option value="ERROR">Error</md-option>
+        </md-select>
+    </md-input-container>
 </div>

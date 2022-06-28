@@ -78,8 +78,8 @@ public class PipelineExecutor {
         this.resources = new ResourceManager(
                 directory.getParentFile(), directory);
         this.loggerFacade.prepareAppendersForExecution(
-                resources.getDebugLogFile(),
-                resources.getWarnLogFile());
+                resources.getExecutionLogFile(),
+                "INFO");
         this.moduleFacade = modules;
         this.execution = new ExecutionObserver(resources, iri);
         this.execution.onExecutionBegin();
@@ -138,6 +138,7 @@ public class PipelineExecutor {
             execution.onCantLoadPipeline(ex);
             return false;
         }
+        updateLogging();
         try {
             preparePipelineDefinition();
         } catch (ExecutorException ex) {
@@ -176,6 +177,17 @@ public class PipelineExecutor {
                 resources.getWorkingDirectory("pipeline_repository");
         pipeline.load(definitionFile, workingDirectory);
         execution.onPipelineLoaded(pipeline.getModel());
+    }
+
+    /**
+     * We start with default INFO log level, we need to update it.
+     */
+    private void updateLogging() {
+        String level = pipeline.getModel().getLogLevel();
+        LOG.info("Changing log level to: {}", level);
+        loggerFacade.destroyExecutionAppenders();
+        loggerFacade.prepareAppendersForExecution(
+                resources.getExecutionLogFile(), level);
     }
 
     private File locatePipelineDefinitionFile() throws ExecutorException {

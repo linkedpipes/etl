@@ -75,18 +75,14 @@ public class ResourceManager {
         return new File(executionRoot, "working/" + name + "-" + counter);
     }
 
-    public File getDebugLogFile() {
-        return new File(getExecutionLogDirectory(), "execution-debug.log");
+    public File getExecutionLogFile() {
+        return new File(getExecutionLogDirectory(), "execution.log");
     }
 
     public File getExecutionLogDirectory() {
         File file = new File(executionRoot, "log");
         file.mkdirs();
         return file;
-    }
-
-    public File getWarnLogFile() {
-        return new File(getExecutionLogDirectory(), "execution-warn.log");
     }
 
     /**

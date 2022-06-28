@@ -72,6 +72,9 @@ public final class LP_PIPELINE {
     public static final String HAS_LOG_POLICY =
             PREFIX + "logPolicy";
 
+    public static final String HAS_LOG_LEVEL =
+            PREFIX + "logLevel";
+
     public static final String LOG_PRESERVE =
             PREFIX + "log/Preserve";
 

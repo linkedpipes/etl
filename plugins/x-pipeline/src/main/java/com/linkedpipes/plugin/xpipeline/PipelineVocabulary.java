@@ -18,6 +18,8 @@ public final class PipelineVocabulary {
 
     public static final String LOG_POLICY = PREFIX + "logPolicy";
 
+    public static final String LOG_LEVEL = PREFIX + "logLevel";
+
     public static final String LOG_PRESERVE = PREFIX + "PreserveLogs";
 
     public static final String LOG_DELETE_ON_SUCCESS =

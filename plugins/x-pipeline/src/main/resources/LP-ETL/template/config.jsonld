@@ -15,6 +15,10 @@
         },
         "http://plugins.linkedpipes.com/ontology/x-pipeline#logPolicyControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
+        },
+        "http://plugins.linkedpipes.com/ontology/x-pipeline#logLevel": "INFO",
+        "http://plugins.linkedpipes.com/ontology/x-pipeline#logLevelControl" : {
+            "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         }
     }
 ]

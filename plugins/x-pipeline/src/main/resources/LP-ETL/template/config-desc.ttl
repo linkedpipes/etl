@@ -7,7 +7,8 @@
         <http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/pipeline> ,
         <http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/saveDebugData> ,
         <http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/deleteWorkingData> ,
-        <http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/logPolicy> .
+        <http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/logPolicy> ,
+        <http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/logLevel> .
 
 <http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/instance>
     a config:ConfigurationMember ;
@@ -33,3 +34,8 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/x-pipeline#logPolicy> ;
     config:control <http://plugins.linkedpipes.com/ontology/x-pipeline#logPolicyControl> .
+
+<http://linkedpipes.com/resources/components/x-pipeline/0.0.0/configuration/desc/logLevel>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/x-pipeline#logLevel> ;
+    config:control <http://plugins.linkedpipes.com/ontology/x-pipeline#logLevelControl> .

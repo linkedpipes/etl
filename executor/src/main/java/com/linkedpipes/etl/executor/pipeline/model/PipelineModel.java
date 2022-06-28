@@ -103,4 +103,8 @@ public class PipelineModel implements Loadable {
                 executionMetadata.getLogPolicy());
     }
 
+    public String getLogLevel() {
+        return executionMetadata.getLogLevel();
+    }
+
 }

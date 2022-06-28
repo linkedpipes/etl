@@ -13,7 +13,6 @@ import org.eclipse.rdf4j.rio.Rio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -131,7 +130,7 @@ public class ExecutionServlet {
             @RequestParam String iri,
             HttpServletResponse response) throws MissingResource {
         Execution execution = getLivingExecution(iri);
-        File file = this.executions.getExecutionDebugLogFile(execution);
+        File file = this.executions.getExecutionLogFile(execution);
         if (file == null || !file.exists()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return null;
@@ -148,7 +147,7 @@ public class ExecutionServlet {
             @RequestParam(value = "n", defaultValue = "32") int count,
             HttpServletResponse response) throws IOException, MissingResource {
         Execution execution = getLivingExecution(iri);
-        File file = this.executions.getExecutionDebugLogFile(execution);
+        File file = this.executions.getExecutionLogFile(execution);
         if (file == null || !file.exists()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;

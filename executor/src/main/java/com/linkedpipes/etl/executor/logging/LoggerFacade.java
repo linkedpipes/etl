@@ -25,25 +25,17 @@ public class LoggerFacade {
 
     public static final String WEB_MDC = "web";
 
-    private FileAppender debugAppender = null;
+    private FileAppender appender = null;
 
-    private FileAppender infoAppender = null;
-
-    public void prepareAppendersForExecution(
-            File debugLogFile, File warnLogFile) {
+    public void prepareAppendersForExecution(File logFile, String level) {
         destroyExecutionAppenders();
-        debugAppender = createExecutionAppender(debugLogFile, "DEBUG");
-        infoAppender = createExecutionAppender(warnLogFile, "EARN");
+        appender = createExecutionAppender(logFile, level);
     }
 
     public void destroyExecutionAppenders() {
-        if (debugAppender != null) {
-            destroyAppender(debugAppender);
-            debugAppender = null;
-        }
-        if (infoAppender != null) {
-            destroyAppender(infoAppender);
-            infoAppender = null;
+        if (appender != null) {
+            destroyAppender(appender);
+            appender = null;
         }
     }
 

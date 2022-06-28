@@ -22,6 +22,8 @@ public class ExecutorMetadata {
 
     private String logPolicy = LP_PIPELINE.LOG_PRESERVE;
 
+    private String logLevel = "INFO";
+
     public ExecutorMetadata(String iri) {
         this.iri = iri;
     }
@@ -31,6 +33,7 @@ public class ExecutorMetadata {
         writer.bool(iri, LP_PIPELINE.HAS_DELETE_WORKING, deleteWorkingData);
         writer.bool(iri, LP_PIPELINE.HAS_SAVE_DEBUG_DATA, saveDebugData);
         writer.iri(iri, LP_PIPELINE.HAS_LOG_POLICY, logPolicy);
+        writer.string(iri, LP_PIPELINE.HAS_LOG_LEVEL, logLevel, null);
         if (targetComponent != null && !targetComponent.isEmpty()) {
             writer.iri(iri, LP_EXEC.HAS_TARGET_COMPONENT, targetComponent);
         }
@@ -57,8 +60,9 @@ public class ExecutorMetadata {
         this.saveDebugData = saveDebugData;
     }
 
-    public void setLogPolicy(String logPolicy) {
-        this.logPolicy = logPolicy;
+    public void setLog(String policy, String level) {
+        this.logPolicy = policy;
+        this.logLevel = level;
     }
 
 }

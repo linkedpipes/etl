@@ -28,6 +28,10 @@ define([], function () {
             "$type": "iri",
             "$label": "Log policy"
         },
+        "logLevel": {
+            "$type": "str",
+            "$label": "Log level"
+        },
     };
 
     function controller($scope, $service) {

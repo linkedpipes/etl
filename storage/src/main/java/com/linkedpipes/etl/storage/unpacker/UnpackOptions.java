@@ -103,6 +103,8 @@ class UnpackOptions implements Loadable {
 
     private String logPolicy = LP_PIPELINE.LOG_PRESERVE;
 
+    private String logLevel = "DEBUG";
+
     @Override
     public Loadable load(String predicate, BackendRdfValue value)
             throws RdfUtilsException {
@@ -125,6 +127,9 @@ class UnpackOptions implements Loadable {
                 return null;
             case LP_PIPELINE.HAS_LOG_POLICY:
                 logPolicy = value.asString();
+                return null;
+            case LP_PIPELINE.HAS_LOG_LEVEL:
+                logLevel = value.asString();
                 return null;
             default:
                 return null;
@@ -153,6 +158,10 @@ class UnpackOptions implements Loadable {
 
     public String getLogPolicy() {
         return logPolicy;
+    }
+
+    public String getLogLevel() {
+        return logLevel;
     }
 
 }

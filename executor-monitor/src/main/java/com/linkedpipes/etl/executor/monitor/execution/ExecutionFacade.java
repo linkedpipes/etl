@@ -73,12 +73,22 @@ public class ExecutionFacade implements DebugDataSource {
                 .collect(Collectors.toList());
     }
 
-    public File getExecutionDebugLogFile(Execution execution) {
-        return new File(execution.getDirectory(), "log/execution-debug.log");
-    }
-
-    public File getExecutionWarnLogFile(Execution execution) {
-        return new File(execution.getDirectory(), "log/execution-warn.log");
+    /**
+     * For backwards compatibility we also try the older execution file.
+     * This is of 2022.06.
+     */
+    public File getExecutionLogFile(Execution execution) {
+        File primary = new File(
+                execution.getDirectory(), "log/execution.log");
+        if (primary.exists()) {
+            return primary;
+        }
+        File secondary = new File(
+                execution.getDirectory(), "log/execution-debug.log");
+        if (secondary.exists()) {
+            return secondary;
+        }
+        return primary;
     }
 
     public JsonNode getOverview(Execution execution) {

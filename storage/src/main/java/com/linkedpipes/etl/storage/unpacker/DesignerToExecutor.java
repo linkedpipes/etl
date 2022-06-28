@@ -127,7 +127,7 @@ public class DesignerToExecutor {
         metadata.setTargetComponent(options.getRunToComponent());
         metadata.setDeleteWorkingData(options.isDeleteWorkingDirectory());
         metadata.setSaveDebugData(options.isSaveDebugData());
-        metadata.setLogPolicy(options.getLogPolicy());
+        metadata.setLog(options.getLogPolicy(), options.getLogLevel());
         target.getExecutorMetadata()
                 .setExecutionType(getExecutionType(options));
     }

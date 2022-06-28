@@ -81,6 +81,12 @@ public final class Pipeline implements Component, SequentialExecution {
                         "http://linkedpipes.com/ontology/logPolicy"
                 ),
                 valueFactory.createIRI(getLogPolicy())));
+        result.add(valueFactory.createStatement(
+                resource,
+                valueFactory.createIRI(
+                        "http://linkedpipes.com/ontology/logLevel"
+                ),
+                valueFactory.createLiteral(configuration.getLogLevel())));
         return result;
     }
 

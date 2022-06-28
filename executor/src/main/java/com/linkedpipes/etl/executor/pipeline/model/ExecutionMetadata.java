@@ -12,6 +12,8 @@ public class ExecutionMetadata implements Loadable {
 
     private String logPolicy = LP_PIPELINE.LOG_PRESERVE;
 
+    private String logLevel = "DEBUG";
+
     @Override
     public Loadable load(String predicate, BackendRdfValue object)
             throws RdfUtilsException {
@@ -21,6 +23,9 @@ public class ExecutionMetadata implements Loadable {
                 return null;
             case LP_PIPELINE.HAS_LOG_POLICY:
                 logPolicy = object.asString();
+                return null;
+            case LP_PIPELINE.HAS_LOG_LEVEL:
+                logLevel = object.asString();
                 return null;
             default:
                 return null;
@@ -33,6 +38,10 @@ public class ExecutionMetadata implements Loadable {
 
     public String getLogPolicy() {
         return logPolicy;
+    }
+
+    public String getLogLevel() {
+        return logLevel;
     }
 
 }

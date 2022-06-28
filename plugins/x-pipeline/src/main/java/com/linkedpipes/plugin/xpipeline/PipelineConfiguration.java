@@ -20,6 +20,9 @@ public class PipelineConfiguration {
     @RdfToPojo.Property(iri = PipelineVocabulary.LOG_POLICY)
     private String logPolicy = "Preserve";
 
+    @RdfToPojo.Property(iri = PipelineVocabulary.LOG_LEVEL)
+    private String logLevel = "INFO";
+
     public PipelineConfiguration() {
     }
 
@@ -61,6 +64,14 @@ public class PipelineConfiguration {
 
     public void setLogPolicy(String logPolicy) {
         this.logPolicy = logPolicy;
+    }
+
+    public String getLogLevel() {
+        return logLevel;
+    }
+
+    public void setLogLevel(String logLevel) {
+        this.logLevel = logLevel;
     }
 
 }
