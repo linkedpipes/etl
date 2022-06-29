@@ -8,7 +8,6 @@ import com.linkedpipes.etl.plugin.configuration.InvalidConfiguration;
 import com.linkedpipes.etl.storage.BaseException;
 import com.linkedpipes.etl.storage.pipeline.Pipeline;
 import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
-import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import com.linkedpipes.etl.storage.template.ReferenceTemplate;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
 import org.eclipse.rdf4j.model.Statement;
@@ -178,7 +177,7 @@ public class ExportServlet {
                 templates.getConfigurationDescription(template.getIri());
         Collection<Statement> privateConfiguration;
         try {
-            privateConfiguration = configurationFacade.selectPrivateStatements(
+            privateConfiguration = configurationFacade.selectPrivate(
                     configuration, description);
         } catch (InvalidConfiguration ex) {
             throw new BaseException("Invalid configuration for '{}.'",

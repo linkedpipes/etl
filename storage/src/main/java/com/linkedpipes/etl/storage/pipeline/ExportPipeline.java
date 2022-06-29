@@ -109,7 +109,7 @@ class ExportPipeline {
                     templatesFacade.getConfigurationDescription(
                             template.getIri());
             Collection<Statement> privateProperties =
-                    configurationFacade.selectPrivateStatements(
+                    configurationFacade.selectPrivate(
                             configuration,
                             new ArrayList<>(description));
             rdf.removeAll(privateProperties);
