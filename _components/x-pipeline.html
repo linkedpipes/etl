@@ -1,0 +1,48 @@
+---
+short: x-pipeline
+type: other
+color: pink
+title: Pipeline executor
+description: Executes LinkedPipes ETL pipelines
+---
+
+<p class="flow-text">
+Special purpose component, allows the user to execute LP-ETL pipelines.
+</p>
+<dl class="flow-text">
+    <dt>URL of LinkedPipes instance</dt>
+    <dd>The instance on which a pipeline should be executed</dd>
+    <dt>Pipeline IRI</dt>
+    <dd>IRI of the pipeline to be executed</dd>
+    <dt>Save debug data</dt>
+    <dd>
+        Determines, whether outputs and inputs of all components are saved or not.
+        Choosing not to save them might increase execution performance, but in case of failures, debug data will not be available.</dd>
+    <dt>Delete working data, including saved debug data, after successful execution</dt>
+    <dd>
+        On successful execution of a pipeline, debug data and logs can be deleted, to save space.
+    </dd>
+    <dt>Execution log level</dt>
+    <dd>
+        Determines the log level of the pipeline execution.
+    </dd>
+</dl>
+<!--more-->
+<div class="row" id="characteristics">
+    <h3 class="orange-text center">Characteristics</h3>
+    <div class="col s12 l6">
+        <dl class="flow-text">
+            <dt>ID</dt>
+            <dd>{{ page.short }}</dd>
+            <dt>Type</dt>
+            <dd>{{ page.type }}</dd>
+            <dt>Look in pipeline</dt>
+            <dd><img class="responsive-img" src="../assets/components/{{page.short}}.png" alt="{{page.title}}"></dd>
+        </dl>
+    </div>
+    <div class="col s12 l6">
+        <p class="flow-text">
+        The {{page.title}} component executes LP-ETL pipelines on the given LP-ETL instance, with given execution options.
+        </p>
+    </div>
+</div>
