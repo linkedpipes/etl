@@ -7,7 +7,6 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +20,10 @@ class MergeGloballyControlledConfiguration {
             List<Statement> instanceRdf,
             Description description, String baseIri
     ) throws InvalidConfiguration {
-        Resource parentResource = findEntity(parentRdf, description);
-        Resource instanceResource = findEntity(instanceRdf, description);
+        Resource parentResource = RdfUtils.findByType(
+                parentRdf, description.getType());
+        Resource instanceResource = RdfUtils.findByType(
+                instanceRdf, description.getType());
         String parentControl =
                 getGlobalControl(description, parentRdf, parentResource);
         String instanceControl =
@@ -33,21 +34,6 @@ class MergeGloballyControlledConfiguration {
                 parentResource, instanceResource,
                 parentControl, instanceControl, baseIri);
     }
-
-    // TODO Move to utility class.
-    private Resource findEntity(
-            List<Statement> statements, Description description) {
-        for (Statement statement : statements) {
-            if (!statement.getPredicate().equals(RDF.TYPE)) {
-                continue;
-            }
-            if (statement.getObject().equals(description.getType())) {
-                return statement.getSubject();
-            }
-        }
-        return null;
-    }
-
 
     private String getGlobalControl(
             Description description, List<Statement> statements,

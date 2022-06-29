@@ -1,10 +1,12 @@
 package com.linkedpipes.etl.plugin.configuration;
 
+import com.linkedpipes.etl.plugin.configuration.model.Description;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,19 @@ class RdfUtils {
             ));
         }
         return result;
+    }
+
+    public static Resource findByType(
+            List<Statement> statements, Resource type) {
+        for (Statement statement : statements) {
+            if (!statement.getPredicate().equals(RDF.TYPE)) {
+                continue;
+            }
+            if (statement.getObject().equals(type)) {
+                return statement.getSubject();
+            }
+        }
+        return null;
     }
 
 }

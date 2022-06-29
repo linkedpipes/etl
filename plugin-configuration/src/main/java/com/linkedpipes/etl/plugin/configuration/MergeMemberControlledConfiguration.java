@@ -64,12 +64,14 @@ class MergeMemberControlledConfiguration {
             Description description, String baseIri
     ) throws InvalidConfiguration {
         // Load parent.
-        Resource parentResource = findEntity(parentRdf, description);
+        Resource parentResource = RdfUtils.findByType(
+                parentRdf, description.getType());
         Map<Description.Member, PredicateTree> parent =
                 loadTreesForPredicates(
                         description, parentRdf, parentResource);
         // Load instance.
-        Resource instanceResource = findEntity(instanceRdf, description);
+        Resource instanceResource = RdfUtils.findByType(
+                instanceRdf, description.getType());
         Map<Description.Member, PredicateTree> instance =
                 loadTreesForPredicates(
                         description, instanceRdf, instanceResource);
@@ -90,20 +92,6 @@ class MergeMemberControlledConfiguration {
         // with the parent (template) IRI.
         RdfUtils.updateSubject(result, parentResource, instanceResource);
         return result;
-    }
-
-    // TODO Move to utility class.
-    private Resource findEntity(
-            List<Statement> statements, Description description) {
-        for (Statement statement : statements) {
-            if (!statement.getPredicate().equals(RDF.TYPE)) {
-                continue;
-            }
-            if (statement.getObject().equals(description.getType())) {
-                return statement.getSubject();
-            }
-        }
-        return null;
     }
 
     private Map<Description.Member, PredicateTree> loadTreesForPredicates(
