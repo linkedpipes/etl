@@ -3,13 +3,13 @@
  * dialogs.
  *
  * For each "property" create object with:
- *  value - the value to show in UI
- *  templateValue - value of template if it exists
- *  hide - true if UI element should be hidden
- *  disabled - true if UI element should be read-only
- *  inherit - true if inheritance control is set to true
- *  force - true if force control is set to true
- *  label - label for UI
+ *  - value - the value to show in UI
+ *  - templateValue - value of template if it exists
+ *  - hide - true if UI element should be hidden
+ *  - disabled - true if UI element should be read-only
+ *  - inherit - true if inheritance control is set to true
+ *  - force - true if force control is set to true
+ *  - label - label for UI
  *
  * Usage for X:
  *   ng-hide="dialog.X.hide"

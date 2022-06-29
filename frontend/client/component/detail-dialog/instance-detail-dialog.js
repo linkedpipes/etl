@@ -49,7 +49,7 @@ define([
       const newComponent = jQuery.extend(true, {}, component);
 
       // Update shared data with dialogs.
-      // TODO Rename to indicate that we are saving values from dialogs.
+      // TODO: Rename to indicate that we are saving values from dialogs.
       $scope.api.save();
 
       // Save changes in instance.

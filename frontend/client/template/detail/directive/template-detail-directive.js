@@ -94,7 +94,7 @@ define([
       }
 
       // The data might be already ready, as we do not know
-      // if the parent or we get to run first.
+      // if the parent, or we get to run first.
       if ($scope.api.store) {
         load();
       }

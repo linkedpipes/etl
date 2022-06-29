@@ -49,7 +49,7 @@ define([
         },
         /**
          * A callback function dialog must implement.
-         * Upon call of this function the config.instance must
+         * Upon call of this function the configuration instance must
          * be updated and ready to be saved as the configuration.
          */
         "onStore": undefined,
@@ -68,14 +68,14 @@ define([
                 "forced": false
               }
             case LP.Force:
-              // This apply for templates.
+              // This applies for templates.
               return {
                 "inherit": false,
                 "force": true,
                 "forced": false
               }
             case LP.InheritAndForce:
-              // This apply for templates.
+              // This applies for templates.
               return {
                 "inherit": true,
                 "force": true,

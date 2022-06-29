@@ -22,24 +22,24 @@
     </md-tab>
     <md-tab label="Delete" ng-if="showTemplateManagement">
       <div class="layout-padding">
-        <p>
-          WARNING:
-        <div ng-show="template._children.length !== 0">
-          This template has some successors. If this
-          template is deleted those successors will not be visible
-          in the application any more. They will however stay in
-          the application. In such case they have to be deleted
-          manually from the storage directory.
-        </div>
-        <div ng-hide="!isUsed">
-          This template (or its successor) is used in a pipeline.
-          If this template is deleted the pipeline become invalid.
-        </div>
         <div>
-          There is no additional warning dialog, once the delete
-          button is clicked there is no way back.
+          WARNING:
+          <div ng-show="template._children.length !== 0">
+            This template has some successors. If this
+            template is deleted those successors will not be visible
+            in the application any more. They will however stay in
+            the application. In such case they have to be deleted
+            manually from the storage directory.
+          </div>
+          <div ng-hide="!isUsed">
+            This template (or its successor) is used in a pipeline.
+            If this template is deleted the pipeline become invalid.
+          </div>
+          <div>
+            There is no additional warning dialog, once the delete
+            button is clicked there is no way back.
+          </div>
         </div>
-        </p>
         <md-button ng-click="onDelete()">
           <md-icon md-menu-origin class="lp-icon material-icons" style="color:red">
             delete_forever

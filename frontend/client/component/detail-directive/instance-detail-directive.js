@@ -49,7 +49,7 @@ define([
         $scope.dialogService.api.setInstanceConfig(configuration);
         // Load parent configuration.
         templateService.fetchEffectiveConfig(parent.id).then((config) => {
-          // For sure we use new object here.
+          // To be sure, we use new object here.
           $scope.dialogService.api.setTemplateConfig(
             jQuery.extend(true, [], config));
           // Load dialogs.
@@ -71,7 +71,7 @@ define([
       $scope.api.load = load;
 
       // The data might be already ready, as we do not know
-      // if the parent or we get to run first.
+      // if the parent, or we get to run first.
       if ($scope.api.store) {
         load();
       }
