@@ -44,6 +44,7 @@
 <http://localhost/instance> a component:Configuration ;
     # Property with value.
     component:first "p-1" ;
+    component:firstSubstitution "LP_ETL" ;
     # Property with value and control.
     component:second "p-2" ;
     component:secondControl config:None ;
@@ -55,7 +56,8 @@
     # Missing property.
 
     # Force property without value.
-    component:sixthControl config:Force .
+    component:sixthControl config:Force ;
+    component:sixthSubstitution "LP_ETL" .
 
 <http://localhost/object/1> <http://localhost/value> "p-o-1" .
 
@@ -66,7 +68,7 @@
 #
 # We do not respect controls here, as they are saved
 # in the parent configuration. If we use controls from parent, we would need
-# to update all configurations when paren change and we do not do that.
+# to update all configurations when parent change and we do not do that.
 #
 
 <http://expected/jar> {

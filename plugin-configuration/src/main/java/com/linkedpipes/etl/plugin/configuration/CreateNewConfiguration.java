@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.plugin.configuration;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
+import com.linkedpipes.etl.plugin.configuration.model.Description;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -11,8 +12,11 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 class CreateNewConfiguration {
 
@@ -35,13 +39,6 @@ class CreateNewConfiguration {
                 baseIri, graph, CONTROL_NONE);
     }
 
-    public List<Statement> createNewFromTemplate(
-            List<Statement> configuration, Description description,
-            String baseIri, IRI graph) {
-        return createNew(configuration, description,
-                baseIri, graph, CONTROL_INHERIT);
-    }
-
     private List<Statement> createNew(
             List<Statement> configuration, Description description,
             String baseIri, IRI graph, IRI defaultControl) {
@@ -54,6 +51,8 @@ class CreateNewConfiguration {
             replaceControls(
                     entry.getValue(), description,
                     entry.getKey(), defaultControl);
+            removeSubstitution(
+                    entry.getValue(), description);
             RdfUtils.updateSubject(
                     entry.getValue(),
                     entry.getKey(),
@@ -122,6 +121,19 @@ class CreateNewConfiguration {
         return result;
     }
 
+    /**
+     * Remove all substitution related content as the new configuration
+     * must not contain any of it.
+     */
+    private void removeSubstitution(
+            List<Statement> statements, Description description) {
+        Set<IRI> forRemoval = description.getMembers().stream()
+                .map(entry -> entry.getSubstitution())
+                .collect(Collectors.toSet());
+        statements.removeIf(
+                (statement -> forRemoval.contains(statement.getPredicate())));
+    }
+
     private List<Statement> collectStatements(
             Map<Resource, List<Statement>> entities) {
         List<Statement> result = new ArrayList<>();
@@ -129,6 +141,13 @@ class CreateNewConfiguration {
             result.addAll(statements);
         }
         return result;
+    }
+
+    public List<Statement> createNewFromTemplate(
+            List<Statement> configuration, Description description,
+            String baseIri, IRI graph) {
+        return createNew(configuration, description,
+                baseIri, graph, CONTROL_INHERIT);
     }
 
 }

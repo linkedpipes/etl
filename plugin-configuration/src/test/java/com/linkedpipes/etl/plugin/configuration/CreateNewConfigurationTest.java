@@ -4,14 +4,14 @@ import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.junit.jupiter.api.Test;
 
-public class CreateNewTest {
+public class CreateNewConfigurationTest {
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     @Test
     public void createNewFromJarFile() throws Exception {
         ConfigurationFacade facade = new ConfigurationFacade();
-        var data = TestUtils.statementsFromResource("createNew.trig");
+        var data = TestUtils.statementsFromResource("create-new.trig");
         var actual = facade.createNewFromJarFile(
                 TestUtils.selectGraph(data, "http://input"),
                 TestUtils.selectGraph(data, "http://description"),
@@ -25,7 +25,7 @@ public class CreateNewTest {
     @Test
     public void createNewFromTemplate() throws Exception {
         ConfigurationFacade facade = new ConfigurationFacade();
-        var data = TestUtils.statementsFromResource("createNew.trig");
+        var data = TestUtils.statementsFromResource("create-new.trig");
         var actual = facade.createNewFromTemplate(
                 TestUtils.selectGraph(data, "http://input"),
                 TestUtils.selectGraph(data, "http://description"),

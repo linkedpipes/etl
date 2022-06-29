@@ -1,6 +1,8 @@
-package com.linkedpipes.etl.plugin.configuration;
+package com.linkedpipes.etl.plugin.configuration.adapter;
 
 import com.linkedpipes.etl.model.vocabulary.LP;
+import com.linkedpipes.etl.plugin.configuration.InvalidConfiguration;
+import com.linkedpipes.etl.plugin.configuration.model.Description;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
@@ -14,27 +16,26 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-class DescriptionAdapter {
+public class RdfToDescription {
 
-    static final IRI TYPE;
+    private static final String SUBSTITUTION_SUFFIX = "Substitution";
+
+    private static final IRI TYPE;
 
     static {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
         TYPE = valueFactory.createIRI(LP.CONFIG_DESCRIPTION);
     }
 
-    public Description fromStatements(Collection<Statement> statements)
-            throws InvalidConfiguration {
-        List<Resource> resources = findDescription(statements);
-        if (resources.size() != 1) {
-            throw new InvalidConfiguration(
-                    "Invalid number of Description type resources ({}).",
-                    resources.size());
-        }
-        return loadDescription(resources.get(0), statements);
+    public static List<Description> asDescription(
+            Collection<Statement> statements) {
+        return findDescription(statements).stream()
+                .map(resource -> loadDescription(resource, statements))
+                .toList();
     }
 
-    private List<Resource> findDescription(Collection<Statement> statements) {
+    private static List<Resource> findDescription(
+            Collection<Statement> statements) {
         List<Resource> result = new ArrayList<>();
         for (Statement statement : statements) {
             if (!statement.getPredicate().equals(RDF.TYPE)) {
@@ -48,7 +49,7 @@ class DescriptionAdapter {
         return result;
     }
 
-    private Description loadDescription(
+    private static Description loadDescription(
             Resource resource, Collection<Statement> statements) {
         Description result = new Description();
         for (Statement statement : statements) {
@@ -80,7 +81,7 @@ class DescriptionAdapter {
         return result;
     }
 
-    private Description.Member loadMember(
+    private static  Description.Member loadMember(
             Resource resource, Collection<Statement> statements) {
         Description.Member result = new Description.Member();
         for (Statement statement : statements) {
@@ -107,6 +108,11 @@ class DescriptionAdapter {
                 default:
                     break;
             }
+        }
+        // The substitution property is computed.
+        if (result.getProperty() != null) {
+            result.setSubstitution(SimpleValueFactory.getInstance().createIRI(
+                    result.getProperty().stringValue() + SUBSTITUTION_SUFFIX));
         }
         return result;
     }

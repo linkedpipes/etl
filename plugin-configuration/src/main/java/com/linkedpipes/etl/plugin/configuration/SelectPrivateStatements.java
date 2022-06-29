@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.plugin.configuration;
 
+import com.linkedpipes.etl.plugin.configuration.model.Description;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 

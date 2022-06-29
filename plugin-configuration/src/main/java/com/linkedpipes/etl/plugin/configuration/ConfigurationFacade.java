@@ -1,5 +1,7 @@
 package com.linkedpipes.etl.plugin.configuration;
 
+import com.linkedpipes.etl.plugin.configuration.adapter.RdfToDescription;
+import com.linkedpipes.etl.plugin.configuration.model.Description;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 
@@ -8,8 +10,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class ConfigurationFacade {
-
-    private DescriptionAdapter descriptionAdapter = new DescriptionAdapter();
 
     public List<Statement> createNewFromJarFile(
             List<Statement> configurationRdf, List<Statement> descriptionRdf,
@@ -23,7 +23,14 @@ public class ConfigurationFacade {
 
     private Description loadDescription(Collection<Statement> statements)
             throws InvalidConfiguration {
-        return descriptionAdapter.fromStatements(statements);
+        List<Description> candidates =
+                RdfToDescription.asDescription(statements);
+        if (candidates.size() != 1) {
+            throw new InvalidConfiguration(
+                    "Expected only one description, got {}.",
+                    candidates.size());
+        }
+        return candidates.get(0);
     }
 
     public List<Statement> createNewFromTemplate(
@@ -61,7 +68,7 @@ public class ConfigurationFacade {
     /**
      * Return private configuration properties.
      */
-    public List<Statement> selectPrivateStatements(
+    public List<Statement> selectPrivate(
             Collection<Statement> configurationRdf,
             Collection<Statement> descriptionRdf) throws InvalidConfiguration {
         Description description = loadDescription(descriptionRdf);

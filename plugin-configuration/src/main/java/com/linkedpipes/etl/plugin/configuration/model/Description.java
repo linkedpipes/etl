@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.plugin.configuration;
+package com.linkedpipes.etl.plugin.configuration.model;
 
 import org.eclipse.rdf4j.model.IRI;
 
@@ -9,13 +9,15 @@ import java.util.List;
  * Represents a description of the component configuration.
  * For one only the first level of the configuration.
  */
-class Description {
+public class Description {
 
     public static class Member {
 
         private IRI property;
 
         private IRI control;
+
+        private IRI substitution;
 
         private boolean isPrivate = false;
 
@@ -42,6 +44,15 @@ class Description {
         public void setPrivate(boolean isPrivate) {
             this.isPrivate = isPrivate;
         }
+
+        public IRI getSubstitution() {
+            return substitution;
+        }
+
+        public void setSubstitution(IRI substitution) {
+            this.substitution = substitution;
+        }
+
     }
 
     /**
@@ -55,7 +66,7 @@ class Description {
      */
     private IRI globalControl;
 
-    private List<Member> members = new ArrayList<>();
+    private final List<Member> members = new ArrayList<>();
 
     public IRI getType() {
         return type;
