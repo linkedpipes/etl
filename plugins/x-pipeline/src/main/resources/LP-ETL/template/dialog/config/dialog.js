@@ -14,7 +14,7 @@ define([], function () {
         },
         "pipeline": {
             "$type": "iri",
-            "$label": "Pipeline ULR"
+            "$label": "Pipeline IRI"
         },
         "saveDebugData": {
             "$type": "bool",
