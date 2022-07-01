@@ -12,10 +12,6 @@
     <packaging>jar</packaging>
     <name>LinkedPipes Executor Monitor</name>
 
-    <properties>
-        <deploy.directory>../deploy/executor-monitor/</deploy.directory>
-    </properties>
-
     <dependencies>
         <!-- Java EE API used by RDF4J to hash blank nodes. -->
         <dependency>
@@ -244,15 +240,18 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <mkdir dir="${deploy.directory}"/>
-                                        <copy todir="${deploy.directory}">
+                                        <mkdir dir="${deploy.directory}/executor-monitor"/>
+                                        <copy todir="${deploy.directory}/executor-monitor">
                                             <fileset dir="${project.build.directory}">
                                                 <include name="executor-monitor.jar"/>
                                             </fileset>
                                         </copy>
-                                        <mkdir dir="${deploy.directory}/lib"/>
-                                        <copy todir="${deploy.directory}/lib">
+                                        <mkdir dir="${deploy.directory}/executor-monitor/lib"/>
+                                        <copy todir="${deploy.directory}/executor-monitor/lib">
                                             <fileset dir="${project.build.directory}/lib" />
+                                        </copy>
+                                        <copy todir="${deploy.directory}">
+                                            <fileset dir="${project.basedir}/deploy"/>
                                         </copy>
                                     </target>
                                 </configuration>

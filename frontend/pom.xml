@@ -9,10 +9,6 @@
     <packaging>pom</packaging>
     <name>LinkedPipes Frontend</name>
 
-    <properties>
-        <deploy.directory>../deploy/frontend/</deploy.directory>
-    </properties>
-
     <profiles>
         <profile>
             <id>deploy</id>
@@ -61,16 +57,19 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <mkdir dir="${deploy.directory}"/>
-                                        <copy todir="${deploy.directory}/server">
-                                            <fileset dir="${project.basedir}/server"/>
+                                        <mkdir dir="${deploy.directory}/frontend"/>
+                                        <copy todir="${deploy.directory}/frontend/server">
+                                            <fileset dir="${project.basedir}/frontend/server"/>
                                         </copy>
-                                        <copy todir="${deploy.directory}/dist">
+                                        <copy todir="${deploy.directory}/frontend/dist">
                                             <fileset dir="${project.basedir}/dist"/>
                                         </copy>
-                                        <copy todir="${deploy.directory}/">
+                                        <copy todir="${deploy.directory}/frontend/">
                                             <fileset file="${project.basedir}/package.json"/>
                                             <fileset file="${project.basedir}/package-lock.json"/>
+                                        </copy>
+                                        <copy todir="${deploy.directory}">
+                                            <fileset dir="${project.basedir}/deploy"/>
                                         </copy>
                                     </target>
                                 </configuration>

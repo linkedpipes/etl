@@ -12,10 +12,6 @@
     <name>LinkedPipes Executor</name>
     <packaging>jar</packaging>
 
-    <properties>
-        <deploy.directory>../deploy/executor/</deploy.directory>
-    </properties>
-
     <dependencies>
         <!-- Java EE API used by RDF4J to hash blank nodes. -->
         <dependency>
@@ -219,15 +215,18 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <mkdir dir="${deploy.directory}"/>
-                                        <copy todir="${deploy.directory}">
+                                        <mkdir dir="${deploy.directory}/executor"/>
+                                        <copy todir="${deploy.directory}/executor">
                                             <fileset dir="${project.build.directory}">
                                                 <include name="executor.jar"/>
                                             </fileset>
                                         </copy>
-                                        <mkdir dir="${deploy.directory}/lib"/>
-                                        <copy todir="${deploy.directory}/lib">
+                                        <mkdir dir="${deploy.directory}/executor/lib"/>
+                                        <copy todir="${deploy.directory}/executor/lib">
                                             <fileset dir="${project.build.directory}/lib"/>
+                                        </copy>
+                                        <copy todir="${deploy.directory}">
+                                            <fileset dir="${project.basedir}/deploy"/>
                                         </copy>
                                     </target>
                                 </configuration>

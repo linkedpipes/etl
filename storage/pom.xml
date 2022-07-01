@@ -12,10 +12,6 @@
     <packaging>jar</packaging>
     <name>LinkedPipes Storage</name>
 
-    <properties>
-        <deploy.directory>../deploy/storage/</deploy.directory>
-    </properties>
-
     <dependencies>
         <!-- Java EE API used by RDF4J to hash blank nodes. -->
         <dependency>
@@ -234,15 +230,18 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <mkdir dir="${deploy.directory}"/>
-                                        <copy todir="${deploy.directory}">
+                                        <mkdir dir="${deploy.directory}/storage"/>
+                                        <copy todir="${deploy.directory}/storage">
                                             <fileset dir="${project.build.directory}">
                                                 <include name="storage.jar"/>
                                             </fileset>
                                         </copy>
-                                        <mkdir dir="${deploy.directory}/lib"/>
-                                        <copy todir="${deploy.directory}/lib">
+                                        <mkdir dir="${deploy.directory}/storage/lib"/>
+                                        <copy todir="${deploy.directory}/storage/lib">
                                             <fileset dir="${project.build.directory}/lib" />
+                                        </copy>
+                                        <copy todir="${deploy.directory}">
+                                            <fileset dir="${project.basedir}/deploy"/>
                                         </copy>
                                     </target>
                                 </configuration>
