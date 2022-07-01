@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>api-executor-v1</artifactId>
+            <artifactId>plugin-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
@@ -43,7 +43,7 @@
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>test-environment</artifactId>
+            <artifactId>plugin-test</artifactId>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

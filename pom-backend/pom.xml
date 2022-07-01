@@ -50,7 +50,7 @@
             </dependency>
             <dependency>
                 <groupId>com.linkedpipes</groupId>
-                <artifactId>api-executor-v1</artifactId>
+                <artifactId>plugin-api</artifactId>
                 <version>${lp.version}</version>
             </dependency>
             <dependency>

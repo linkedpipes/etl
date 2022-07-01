@@ -9,8 +9,8 @@
 		<version>0.0.0</version>
 		<relativePath>../pom-plugin/pom.xml</relativePath>
 	</parent>
-	<artifactId>test-environment</artifactId>
-	<name>LinkedPipes Test Environment</name>
+	<artifactId>plugin-test</artifactId>
+	<name>LinkedPipes Plugin Test Environment</name>
 	<version>0.0.0</version>
 	<packaging>jar</packaging>
 
@@ -26,7 +26,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.linkedpipes</groupId>
-			<artifactId>api-executor-v1</artifactId>
+			<artifactId>plugin-api</artifactId>
 			<version>${lp.version}</version>
 			<scope>compile</scope>
 		</dependency>
