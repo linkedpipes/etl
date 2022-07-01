@@ -33,8 +33,6 @@ import java.util.Map;
  */
 public class Pipeline {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Pipeline.class);
-
     private PipelineModel model;
 
     /**
@@ -42,7 +40,7 @@ public class Pipeline {
      */
     private Repository repository;
 
-    private BackendRdfSource source;
+    private Rdf4jSource source;
 
     /**
      * Load pipeline definition from given file.
@@ -118,7 +116,7 @@ public class Pipeline {
         return model.getGraph();
     }
 
-    public BackendRdfSource getSource() {
+    public Rdf4jSource getSource() {
         return source;
     }
 
@@ -154,10 +152,9 @@ public class Pipeline {
      * The writer write statements into the pipeline definition. The
      * writer must be closed for changes to apply.
      */
-    public BackendTripleWriter setConfiguration(
+    public BackendTripleWriter configurationWriter(
             PipelineComponent component, String graph) {
-        LOG.info("setConfiguration {} {}", component.getIri(), graph);
-        // TODO Save reference to the entity.
+        // TODO Save component so we know the owner.
         return source.getTripleWriter(graph);
     }
 

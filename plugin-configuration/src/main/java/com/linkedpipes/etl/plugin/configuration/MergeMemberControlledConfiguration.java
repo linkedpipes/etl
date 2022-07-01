@@ -37,7 +37,7 @@ class MergeMemberControlledConfiguration {
         /**
          * Value with substitution.
          */
-        public String substitution = null;
+        public Value substitution = null;
 
         /**
          * Link to a description class.
@@ -180,7 +180,7 @@ class MergeMemberControlledConfiguration {
         IRI predicate = statement.getPredicate();
         Value value = statement.getObject();
         if (collector.containsKey(predicate)) {
-            collector.get(predicate).substitution = value.stringValue();
+            collector.get(predicate).substitution = value;
         }
     }
 
@@ -268,12 +268,12 @@ class MergeMemberControlledConfiguration {
     }
 
     private List<Statement> treeToStatement(
-            PredicateTree tree, String controlPredicate,
+            PredicateTree tree, String control,
             Resource from, Resource to) {
         List<Statement> result = new ArrayList<>();
         result.add(valueFactory.createStatement(
                 to, tree.member.getControl(),
-                valueFactory.createIRI(controlPredicate)));
+                valueFactory.createIRI(control)));
         for (Statement statement : tree.statements) {
             if (statement.getSubject().equals(from)) {
                 result.add(valueFactory.createStatement(
@@ -282,6 +282,11 @@ class MergeMemberControlledConfiguration {
             } else {
                 result.add(statement);
             }
+        }
+        if (tree.substitution != null) {
+            result.add(valueFactory.createStatement(
+                    to, tree.member.getSubstitution(),
+                    tree.substitution));
         }
         return result;
     }

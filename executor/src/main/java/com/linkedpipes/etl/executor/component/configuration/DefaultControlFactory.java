@@ -12,19 +12,13 @@ class DefaultControlFactory implements MergeControlFactory {
      */
     private final BackendRdfSource definitionSource;
 
-    /**
-     * Graph in {@link #definitionGraph} with definitions.
-     */
-    private final String definitionGraph;
-
-    public DefaultControlFactory(BackendRdfSource source, String graph) {
+    public DefaultControlFactory(BackendRdfSource source) {
         this.definitionSource = source;
-        this.definitionGraph = graph;
     }
 
     @Override
     public MergeControl create(String type) throws RdfUtilsException {
-        final DefaultControl control = new DefaultControl();
+        DefaultControl control = new DefaultControl();
         control.loadDefinition(definitionSource, type);
         return control;
     }

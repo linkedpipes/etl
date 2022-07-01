@@ -10,6 +10,7 @@
  *  - inherit - true if inheritance control is set to true
  *  - force - true if force control is set to true
  *  - label - label for UI
+ *  - substitution - value to substitute from ENV properties
  *
  * Usage for X:
  *   ng-hide="dialog.X.hide"
@@ -177,7 +178,7 @@ define(["@client/app-service/jsonld/jsonld"], function (jsonld) {
     }
 
     /**
-     * Some value may be undefined (ie. strings, booleans), this may case
+     * Some value may be undefined (i.e. strings, booleans), this may case
      * problems as for example undefined is equal to false (for UI checkbox)
      *
      * For this reason we check for undefined values and replace them
@@ -200,7 +201,7 @@ define(["@client/app-service/jsonld/jsonld"], function (jsonld) {
      *
      * @param desc Description.
      * @param instance RDF resource.
-     * @param instanceTriples RDF triples.
+     * @param triples RDF triples.
      * @param target Target to load into.
      */
     function loadObject(desc, instance, triples, target) {
@@ -237,8 +238,8 @@ define(["@client/app-service/jsonld/jsonld"], function (jsonld) {
                     const objectInstance = jsonld.t.getResource(triples, iri);
                     const object = {};
                     //
-                    loadObject(descItem.$object, objectInstance, triples,
-                        object);
+                    loadObject(
+                      descItem.$object, objectInstance, triples, object);
                     objects.push(object);
                 }
                 instanceValue = select(objects, descItem);
@@ -246,6 +247,13 @@ define(["@client/app-service/jsonld/jsonld"], function (jsonld) {
             if (descItem.$onLoad !== undefined) {
                 instanceValue = descItem.$onLoad(instanceValue);
             }
+
+            // // Save substitution.
+            // if (!isEmpty(toSaveItem.substitution)) {
+            //     jsonld.r.setValue(
+            //       instance, descItem.$substitution, toSaveItem.substitution);
+            // }
+
             if (descItem.$control === undefined) {
                 target[key] = {
                     "value": instanceValue,
@@ -264,13 +272,34 @@ define(["@client/app-service/jsonld/jsonld"], function (jsonld) {
                     "forced": instanceControl.forced
                 };
             }
+            if (descItem.$substitution) {
+                // There is only one value.
+                const substitutionValue = selectRdfValue(jsonld.r.getValue(
+                  instance, descItem.$substitution));
+                target[key]["substitution"] = substitutionValue ?? "";
+            }
+        }
+    }
+
+    function selectRdfValue(value) {
+        if (value === null || value === undefined) {
+            return undefined;
+        }
+        if (Array.isArray(value)) {
+            value = value[0];
+        }
+        if (value["@value"]) {
+            return value["@value"];
+        } else {
+            return value;
         }
     }
 
     /**
+     * Save given object to RDF.
      *
      * @param desc Object description class.
-     * @param toSave to save, must be a an object.
+     * @param toSave to save, must be an object.
      * @param graph RDF object.
      * @param iri The base IRI for the object.
      */
@@ -335,14 +364,27 @@ define(["@client/app-service/jsonld/jsonld"], function (jsonld) {
                 jsonld.r.setIRIs(instance, descItem.$control,
                     controlToIri(toSaveItem.inherit, toSaveItem.force));
             }
+            // Save substitution.
+            if (!isEmpty(toSaveItem.substitution)) {
+                jsonld.r.setValue(
+                  instance, descItem.$substitution, toSaveItem.substitution);
+            }
         }
         //
         graph.push(instance);
     }
 
+    function isEmpty(value) {
+        return value?.trim().length === 0;
+    }
+
     /**
      * Perform in-place preparation of the description object. Can be
      * called multiple times on the same object.
+     *
+     * @param desc Object to store description into.
+     * @param ns Default namespace.
+     * @param autoControl
      */
     function prepareDescription(desc, ns, autoControl) {
         if (desc.$decorated) {
@@ -380,13 +422,9 @@ define(["@client/app-service/jsonld/jsonld"], function (jsonld) {
             if (key.startsWith("$")) {
                 continue;
             }
-            // Update all other.
+            // Update all others.
             const item = desc[key];
-            if (item.$property === undefined) {
-                item.$property = ns + key;
-            } else {
-                item.$property = ns + item.$property;
-            }
+            item.$property = ns + (item.$property ?? key);
             if (item.$control === undefined) {
                 if (autoControl) {
                     item.$control = item.$property + "Control";
@@ -394,9 +432,19 @@ define(["@client/app-service/jsonld/jsonld"], function (jsonld) {
             } else {
                 item.$control = ns + item.$control;
             }
+            // Substitution.
+            if (item.$array || item.$object) {
+                // There is no support for arrays or objects.
+            } else {
+                if (item.$substitution === undefined) {
+                    item.$substitution = ns + key + "Substitution";
+                } else {
+                    item.$substitution = ns + item.$substitution;
+                }
+            }
             // Check for objects.
             if (item.$object !== undefined) {
-                // Objects does not have controls.
+                // Objects do not have controls.
                 prepareDescription(item.$object, ns, false);
             }
         }
@@ -404,11 +452,6 @@ define(["@client/app-service/jsonld/jsonld"], function (jsonld) {
 
     /**
      * Merge instance and template class into a dialog.
-     *
-     * @param desc
-     * @param instance
-     * @param template
-     * @param dialog
      */
     function mergeConfigurations(desc, instance, template, dialog) {
         // Control from instance.
@@ -440,9 +483,11 @@ define(["@client/app-service/jsonld/jsonld"], function (jsonld) {
                 "disabled": false,
                 "inherit": instanceValue.inherit,
                 "force": instanceValue.force,
-                // From control.
+                "substitution": instanceValue.substitution,
+                // From description.
                 "label": descItem.$label,
-                "controlled": descItem.$control !== undefined
+                "controlled": descItem.$control !== undefined,
+                "allowSubstitution": descItem.$substitution !== undefined,
             };
         }
     }

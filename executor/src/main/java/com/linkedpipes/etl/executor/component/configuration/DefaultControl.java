@@ -13,12 +13,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 
 /**
  * Control loading of RDF data into entities.
@@ -29,23 +29,18 @@ class DefaultControl implements MergeControl {
     /**
      * Represent a control of given property.
      */
-    private static class PropertyControl {
+    public record PropertyControl (
+            String predicate,
+            String control
+    ) {
 
-        private final String predicate;
-
-        private final String control;
-
-        public PropertyControl(String predicate, String control) {
-            this.predicate = predicate;
-            this.control = control;
-        }
     }
 
     private static final Logger LOG =
             LoggerFactory.getLogger(DefaultControl.class);
 
     private static final List<String> ALWAYS_LOAD_PROPERTIES =
-            Arrays.asList(RDF.TYPE);
+            List.of(RDF.TYPE);
 
     private List<PropertyControl> controlledPredicates;
 
@@ -337,5 +332,8 @@ class DefaultControl implements MergeControl {
         return builder.toString();
     }
 
+    public List<PropertyControl> getControlledPredicates() {
+        return Collections.unmodifiableList(controlledPredicates);
+    }
 }
 

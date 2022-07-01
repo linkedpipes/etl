@@ -100,7 +100,7 @@ public class EntityMerger {
         reference.getSource().triples(
                 reference.getResource(),
                 reference.getGraph(),
-                triple -> handleStatement(triple));
+                this::handleStatement);
     }
 
     private void handleStatement(RdfTriple triple)

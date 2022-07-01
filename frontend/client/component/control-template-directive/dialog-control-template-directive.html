@@ -16,12 +16,19 @@
   </div>
   <div ng-repeat="item in model" ng-if="::item.controlled"
        ng-show="!item.hide">
-    <span>{{item.label}}</span><br/>
+    <span>{{::item.label}}</span><br/>
     <md-checkbox ng-model="item.inherit">
       Inherit from template
     </md-checkbox>
     <md-checkbox ng-model="item.force">
       Overwrite instance
     </md-checkbox>
+    <br/>
+    <md-input-container
+        style="width: 100%;margin: 0"
+        ng-if="::item.allowSubstitution">
+      <label>Substitution for {{::item.label}}</label>
+      <input type="text" ng-model="item.substitution">
+    </md-input-container>
   </div>
 </div>

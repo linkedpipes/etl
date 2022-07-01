@@ -168,25 +168,28 @@ class ExecuteComponent implements ComponentExecutor {
             throw new ExecutorException("Can't get runtime configuration.", ex);
         }
 
-        String configGraph = pplComponent.getIri() + "/configuration/effective";
-        BackendTripleWriter writer = pipeline.setConfiguration(
-                pplComponent, configGraph);
+        String resultGraph = pplComponent.getIri() + "/configuration/effective";
+        BackendTripleWriter writer = pipeline.configurationWriter(
+                pplComponent, resultGraph);
 
         if (runtimeConfig == null) {
-            Configuration.prepareConfiguration(configGraph,
-                    pplComponent, null, null, writer, pipeline);
+            Configuration.prepareConfiguration(
+                    resultGraph, pplComponent,
+                    null,
+                    null,
+                    writer, pipeline);
         } else {
-            BackendRdfSource runtimeSource =
-                    wrapRuntimeConfiguration(runtimeConfig);
-            Configuration.prepareConfiguration(configGraph, pplComponent,
-                    runtimeSource, RUNTIME_CONFIGURATION_GRAPH,
+            Configuration.prepareConfiguration(
+                    resultGraph, pplComponent,
+                    wrapRuntimeConfiguration(runtimeConfig),
+                    RUNTIME_CONFIGURATION_GRAPH,
                     writer, pipeline);
         }
 
         try {
             instance.loadConfiguration(new RdfSourceWrap(
                     pipeline.getSource(),
-                    configGraph));
+                    resultGraph));
         } catch (LpException ex) {
             throw new ExecutorException(
                     "Can't load component configuration", ex);

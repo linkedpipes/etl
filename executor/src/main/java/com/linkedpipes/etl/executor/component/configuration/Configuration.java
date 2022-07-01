@@ -10,6 +10,7 @@ import com.linkedpipes.etl.executor.rdf.entity.EntityMerger;
 import com.linkedpipes.etl.executor.rdf.entity.EntityReference;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
 import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
+import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 public class Configuration {
 
-    enum Status {
+    public enum Status {
         FORCE,
         FORCED,
         INHERIT,
@@ -47,62 +48,66 @@ public class Configuration {
      */
     public static void prepareConfiguration(
             String iri, PipelineComponent component,
-            BackendRdfSource runtimeSource,
-            String runtimeGraph, BackendTripleWriter writer,
-            Pipeline pipeline)
+            BackendRdfSource runtimeSource, String runtimeGraph,
+            BackendTripleWriter writer, Pipeline pipeline)
             throws ExecutorException {
         List<EntityReference> references = new ArrayList<>();
         ConfigurationDescription description =
                 component.getConfigurationDescription();
-        BackendRdfSource pplSource = pipeline.getSource();
+        Rdf4jSource pipelineSource = pipeline.getSource();
         String configurationType = description.getDescribedType();
-        // Get definitionGraph and resource for each configuration.
-        {
-            String graph = component.getConfigurationGraph();
-            String query = getQueryForConfiguration(
-                    configurationType, graph);
-            String resource;
-            try {
-                resource = RdfUtils.sparqlSelectSingle(pplSource,
-                        query, "resource");
-            } catch (RdfUtilsException ex) {
-                throw new ExecutorException(
-                        "Can't get configuration object of type {} in {}",
-                        configurationType, graph, ex);
-            }
-            // Create a reference to the configuration.
-            references.add(new EntityReference(resource, graph, pplSource));
-        }
-        // Get definitionGraph and resource for runtime configuration if
-        // provided.
-        if (runtimeSource != null && runtimeGraph != null) {
-            String query = getQueryForConfiguration(
-                    configurationType, runtimeGraph);
-            String resource;
-            try {
-                resource = RdfUtils.sparqlSelectSingle(runtimeSource,
-                        query, "resource");
-                references.add(new EntityReference(resource, runtimeGraph,
-                        runtimeSource));
-            } catch (RdfUtilsException ex) {
-                // The runtime configuration may not be provided.
-            }
-        }
-        // Merge.
-        DefaultControlFactory controlFactory = new DefaultControlFactory(
-                pplSource, pipeline.getPipelineGraph());
-        EntityMerger merger = new EntityMerger(controlFactory);
+
+        // Get reference for configuration in the pipeline.
+        EntityReference componentConfiguration = loadConfigurationReference(
+                pipelineSource,
+                component.getConfigurationGraph(),
+                configurationType);
         try {
-            merger.merge(references, iri, writer);
+            references.add(SubstituteEnvironment.substitute(
+                    System.getenv(),
+                    pipelineSource, componentConfiguration, configurationType));
+        } catch (RdfUtilsException ex) {
+            throw new ExecutorException("Can't update configuration.", ex);
+        }
+
+        // Get reference for configuration in
+        if (runtimeSource != null && runtimeGraph != null) {
+            references.add(loadConfigurationReference(
+                    runtimeSource,
+                    runtimeGraph,
+                    configurationType));
+        }
+
+        // Merge.
+        try {
+            (new EntityMerger(new DefaultControlFactory(pipelineSource)))
+                    .merge(references, iri, writer);
         } catch (RdfUtilsException ex) {
             throw new ExecutorException("Can't merge data.", ex);
         }
     }
 
-    private static String getQueryForConfiguration(String type, String graph) {
+    private static EntityReference loadConfigurationReference(
+            BackendRdfSource source, String graph, String configurationType)
+            throws ExecutorException {
+        String query = queryForTypes(
+                configurationType, graph);
+        String resource;
+        try {
+            resource = RdfUtils.sparqlSelectSingle(source, query, "resource");
+        } catch (RdfUtilsException ex) {
+            throw new ExecutorException(
+                    "Can't get configuration object of type {} in {}",
+                    configurationType, graph, ex);
+        }
+        return new EntityReference(resource, graph, source);
+    }
+
+    private static String queryForTypes(String type, String graph) {
         return "SELECT ?resource WHERE { GRAPH <" + graph + "> {\n"
                 + "   ?resource a <" + type + ">\n"
                 + "} }";
     }
+
 
 }
