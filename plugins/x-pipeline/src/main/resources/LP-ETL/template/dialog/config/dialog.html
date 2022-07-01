@@ -3,11 +3,11 @@
     <md-input-container class="md-block" ng-hide="dialog.instance.hide">
         <label>URL of LinkedPipes instance (must not end with '/')</label>
         <input ng-model="dialog.instance.value"
-               placeholder=""
+               placeholder="http://localhost:8090"
                ng-disabled="dialog.instance.disabled || dialog.instance.inherit">
     </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.pipeline.hide">
-        <label>Pipeline URL</label>
+        <label>Pipeline IRI</label>
         <input ng-model="dialog.pipeline.value"
                placeholder=""
                ng-disabled="dialog.pipeline.disabled || dialog.pipeline.inherit">
@@ -20,7 +20,7 @@
     <md-switch ng-model="dialog.deleteWorkingData.value"
                ng-disabled="dialog.deleteWorkingData.disabled || dialog.deleteWorkingData.inherit"
                ng-hide="dialog.deleteWorkingData.hide">
-        Delete working data, including saved debug data, after execution
+        Delete working data, including saved debug data, after successful execution
     </md-switch>
     <md-input-container class="md-block" ng-hide="dialog.logPolicy.hide" flex>
         <label>What to do with execution logs</label>
@@ -31,7 +31,7 @@
         </md-select>
     </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.logLevel.hide" flex>
-        <label>What to do with execution logs</label>
+        <label>Execution log level</label>
         <md-select ng-model="dialog.logLevel.value"
                    ng-disabled="dialog.logLevel.disabled || dialog.logLevel.inherit">
             <md-option value="DEBUG">Debug</md-option>
