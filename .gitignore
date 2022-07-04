@@ -33,13 +33,14 @@ configuration.properties
 
 # Deploy directory.
 deploy/configuration.properties
-deploy/executor
-deploy/executor-monitor
-deploy/storage
-deploy/frontend
+deploy/executor*
+deploy/executor-monitor*
+deploy/storage*
+deploy/frontend*
 deploy/jar
 deploy/osg
 data/
+dist/
 
 # Intellij IDEA
 *.iml
