@@ -14,6 +14,7 @@ import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Manage configurations for components.
@@ -58,24 +59,31 @@ public class Configuration {
         String configurationType = description.getDescribedType();
 
         // Get reference for configuration in the pipeline.
-        EntityReference componentConfiguration = loadConfigurationReference(
-                pipelineSource,
-                component.getConfigurationGraph(),
-                configurationType);
+        Optional<EntityReference> componentConfiguration =
+                loadConfigurationReference(
+                        pipelineSource,
+                        component.getConfigurationGraph(),
+                        configurationType);
         try {
-            references.add(SubstituteEnvironment.substitute(
-                    System.getenv(),
-                    pipelineSource, componentConfiguration, configurationType));
+            if (componentConfiguration.isPresent()) {
+                references.add(SubstituteEnvironment.substitute(
+                        System.getenv(),
+                        pipelineSource,
+                        componentConfiguration.get(),
+                        configurationType));
+            }
         } catch (RdfUtilsException ex) {
             throw new ExecutorException("Can't update configuration.", ex);
         }
 
         // Get reference for configuration in
         if (runtimeSource != null && runtimeGraph != null) {
-            references.add(loadConfigurationReference(
-                    runtimeSource,
-                    runtimeGraph,
-                    configurationType));
+            Optional<EntityReference> runtimeConfiguration =
+                    loadConfigurationReference(
+                            runtimeSource,
+                            runtimeGraph,
+                            configurationType);
+            runtimeConfiguration.ifPresent(references::add);
         }
 
         // Merge.
@@ -87,20 +95,23 @@ public class Configuration {
         }
     }
 
-    private static EntityReference loadConfigurationReference(
+    private static Optional<EntityReference> loadConfigurationReference(
             BackendRdfSource source, String graph, String configurationType)
             throws ExecutorException {
-        String query = queryForTypes(
-                configurationType, graph);
+        String query = queryForTypes(configurationType, graph);
         String resource;
         try {
-            resource = RdfUtils.sparqlSelectSingle(source, query, "resource");
+            resource = RdfUtils.sparqlSelectSingleOptional(
+                    source, query, "resource");
         } catch (RdfUtilsException ex) {
             throw new ExecutorException(
                     "Can't get configuration object of type {} in {}",
                     configurationType, graph, ex);
         }
-        return new EntityReference(resource, graph, source);
+        if (resource == null) {
+            return Optional.empty();
+        }
+        return Optional.of(new EntityReference(resource, graph, source));
     }
 
     private static String queryForTypes(String type, String graph) {

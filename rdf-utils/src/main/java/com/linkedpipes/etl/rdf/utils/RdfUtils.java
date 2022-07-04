@@ -193,4 +193,19 @@ public class RdfUtils {
         return output;
     }
 
+    public static String sparqlSelectSingleOptional(
+            BackendRdfSource source, String queryAsString, String outputBinding)
+            throws RdfUtilsException {
+        List<Map<String, String>> result = sparqlSelect(source, queryAsString);
+        if (result.isEmpty()) {
+            return null;
+        } else if (result.size() == 1) {
+            return result.get(0).get(outputBinding);
+        } else {
+            throw new InvalidNumberOfResults(
+                    "Invalid number of results: {} (1 expected) for:\n{}",
+                    result.size(), queryAsString);
+        }
+    }
+
 }
