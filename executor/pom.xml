@@ -28,10 +28,16 @@
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>plugin-api</artifactId>
+            <version>0.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>plugin-loader</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>library-rdf</artifactId>
+            <version>0.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>

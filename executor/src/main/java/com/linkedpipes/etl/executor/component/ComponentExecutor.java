@@ -23,7 +23,7 @@ public interface ComponentExecutor {
      * Cancel the component execution.
      */
     default void cancel() {
-        // By default do nothing.
+        // By default, do nothing.
     }
 
     static ComponentExecutor create(

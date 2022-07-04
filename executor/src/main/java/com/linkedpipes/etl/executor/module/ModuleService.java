@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.module;
 
-import com.linkedpipes.etl.executor.Configuration;
+import com.linkedpipes.etl.executor.ConfigurationHolder;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.PipelineExecutionObserver;
 import com.linkedpipes.etl.executor.api.v1.component.DefaultComponentFactory;
@@ -103,13 +103,13 @@ public class ModuleService implements ApplicationListener<ApplicationEvent> {
 
     private final Map<String, Bundle> components = new HashMap<>();
 
-    private Configuration configuration;
+    private ConfigurationHolder configuration;
 
     private AbstractApplicationContext springContext;
 
     @Autowired
     public ModuleService(
-            Configuration configuration,
+            ConfigurationHolder configuration,
             AbstractApplicationContext appContext) {
         this.configuration = configuration;
         this.springContext = appContext;

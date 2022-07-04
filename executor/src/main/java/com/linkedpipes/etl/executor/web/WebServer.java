@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.web;
 
-import com.linkedpipes.etl.executor.Configuration;
+import com.linkedpipes.etl.executor.ConfigurationHolder;
 import com.linkedpipes.etl.executor.logging.LoggerFacade;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
@@ -34,7 +34,7 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(WebServer.class);
 
-    private Configuration configuration;
+    private ConfigurationHolder configuration;
 
     private AbstractApplicationContext appContext;
 
@@ -42,7 +42,7 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
 
     @Autowired
     public WebServer(
-            Configuration configuration,
+            ConfigurationHolder configuration,
             AbstractApplicationContext appContext) {
         this.configuration = configuration;
         this.appContext = appContext;
