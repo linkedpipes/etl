@@ -9,6 +9,10 @@
     <packaging>pom</packaging>
     <name>LinkedPipes Frontend</name>
 
+    <properties>
+        <deploy.directory>../deploy/</deploy.directory>
+    </properties>
+
     <profiles>
         <profile>
             <id>deploy</id>
@@ -25,7 +29,7 @@
                         <configuration>
                             <filesets>
                                 <fileset>
-                                    <directory>${deploy.directory}</directory>
+                                    <directory>${deploy.directory}/frontend</directory>
                                     <followSymlinks>false</followSymlinks>
                                 </fileset>
                             </filesets>
