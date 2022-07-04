@@ -61,9 +61,9 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <mkdir dir="${deploy.directory}/frontend"/>
+                                        <mkdir dir="${deploy.directory}/frontend/server"/>
                                         <copy todir="${deploy.directory}/frontend/server">
-                                            <fileset dir="${project.basedir}/frontend/server"/>
+                                            <fileset dir="${project.basedir}/server"/>
                                         </copy>
                                         <copy todir="${deploy.directory}/frontend/dist">
                                             <fileset dir="${project.basedir}/dist"/>
