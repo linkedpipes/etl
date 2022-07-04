@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +34,6 @@ public class TabularChunked implements Component, SequentialExecution {
     public TabularConfiguration configuration;
 
     @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
-    @Component.Inject
     public ProgressReport progressReport;
 
     @Override
@@ -45,10 +41,9 @@ public class TabularChunked implements Component, SequentialExecution {
         final RdfOutput output = new RdfOutput(outputRdfDataUnit,
                 configuration.getChunkSize());
         LOG.info("Chunk size: {}", configuration.getChunkSize());
-        final Parser parser = new Parser(configuration, exceptionFactory);
+        final Parser parser = new Parser(configuration);
         final Mapper mapper = new Mapper(output, configuration,
-                ColumnFactory.createColumnList(configuration, exceptionFactory),
-                exceptionFactory);
+                ColumnFactory.createColumnList(configuration));
         mapper.initialize(null);
         progressReport.start(inputFilesDataUnit.size());
         for (FilesDataUnit.Entry entry : inputFilesDataUnit) {
@@ -66,7 +61,7 @@ public class TabularChunked implements Component, SequentialExecution {
             try {
                 parser.parse(entry, mapper);
             } catch (IOException | ColumnAbstract.MissingColumnValue ex) {
-                throw exceptionFactory.failure("Can't process file: {}",
+                throw new LpException("Can't process file: {}",
                         entry.getFileName(), ex);
             }
             mapper.onTableEnd();

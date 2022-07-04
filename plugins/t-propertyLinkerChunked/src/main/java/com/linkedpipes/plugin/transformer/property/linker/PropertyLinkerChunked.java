@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -53,9 +52,6 @@ public final class PropertyLinkerChunked implements Component,
 
     @Component.Configuration
     public PropertyLinkedConfiguration configuration;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     @Component.Inject
     public ProgressReport progressReport;

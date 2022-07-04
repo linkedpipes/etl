@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.Consts;
@@ -79,9 +78,6 @@ public final class BingTranslator implements Component, SequentialExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     /**
      * Current token in used. The bing require us to update this
      * every 8 minute (10 minute is expiration time).
@@ -116,7 +112,7 @@ public final class BingTranslator implements Component, SequentialExecution {
             final SAXParserFactory factory = SAXParserFactory.newInstance();
             this.saxParser = factory.newSAXParser();
         } catch (ParserConfigurationException | SAXException ex) {
-            throw exceptionFactory.failure("Can't create SAX parser,", ex);
+            throw new LpException("Can't create SAX parser,", ex);
         }
         // We use LinkedHashMap to preserve ordering.
         final Map<String, LinkedHashMap<String, List<Statement>>> data =
@@ -204,7 +200,7 @@ public final class BingTranslator implements Component, SequentialExecution {
             try {
                 responseString = EntityUtils.toString(response.getEntity());
             } catch (java.net.SocketException ex) {
-                throw exceptionFactory.failure("Can't read response", ex);
+                throw new LpException("Can't read response", ex);
             }
             //
             int responseCode = response.getStatusLine().getStatusCode();
@@ -221,7 +217,7 @@ public final class BingTranslator implements Component, SequentialExecution {
             }
             // We need to detect the error.
             if (responseString.contains("The incoming token has expired")) {
-                throw exceptionFactory.failure("The token expired before " +
+                throw new LpException("The token expired before " +
                                 "use, retrieval: {}, current: {}) : {}\n{}",
                         tokenRetrieval, (new Date()).getTime(),
                         responseCode, responseString);
@@ -230,7 +226,7 @@ public final class BingTranslator implements Component, SequentialExecution {
             parserErrorResponse(data, fromLanguage, toLanguage, responseCode,
                     response.getStatusLine().getReasonPhrase(), responseString);
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't execute request.", ex);
+            throw new LpException("Can't execute request.", ex);
         }
     }
 
@@ -245,7 +241,7 @@ public final class BingTranslator implements Component, SequentialExecution {
                 || responseString.contains(BingErrorResponse.TOO_MUCH_DATA)) {
             // We just try to split the data in half.
             if (data.size() <= 1) {
-                throw exceptionFactory.failure(
+                throw new LpException(
                         "Can't further divide the data. Response {} : {}\n{}",
                         responseCode, responsePhrase, responseString);
             }
@@ -269,7 +265,7 @@ public final class BingTranslator implements Component, SequentialExecution {
         //Service temporarily unavailable
 
         //
-        throw exceptionFactory.failure("{} : {}\n{}", responseCode,
+        throw new LpException("{} : {}\n{}", responseCode,
                 responsePhrase, responseString);
     }
 
@@ -289,7 +285,7 @@ public final class BingTranslator implements Component, SequentialExecution {
             for (String s : data.keySet()) {
                 LOG.info("\t{}", s);
             }
-            throw exceptionFactory.failure("Can't further split data.");
+            throw new LpException("Can't further split data.");
         }
 
         //
@@ -327,9 +323,9 @@ public final class BingTranslator implements Component, SequentialExecution {
             saxParser.parse(new ByteArrayInputStream(
                     response.getBytes("utf-8")), responseHandler);
         } catch (UnsupportedEncodingException ex) {
-            throw exceptionFactory.failure("UTF-8 is not supported.", ex);
+            throw new LpException("UTF-8 is not supported.", ex);
         } catch (IOException | SAXException ex) {
-            throw exceptionFactory.failure("Can't parser response.", ex);
+            throw new LpException("Can't parser response.", ex);
         }
         return responseHandler.getValues();
     }
@@ -355,7 +351,7 @@ public final class BingTranslator implements Component, SequentialExecution {
             for (String s : target) {
                 LOG.info("{}\t", s);
             }
-            throw exceptionFactory.failure("Number of entities in request " +
+            throw new LpException("Number of entities in request " +
                             "and response is not equal ({}:{})",
                     data.size(), target.size());
         }
@@ -463,20 +459,20 @@ public final class BingTranslator implements Component, SequentialExecution {
             try {
                 responseString = EntityUtils.toString(response.getEntity());
             } catch (java.net.SocketException ex) {
-                throw exceptionFactory.failure("Can't read response", ex);
+                throw new LpException("Can't read response", ex);
             }
             switch (response.getStatusLine().getStatusCode()) {
                 case 401:
-                    throw exceptionFactory.failure("Unauthorized. " +
+                    throw new LpException("Unauthorized. " +
                             "Ensure that the key provided is valid.");
                 case 403:
-                    throw exceptionFactory.failure("Unauthorized. " +
+                    throw new LpException("Unauthorized. " +
                             "For an account in the free-tier, this indicates " +
                             "that the account quota has been exceeded.");
                 case 200:
                     break;
                 default:
-                    throw exceptionFactory.failure(
+                    throw new LpException(
                             "Request for token failed: {} \n {}",
                             response.getStatusLine().getStatusCode(),
                             responseString);
@@ -485,7 +481,7 @@ public final class BingTranslator implements Component, SequentialExecution {
             token = responseString;
             tokenRetrieval = retrieveStartTime;
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Request for token failed.", ex);
+            throw new LpException("Request for token failed.", ex);
         }
     }
 

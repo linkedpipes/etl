@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.exec.httprequest;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -11,15 +10,11 @@ import java.util.Map;
 
 class TaskContentWriter {
 
-    private final ExceptionFactory exceptionFactory;
-
     private final Map<String, File> inputFilesMap;
 
     private MultipartConnection connection;
 
-    public TaskContentWriter(ExceptionFactory exceptionFactory,
-                             Map<String, File> inputFilesMap) {
-        this.exceptionFactory = exceptionFactory;
+    public TaskContentWriter(Map<String, File> inputFilesMap) {
         this.inputFilesMap = inputFilesMap;
     }
 
@@ -50,12 +45,12 @@ class TaskContentWriter {
             throws LpException {
         File file = inputFilesMap.get(fileReference);
         if (file == null) {
-            throw exceptionFactory.failure("Missing file: {}", fileName);
+            throw new LpException("Missing file: {}", fileName);
         } else {
             try {
                 connection.addFile(name, fileName, file);
             } catch (IOException ex) {
-                throw exceptionFactory.failure("Can't add file content.", ex);
+                throw new LpException("Can't add file content.", ex);
             }
         }
     }

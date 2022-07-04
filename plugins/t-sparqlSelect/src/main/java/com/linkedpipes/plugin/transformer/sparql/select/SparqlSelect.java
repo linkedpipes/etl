@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.TupleQuery;
@@ -38,19 +37,16 @@ public final class SparqlSelect implements Component, SequentialExecution {
     @Component.Configuration
     public SparqlSelectConfiguration configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         if (configuration.getFileName() == null
                 || configuration.getFileName().isEmpty()) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     SparqlSelectVocabulary.HAS_FILE_NAME, "");
         }
         if (configuration.getQuery() == null
                 || configuration.getQuery().isEmpty()) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     SparqlSelectVocabulary.HAS_QUERY, "");
         }
         //
@@ -77,7 +73,7 @@ public final class SparqlSelect implements Component, SequentialExecution {
                 query.setDataset(dataset);
                 query.evaluate(resultWriter);
             } catch (IOException ex) {
-                throw exceptionFactory.failure("Exception.", ex);
+                throw new LpException("Exception.", ex);
             }
         });
     }

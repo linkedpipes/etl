@@ -8,7 +8,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 
 import java.io.*;
@@ -31,9 +30,6 @@ public final class MustacheComponent implements Component, SequentialExecution {
 
     @Component.Inject
     public ProgressReport progressReport;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     private Integer fileNameCounter = 0;
 
@@ -77,7 +73,7 @@ public final class MustacheComponent implements Component, SequentialExecution {
                     new FileOutputStream(outputFile), "UTF8")) {
                 mustache.execute(outputStream, object.data).flush();
             } catch (IOException ex) {
-                throw exceptionFactory.failure("Can't write output file.", ex);
+                throw new LpException("Can't write output file.", ex);
             }
             progressReport.entryProcessed();
         }

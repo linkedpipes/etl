@@ -4,7 +4,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.Update;
@@ -27,9 +26,6 @@ public final class Virtuoso implements Component, SequentialExecution {
 
     @Component.Configuration
     public VirtuosoConfiguration configuration;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     @Component.Inject
     public ProgressReport progressReport;
@@ -56,7 +52,7 @@ public final class Virtuoso implements Component, SequentialExecution {
         try {
             repository.initialize();
         } catch (RepositoryException ex) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't connect to Virtuoso repository.", ex);
         }
     }
@@ -75,7 +71,7 @@ public final class Virtuoso implements Component, SequentialExecution {
         fillLoadList();
         int filesToLoadCount = getFilesToLoadCount();
         if (filesToLoadCount == 0) {
-            throw exceptionFactory.failure("Nothing to load.");
+            throw new LpException("Nothing to load.");
         }
         if (configuration.isClearDestinationGraph()) {
             clearDestinationGraph();
@@ -93,14 +89,13 @@ public final class Virtuoso implements Component, SequentialExecution {
         try {
             new virtuoso.jdbc4.Driver();
         } catch (SQLException ex) {
-            throw exceptionFactory.failure("Can't create SQL driver.", ex);
+            throw new LpException("Can't create SQL driver.", ex);
         }
         sqlExecutor = new SqlExecutor(
                 configuration.getVirtuosoUrl(),
                 configuration.getUsername(),
                 configuration.getPassword(),
-                configuration.getLoadDirectoryPath(),
-                exceptionFactory);
+                configuration.getLoadDirectoryPath());
     }
 
     private void fillLoadList() throws LpException {
@@ -141,7 +136,7 @@ public final class Virtuoso implements Component, SequentialExecution {
 
     private void runLoaders(int filesToLoad) throws LpException {
         MultiThreadLoader loader = new MultiThreadLoader(
-                sqlExecutor, configuration, exceptionFactory, progressReport);
+                sqlExecutor, configuration, progressReport);
         loader.loadData(filesToLoad);
     }
 

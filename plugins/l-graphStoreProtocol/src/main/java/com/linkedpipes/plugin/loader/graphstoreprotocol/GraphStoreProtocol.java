@@ -7,7 +7,6 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpPost;
@@ -50,9 +49,6 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
     @Component.Configuration
     public GraphStoreProtocolConfiguration configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     protected HttpService httpClient;
 
     @Override
@@ -72,11 +68,11 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
     private void checkConfiguration() throws LpException {
         if (configuration.getEndpoint() == null
                 || configuration.getEndpoint().isEmpty()) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     GraphStoreProtocolVocabulary.HAS_CRUD);
         }
         if (inputFiles.size() > 1 && configuration.isReplace()) {
-            throw exceptionFactory.failure("Only one file can be uploaded "
+            throw new LpException("Only one file can be uploaded "
                     + "with replace mode.");
         }
     }
@@ -99,11 +95,11 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
         Optional<RDFFormat> rdfFormat
                 = Rio.getParserFormatForFileName(fileEntry.getFileName());
         if (rdfFormat.isEmpty()) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't determine format for file: {}", fileEntry);
         }
         if (rdfFormat.get().supportsContexts()) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Quad-based formats are not supported.");
         }
         String graph;
@@ -117,7 +113,7 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
             try {
                 beforeSize = getGraphSize(graph);
             } catch (IOException ex) {
-                throw exceptionFactory.failure("Can't get graph size.", ex);
+                throw new LpException("Can't get graph size.", ex);
             }
         }
         String mimeType = rdfFormat.get().getDefaultMIMEType();
@@ -145,7 +141,7 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
                         configuration.isReplace());
                 break;
             default:
-                throw exceptionFactory.failure("Unknown repository type!");
+                throw new LpException("Unknown repository type!");
         }
 
         if (configuration.isCheckSize()) {
@@ -153,7 +149,7 @@ public class GraphStoreProtocol implements Component, SequentialExecution {
             try {
                 afterSize = getGraphSize(graph);
             } catch (IOException ex) {
-                throw exceptionFactory.failure("Can't get graph size.", ex);
+                throw new LpException("Can't get graph size.", ex);
             }
             LOG.info(
                     "Graph '{}' size changed from {} to {} by uploading '{}'.",

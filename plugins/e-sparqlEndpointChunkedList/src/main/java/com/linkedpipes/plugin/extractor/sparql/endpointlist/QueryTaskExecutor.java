@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -48,8 +47,6 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
 
     private final RDFHandler rdfHandler;
 
-    private final ExceptionFactory exceptionFactory;
-
     private ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     private SPARQLRepository repository;
@@ -60,13 +57,11 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
             SparqlEndpointChunkedListConfiguration configuration,
             StatementsConsumer consumer,
             ProgressReport progressReport,
-            ExceptionFactory exceptionFactory,
             Map<String, List<File>> inputFilesByName) {
         this.configuration = configuration;
         this.progressReport = progressReport;
         this.consumer = consumer;
         this.rdfHandler = createRdfHandler(configuration);
-        this.exceptionFactory = exceptionFactory;
         this.inputFilesByName = inputFilesByName;
     }
 
@@ -166,7 +161,7 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
 
     private void executeTask() throws LpException {
         CsvValuesReader valuesReader = new CsvValuesReader(
-                exceptionFactory, task.getChunkSize(), task.getAsLiterals());
+                task.getChunkSize(), task.getAsLiterals());
         valuesReader.setHandler((values) -> {
             String query = prepareQuery(values);
             executeQuery(query);
@@ -179,7 +174,7 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
     private List<File> getFilesForTask() throws LpException {
         List<File> files = inputFilesByName.get(task.getFileName());
         if (files == null) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "No files find for task: {}", task.getIri());
         }
         return files;

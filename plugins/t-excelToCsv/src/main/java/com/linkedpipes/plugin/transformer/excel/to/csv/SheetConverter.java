@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.transformer.excel.to.csv;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
@@ -14,8 +13,6 @@ import java.util.List;
 class SheetConverter {
 
     private final ExcelToCsvConfiguration configuration;
-
-    private final ExceptionFactory exceptionFactory;
 
     private final CellConverter cellConverter;
 
@@ -32,10 +29,8 @@ class SheetConverter {
      */
     private List<String> emptyRow;
 
-    public SheetConverter(ExcelToCsvConfiguration configuration,
-            ExceptionFactory exceptionFactory) {
+    public SheetConverter(ExcelToCsvConfiguration configuration) {
         this.configuration = configuration;
-        this.exceptionFactory = exceptionFactory;
         this.cellConverter = new CellConverter(configuration);
     }
 
@@ -76,7 +71,7 @@ class SheetConverter {
     }
 
     private String getVirtualColumnValue(Sheet sheet,
-            ExcelToCsvConfiguration.VirtualColumn virtualColumn) {
+                                         ExcelToCsvConfiguration.VirtualColumn virtualColumn) {
         Row row = sheet.getRow(virtualColumn.getRow() - 1);
         if (row == null) {
             return "";
@@ -122,7 +117,7 @@ class SheetConverter {
     private void parseRegion(int rowsEnd, int columnsStart, int columnsCount) {
         boolean firstRow = true;
         for (int rowIndex = configuration.getRowsStart(); rowIndex <= rowsEnd;
-                ++rowIndex) {
+             ++rowIndex) {
             Row row = sheet.getRow(rowIndex);
             if (row == null && configuration.isSkipEmptyRows()) {
                 continue;

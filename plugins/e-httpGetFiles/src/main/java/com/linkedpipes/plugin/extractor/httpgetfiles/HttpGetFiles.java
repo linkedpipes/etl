@@ -12,7 +12,6 @@ import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,9 +42,6 @@ public final class HttpGetFiles extends TaskExecution<DownloadTask> {
 
     @Component.Inject
     public ProgressReport progressReport;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     private List<DownloadTask> tasks;
 
@@ -82,7 +78,7 @@ public final class HttpGetFiles extends TaskExecution<DownloadTask> {
     @Override
     protected TaskConsumer<DownloadTask> createConsumer() {
         return new DownloadTaskExecutor(
-                configuration, progressReport, output, exceptionFactory,
+                configuration, progressReport, output,
                 statementsConsumer, reportWriter);
     }
 
@@ -141,7 +137,7 @@ public final class HttpGetFiles extends TaskExecution<DownloadTask> {
             HttpsURLConnection.setDefaultHostnameVerifier(
                     (String urlHostName, SSLSession session) -> true);
         } catch (KeyManagementException | NoSuchAlgorithmException ex) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't set trust all certificates.", ex);
         }
     }

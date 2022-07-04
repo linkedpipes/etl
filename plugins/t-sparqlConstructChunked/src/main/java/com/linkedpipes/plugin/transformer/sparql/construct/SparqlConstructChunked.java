@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,9 +40,6 @@ public final class SparqlConstructChunked implements Component,
 
     @Component.Configuration
     public SparqlConstructConfiguration configuration;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     @Component.Inject
     public ProgressReport progressReport;
@@ -83,7 +79,7 @@ public final class SparqlConstructChunked implements Component,
     private void checkConfiguration() throws LpException {
         String query = configuration.getQuery();
         if (query == null || query.isEmpty()) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     SparqlConstructVocabulary.HAS_QUERY);
         }
     }
@@ -112,7 +108,7 @@ public final class SparqlConstructChunked implements Component,
     private void checkExecutorsStatus() throws LpException {
         for (SparqlConstructExecutor constructExecutor : executors) {
             if (constructExecutor.isFailed()) {
-                throw exceptionFactory.failure(
+                throw new LpException(
                         "At least one construct failed. See logs for more info.");
             }
         }

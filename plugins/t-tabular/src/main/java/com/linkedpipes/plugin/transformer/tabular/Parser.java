@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.transformer.tabular;
 
 import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.plugin.transformer.tabular.ColumnAbstract.MissingNameInHeader;
 import org.apache.commons.io.input.BOMInputStream;
 import org.slf4j.Logger;
@@ -28,19 +27,15 @@ class Parser {
 
     private final CsvPreference csvPreference;
 
-    private final ExceptionFactory exceptionFactory;
-
     private final int ignoreLines;
 
-    Parser(TabularConfiguration configuration,
-            ExceptionFactory exceptionFactory) {
+    Parser(TabularConfiguration configuration) {
         this.dialect = configuration.getDialect();
-        this.exceptionFactory = exceptionFactory;
         this.ignoreLines = configuration.getSkipLines();
-        // We will use quates only if they are provided
+        // We will use quotes only if they are provided
         if (dialect.getQuoteChar() == null ||
                 dialect.getQuoteChar().isEmpty()) {
-            // We do not use quates.
+            // We do not use quotes.
             final QuoteMode customQuoteMode = (String csvColumn,
                     CsvContext context, CsvPreference preference) -> false;
             // Quote char is never used.
@@ -105,7 +100,7 @@ class Parser {
             try {
                 mapper.onHeader(header);
             } catch (InvalidTemplate | MissingNameInHeader ex) {
-                throw exceptionFactory.failure("Can initalize on header row.",
+                throw new LpException("Can initalize on header row.",
                         ex);
             }
             if (row == null) {

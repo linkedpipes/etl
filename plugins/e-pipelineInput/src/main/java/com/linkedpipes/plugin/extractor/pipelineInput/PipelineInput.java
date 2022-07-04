@@ -5,7 +5,6 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.DefinitionReader;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -24,21 +23,18 @@ public class PipelineInput implements Component, SequentialExecution {
     @Component.Inject
     public DefinitionReader definition;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         final Collection<String> values;
         try {
             values = definition.getProperties(HAS_INPUT_DIRECTORY);
         } catch (LpException ex) {
-            throw exceptionFactory.failure("Can't read property.", ex);
+            throw new LpException("Can't read property.", ex);
         }
         //
         final File directory;
         if (values.size() != 1) {
-            throw exceptionFactory.failure("Missing directory.");
+            throw new LpException("Missing directory.");
         }
         directory = new File(URI.create(values.iterator().next()));
         if (!directory.isDirectory()) {
@@ -49,7 +45,7 @@ public class PipelineInput implements Component, SequentialExecution {
             //
             FileUtils.copyDirectory(directory, output.getWriteDirectory());
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't copy data.", ex);
+            throw new LpException("Can't copy data.", ex);
         }
     }
 

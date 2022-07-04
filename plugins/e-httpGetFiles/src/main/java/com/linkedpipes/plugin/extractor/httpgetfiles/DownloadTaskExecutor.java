@@ -4,7 +4,6 @@ import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,21 +23,17 @@ class DownloadTaskExecutor implements TaskConsumer<DownloadTask> {
 
     private WritableFilesDataUnit output;
 
-    private ExceptionFactory exceptionFactory;
-
     private final HttpRequestReport requestReport;
 
     public DownloadTaskExecutor(
             HttpGetFilesConfiguration configuration,
             ProgressReport progressReport,
             WritableFilesDataUnit output,
-            ExceptionFactory exceptionFactory,
             StatementsConsumer statementsConsumer,
             ReportWriter reportWriter) {
         this.configuration = configuration;
         this.progressReport = progressReport;
         this.output = output;
-        this.exceptionFactory = exceptionFactory;
         this.requestReport =
                 new HttpRequestReport(statementsConsumer, reportWriter);
     }
@@ -59,7 +54,7 @@ class DownloadTaskExecutor implements TaskConsumer<DownloadTask> {
             }
         }
         // Download failed.
-        throw exceptionFactory.failure("Can't download file.");
+        throw new LpException("Can't download file.");
     }
 
     private void tryDownloading(DownloadTask task) throws Exception {
@@ -83,7 +78,7 @@ class DownloadTaskExecutor implements TaskConsumer<DownloadTask> {
         String uri = nullForEmpty(task.getUri());
         String fileName = nullForEmpty(task.getFileName());
         if (uri == null || fileName == null) {
-            throw exceptionFactory.failure("Invalid reference.");
+            throw new LpException("Invalid reference.");
         }
         File targetFile = output.createFile(task.getFileName());
         return new Downloader.Task(uri,

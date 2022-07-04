@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.plugin.transformer.tabular.TabularConfiguration.Column;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -35,9 +34,8 @@ class ColumnFactory {
      * @return
      */
     public static List<ColumnAbstract> createColumnList(
-            TabularConfiguration configuration,
-            ExceptionFactory exceptionFactory) throws LpException {
-        // The configuration can contains user mapping, but if the full
+            TabularConfiguration configuration) throws LpException {
+        // The configuration can contain user mapping, but if the full
         // mapping is used all user options are ignored.
         if (configuration.isFullMapping()) {
             return Collections.EMPTY_LIST;
@@ -64,7 +62,7 @@ class ColumnFactory {
 
             final UrlTemplate predicate;
             if (column.getPropertyUrl() == null) {
-                throw exceptionFactory.failure(
+                throw new LpException(
                         "Missing predicate for column: '{}'", column.getName());
             } else {
                 // We need to test if we got absolute IRI or not.
@@ -75,7 +73,7 @@ class ColumnFactory {
                                 + predicateAsString;
                     }
                 } catch (IllegalArgumentException ex) {
-                    throw exceptionFactory.failure("Invalid IRI: '{}'",
+                    throw new LpException("Invalid IRI: '{}'",
                             ex);
                 }
                 predicate = new UrlTemplate(predicateAsString);
@@ -99,7 +97,7 @@ class ColumnFactory {
                 try {
                     type = valueFactory.createIRI(column.getDatatype());
                 } catch (RuntimeException ex) {
-                    throw exceptionFactory.failure(
+                    throw new LpException(
                             "Invalid column type '{}' for colum: '{}'",
                             column.getDatatype(), column.getName(), ex);
                 }
@@ -108,7 +106,7 @@ class ColumnFactory {
                         column.getName(), column.isRequired(),
                         aboutUrl, predicate));
             } else {
-                throw exceptionFactory.failure(
+                throw new LpException(
                         "Invalid configuration for column {}",
                         column.getName());
             }
@@ -124,8 +122,8 @@ class ColumnFactory {
      * @return
      */
     public static List<ColumnAbstract> createColumList(
-            TabularConfiguration configuration, List<String> header,
-            ExceptionFactory exceptionFactory) throws LpException {
+            TabularConfiguration configuration, List<String> header
+    ) throws LpException {
         final List<ColumnAbstract> result = new ArrayList<>(header.size());
         final TabularConfiguration.Schema schema
                 = configuration.getTableSchema();
@@ -149,7 +147,7 @@ class ColumnFactory {
                     header.set(counter - 1, name);
                 } else {
                     LOG.info("Header: {}", header);
-                    throw exceptionFactory.failure(
+                    throw new LpException(
                             "Header must not contains null values.");
                 }
             }

@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -63,9 +62,6 @@ public final class GeoTools implements Component, SequentialExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     private CoordinateReferenceSystem targetCrs = null;
 
     private Value targetCrsName;
@@ -83,7 +79,7 @@ public final class GeoTools implements Component, SequentialExecution {
             targetCrsName = valueFactory.createLiteral(crsName);
             targetCrs = CRS.decode(crsName);
         } catch (Exception ex) {
-            throw exceptionFactory.failure("Can't create output CRS: {}",
+            throw new LpException("Can't create output CRS: {}",
                     configuration.getOutputCoordType(), ex);
         }
         //
@@ -189,7 +185,7 @@ public final class GeoTools implements Component, SequentialExecution {
             transY = dstPosition.y;
         } catch (Exception ex) {
             if (configuration.isFailOnError()) {
-                throw exceptionFactory.failure("Can't convert coordinate: {}",
+                throw new LpException("Can't convert coordinate: {}",
                         subject.stringValue(), ex);
             } else {
                 LOG.error("Can't convert coordinate: {} ('{}','{}')",
@@ -204,7 +200,7 @@ public final class GeoTools implements Component, SequentialExecution {
             entity = valueFactory.createIRI(
                     subject.stringValue() + "/" + coordType);
         } else {
-            throw exceptionFactory.failure("Blank nodes are not supported!");
+            throw new LpException("Blank nodes are not supported!");
         }
 
         outputBuffer.add(valueFactory.createStatement(subject,

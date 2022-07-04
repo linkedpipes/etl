@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.plugin.extractor.voidDataset.VoidDatasetConfiguration.LocalizedString;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -38,9 +37,6 @@ public class VoidDataset implements Component, SequentialExecution {
     @Component.Configuration
     public VoidDatasetConfiguration configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     private final List<Statement> statements = new ArrayList<>();
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
@@ -56,8 +52,8 @@ public class VoidDataset implements Component, SequentialExecution {
                     + "{?d a <" +
                     VoidDatasetVocabulary.DCAT_DISTRIBUTION_CLASS + ">}", "d");
             if (isBlank(distributionIRI)) {
-                throw exceptionFactory
-                        .failure("Missing distribution in the input data.");
+                throw new LpException(
+                        "Missing distribution in the input data.");
             }
 
         } else {

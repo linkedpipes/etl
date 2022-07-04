@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.net.ProtocolCommandEvent;
 import org.apache.commons.net.ProtocolCommandListener;
@@ -29,9 +28,6 @@ public class FtpFilesLoader implements Component, SequentialExecution {
     @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Component.InputPort(iri = "FilesInput")
     public FilesDataUnit input;
 
@@ -49,7 +45,7 @@ public class FtpFilesLoader implements Component, SequentialExecution {
             initializeClient();
             uploadFiles();
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't upload files.", ex);
+            throw new LpException("Can't upload files.", ex);
         } finally {
             closeClient();
         }
@@ -121,7 +117,7 @@ public class FtpFilesLoader implements Component, SequentialExecution {
         checkAndCreateDirectory(remoteFullName);
         try (InputStream inputStream = new FileInputStream(file)) {
             if (!ftpClient.storeFile(remoteFullName, inputStream)) {
-                throw exceptionFactory.failure(
+                throw new LpException(
                         "Can't upload file. Response code: {} message: {}",
                         ftpClient.getReplyCode(), ftpClient.getReplyString());
             }
@@ -146,18 +142,18 @@ public class FtpFilesLoader implements Component, SequentialExecution {
             }
         }
         if (!ftpClient.changeWorkingDirectory(subPath)) {
-            throw exceptionFactory
-                    .failure("Failed to create directories for: {}", subPath);
+            throw new LpException(
+                    "Failed to create directories for: {}", subPath);
         }
         if (!ftpClient.changeWorkingDirectory("/")) {
-            throw exceptionFactory
-                    .failure("Can't change working directory to root.");
+            throw new LpException(
+                    "Can't change working directory to root.");
         }
     }
 
     private void createDirectory(String path) throws IOException, LpException {
         if (!ftpClient.makeDirectory(path)) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't create directory: {}", path);
         }
     }

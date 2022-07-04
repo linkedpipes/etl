@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.RepositoryResult;
@@ -35,9 +34,6 @@ public final class ValueParser implements Component, SequentialExecution {
 
     @Component.Configuration
     public ValueParserConfiguration configuration;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
@@ -97,7 +93,7 @@ public final class ValueParser implements Component, SequentialExecution {
                 return new DefaultProducer(outputRdf, predicate,
                         configuration.isKeepMetadata());
             default:
-                throw exceptionFactory.failure("Invalid type: {}", type);
+                throw new LpException("Invalid type: {}", type);
         }
     }
 

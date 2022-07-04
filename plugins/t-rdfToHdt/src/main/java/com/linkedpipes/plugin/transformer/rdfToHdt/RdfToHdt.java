@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.rdfhdt.hdt.exceptions.ParserException;
 import org.rdfhdt.hdt.hdt.HDT;
 import org.rdfhdt.hdt.hdt.HDTManager;
@@ -29,9 +28,6 @@ public final class RdfToHdt implements Component, SequentialExecution {
     @Component.Configuration
     public RdfToHdtConfiguration configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         checkConfiguration();
@@ -41,10 +37,10 @@ public final class RdfToHdt implements Component, SequentialExecution {
 
     private void checkConfiguration() throws LpException {
         if (nullOrEmpty(configuration.getFileName())) {
-            throw exceptionFactory.failure("Invalid output file name.");
+            throw new LpException("Invalid output file name.");
         }
         if (nullOrEmpty(configuration.getBaseIri())) {
-            throw exceptionFactory.failure("Invalid base IRI.");
+            throw new LpException("Invalid base IRI.");
         }
     }
 
@@ -60,7 +56,7 @@ public final class RdfToHdt implements Component, SequentialExecution {
                     new HDTSpecification(),
                     null);
         } catch (IOException | ParserException ex) {
-            throw exceptionFactory.failure("Can't convert RDF to HDT.", ex);
+            throw new LpException("Can't convert RDF to HDT.", ex);
         }
     }
 
@@ -69,7 +65,7 @@ public final class RdfToHdt implements Component, SequentialExecution {
         try {
             hdt.saveToHDT(outputFile.toString(), null);
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't save HDT.", ex);
+            throw new LpException("Can't save HDT.", ex);
         }
     }
 

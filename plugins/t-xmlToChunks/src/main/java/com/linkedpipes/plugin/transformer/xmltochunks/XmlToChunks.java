@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -51,9 +50,6 @@ public class XmlToChunks implements Component, SequentialExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     private final XMLInputFactory inFactory = XMLInputFactory.newInstance();
 
     private int chunkNumber = 1;
@@ -89,7 +85,7 @@ public class XmlToChunks implements Component, SequentialExecution {
             transformer = transformerFactory.newTransformer();
         } catch (ParserConfigurationException |
                 TransformerConfigurationException ex) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't load XML document builder.", ex);
         }
     }
@@ -100,13 +96,13 @@ public class XmlToChunks implements Component, SequentialExecution {
             eventReader = inFactory.createXMLEventReader(new FileReader(input));
             splitXmlFile(entry.getFileName());
         } catch (IOException ex) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't write output to file.", ex);
         } catch (XMLStreamException ex) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Exception when parsing XML. ", ex);
         } catch (TransformerException ex) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Exception when transforming XML. ", ex);
         }
     }

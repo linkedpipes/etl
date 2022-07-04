@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableGraphListDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.model.IRI;
@@ -38,9 +37,6 @@ public final class FilesToStatements implements Component, SequentialExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         final List<Statement> statements = new ArrayList<>(BUFFER_SIZE + 1);
@@ -50,7 +46,7 @@ public final class FilesToStatements implements Component, SequentialExecution {
             predicate = valueFactory.createIRI(
                     configuration.getPredicate());
         } catch (Throwable t) {
-            throw exceptionFactory.failure("Invalid predicate: {}",
+            throw new LpException("Invalid predicate: {}",
                     FilesToStatementsVocabulary.PREDICATE, t);
         }
         //
@@ -61,7 +57,7 @@ public final class FilesToStatements implements Component, SequentialExecution {
             try {
                 content = FileUtils.readFileToString(file.toFile());
             } catch (IOException ex) {
-                throw exceptionFactory.failure("Can't read file: {}", file, ex);
+                throw new LpException("Can't read file: {}", file, ex);
             }
             // Add to output.
             final IRI outputGraph = outputRdf.createGraph();

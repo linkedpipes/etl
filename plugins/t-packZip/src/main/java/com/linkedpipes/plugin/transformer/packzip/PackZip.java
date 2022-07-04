@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 
 import java.io.File;
@@ -34,14 +33,11 @@ public final class PackZip implements Component, SequentialExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         if (configuration.getFileName() == null
                 || configuration.getFileName().isEmpty()) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     PackZipVocabulary.HAS_FILE_NAME);
         }
         //
@@ -56,7 +52,7 @@ public final class PackZip implements Component, SequentialExecution {
                 progressReport.entryProcessed();
             }
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't create archive.", ex);
+            throw new LpException("Can't create archive.", ex);
         }
         progressReport.done();
     }
@@ -81,7 +77,7 @@ public final class PackZip implements Component, SequentialExecution {
                 zos.write(buffer, 0, len);
             }
         } catch (Exception ex) {
-            throw exceptionFactory.failure("", ex);
+            throw new LpException("", ex);
         }
     }
 

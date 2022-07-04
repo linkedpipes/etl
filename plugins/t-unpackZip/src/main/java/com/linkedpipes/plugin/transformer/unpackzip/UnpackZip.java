@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -30,9 +29,6 @@ public final class UnpackZip implements Component, SequentialExecution {
 
     @Component.Inject
     public ProgressReport progressReport;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     @Override
     public void execute() throws LpException {
@@ -63,12 +59,12 @@ public final class UnpackZip implements Component, SequentialExecution {
         try {
             final ZipFile zip = new ZipFile(zipFile);
             if (zip.isEncrypted()) {
-                throw exceptionFactory.failure("File is encrypted: {}",
+                throw new LpException("File is encrypted: {}",
                         zipFile.getName());
             }
             zip.extractAll(targetDirectory.toString());
         } catch (ZipException ex) {
-            throw exceptionFactory.failure("Extraction failure: {}",
+            throw new LpException("Extraction failure: {}",
                     zipFile.getName(), ex);
         }
     }

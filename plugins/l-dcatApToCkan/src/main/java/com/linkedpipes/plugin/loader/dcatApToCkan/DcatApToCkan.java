@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
@@ -57,9 +56,6 @@ public final class DcatApToCkan implements Component, SequentialExecution {
 
     @Component.Configuration
     public DcatApToCkanConfiguration configuration;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     @Override
     public void execute() throws LpException {
@@ -469,12 +465,12 @@ public final class DcatApToCkan implements Component, SequentialExecution {
                     } else if (response.getStatusLine().getStatusCode() == 409) {
                         String ent = EntityUtils.toString(response.getEntity());
                         LOG.error("Dataset already exists: " + ent);
-                        throw exceptionFactory.failure("Dataset already exists");
+                        throw new LpException("Dataset already exists");
                         //ContextUtils.sendError(context, "Dataset already exists", "Dataset already exists: {0}: {1}", response.getStatusLine().getStatusCode(), ent);
                     } else {
                         String ent = EntityUtils.toString(response.getEntity());
                         LOG.error("Response:" + ent);
-                        throw exceptionFactory.failure("Error creating dataset");
+                        throw new LpException("Error creating dataset");
                         //ContextUtils.sendError(context, "Error creating dataset", "Response while creating dataset: {0}: {1}", response.getStatusLine().getStatusCode(), ent);
                     }
                 } catch (ClientProtocolException e) {
@@ -488,7 +484,7 @@ public final class DcatApToCkan implements Component, SequentialExecution {
                             client.close();
                         } catch (IOException e) {
                             LOG.error(e.getLocalizedMessage(), e);
-                            throw exceptionFactory.failure("Error creating dataset");
+                            throw new LpException("Error creating dataset");
                             //ContextUtils.sendError(context, "Error creating dataset", e.getLocalizedMessage());
                         }
                     }
@@ -523,7 +519,7 @@ public final class DcatApToCkan implements Component, SequentialExecution {
                     } else {
                         String ent = EntityUtils.toString(response.getEntity());
                         LOG.error("Response:" + ent);
-                        throw exceptionFactory.failure("Error updating dataset");
+                        throw new LpException("Error updating dataset");
                         //ContextUtils.sendError(context, "Error updating dataset", "Response while updating dataset: {0}: {1}", response.getStatusLine().getStatusCode(), ent);
                     }
                 } catch (ClientProtocolException e) {
@@ -537,7 +533,7 @@ public final class DcatApToCkan implements Component, SequentialExecution {
                             client.close();
                         } catch (IOException e) {
                             LOG.error(e.getLocalizedMessage(), e);
-                            throw exceptionFactory.failure("Error updating dataset");
+                            throw new LpException("Error updating dataset");
 //		                	ContextUtils.sendError(context, "Error updating dataset", e.getLocalizedMessage());
                         }
                     }

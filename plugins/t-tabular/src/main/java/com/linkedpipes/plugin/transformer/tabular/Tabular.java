@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,16 +26,12 @@ public class Tabular implements Component, SequentialExecution {
     @Component.Configuration
     public TabularConfiguration configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         final BufferedOutput output = new BufferedOutput(outputRdfDataUnit);
-        final Parser parser = new Parser(configuration, exceptionFactory);
+        final Parser parser = new Parser(configuration);
         final Mapper mapper = new Mapper(output, configuration,
-                ColumnFactory.createColumnList(configuration, exceptionFactory),
-                exceptionFactory);
+                ColumnFactory.createColumnList(configuration));
         // TODO We could use some table group URI from user?
         mapper.initialize(null);
         for (FilesDataUnit.Entry entry : inputFilesDataUnit) {
@@ -59,7 +54,7 @@ public class Tabular implements Component, SequentialExecution {
                     LOG.error("Can't process file: {}",
                             entry.getFileName(), ex);
                 } else {
-                    throw exceptionFactory.failure("Can't process file: {}",
+                    throw new LpException("Can't process file: {}",
                             entry.getFileName(), ex);
                 }
             }

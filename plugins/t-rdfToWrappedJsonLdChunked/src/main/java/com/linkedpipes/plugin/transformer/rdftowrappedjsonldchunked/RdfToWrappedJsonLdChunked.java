@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -31,9 +30,6 @@ public class RdfToWrappedJsonLdChunked
     public RdfToWrappedJsonLdChunkedConfiguration configuration;
 
     @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
-    @Component.Inject
     public ProgressReport progressReport;
 
     private Integer fileCounter = 0;
@@ -49,7 +45,7 @@ public class RdfToWrappedJsonLdChunked
             try {
                 transformFile(chunk.toCollection(), outputFile);
             } catch (LpException ex) {
-                throw exceptionFactory.failure("Can't transform chunk", ex);
+                throw new LpException("Can't transform chunk", ex);
             }
             progressReport.entryProcessed();
         }
@@ -74,7 +70,7 @@ public class RdfToWrappedJsonLdChunked
              Writer writer = new OutputStreamWriter(stream, "UTF-8")) {
             templateWriter.writeToWriter(writer);
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Failed to create file: {}",
+            throw new LpException("Failed to create file: {}",
                     target, ex);
         }
     }

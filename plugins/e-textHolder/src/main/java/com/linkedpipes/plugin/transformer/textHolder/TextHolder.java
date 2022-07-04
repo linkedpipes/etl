@@ -4,7 +4,6 @@ import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,9 +18,6 @@ public final class TextHolder implements Component, SequentialExecution {
     @Component.Configuration
     public TextHolderConfiguration configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         validateConfiguration();
@@ -33,7 +29,7 @@ public final class TextHolder implements Component, SequentialExecution {
     private void validateConfiguration() throws LpException {
         String fileName = configuration.getFileName();
         if (fileName == null || fileName.isEmpty()) {
-            throw exceptionFactory.failure("Missing file name.", fileName);
+            throw new LpException("Missing file name.", fileName);
         }
     }
 
@@ -45,7 +41,7 @@ public final class TextHolder implements Component, SequentialExecution {
         try {
             return configuration.getContent().getBytes("UTF-8");
         } catch (UnsupportedEncodingException ex) {
-            throw exceptionFactory.failure("Can't resolved encoding.", ex);
+            throw new LpException("Can't resolved encoding.", ex);
         }
     }
 
@@ -54,7 +50,7 @@ public final class TextHolder implements Component, SequentialExecution {
         try {
             Files.write(file.toPath(), content);
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't write content to file.", ex);
+            throw new LpException("Can't write content to file.", ex);
         }
     }
 

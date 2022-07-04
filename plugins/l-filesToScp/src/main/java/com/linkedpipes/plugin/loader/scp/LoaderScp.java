@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 
 public final class LoaderScp implements Component, SequentialExecution {
 
@@ -18,9 +17,6 @@ public final class LoaderScp implements Component, SequentialExecution {
 
     @Component.Configuration
     public LoaderScpConfiguration configuration;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     @Override
     public void execute() throws LpException {
@@ -41,7 +37,7 @@ public final class LoaderScp implements Component, SequentialExecution {
             scpClient.uploadDirectories(targetDirectory,
                     input.getReadDirectories());
         } catch (Exception ex) {
-            throw exceptionFactory.failure("SCP operation failed.", ex);
+            throw new LpException("SCP operation failed.", ex);
         }
     }
 
@@ -51,23 +47,23 @@ public final class LoaderScp implements Component, SequentialExecution {
 
     private void checkConfiguration() throws LpException {
         if (isNullOrEmpty(configuration.getUserName())) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     LoaderScpVocabulary.HAS_USERNAME);
         }
         if (isNullOrEmpty(configuration.getPassword())) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     LoaderScpVocabulary.HAS_PASSWORD);
         }
         if (isNullOrEmpty(configuration.getHost())) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     LoaderScpVocabulary.HAS_HOST);
         }
         if (configuration.getPort() == null) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     LoaderScpVocabulary.HAS_PORT);
         }
         if (isNullOrEmpty(configuration.getTargetDirectory())) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     LoaderScpVocabulary.HAS_TARGET_DIRECTORY);
         }
     }

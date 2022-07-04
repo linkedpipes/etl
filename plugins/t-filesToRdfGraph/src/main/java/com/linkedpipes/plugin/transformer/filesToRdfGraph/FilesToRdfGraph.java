@@ -6,14 +6,12 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.eclipse.rdf4j.rio.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 
@@ -37,9 +35,6 @@ public final class FilesToRdfGraph implements Component, SequentialExecution {
 
     @Component.Inject
     public ProgressReport progressReport;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     private RDFFormat defaultFormat;
 
@@ -96,7 +91,7 @@ public final class FilesToRdfGraph implements Component, SequentialExecution {
         }
         Optional<RDFFormat> format = Rio.getParserFormatForFileName(fileName);
         if (!format.isPresent()) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't determine format for file: {}", fileName);
         }
         return format.get();
@@ -118,7 +113,7 @@ public final class FilesToRdfGraph implements Component, SequentialExecution {
         if (configuration.isSkipOnFailure()) {
             LOG.error("Can't parse file: {}", fileName, ex);
         } else {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't parse file: {}", fileName, ex);
         }
     }

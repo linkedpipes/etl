@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
@@ -40,9 +39,6 @@ public final class Unpack implements Component, SequentialExecution {
 
     @Component.Inject
     public ProgressReport progressReport;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     @Override
     public void execute() throws LpException {
@@ -90,7 +86,7 @@ public final class Unpack implements Component, SequentialExecution {
                     unpackGzip(stream, targetDirectory, inputEntry);
                     break;
                 default:
-                    throw exceptionFactory.failure("Unknown file format (" +
+                    throw new LpException("Unknown file format (" +
                             extension + ") : " + inputEntry.getFileName());
             }
         } catch (IOException | ArchiveException ex) {
@@ -104,7 +100,7 @@ public final class Unpack implements Component, SequentialExecution {
             LOG.error("Extraction failure: {}",
                     inputEntry.getFileName(), ex);
         } else {
-            throw exceptionFactory.failure("Extraction failure: {}",
+            throw new LpException("Extraction failure: {}",
                     inputEntry.getFileName(), ex);
         }
     }

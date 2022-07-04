@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.XSD;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -73,8 +72,6 @@ class Mapper {
 
     private String tableResource;
 
-    private final ExceptionFactory exceptionFactory;
-
     /**
      * Does not call any other method on {@link RdfOutput}
      * than onRowStart, onRowEnd and submit for new statement.
@@ -84,7 +81,7 @@ class Mapper {
      * @param columns
      */
     Mapper(RdfOutput consumer, TabularConfiguration configuration,
-            List<ColumnAbstract> columns, ExceptionFactory exceptionFactory) {
+            List<ColumnAbstract> columns) {
         this.consumer = consumer;
         this.configuration = configuration;
         this.columns = columns;
@@ -93,7 +90,6 @@ class Mapper {
         } else {
             this.outputMode = Mode.MINIMAL;
         }
-        this.exceptionFactory = exceptionFactory;
     }
 
     /**
@@ -169,7 +165,7 @@ class Mapper {
         usedColumns = new ArrayList<>(columns.size());
         if (configuration.isFullMapping()) {
             usedColumns.addAll(ColumnFactory.createColumList(
-                    configuration, header, exceptionFactory));
+                    configuration, header));
         } else {
             // Use user given.
             usedColumns.addAll(columns);

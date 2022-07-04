@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
@@ -32,9 +31,6 @@ public final class StreamCompression implements Component, SequentialExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Component.Configuration
     public StreamCompressionConfiguration configuration;
 
@@ -59,7 +55,7 @@ public final class StreamCompression implements Component, SequentialExecution {
                         break;
                 }
             } catch (IOException ex) {
-                exceptionFactory.failure(
+                throw new LpException(
                         "Can't compress file: {}", entry.getFileName(), ex);
             }
             progressReport.entryProcessed();

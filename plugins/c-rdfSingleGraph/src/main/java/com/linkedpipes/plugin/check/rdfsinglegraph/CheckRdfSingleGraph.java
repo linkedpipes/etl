@@ -4,7 +4,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.eclipse.rdf4j.common.iteration.Iterations;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
@@ -21,15 +20,12 @@ public class CheckRdfSingleGraph implements Component, SequentialExecution {
     @Component.InputPort(iri = "Actual")
     public SingleGraphDataUnit actual;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         Model expectedModel = createModel(expected);
         Model actualModel = createModel(actual);
         if (!Models.isomorphic(expectedModel, actualModel)) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Expected and Actual inputs are not isomorphic.");
         }
     }

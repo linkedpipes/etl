@@ -6,7 +6,6 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.plugin.loader.wikibase.model.DocumentMerger;
 import com.linkedpipes.plugin.loader.wikibase.model.MergeStrategy;
 import com.linkedpipes.plugin.loader.wikibase.model.RdfToDocument;
@@ -44,8 +43,6 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
 
     private final WikibaseLoaderConfiguration configuration;
 
-    private final ExceptionFactory exceptionFactory;
-
     private final List<Statement> source;
 
     private final WritableSingleGraphDataUnit outputRdf;
@@ -64,11 +61,9 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
 
     public WikibaseWorker(
             WikibaseLoaderConfiguration configuration,
-            ExceptionFactory exceptionFactory,
             WritableSingleGraphDataUnit outputRdf,
             List<Statement> source) {
         this.configuration = configuration;
-        this.exceptionFactory = exceptionFactory;
         this.outputRdf = outputRdf;
         this.source = source;
     }
@@ -96,7 +91,7 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
                     configuration.getUserName(),
                     configuration.getPassword());
         } catch (LoginFailedException | NullPointerException ex) {
-            throw exceptionFactory.failure("Can't login.", ex);
+            throw new LpException("Can't login.", ex);
         }
     }
 
@@ -146,7 +141,7 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
             }
         } catch (Throwable ex) {
             lastException = ex;
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Error processing document: {}", task.getIri(), ex);
         }
     }
@@ -252,7 +247,7 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
         try {
             connection.logout();
         } catch (IOException | MediaWikiApiErrorException ex) {
-            throw exceptionFactory.failure("Can't close connection.", ex);
+            throw new LpException("Can't close connection.", ex);
         }
     }
 

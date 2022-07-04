@@ -4,7 +4,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.http.ParseException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -58,13 +57,6 @@ public final class LodCloud implements Component, SequentialExecution {
     @Component.Configuration
     public LodCloudConfiguration configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
-    //private CloseableHttpClient queryClient = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
-    //private CloseableHttpClient createClient = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
-    //private CloseableHttpClient postClient = HttpClients.createDefault();
-
     @Override
     public void execute() throws LpException {
 
@@ -77,7 +69,7 @@ public final class LodCloud implements Component, SequentialExecution {
         List<Map<String, Value>> distributions = executeSelectQuery("SELECT ?distribution WHERE {<" + datasetUrl + "> <"+ DCAT.HAS_DISTRIBUTION + "> ?distribution . ?distribution <" + LodCloudVocabulary.VOID_SPARQLENDPOINT + "> [] .  }");
 
         if (distributions.size() != 1) {
-            throw exceptionFactory.failure("Expected 1 distribution with SPARQL endpoint. Found: " + distributions.size());
+            throw new LpException("Expected 1 distribution with SPARQL endpoint. Found: " + distributions.size());
         }
 
         String title = executeSimpleSelectQuery("SELECT ?title WHERE {<" + datasetUrl + "> <"+ DCTERMS.TITLE + "> ?title FILTER(LANGMATCHES(LANG(?title), \"en\"))}", "title");
@@ -432,9 +424,9 @@ public final class LodCloud implements Component, SequentialExecution {
                         LOG.info("Dataset created OK: " + response.getStatusLine());
                     } else if (response.getStatusLine().getStatusCode() == 409) {
                         LOG.error("Dataset already exists: " + response.getStatusLine());
-                        throw exceptionFactory.failure("Dataset already exists or cannot be created", "Dataset already exists or cannot be created: {0}", response.getStatusLine());
+                        throw new LpException("Dataset already exists or cannot be created", "Dataset already exists or cannot be created: {0}", response.getStatusLine());
                     } else {
-                        throw exceptionFactory.failure("Error while creating dataset", "Response while creating dataset: " + response.getStatusLine());
+                        throw new LpException("Error while creating dataset", "Response while creating dataset: " + response.getStatusLine());
                     }
                 } catch (IOException e) {
                     LOG.error(e.getLocalizedMessage(), e);
@@ -445,7 +437,7 @@ public final class LodCloud implements Component, SequentialExecution {
                             client.close();
                         } catch (IOException e) {
                             LOG.error(e.getLocalizedMessage(), e);
-                            throw exceptionFactory.failure("Error creating dataset", e.getLocalizedMessage());
+                            throw new LpException("Error creating dataset", e.getLocalizedMessage());
                         }
                     }
                 }
@@ -468,7 +460,7 @@ public final class LodCloud implements Component, SequentialExecution {
                 if (response.getStatusLine().getStatusCode() == 200) {
                     LOG.info("Response: " + EntityUtils.toString(response.getEntity()));
                 } else {
-                    throw exceptionFactory.failure("Error updating dataset", "Response while updating dataset: {0}", response.getStatusLine());
+                    throw new LpException("Error updating dataset", "Response while updating dataset: {0}", response.getStatusLine());
                 }
             } catch (IOException e) {
                 LOG.error(e.getLocalizedMessage(), e);
@@ -479,7 +471,7 @@ public final class LodCloud implements Component, SequentialExecution {
                         client.close();
                     } catch (IOException e) {
                         LOG.error(e.getLocalizedMessage(), e);
-                        throw exceptionFactory.failure("Error updating dataset", e.getLocalizedMessage());
+                        throw new LpException("Error updating dataset", e.getLocalizedMessage());
                     }
                 }
             }

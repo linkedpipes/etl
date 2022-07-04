@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import cz.komix.xls2csv.Fact;
 import cz.komix.xls2csv.Xls2Csv;
@@ -42,9 +41,6 @@ public class XlsToCsv implements Component, SequentialExecution {
     @Component.OutputPort(iri = "Output")
     public WritableFilesDataUnit outputFiles;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Component.Configuration
     public XlsToCsvConfiguration configuration;
 
@@ -73,7 +69,7 @@ public class XlsToCsv implements Component, SequentialExecution {
             try {
                 xls2Csv.init(task.input, task.template);
             } catch (IOException ex) {
-                throw exceptionFactory.failure("Can't initialize Xls2Csv.", ex);
+                throw new LpException("Can't initialize Xls2Csv.", ex);
             }
             //
             xls2Csv.parse();

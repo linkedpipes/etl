@@ -3,7 +3,6 @@ package com.linkedpipes.plugin.exec.httprequest;
 import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -26,8 +25,6 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
     private static final Logger LOG =
             LoggerFactory.getLogger(TaskExecutor.class);
 
-    private final ExceptionFactory exceptionFactory;
-
     private final WritableFilesDataUnit outputFiles;
 
     private final TaskContentWriter taskContentWriter;
@@ -43,16 +40,13 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
     private HttpRequestTask task;
 
     public TaskExecutor(
-            ExceptionFactory exceptionFactory,
             WritableFilesDataUnit outputFiles,
             Map<String, File> inputFilesMap,
             StatementsConsumer consumer,
             ProgressReport progressReport,
             boolean encodeUrl) {
-        this.exceptionFactory = exceptionFactory;
         this.outputFiles = outputFiles;
-        this.taskContentWriter = new TaskContentWriter(
-                exceptionFactory, inputFilesMap);
+        this.taskContentWriter = new TaskContentWriter(inputFilesMap);
         this.headerReporter = new HeaderReporter(consumer);
         this.progressReport = progressReport;
         this.encodeUrl = encodeUrl;
@@ -99,7 +93,7 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
     private void performRequest(URL url) throws LpException {
         LOG.debug("Creating connection {} ...", url);
         if (visited.contains(url)) {
-            throw exceptionFactory.failure("Cycle detected.");
+            throw new LpException("Cycle detected.");
         }
         visited.add(url);
         try (Connection connection = createConnection(url)) {
@@ -114,7 +108,7 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
             }
             LOG.debug("Done {} ...", url);
         } catch (Exception ex) {
-            throw exceptionFactory.failure("Request failed for: {}", url, ex);
+            throw new LpException("Request failed for: {}", url, ex);
         }
     }
 
@@ -214,7 +208,7 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         HttpURLConnection urlConnection = connection.getConnection();
         if (connection.requestFailed()) {
             headerReporter.reportHeaderResponse(urlConnection, task);
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "{} : {}",
                     connection.getResponseCode(),
                     connection.getResponseMessage());

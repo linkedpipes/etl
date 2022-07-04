@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -45,9 +44,6 @@ public final class SparqlEndpoint implements Component, SequentialExecution {
     @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Component.Configuration
     public SparqlEndpointConfiguration configuration;
 
@@ -57,12 +53,12 @@ public final class SparqlEndpoint implements Component, SequentialExecution {
     public void execute() throws LpException {
         if (configuration.getEndpoint() == null
                 || configuration.getEndpoint().isEmpty()) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     SparqlEndpointVocabulary.HAS_ENDPOINT);
         }
         if (configuration.getQuery() == null
                 || configuration.getQuery().isEmpty()) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     SparqlEndpointVocabulary.HAS_QUERY);
         }
         //
@@ -71,14 +67,14 @@ public final class SparqlEndpoint implements Component, SequentialExecution {
         try {
             repository.initialize();
         } catch (OpenRDFException ex) {
-            throw exceptionFactory.failure("Can't connnect to endpoint.", ex);
+            throw new LpException("Can't connnect to endpoint.", ex);
         }
         repository.setHttpClient(getHttpClient());
         //
         try {
             queryRemote(repository);
         } catch (Throwable t) {
-            throw exceptionFactory.failure("Can't query remote SPARQL.", t);
+            throw new LpException("Can't query remote SPARQL.", t);
         } finally {
             try {
                 repository.shutDown();

@@ -4,7 +4,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.ChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
@@ -21,9 +20,6 @@ public class CheckRdfChunked implements Component, SequentialExecution {
     @Component.InputPort(iri = "Actual")
     public ChunkedTriples actual;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         checkSize();
@@ -32,7 +28,7 @@ public class CheckRdfChunked implements Component, SequentialExecution {
 
     private void checkSize() throws LpException {
         if (expected.size() != actual.size()) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Expected and Actual inputs have different size");
         }
     }
@@ -46,7 +42,7 @@ public class CheckRdfChunked implements Component, SequentialExecution {
             Model expectedModel = createModel(expectedChunk.toCollection());
             Model actualModel = createModel(actualChunk.toCollection());
             if (!Models.isomorphic(expectedModel, actualModel)) {
-                throw exceptionFactory.failure(
+                throw new LpException(
                         "Expected and Actual inputs are not isomorphic.");
             }
         }

@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -28,9 +27,6 @@ public class FileHasher implements Component, SequentialExecution {
     @Component.OutputPort(iri = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         final ValueFactory vf = SimpleValueFactory.getInstance();
@@ -42,9 +38,9 @@ public class FileHasher implements Component, SequentialExecution {
             try {
                 checkSum = computeChecksum(entry.toFile());
             } catch (IOException ex) {
-                throw exceptionFactory.failure("Can't read file.", ex);
+                throw new LpException("Can't read file.", ex);
             } catch (NoSuchAlgorithmException ex) {
-                throw exceptionFactory.failure("Missing algorithm.", ex);
+                throw new LpException("Missing algorithm.", ex);
             }
             // Create RDF output.
             outputRdf.execute((connection) -> {

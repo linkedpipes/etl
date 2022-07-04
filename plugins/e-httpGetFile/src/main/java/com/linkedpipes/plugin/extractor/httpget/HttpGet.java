@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +27,6 @@ public final class HttpGet implements Component, SequentialExecution {
     @Component.OutputPort(iri = "FilesOutput")
     public WritableFilesDataUnit output;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Component.Configuration
     public HttpGetConfiguration configuration;
 
@@ -51,7 +47,7 @@ public final class HttpGet implements Component, SequentialExecution {
         try {
             downloader.download();
         } catch (Exception ex) {
-            throw exceptionFactory.failure("Can't download file.", ex);
+            throw new LpException("Can't download file.", ex);
         }
         progressReport.entryProcessed();
         progressReport.done();
@@ -59,11 +55,11 @@ public final class HttpGet implements Component, SequentialExecution {
 
     private void checkConfiguration() throws LpException {
         if (isNullOrEmpty(configuration.getUri())) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     HttpGetVocabulary.HAS_URI);
         }
         if (isNullOrEmpty(configuration.getFileName())) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     HttpGetVocabulary.HAS_NAME);
         }
     }
@@ -100,8 +96,7 @@ public final class HttpGet implements Component, SequentialExecution {
             HttpsURLConnection.setDefaultHostnameVerifier(
                     (String urlHostName, SSLSession session) -> true);
         } catch (KeyManagementException | NoSuchAlgorithmException ex) {
-            throw exceptionFactory
-                    .failure("Can't set trust all certificates.", ex);
+            throw new LpException("Can't set trust all certificates.", ex);
         }
     }
 

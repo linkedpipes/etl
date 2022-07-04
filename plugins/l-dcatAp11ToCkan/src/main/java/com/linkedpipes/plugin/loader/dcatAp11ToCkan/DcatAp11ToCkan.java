@@ -4,7 +4,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -52,9 +51,6 @@ public final class DcatAp11ToCkan implements Component, SequentialExecution {
 
     @Component.Configuration
     public DcatAp11ToCkanConfiguration configuration;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     @Component.Inject
     public ProgressReport progressReport;
@@ -153,7 +149,7 @@ public final class DcatAp11ToCkan implements Component, SequentialExecution {
         String datasetID = configuration.getDatasetID();
 
         if (datasetID == null || datasetID.isEmpty() || apiURI == null || apiURI.isEmpty() || configuration.getApiKey() == null || configuration.getApiKey().isEmpty() ) {
-            throw exceptionFactory.failure("Missing required settings.");
+            throw new LpException("Missing required settings.");
         }
 
         Map<String, String> organizations = getOrganizations();
@@ -240,7 +236,7 @@ public final class DcatAp11ToCkan implements Component, SequentialExecution {
             JSONObject root = new JSONObject();
 
             if (publisher_name == null || publisher_name.isEmpty()) {
-                throw exceptionFactory.failure("Organization has no name: " + publisher_uri);
+                throw new LpException("Organization has no name: " + publisher_uri);
             }
 
             root.put("title", publisher_name);
@@ -272,11 +268,11 @@ public final class DcatAp11ToCkan implements Component, SequentialExecution {
                 } else if (response.getStatusLine().getStatusCode() == 409) {
                     String ent = EntityUtils.toString(response.getEntity());
                     LOG.error("Organization conflict: " + ent);
-                    throw exceptionFactory.failure("Organization conflict: " + ent);
+                    throw new LpException("Organization conflict: " + ent);
                 } else {
                     String ent = EntityUtils.toString(response.getEntity());
                     LOG.error("Response:" + ent);
-                    throw exceptionFactory.failure("Error creating organization: " + ent);
+                    throw new LpException("Error creating organization: " + ent);
                 }
             } catch (Exception e) {
                 LOG.error(e.getLocalizedMessage(), e);
@@ -286,7 +282,7 @@ public final class DcatAp11ToCkan implements Component, SequentialExecution {
                         response.close();
                     } catch (IOException e) {
                         LOG.error(e.getLocalizedMessage(), e);
-                        throw exceptionFactory.failure("Error creating dataset");
+                        throw new LpException("Error creating dataset");
                     }
                 }
             }
@@ -592,11 +588,11 @@ public final class DcatAp11ToCkan implements Component, SequentialExecution {
                 } else if (response.getStatusLine().getStatusCode() == 409) {
                     String ent = EntityUtils.toString(response.getEntity());
                     LOG.error("Dataset already exists: " + ent);
-                    throw exceptionFactory.failure("Dataset already exists");
+                    throw new LpException("Dataset already exists");
                 } else {
                     String ent = EntityUtils.toString(response.getEntity());
                     LOG.error("Response:" + ent);
-                    throw exceptionFactory.failure("Error creating dataset");
+                    throw new LpException("Error creating dataset");
                 }
             } catch (Exception e) {
                 LOG.error(e.getLocalizedMessage(), e);
@@ -606,7 +602,7 @@ public final class DcatAp11ToCkan implements Component, SequentialExecution {
                         response.close();
                     } catch (IOException e) {
                         LOG.error(e.getLocalizedMessage(), e);
-                        throw exceptionFactory.failure("Error creating dataset");
+                        throw new LpException("Error creating dataset");
                     }
                 }
             }
@@ -630,7 +626,7 @@ public final class DcatAp11ToCkan implements Component, SequentialExecution {
             } else {
                 String ent = EntityUtils.toString(response.getEntity());
                 LOG.error("Response:" + ent);
-                throw exceptionFactory.failure("Error updating dataset");
+                throw new LpException("Error updating dataset");
             }
         } catch (Exception e) {
             LOG.error(e.getLocalizedMessage(), e);
@@ -640,7 +636,7 @@ public final class DcatAp11ToCkan implements Component, SequentialExecution {
                     response.close();
                 } catch (IOException e) {
                     LOG.error(e.getLocalizedMessage(), e);
-                    throw exceptionFactory.failure("Error updating dataset");
+                    throw new LpException("Error updating dataset");
                 }
             }
         }

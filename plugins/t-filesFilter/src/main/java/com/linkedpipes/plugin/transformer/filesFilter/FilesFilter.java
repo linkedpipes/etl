@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,14 +31,11 @@ public class FilesFilter implements Component, SequentialExecution {
     @Component.Configuration
     public FilesFilterConfiguration configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         if (configuration.getFileNamePattern() == null
                 || configuration.getFileNamePattern().isEmpty()) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     FilesFilterVocabulary.HAS_PATTERN);
         }
         //
@@ -54,7 +50,7 @@ public class FilesFilter implements Component, SequentialExecution {
                 try {
                     Files.copy(entry.toFile().toPath(), outputFile.toPath());
                 } catch (IOException ex) {
-                    throw exceptionFactory.failure("Can't copy file: {}",
+                    throw new LpException("Can't copy file: {}",
                             entry.getFileName(), ex);
                 }
             }

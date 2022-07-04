@@ -83,8 +83,7 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
     @Override
     protected TaskConsumer<WikibaseTask> createConsumer() throws LpException {
         WikibaseWorker worker = new WikibaseWorker(
-                configuration, exceptionFactory,
-                outputRdf, collectStatements());
+                configuration, outputRdf, collectStatements());
         workers.add(worker);
         return worker;
     }

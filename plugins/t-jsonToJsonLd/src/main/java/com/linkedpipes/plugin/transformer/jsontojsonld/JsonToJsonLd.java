@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.io.FileUtils;
 
@@ -29,9 +28,6 @@ public class JsonToJsonLd implements Component, SequentialExecution {
 
     @Component.Configuration
     public JsonToJsonLdConfiguration configuration;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     @Component.Inject
     public ProgressReport progressReport;
@@ -67,7 +63,7 @@ public class JsonToJsonLd implements Component, SequentialExecution {
         try {
             updateFile(entry, outputFile);
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't update file: {}",
+            throw new LpException("Can't update file: {}",
                     entry.getFileName(), ex);
         }
     }

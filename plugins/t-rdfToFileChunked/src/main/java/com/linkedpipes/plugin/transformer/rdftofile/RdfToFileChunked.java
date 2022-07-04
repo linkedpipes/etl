@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -38,9 +37,6 @@ public final class RdfToFileChunked implements Component, SequentialExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     private RDFFormat outputFormat;
 
     private File outputFile;
@@ -56,7 +52,7 @@ public final class RdfToFileChunked implements Component, SequentialExecution {
         Optional<RDFFormat> rdfFormat = Rio.getParserFormatForMIMEType(
                 configuration.getFileType());
         if (!rdfFormat.isPresent()) {
-            throw exceptionFactory.failure("Invalid output file type: {}",
+            throw new LpException("Invalid output file type: {}",
                     configuration.getFileName());
         }
         outputFormat = rdfFormat.get();
@@ -77,7 +73,7 @@ public final class RdfToFileChunked implements Component, SequentialExecution {
             exportChunks(writer);
             writer.endRDF();
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't write data.", ex);
+            throw new LpException("Can't write data.", ex);
         }
         reportEnd();
     }
@@ -128,7 +124,7 @@ public final class RdfToFileChunked implements Component, SequentialExecution {
             stream = new ByteArrayInputStream(
                     configuration.getPrefixes().getBytes("UTF-8"));
         } catch (UnsupportedEncodingException ex) {
-            throw exceptionFactory.failure("Unsupported encoding exception.",
+            throw new LpException("Unsupported encoding exception.",
                     ex);
         }
         try {
@@ -141,7 +137,7 @@ public final class RdfToFileChunked implements Component, SequentialExecution {
             });
             parser.parse(stream, "http://localhost/base");
         } catch (IOException ex) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't read prefixes.", ex);
         }
 

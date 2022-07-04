@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.exec.virtuoso;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +20,6 @@ class MultiThreadLoader {
 
     private final VirtuosoConfiguration configuration;
 
-    private final ExceptionFactory exceptionFactory;
-
     private final ProgressReport progressReport;
 
     private int lastReportedProgress = 0;
@@ -36,11 +33,9 @@ class MultiThreadLoader {
     public MultiThreadLoader(
             SqlExecutor sqlExecutor,
             VirtuosoConfiguration configuration,
-            ExceptionFactory exceptionFactory,
             ProgressReport progressReport) {
         this.sqlExecutor = sqlExecutor;
         this.configuration = configuration;
-        this.exceptionFactory = exceptionFactory;
         this.progressReport = progressReport;
     }
 
@@ -126,7 +121,7 @@ class MultiThreadLoader {
     public void checkResults() throws LpException {
         for (LoadWorker worker : workers) {
             if (worker.getException() != null) {
-                throw exceptionFactory.failure("Can't load data");
+                throw new LpException("Can't load data");
             }
         }
     }

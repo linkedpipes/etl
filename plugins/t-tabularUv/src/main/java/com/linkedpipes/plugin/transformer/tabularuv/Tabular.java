@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableGraphListDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdf;
 import com.linkedpipes.plugin.transformer.tabularuv.parser.*;
@@ -36,9 +35,6 @@ public class Tabular implements Component, SequentialExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
@@ -63,7 +59,7 @@ public class Tabular implements Component, SequentialExecution {
                         tableToRdf);
                 break;
             default:
-                throw exceptionFactory.failure("Unknown table type: {}",
+                throw new LpException("Unknown table type: {}",
                         configuration.getTableType());
         }
         progressReport.start(inputFiles.size());
@@ -85,7 +81,7 @@ public class Tabular implements Component, SequentialExecution {
             try {
                 parser.parse(entry.toFile());
             } catch (ParseFailed ex) {
-                throw exceptionFactory.failure("Can't parse file: {}",
+                throw new LpException("Can't parse file: {}",
                         entry.getFileName(), ex);
             }
             progressReport.entryProcessed();

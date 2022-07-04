@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -57,9 +56,6 @@ public final class SparqlEndpointChunked implements Component,
     @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Component.Configuration
     public SparqlEndpointChunkedConfiguration configuration;
 
@@ -69,14 +65,14 @@ public final class SparqlEndpointChunked implements Component,
         try {
             repository.initialize();
         } catch (OpenRDFException ex) {
-            throw exceptionFactory.failure("Can't connect to endpoint.", ex);
+            throw new LpException("Can't connect to endpoint.", ex);
         }
 
         final List<Statement> buffer = new ArrayList<>(50000);
         try {
             for (FilesDataUnit.Entry entry : inputFiles) {
                 final ValuesSource valuesSource = new ValuesSource(
-                        entry.toFile(), exceptionFactory,
+                        entry.toFile(),
                         configuration.getAsLiterals(),
                         configuration.getChunkSize());
                 valuesSource.readSource((valuesClause) -> {
@@ -155,7 +151,7 @@ public final class SparqlEndpointChunked implements Component,
             if (configuration.isSkipOnError()) {
                 LOG.error("Failed to execute query.", ex);
             } else {
-                throw exceptionFactory.failure("Failed to execute query.", ex);
+                throw new LpException("Failed to execute query.", ex);
             }
         }
     }

@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableGraphListDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.jsoup.Jsoup;
@@ -46,9 +45,6 @@ public class HtmlCssUv implements Component, SequentialExecution {
     @Component.Configuration
     public HtmlCssUvConfiguration config;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     /**
      * Used to generate original subjects.
      */
@@ -76,7 +72,7 @@ public class HtmlCssUv implements Component, SequentialExecution {
                 final Document doc = Jsoup.parse(entryFile, null);
                 parse(valueFactory, doc, rootSubject);
             } catch (IOException ex) {
-                throw exceptionFactory.failure("Can't parse file: {}",
+                throw new LpException("Can't parse file: {}",
                         entry.getFileName(), ex);
             }
             // Add "metadata"
@@ -118,7 +114,7 @@ public class HtmlCssUv implements Component, SequentialExecution {
                     continue;
                 }
                 if (action.getType() == null) {
-                    throw exceptionFactory.failure("Missing action type!");
+                    throw new LpException("Missing action type!");
                 }
                 // Execute action.
                 switch (action.getType()) {
@@ -133,7 +129,7 @@ public class HtmlCssUv implements Component, SequentialExecution {
                                     state.elements.get(0)
                                             .attr(action.getActionData())));
                         } else {
-                            throw exceptionFactory.failure(
+                            throw new LpException(
                                     "Element does not have required attribute:" +
                                             "{} action: {} html: {}",
                                     action.getActionData(), action.getName(),
@@ -151,7 +147,7 @@ public class HtmlCssUv implements Component, SequentialExecution {
                         if (state.value == null) {
                             // Nothing to output.
                             if (state.elements != null) {
-                                throw exceptionFactory.failure(
+                                throw new LpException(
                                         "No string value but JSOUP elements set for: {}",
                                         action.getActionData());
                             }
@@ -231,7 +227,7 @@ public class HtmlCssUv implements Component, SequentialExecution {
 
     private void checkElementNotNull(NamedData state) throws LpException {
         if (state.elements == null) {
-            throw exceptionFactory.failure("Elements are null for action: {}",
+            throw new LpException("Elements are null for action: {}",
                     state.name);
         }
     }

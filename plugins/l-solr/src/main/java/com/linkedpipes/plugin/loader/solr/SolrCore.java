@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.loader.solr;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -23,15 +22,11 @@ class SolrCore {
 
     private final String coreName;
 
-    private final ExceptionFactory exceptionFactory;
-
     private String authorizationHeader = null;
 
-    public SolrCore(String url, String coreName,
-                    ExceptionFactory exceptionFactory) {
+    public SolrCore(String url, String coreName) {
         this.serverUrl = url;
         this.coreName = coreName;
-        this.exceptionFactory = exceptionFactory;
     }
 
     public void setCredentials(String userName, String password) {
@@ -47,7 +42,7 @@ class SolrCore {
         try {
             executePostWithEmptyBody(url);
         } catch (IOException | LpException ex) {
-            throw exceptionFactory.failure("Can't delete data.", ex);
+            throw new LpException("Can't delete data.", ex);
         }
     }
 
@@ -70,7 +65,7 @@ class SolrCore {
             return new URL(serverUrl + "/" + coreName +
                     "/update?stream.body=<delete><query>*:*</query></delete>");
         } catch (MalformedURLException ex) {
-            throw exceptionFactory.failure("Invalid Solr URL.", ex);
+            throw new LpException("Invalid Solr URL.", ex);
         }
     }
 
@@ -82,7 +77,7 @@ class SolrCore {
         try {
             return new URL(serverUrl + "/" + coreName + "/update/json/docs");
         } catch (MalformedURLException ex) {
-            throw exceptionFactory.failure("Invalid Solr URL.", ex);
+            throw new LpException("Invalid Solr URL.", ex);
         }
     }
 
@@ -96,7 +91,7 @@ class SolrCore {
             }
             checkResponse(connection);
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't upload file.", ex);
+            throw new LpException("Can't upload file.", ex);
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -142,7 +137,7 @@ class SolrCore {
                 errorMessage.append("\n");
             }
             LOG.error("Response (error): {}", errorMessage);
-            throw exceptionFactory.failure("Request failed {} : {}",
+            throw new LpException("Request failed {} : {}",
                     responseCode, errorMessage);
         }
     }
@@ -167,7 +162,7 @@ class SolrCore {
         try {
             executePostWithEmptyBody(url);
         } catch (IOException | LpException ex) {
-            throw exceptionFactory.failure("Can't commit.", ex);
+            throw new LpException("Can't commit.", ex);
         }
     }
 
@@ -175,7 +170,7 @@ class SolrCore {
         try {
             return new URL(serverUrl + "/" + coreName + "/update?commit=true");
         } catch (MalformedURLException ex) {
-            throw exceptionFactory.failure("Invalid Solr URL.", ex);
+            throw new LpException("Invalid Solr URL.", ex);
         }
     }
 

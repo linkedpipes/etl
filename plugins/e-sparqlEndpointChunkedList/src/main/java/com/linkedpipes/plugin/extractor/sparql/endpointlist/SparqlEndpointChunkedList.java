@@ -13,7 +13,6 @@ import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 
 import java.io.File;
@@ -51,9 +50,6 @@ public final class SparqlEndpointChunkedList extends TaskExecution<QueryTask> {
 
     @Component.InputPort(iri = "Tasks")
     public SingleGraphDataUnit tasksRdf;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     @Component.Inject
     public ProgressReport progressReport;
@@ -110,8 +106,7 @@ public final class SparqlEndpointChunkedList extends TaskExecution<QueryTask> {
     protected TaskConsumer<QueryTask> createConsumer() {
         return new QueryTaskExecutor(
                 this.configuration, this.consumer, this.progressReport,
-                this.exceptionFactory, this.inputFilesByName
-        );
+                this.inputFilesByName);
     }
 
     @Override

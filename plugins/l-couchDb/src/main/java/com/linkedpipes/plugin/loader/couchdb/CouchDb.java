@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.loader.couchdb;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -24,17 +23,14 @@ public class CouchDb {
 
     private final String server;
 
-    private final ExceptionFactory exceptionFactory;
-
     private String authorizationHeader = null;
 
-    public CouchDb(String server, ExceptionFactory exceptionFactory) {
+    public CouchDb(String server) {
         if (server.endsWith("/")) {
             this.server = server;
         } else {
             this.server = server + "/";
         }
-        this.exceptionFactory = exceptionFactory;
     }
 
     public void setCredentials(String userName, String password) {
@@ -50,7 +46,7 @@ public class CouchDb {
         try {
             responseCode = executeRequest(url, "DELETE");
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't delete database: {}",
+            throw new LpException("Can't delete database: {}",
                     database, ex);
         }
         if (responseCode == 404) {
@@ -58,7 +54,7 @@ public class CouchDb {
             return;
         }
         if (responseCode < 200 || responseCode > 299) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Request failed with status: {}", responseCode);
         }
     }
@@ -69,11 +65,11 @@ public class CouchDb {
         try {
             responseCode = executeRequest(url, "PUT");
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't create database: {}",
+            throw new LpException("Can't create database: {}",
                     database, ex);
         }
         if (responseCode < 200 || responseCode > 299) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't create database, status: {}", responseCode);
         }
     }
@@ -135,7 +131,7 @@ public class CouchDb {
             }
             checkStatus(connection);
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't set users connection.", ex);
+            throw new LpException("Can't set users connection.", ex);
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -168,7 +164,7 @@ public class CouchDb {
             }
             checkStatus(connection);
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't open connection.", ex);
+            throw new LpException("Can't open connection.", ex);
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -205,7 +201,7 @@ public class CouchDb {
             }
         } catch (IOException ex) {
             // This can happen if the query is too big, ie. we split the query.
-            throw exceptionFactory.failure("Can't get response code.", ex);
+            throw new LpException("Can't get response code.", ex);
         }
         StringWriter error = new StringWriter();
         try (InputStream stream = connection.getErrorStream()) {
@@ -215,7 +211,7 @@ public class CouchDb {
         } catch (IOException ex) {
             // Ignore.
         }
-        throw exceptionFactory.failure(
+        throw new LpException(
                 "Can't execute request, response code: {}\nResponse: {}",
                 responseCode, error);
     }

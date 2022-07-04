@@ -16,9 +16,6 @@ public class DefaultServiceFactory implements ServiceFactory {
             Class<?> serviceType, String component,
             RdfSource definition, Component.Context context)
             throws LpException {
-        if (serviceType.equals(ExceptionFactory.class)) {
-            return new DefaultExceptionFactory();
-        }
         if (serviceType.equals(ProgressReport.class)) {
             return new DefaultProgressReport(context, component);
         }

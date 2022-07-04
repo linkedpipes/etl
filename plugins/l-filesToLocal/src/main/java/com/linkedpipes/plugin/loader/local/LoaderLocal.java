@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,14 +39,11 @@ public final class LoaderLocal implements Component, SequentialExecution {
     @Component.Inject
     public ProgressReport progress;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         if (configuration.getPath() == null
                 || configuration.getPath().isEmpty()) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     LoaderLocalVocabulary.HAS_PATH);
         }
         //
@@ -64,7 +60,7 @@ public final class LoaderLocal implements Component, SequentialExecution {
                         StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException ex) {
                 LOG.error("{} -> {}", inputFile, outputFile);
-                throw exceptionFactory.failure("Can't copy files.", ex);
+                throw new LpException("Can't copy files.", ex);
             }
             //
             progress.entryProcessed();

@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -37,9 +36,6 @@ public final class ModifyDateUpdate implements Component, SequentialExecution {
     @Component.Configuration
     public ModifyDateConfiguration configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
@@ -63,7 +59,7 @@ public final class ModifyDateUpdate implements Component, SequentialExecution {
                     date = modifyDate(st.getObject().stringValue(),
                             configuration.getModifyDay());
                 } catch (ParseException ex) {
-                    throw exceptionFactory.failure("Invalid date: {} for {}:",
+                    throw new LpException("Invalid date: {} for {}:",
                             st.getObject().stringValue(),
                             st.getSubject().stringValue(),
                             ex);

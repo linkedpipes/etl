@@ -7,7 +7,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 
 import java.io.File;
@@ -29,9 +28,6 @@ public class JsonLdFormatTitanium implements Component, SequentialExecution {
     public JsonLdFormatTitaniumConfiguration configuration;
 
     @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
-    @Component.Inject
     public ProgressReport progressReport;
 
     private Object context;
@@ -46,7 +42,7 @@ public class JsonLdFormatTitanium implements Component, SequentialExecution {
             try {
                 transformFile(inputFIle, outputFile);
             } catch (LpException ex) {
-                throw exceptionFactory.failure(
+                throw new LpException(
                         "Can't transform: {}", entry.getFileName(), ex);
             }
             progressReport.entryProcessed();
@@ -63,7 +59,7 @@ public class JsonLdFormatTitanium implements Component, SequentialExecution {
         try {
             context = JsonUtils.fromString(configuration.getContext());
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't prepare context.", ex);
+            throw new LpException("Can't prepare context.", ex);
         }
     }
 
@@ -91,7 +87,7 @@ public class JsonLdFormatTitanium implements Component, SequentialExecution {
                         target);
                 break;
             default:
-                throw exceptionFactory.failure("Invalid format type: '{}'",
+                throw new LpException("Invalid format type: '{}'",
                         configuration.getFormat());
         }
     }

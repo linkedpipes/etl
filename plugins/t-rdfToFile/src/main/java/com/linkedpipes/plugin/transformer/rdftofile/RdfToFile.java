@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -42,9 +41,6 @@ public final class RdfToFile implements Component, SequentialExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     private RDFFormat outputFormat;
 
     private File outputFile;
@@ -62,7 +58,7 @@ public final class RdfToFile implements Component, SequentialExecution {
         Optional<RDFFormat> rdfFormat = Rio.getParserFormatForMIMEType(
                 configuration.getFileType());
         if (!rdfFormat.isPresent()) {
-            throw exceptionFactory.failure("Invalid output file type: {}",
+            throw new LpException("Invalid output file type: {}",
                     configuration.getFileName());
         }
         outputFormat = rdfFormat.get();
@@ -80,7 +76,7 @@ public final class RdfToFile implements Component, SequentialExecution {
             RDFHandler writer = createWriter(outWriter);
             connection.export(writer, inputRdf.getReadGraph());
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't write data.", ex);
+            throw new LpException("Can't write data.", ex);
         }
         reportEnd();
     }

@@ -4,7 +4,6 @@ import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,9 +19,6 @@ public class CheckFiles implements Component, SequentialExecution {
 
     @Component.InputPort(iri = "ActualFiles")
     public FilesDataUnit actualFiles;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     @Override
     public void execute() throws LpException {
@@ -44,11 +40,11 @@ public class CheckFiles implements Component, SequentialExecution {
         checkSameSize(expected.size(), actual.size());
         for (Map.Entry<String, File> entry : expected.entrySet()) {
             if (!actual.containsKey(entry.getKey())) {
-                throw exceptionFactory.failure("Missing file: {}",
+                throw new LpException("Missing file: {}",
                         entry.getKey());
             }
             if (!filesAreSame(entry.getValue(), actual.get(entry.getKey()))) {
-                throw exceptionFactory.failure("Files are not same: {}",
+                throw new LpException("Files are not same: {}",
                         entry.getKey());
             }
         }
@@ -57,7 +53,7 @@ public class CheckFiles implements Component, SequentialExecution {
     private void checkSameSize(int expectedSize, int actualSize)
             throws LpException {
         if (expectedSize != actualSize) {
-            throw exceptionFactory.failure("Invalid size: {} {}",
+            throw new LpException("Invalid size: {} {}",
                     expectedSize, actualSize);
         }
     }
@@ -68,7 +64,7 @@ public class CheckFiles implements Component, SequentialExecution {
              InputStream actualStream = new FileInputStream(actual)) {
             return streamsAreSame(expectedStream, actualStream);
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't read files.", ex);
+            throw new LpException("Can't read files.", ex);
         }
     }
 

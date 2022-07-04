@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -51,9 +50,6 @@ public final class SparqlEndpointSelect implements Component,
     @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Component.Configuration
     public SparqlEndpointSelectConfiguration configuration;
 
@@ -63,12 +59,12 @@ public final class SparqlEndpointSelect implements Component,
     public void execute() throws LpException {
         if (configuration.getEndpoint() == null
                 || configuration.getEndpoint().isEmpty()) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     SparqlEndpointSelectVocabulary.HAS_ENDPOINT);
         }
         if (configuration.getQuery() == null
                 || configuration.getQuery().isEmpty()) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     SparqlEndpointSelectVocabulary.HAS_QUERY);
         }
         //
@@ -84,7 +80,7 @@ public final class SparqlEndpointSelect implements Component,
         try {
             repository.initialize();
         } catch (OpenRDFException ex) {
-            throw exceptionFactory.failure("Can't connect to endpoint.", ex);
+            throw new LpException("Can't connect to endpoint.", ex);
         }
         repository.setHttpClient(getHttpClient());
         //
@@ -93,7 +89,7 @@ public final class SparqlEndpointSelect implements Component,
         try {
             queryRemote(repository, outputFile, configuration.getQuery());
         } catch (Throwable t) {
-            throw exceptionFactory.failure("Can't query remote SPARQL.", t);
+            throw new LpException("Can't query remote SPARQL.", t);
         } finally {
             try {
                 repository.shutDown();
@@ -130,7 +126,7 @@ public final class SparqlEndpointSelect implements Component,
                         = writerFactory.getWriter(outputStream);
                 query.evaluate(resultWriter);
             } catch (IOException ex) {
-                throw exceptionFactory.failure("Can't save data.", ex);
+                throw new LpException("Can't save data.", ex);
             }
         }
     }

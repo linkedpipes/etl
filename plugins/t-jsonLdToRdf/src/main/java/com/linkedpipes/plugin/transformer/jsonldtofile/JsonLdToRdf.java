@@ -6,10 +6,8 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.semarglproject.jsonld.JsonLdParser;
-import org.semarglproject.rdf4j.core.sink.RDF4JSink;
 import org.semarglproject.source.StreamProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +32,6 @@ public final class JsonLdToRdf implements Component, SequentialExecution {
 
     @Component.Inject
     public ProgressReport progressReport;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     private BufferedWriter writer;
 
@@ -80,7 +75,7 @@ public final class JsonLdToRdf implements Component, SequentialExecution {
 
     private void handleLoadingException(String fileName, Exception ex)
             throws LpException {
-        throw exceptionFactory.failure(
+        throw new LpException(
                 "Can't parse file: {}", fileName, ex);
     }
 

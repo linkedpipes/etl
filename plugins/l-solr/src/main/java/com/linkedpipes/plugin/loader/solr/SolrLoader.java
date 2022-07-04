@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 
 public final class SolrLoader implements Component, SequentialExecution {
@@ -19,9 +18,6 @@ public final class SolrLoader implements Component, SequentialExecution {
 
     @Component.Configuration
     public SolrLoaderConfiguration configuration;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     @Component.Inject
     public ProgressReport progressReport;
@@ -45,8 +41,7 @@ public final class SolrLoader implements Component, SequentialExecution {
 
     private void initializeSolr() {
         solr = new SolrCore(
-                configuration.getServer(), configuration.getCore(),
-                exceptionFactory);
+                configuration.getServer(), configuration.getCore());
 
         if (configuration.isUseAuthentication()) {
             solr.setCredentials(

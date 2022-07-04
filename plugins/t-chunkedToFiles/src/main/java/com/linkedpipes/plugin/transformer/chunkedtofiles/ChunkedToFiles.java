@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -47,9 +46,6 @@ public class ChunkedToFiles implements Component, SequentialExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     private Integer outputCounter = 0;
 
     private RDFFormat outputFormat;
@@ -66,7 +62,7 @@ public class ChunkedToFiles implements Component, SequentialExecution {
         Optional<RDFFormat> format = Rio.getParserFormatForMIMEType(
                 configuration.getFileType());
         if (!format.isPresent()) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't determine output file type: {}",
                     configuration.getFileType());
         }
@@ -90,7 +86,7 @@ public class ChunkedToFiles implements Component, SequentialExecution {
             });
             parser.parse(reader, "http://localhost");
         } catch (IOException ex) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't parse TTL with prefixes.", ex);
         }
     }
@@ -111,7 +107,7 @@ public class ChunkedToFiles implements Component, SequentialExecution {
                      outStream, Charset.forName(FILE_ENCODE))) {
             writeChunk(chunk, outWriter);
         } catch (IOException | RuntimeException ex) {
-            throw exceptionFactory.failure("Can't write data.", ex);
+            throw new LpException("Can't write data.", ex);
         }
     }
 

@@ -4,7 +4,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -37,9 +36,6 @@ public class SparqlEndpointLoader implements Component, SequentialExecution {
     @Component.Configuration
     public SparqlEndpointLoaderConfiguration configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         // Create repository.
@@ -49,7 +45,7 @@ public class SparqlEndpointLoader implements Component, SequentialExecution {
         try {
             sparqlRepository.initialize();
         } catch (Throwable t) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't connect to remote SPARQL.", t);
         }
         try {
@@ -69,7 +65,7 @@ public class SparqlEndpointLoader implements Component, SequentialExecution {
                         configuration.getTargetGraphName());
             }
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't clear data.", ex);
+            throw new LpException("Can't clear data.", ex);
         }
     }
 
@@ -79,7 +75,7 @@ public class SparqlEndpointLoader implements Component, SequentialExecution {
             sparqlRepository.setHttpClient(client);
             loadDataFromRepository(sparqlRepository);
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't load data.", ex);
+            throw new LpException("Can't load data.", ex);
         }
     }
 

@@ -4,7 +4,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,16 +25,13 @@ public final class VirtuosoExtractor implements Component, SequentialExecution {
     public VirtuosoExtractorConfiguration
             configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         //
         try {
             Class.forName("virtuoso.jdbc4.Driver");
         } catch (ClassNotFoundException ex) {
-            exceptionFactory.failure("Can't find virtuoso drivers.", ex);
+            throw new LpException("Can't find virtuoso drivers.", ex);
         }
         //
         final String statement = String.format(SQL_DUMP,
@@ -44,7 +40,7 @@ public final class VirtuosoExtractor implements Component, SequentialExecution {
         try {
             executeSqlStatement(statement);
         } catch (SQLException ex) {
-            exceptionFactory.failure("Can't execute SQL statement.", ex);
+            throw new LpException("Can't execute SQL statement.", ex);
         }
     }
 

@@ -13,7 +13,6 @@ import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 
 import java.io.File;
@@ -42,9 +41,6 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
 
     @Component.Configuration
     public HttpRequestConfiguration configuration;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     @Component.Inject
     public ProgressReport progressReport;
@@ -107,7 +103,7 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
     @Override
     protected TaskConsumer<HttpRequestTask> createConsumer() {
         return new TaskExecutor(
-                exceptionFactory, outputFiles, inputFilesMap,
+                outputFiles, inputFilesMap,
                 new StatementsConsumer(reportRdf), progressReport,
                 configuration.isEncodeUrl());
     }

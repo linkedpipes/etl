@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.supercsv.io.CsvListReader;
 import org.supercsv.prefs.CsvPreference;
 
@@ -30,19 +29,15 @@ public class ValuesSource {
 
     private final File inputFile;
 
-    private final ExceptionFactory exceptionFactory;
-
     private final int chunkSize;
 
     private final Set<String> literals;
 
     public ValuesSource(
             File inputFile,
-            ExceptionFactory exceptionFactory,
             List<String> literals,
             int chunkSize) {
         this.inputFile = inputFile;
-        this.exceptionFactory = exceptionFactory;
         this.chunkSize = chunkSize;
         this.literals = new HashSet<>(literals);
     }
@@ -69,7 +64,7 @@ public class ValuesSource {
                 handle(header, rows, handler);
             }
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't read input file.", ex);
+            throw new LpException("Can't read input file.", ex);
         }
     }
 

@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.query.Dataset;
 import org.eclipse.rdf4j.query.GraphQuery;
@@ -29,9 +28,6 @@ public final class SparqlConstruct implements Component, SequentialExecution {
     @Component.Configuration
     public SparqlConstructConfiguration configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         checkConfiguration();
@@ -41,7 +37,7 @@ public final class SparqlConstruct implements Component, SequentialExecution {
     private void checkConfiguration() throws LpException {
         if (configuration.getQuery() == null
                 || configuration.getQuery().isEmpty()) {
-            throw exceptionFactory.failure("Missing query.");
+            throw new LpException("Missing query.");
         }
     }
 
@@ -52,7 +48,7 @@ public final class SparqlConstruct implements Component, SequentialExecution {
                 addResultToOutput(result);
             });
         } catch (Throwable t) {
-            throw exceptionFactory.failure("Can't execute given query.", t);
+            throw new LpException("Can't execute given query.", t);
         }
     }
 

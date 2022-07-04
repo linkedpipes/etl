@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -36,9 +35,6 @@ public class FileDecode implements Component, SequentialExecution {
     public FileDecodeConfiguration configuration;
 
     @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
-    @Component.Inject
     public ProgressReport progressReport;
 
     @Override
@@ -55,7 +51,7 @@ public class FileDecode implements Component, SequentialExecution {
                 if (configuration.isSkipOnError()) {
                     LOG.warn("Invalid file ignored", ex);
                 } else {
-                    throw exceptionFactory.failure("Can't decode file: {}",
+                    throw new LpException("Can't decode file: {}",
                             entry, ex);
                 }
             }

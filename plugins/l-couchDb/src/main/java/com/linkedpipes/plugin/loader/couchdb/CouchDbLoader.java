@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 
 import java.io.File;
@@ -24,9 +23,6 @@ public final class CouchDbLoader implements Component, SequentialExecution {
 
     @Component.Configuration
     public CouchDbLoaderConfiguration configuration;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     @Component.Inject
     public ProgressReport progressReport;
@@ -48,7 +44,7 @@ public final class CouchDbLoader implements Component, SequentialExecution {
     }
 
     private void initializeCouchDb() {
-        couchDb = new CouchDb(configuration.getUrl(), exceptionFactory);
+        couchDb = new CouchDb(configuration.getUrl());
         if (configuration.isUseAuthentication()) {
             couchDb.setCredentials(configuration.getUserName(),
                     configuration.getPassword());

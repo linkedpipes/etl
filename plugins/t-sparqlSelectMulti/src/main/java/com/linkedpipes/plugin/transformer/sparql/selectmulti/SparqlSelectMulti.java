@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.QueryLanguage;
@@ -57,9 +56,6 @@ public final class SparqlSelectMulti implements Component, SequentialExecution {
     @Component.OutputPort(iri = "OutputFiles")
     public WritableFilesDataUnit outputFiles;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         final List<Configuration> configurations = new LinkedList<>();
@@ -80,7 +76,7 @@ public final class SparqlSelectMulti implements Component, SequentialExecution {
         for (Configuration configuration : configurations) {
             if (configuration.fileName == null
                     || configuration.fileName.isEmpty()) {
-                throw exceptionFactory.failure("Missing property: {} on {}",
+                throw new LpException("Missing property: {} on {}",
                         SparqlSelectMultiVocabulary.HAS_FILE_NAME,
                         configuration.iri);
             }
@@ -111,7 +107,7 @@ public final class SparqlSelectMulti implements Component, SequentialExecution {
                 query.setDataset(dataset);
                 query.evaluate(resultWriter);
             } catch (IOException ex) {
-                throw exceptionFactory.failure("Exception.", ex);
+                throw new LpException("Exception.", ex);
             }
         });
     }

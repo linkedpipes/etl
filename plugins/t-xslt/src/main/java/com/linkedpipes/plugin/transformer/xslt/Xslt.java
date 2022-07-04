@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import net.sf.saxon.s9api.SaxonApiException;
 import org.eclipse.rdf4j.query.BindingSet;
@@ -48,9 +47,6 @@ public final class Xslt implements Component, SequentialExecution {
 
     @Component.Inject
     public ProgressReport progressReport;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     @Override
     public void execute() throws LpException {
@@ -131,7 +127,7 @@ public final class Xslt implements Component, SequentialExecution {
             try {
                 worker.initialize(configuration.getXsltTemplate());
             } catch (SaxonApiException ex) {
-                throw exceptionFactory.failure("Can't initialize XSLT.", ex);
+                throw new LpException("Can't initialize XSLT.", ex);
             }
             executor.submit(worker);
         }
@@ -154,7 +150,7 @@ public final class Xslt implements Component, SequentialExecution {
             }
             LOG.info("Transformed {}/{}", errorCounter, size);
             if (!configuration.isSkipOnError()) {
-                throw exceptionFactory.failure("Can't transform all files.");
+                throw new LpException("Can't transform all files.");
             }
         } else {
             LOG.info("Transformed {}/{}", size, size);

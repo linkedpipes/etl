@@ -3,7 +3,6 @@ package com.linkedpipes.plugin.transformer.excel.to.csv;
 import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -24,21 +23,16 @@ class WorkbookConverter {
 
     private final ExcelToCsvConfiguration configuration;
 
-    private final ExceptionFactory exceptionFactory;
-
     private final WritableFilesDataUnit outputFiles;
 
     private final SheetConverter sheetConverter;
 
     public WorkbookConverter(
             ExcelToCsvConfiguration configuration,
-            ExceptionFactory exceptionFactory,
             WritableFilesDataUnit outputFiles) {
         this.configuration = configuration;
-        this.exceptionFactory = exceptionFactory;
         this.outputFiles = outputFiles;
-        this.sheetConverter = new SheetConverter(
-                configuration, exceptionFactory);
+        this.sheetConverter = new SheetConverter(configuration);
     }
 
     public void processEntry(FilesDataUnit.Entry entry) throws LpException {
@@ -54,7 +48,7 @@ class WorkbookConverter {
         try {
             return WorkbookFactory.create(entry.toFile());
         } catch (IOException | InvalidFormatException ex) {
-            throw exceptionFactory.failure("Can't open workbook file.", ex);
+            throw new LpException("Can't open workbook file.", ex);
         }
     }
 
@@ -103,7 +97,7 @@ class WorkbookConverter {
                 new FileOutputStream(file), false, "UTF-8")) {
             sheetConverter.convert(sheet, outputStream);
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't write output to file.", ex);
+            throw new LpException("Can't write output to file.", ex);
         }
     }
 

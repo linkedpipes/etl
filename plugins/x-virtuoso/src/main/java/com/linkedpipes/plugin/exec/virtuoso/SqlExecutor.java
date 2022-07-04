@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.exec.virtuoso;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -34,15 +33,12 @@ class SqlExecutor {
 
     private final String directory;
 
-    private final ExceptionFactory exceptionFactory;
-
     public SqlExecutor(String url, String username, String password,
-                       String directory, ExceptionFactory exceptionFactory) {
+                       String directory) {
         this.url = url;
         this.username = username;
         this.password = password;
         this.directory = directory;
-        this.exceptionFactory = exceptionFactory;
     }
 
     public void insertLoadRecord(String fileName, String graph)
@@ -53,7 +49,7 @@ class SqlExecutor {
                 statement.executeQuery().close();
             }
         } catch (SQLException ex) {
-            throw exceptionFactory.failure("Can't execute ld_dir query.", ex);
+            throw new LpException("Can't execute ld_dir query.", ex);
         }
     }
 
@@ -72,7 +68,7 @@ class SqlExecutor {
         try {
             return DriverManager.getConnection(url, username, password);
         } catch (SQLException ex) {
-            throw exceptionFactory.failure("Can't create sql connection.", ex);
+            throw new LpException("Can't create sql connection.", ex);
         }
     }
 
@@ -83,7 +79,7 @@ class SqlExecutor {
                 return executeStatementForSingleInt(statement);
             }
         } catch (SQLException ex) {
-            throw exceptionFactory.failure("Can't query load_list table.", ex);
+            throw new LpException("Can't query load_list table.", ex);
         }
     }
 
@@ -110,7 +106,7 @@ class SqlExecutor {
                 statement.executeUpdate();
             }
         } catch (SQLException ex) {
-            throw exceptionFactory.failure("Can't clear loading table.", ex);
+            throw new LpException("Can't clear loading table.", ex);
         }
     }
 
@@ -129,7 +125,7 @@ class SqlExecutor {
                 return executeStatementForSingleInt(statement);
             }
         } catch (SQLException ex) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't get number of loaded files.", ex);
         }
     }
@@ -152,7 +148,7 @@ class SqlExecutor {
                 statement.executeQuery();
             }
         } catch (SQLException ex) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't load data.", ex);
         }
     }
@@ -170,7 +166,7 @@ class SqlExecutor {
                 statement.executeQuery();
             }
         } catch (SQLException ex) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't load data.", ex);
         }
     }

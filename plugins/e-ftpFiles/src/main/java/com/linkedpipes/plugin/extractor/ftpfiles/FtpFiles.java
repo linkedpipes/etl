@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.net.ProtocolCommandEvent;
 import org.apache.commons.net.ProtocolCommandListener;
@@ -54,9 +53,6 @@ public class FtpFiles implements Component, SequentialExecution {
     @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Component.OutputPort(iri = "FilesOutput")
     public WritableFilesDataUnit output;
 
@@ -87,7 +83,7 @@ public class FtpFiles implements Component, SequentialExecution {
             try {
                 downloadFile(url, file);
             } catch (IOException ex) {
-                throw exceptionFactory.failure("Download failed.", ex);
+                throw new LpException("Download failed.", ex);
             }
             progressReport.entryProcessed();
         }
@@ -121,21 +117,21 @@ public class FtpFiles implements Component, SequentialExecution {
         LOG.debug("Connect reply: {}, {}", reply, client.getReplyString());
         if (!FTPReply.isPositiveCompletion(reply)) {
             client.disconnect();
-            throw exceptionFactory.failure("Server refused connection.");
+            throw new LpException("Server refused connection.");
         }
 
         // For now support only anonymous.
         if (!client.login("anonymous", "")) {
             client.logout();
             client.disconnect();
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't login as 'anonymous' with no password.");
         }
         reply = client.getReplyCode();
         LOG.debug("Connect reply: {}, {}", reply, client.getReplyString());
         if (!FTPReply.isPositiveCompletion(reply)) {
             client.disconnect();
-            throw exceptionFactory.failure("Server refused the connection.");
+            throw new LpException("Server refused the connection.");
         }
 
         // From documentation:
@@ -156,7 +152,7 @@ public class FtpFiles implements Component, SequentialExecution {
         LOG.debug("Downloading ...");
         try (FileOutputStream output = new FileOutputStream(file)) {
             if (!client.retrieveFile("/" + filePath, output)) {
-                throw exceptionFactory.failure(
+                throw new LpException(
                         "Failed to download file. See logs for more detail.");
             }
             LOG.debug("Downloading ... flush");

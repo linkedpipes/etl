@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 
 public class ExcelToCsv implements Component, SequentialExecution {
 
@@ -20,9 +19,6 @@ public class ExcelToCsv implements Component, SequentialExecution {
     @Component.InputPort(iri = "OutputFiles")
     public WritableFilesDataUnit outputFiles;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Component.Configuration
     public ExcelToCsvConfiguration configuration;
 
@@ -35,14 +31,14 @@ public class ExcelToCsv implements Component, SequentialExecution {
     private void checkConfiguration() throws LpException {
         if (configuration.getFileNamePattern() == null
                 || configuration.getFileNamePattern().isEmpty()) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     ExcelToCsvVocabulary.HAS_FILE_NAME);
         }
     }
 
     private void parseFiles() throws LpException {
         WorkbookConverter parser = new WorkbookConverter(
-                configuration, exceptionFactory, outputFiles);
+                configuration, outputFiles);
         for (FilesDataUnit.Entry entry : inputFiles) {
             parser.processEntry(entry);
         }

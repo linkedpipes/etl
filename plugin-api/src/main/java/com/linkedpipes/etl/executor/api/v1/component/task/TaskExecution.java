@@ -5,7 +5,6 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.ResumableComponent;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.WorkingDirectory;
 
 import java.io.BufferedReader;
@@ -35,9 +34,6 @@ public abstract class TaskExecution<T extends Task>
 
     @Component.Inject
     public WorkingDirectory workingDirectory;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     protected Component.Context context;
 
@@ -168,7 +164,7 @@ public abstract class TaskExecution<T extends Task>
             loadProcessedTasks(previousWorkingDirectory);
             saveProcessedTasks();
         } catch (IOException | RuntimeException ex) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't synchronize checkpoint data.", ex);
         }
     }

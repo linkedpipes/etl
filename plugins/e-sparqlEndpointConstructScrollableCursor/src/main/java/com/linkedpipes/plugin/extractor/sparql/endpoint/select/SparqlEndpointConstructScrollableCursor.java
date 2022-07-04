@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -46,9 +45,6 @@ public final class SparqlEndpointConstructScrollableCursor
     @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Component.Configuration
     public SparqlEndpointConstructScrollableCursorConfiguration configuration;
 
@@ -78,7 +74,7 @@ public final class SparqlEndpointConstructScrollableCursor
                 offset += configuration.getPageSize();
             }
         } catch (Throwable t) {
-            throw exceptionFactory.failure("Can't query remote SPARQL.", t);
+            throw new LpException("Can't query remote SPARQL.", t);
         } finally {
             try {
                 repository.shutDown();

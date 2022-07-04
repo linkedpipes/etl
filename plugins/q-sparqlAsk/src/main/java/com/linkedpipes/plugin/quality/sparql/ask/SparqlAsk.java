@@ -4,7 +4,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.eclipse.rdf4j.query.BooleanQuery;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
@@ -21,14 +20,11 @@ public final class SparqlAsk implements Component, SequentialExecution {
     @Component.Configuration
     public SparqlAskConfiguration configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         if (configuration.getQuery() == null
                 || configuration.getQuery().isEmpty()) {
-            throw exceptionFactory.failure("Missing property: {}",
+            throw new LpException("Missing property: {}",
                     SparqlAskVocabulary.HAS_SPARQL);
         }
         //
@@ -44,11 +40,11 @@ public final class SparqlAsk implements Component, SequentialExecution {
                 return query.evaluate();
             });
         } catch (Throwable t) {
-            throw exceptionFactory.failure("Can't evaluate SPARQL ask.", t);
+            throw new LpException("Can't evaluate SPARQL ask.", t);
         }
         if ((ask && configuration.isFailOnTrue())
                 || (!ask && !configuration.isFailOnTrue())) {
-            throw exceptionFactory.failure("Ask assertion failure.");
+            throw new LpException("Ask assertion failure.");
         }
     }
 

@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF4J;
@@ -44,9 +43,6 @@ public final class Shacl implements Component, SequentialExecution {
     @Component.Configuration
     public ShaclConfiguration configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Override
     public void execute() throws LpException {
         ShaclSail shaclSail = new ShaclSail(new MemoryStore());
@@ -70,7 +66,7 @@ public final class Shacl implements Component, SequentialExecution {
             addRulesFromConfiguration(connection);
             connection.commit();
         } catch (RuntimeException | IOException ex) {
-            throw exceptionFactory.failure("Can't load rules.", ex);
+            throw new LpException("Can't load rules.", ex);
         }
     }
 
@@ -110,7 +106,7 @@ public final class Shacl implements Component, SequentialExecution {
                 if (cause instanceof ShaclSailValidationException) {
                     onRuleViolation((ShaclSailValidationException) cause);
                 } else {
-                    throw exceptionFactory.failure("Can't validate data", ex);
+                    throw new LpException("Can't validate data", ex);
                 }
             }
         }
@@ -125,7 +121,7 @@ public final class Shacl implements Component, SequentialExecution {
             connection.add(validationReportModel, reportRdf.getWriteGraph());
         }
         if (configuration.isFailOnError()) {
-            throw exceptionFactory.failure("Validation failed.");
+            throw new LpException("Validation failed.");
         }
     }
 

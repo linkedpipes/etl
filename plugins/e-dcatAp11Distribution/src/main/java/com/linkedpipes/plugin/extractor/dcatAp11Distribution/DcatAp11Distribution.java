@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.plugin.extractor.dcatAp11Distribution.DcatAp11DistributionConfig.LocalizedString;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -42,9 +41,6 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
     @Component.Configuration
     public DcatAp11DistributionConfig configuration;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     private final List<Statement> statements = new ArrayList<>();
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
@@ -61,7 +57,7 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
             datasetIRI = querySingleResult("SELECT ?d WHERE "
                     + "{?d a <" + DcatAp11DistributionVocabulary.DCAT_DATASET_CLASS + ">}", "d");
             if (isBlank(datasetIRI)) {
-                throw exceptionFactory.failure("Missing dataset in the input data.");
+                throw new LpException("Missing dataset in the input data.");
             }
 
         } else {
@@ -85,7 +81,7 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
         addIRI(dataset, DcatAp11DistributionVocabulary.DCAT_DISTRIBUTION, distribution);
 
         if (configuration.getAccessURLs().isEmpty()) {
-            throw exceptionFactory.failure("Access URL is a mandatory property.");
+            throw new LpException("Access URL is a mandatory property.");
         } else {
             addIRIs(distribution, DcatAp11DistributionVocabulary.DCAT_ACCESSURL, configuration.getAccessURLs());
         }
@@ -147,7 +143,7 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
         if (configuration.getIssuedFromDataset() != null && configuration.getIssuedFromDataset()) {
             issued = querySingleResult("SELECT ?issued WHERE {<" + datasetIRI + "> <" + DCTERMS.ISSUED + "> ?issued }", "issued");
             if (isBlank(issued)) {
-                throw exceptionFactory.failure("Missing release date property in the input data.");
+                throw new LpException("Missing release date property in the input data.");
             }
             addValue(distribution, DCTERMS.ISSUED, valueFactory.createLiteral(issued, DcatAp11DistributionVocabulary.XSD_DATE));
         } else if (configuration.getIssued() != null) {

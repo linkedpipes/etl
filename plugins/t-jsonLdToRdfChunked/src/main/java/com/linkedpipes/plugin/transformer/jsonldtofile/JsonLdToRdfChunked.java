@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -35,9 +34,6 @@ public final class JsonLdToRdfChunked implements Component, SequentialExecution 
 
     @Component.Inject
     public ProgressReport progressReport;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     private StatementsCollector collector = new StatementsCollector();
 
@@ -86,7 +82,7 @@ public final class JsonLdToRdfChunked implements Component, SequentialExecution 
 
     private void handleLoadingException(String fileName, Exception ex)
             throws LpException {
-        throw exceptionFactory.failure(
+        throw new LpException(
                 "Can't parse file: {}", fileName, ex);
     }
 

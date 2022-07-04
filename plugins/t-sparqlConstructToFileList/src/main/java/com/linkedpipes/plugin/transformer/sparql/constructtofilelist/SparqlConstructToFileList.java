@@ -7,7 +7,6 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -61,9 +60,6 @@ public class SparqlConstructToFileList
     @Component.Inject
     public ProgressReport progressReport;
 
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
     @Configuration
     public SparqlConstructToFileListConfiguration configuration;
 
@@ -95,7 +91,7 @@ public class SparqlConstructToFileList
             });
             parser.parse(reader, "http://localhost");
         } catch (IOException ex) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Can't parse TTL with prefixes.", ex);
         }
     }
@@ -129,7 +125,7 @@ public class SparqlConstructToFileList
         if (format.isPresent()) {
             return format.get();
         } else {
-            throw exceptionFactory.failure("Can't determine format for: {}",
+            throw new LpException("Can't determine format for: {}",
                     group.getFormat());
         }
     }
@@ -145,7 +141,7 @@ public class SparqlConstructToFileList
             }
             writer.endRDF();
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't write result file.", ex);
+            throw new LpException("Can't write result file.", ex);
         }
     }
 

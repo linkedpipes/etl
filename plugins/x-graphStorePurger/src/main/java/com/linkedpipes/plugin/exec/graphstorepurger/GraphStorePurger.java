@@ -6,7 +6,6 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
@@ -46,9 +45,6 @@ public class GraphStorePurger implements Component, SequentialExecution {
 
     @Component.Configuration
     public GraphStorePurgerConfiguration configuration;
-
-    @Component.Inject
-    public ExceptionFactory exceptionFactory;
 
     private List<GraphsToPurge> graphsToPurge;
 
@@ -165,7 +161,7 @@ public class GraphStorePurger implements Component, SequentialExecution {
         try {
             executeHttpRequest(context, httpMethod);
         } catch (LpException ex) {
-            throw exceptionFactory.failure("Delete request failed on: {}",
+            throw new LpException("Delete request failed on: {}",
                     url, ex);
         }
     }
@@ -184,7 +180,7 @@ public class GraphStorePurger implements Component, SequentialExecution {
                      = this.httpClient.execute(httpMethod, context)) {
             checkResponse(response);
         } catch (IOException | ParseException ex) {
-            throw exceptionFactory.failure("Can't execute request.", ex);
+            throw new LpException("Can't execute request.", ex);
         }
     }
 
@@ -211,7 +207,7 @@ public class GraphStorePurger implements Component, SequentialExecution {
             return;
         }
         if (statusCode >= 400) {
-            throw exceptionFactory.failure(
+            throw new LpException(
                     "Invalid response: {}",
                     response.getStatusLine().getReasonPhrase());
         }

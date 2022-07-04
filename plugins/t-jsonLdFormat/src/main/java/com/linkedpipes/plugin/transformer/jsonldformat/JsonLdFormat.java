@@ -10,7 +10,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 
 import java.io.*;
@@ -31,9 +30,6 @@ public class JsonLdFormat implements Component, SequentialExecution {
     public JsonLdFormatConfiguration configuration;
 
     @Component.Inject
-    public ExceptionFactory exceptionFactory;
-
-    @Component.Inject
     public ProgressReport progressReport;
 
     private Object context;
@@ -48,7 +44,7 @@ public class JsonLdFormat implements Component, SequentialExecution {
             try {
                 transformFile(inputFIle, outputFile);
             } catch (LpException ex) {
-                throw exceptionFactory.failure(
+                throw new LpException(
                         "Can't transform: {}", entry.getFileName(), ex);
             }
             progressReport.entryProcessed();
@@ -64,7 +60,7 @@ public class JsonLdFormat implements Component, SequentialExecution {
         try {
             context = JsonUtils.fromString(configuration.getContext());
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't prepare context.", ex);
+            throw new LpException("Can't prepare context.", ex);
         }
     }
 
@@ -78,7 +74,7 @@ public class JsonLdFormat implements Component, SequentialExecution {
         try (InputStream input = new FileInputStream(file)) {
             return JsonUtils.fromInputStream(input);
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't open input file: {}",
+            throw new LpException("Can't open input file: {}",
                     file, ex);
         }
     }
@@ -88,7 +84,7 @@ public class JsonLdFormat implements Component, SequentialExecution {
         try {
             return formatJsonLd(object, options);
         } catch (JsonLdError ex) {
-            throw exceptionFactory.failure("Can't transform object.", ex);
+            throw new LpException("Can't transform object.", ex);
         }
     }
 
@@ -105,7 +101,7 @@ public class JsonLdFormat implements Component, SequentialExecution {
             case JsonLdFormatVocabulary.FRAME:
                 return JsonLdProcessor.frame(object, getFrameJson(), options);
             default:
-                throw exceptionFactory.failure("Invalid format type: '{}'",
+                throw new LpException("Invalid format type: '{}'",
                         configuration.getFormat());
         }
     }
@@ -114,7 +110,7 @@ public class JsonLdFormat implements Component, SequentialExecution {
         try {
             return JsonUtils.fromString(configuration.getFrame());
         } catch(IOException ex) {
-            throw exceptionFactory.failure("Can't parse frame.", ex);
+            throw new LpException("Can't parse frame.", ex);
         }
     }
 
@@ -124,7 +120,7 @@ public class JsonLdFormat implements Component, SequentialExecution {
         try (FileWriter writer = new FileWriter(file)) {
             JsonUtils.write(writer, jsonLdObject);
         } catch (IOException ex) {
-            throw exceptionFactory.failure("Can't write file: {}", file, ex);
+            throw new LpException("Can't write file: {}", file, ex);
         }
     }
 
