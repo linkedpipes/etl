@@ -14,8 +14,7 @@ import java.util.Map;
 /**
  * Implementation for default manageable wrap for sequential component.
  */
-class SequentialWrap implements
-        ManageableComponent, SequentialExecution, ResumableComponent {
+class SequentialWrap implements ManageableComponent, SequentialExecution {
 
     private final SequentialExecution component;
 
@@ -32,15 +31,6 @@ class SequentialWrap implements
         this.componentIri = componentIri;
         this.definition = definition;
         this.serviceFactory = serviceFactory;
-    }
-
-    @Override
-    public void resumeExecution(File previousWorkingDirectory)
-            throws LpException {
-        if (component instanceof ResumableComponent) {
-            ((ResumableComponent)component)
-                    .resumeExecution(previousWorkingDirectory);
-        }
     }
 
     @Override

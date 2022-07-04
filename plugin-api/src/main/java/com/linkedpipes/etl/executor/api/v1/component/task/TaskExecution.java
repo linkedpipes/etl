@@ -2,19 +2,11 @@ package com.linkedpipes.etl.executor.api.v1.component.task;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
-import com.linkedpipes.etl.executor.api.v1.component.ResumableComponent;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.WorkingDirectory;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public abstract class TaskExecution<T extends Task>
-        implements Component, SequentialExecution, ResumableComponent {
+        implements Component, SequentialExecution {
 
     private static final int TERMINATION_CHECK = 5;
 
@@ -153,54 +145,6 @@ public abstract class TaskExecution<T extends Task>
             throws LpException {
         if (taskSource.doesTaskFailed() && !configuration.isSkipOnError()) {
             throw new LpException("At least one task failed.");
-        }
-    }
-
-    @Override
-    public void resumeExecution(File previousWorkingDirectory)
-            throws LpException {
-        prepareCheckpointDir();
-        try {
-            loadProcessedTasks(previousWorkingDirectory);
-            saveProcessedTasks();
-        } catch (IOException | RuntimeException ex) {
-            throw new LpException(
-                    "Can't synchronize checkpoint data.", ex);
-        }
-    }
-
-    private void loadProcessedTasks(File previousWorkingDirectory)
-            throws IOException {
-        File previousCheckpointDirectory =
-                getCheckpointDir(previousWorkingDirectory);
-        File[] files = previousCheckpointDirectory.listFiles();
-        if (files == null) {
-            return;
-        }
-        for (File file : files) {
-            loadProcessedTasksFromFile(file);
-        }
-    }
-
-    private void loadProcessedTasksFromFile(File file) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                new FileInputStream(file), "utf-8"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                taskFilter.add(line);
-            }
-        }
-    }
-
-    private void saveProcessedTasks() throws IOException {
-        // We save processed task, so in next execution we does not
-        // repeat those from previous run.
-        File file = new File(checkpointDir, "previous");
-        try (Writer writer = new OutputStreamWriter(
-                new FileOutputStream(file), "utf-8")) {
-            for (String iri : taskFilter) {
-                writer.write(String.format("%s%n", iri));
-            }
         }
     }
 

@@ -3,7 +3,6 @@ package com.linkedpipes.etl.executor.component;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.ManageableComponent;
-import com.linkedpipes.etl.executor.api.v1.component.ResumableComponent;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
@@ -115,18 +114,7 @@ class ExecuteComponent implements ComponentExecutor {
     }
 
     private void executeInstance() throws ExecutorException {
-        if (instance instanceof ResumableComponent
-                && pplComponent.getLastWorkingDirectory() != null) {
-            ResumableComponent resumable = (ResumableComponent) instance;
-            try {
-                resumable.resumeExecution(
-                        pplComponent.getLastWorkingDirectory());
-            } catch (LpException ex) {
-                throw new ExecutorException("Can't resume component.", ex);
-            }
-        }
-        if (instance instanceof SequentialExecution) {
-            SequentialExecution executable = (SequentialExecution) instance;
+        if (instance instanceof SequentialExecution executable) {
             executeSequential(executable);
         } else {
             throw new ExecutorException("Unknown execution interface.");

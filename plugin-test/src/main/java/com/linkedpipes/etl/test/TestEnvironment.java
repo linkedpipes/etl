@@ -3,7 +3,6 @@ package com.linkedpipes.etl.test;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.event.Event;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.service.WorkingDirectory;
 import com.linkedpipes.etl.test.dataunit.TestFilesDataUnit;
@@ -105,8 +104,6 @@ public class TestEnvironment implements AutoCloseable {
     private void bindExtension(Field field) throws IllegalAccessException {
         if (field.getType() == ProgressReport.class) {
             field.set(component, new MockedProgressReport());
-        } else if (field.getType() == ExceptionFactory.class) {
-            field.set(component, new MockedExceptionFactory());
         } else if (field.getType() == WorkingDirectory.class) {
             field.set(component, new WorkingDirectory(
                     componentWorkingDirectory.toURI()));
