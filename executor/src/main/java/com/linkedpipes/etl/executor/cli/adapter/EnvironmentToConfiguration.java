@@ -18,7 +18,6 @@ public class EnvironmentToConfiguration {
                 getEnv("LP_ETL_EXECUTOR_OSGI"),
                 getEnv("LP_ETL_EXECUTOR_LIBRARIES"),
                 getEnv("LP_ETL_STORAGE_PLUGINS"),
-                getEnv("LP_ETL_STORAGE_URL"),
                 Collections.emptyList());
     }
 

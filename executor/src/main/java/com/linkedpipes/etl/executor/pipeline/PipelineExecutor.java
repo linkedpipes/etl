@@ -12,11 +12,11 @@ import com.linkedpipes.etl.executor.execution.ExecutionObserver;
 import com.linkedpipes.etl.executor.execution.ResourceManager;
 import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
 import com.linkedpipes.etl.executor.logging.LoggerFacade;
-import com.linkedpipes.etl.executor.module.BannedComponent;
-import com.linkedpipes.etl.executor.module.ModuleException;
-import com.linkedpipes.etl.executor.module.ModuleService;
+import com.linkedpipes.etl.executor.plugin.BannedComponent;
+import com.linkedpipes.etl.executor.plugin.PluginException;
 import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
+import com.linkedpipes.etl.executor.plugin.PluginServiceHolder;
 import com.linkedpipes.etl.executor.rdf.RdfSourceWrap;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.model.Statement;
@@ -45,7 +45,7 @@ public class PipelineExecutor {
 
     private final LoggerFacade loggerFacade = new LoggerFacade();
 
-    private final ModuleService moduleFacade;
+    private final PluginServiceHolder moduleFacade;
 
     private Pipeline pipeline;
 
@@ -71,7 +71,8 @@ public class PipelineExecutor {
      * @param iri       ExecutionObserver IRI.
      * @param modules   Module service.
      */
-    public PipelineExecutor(File directory, String iri, ModuleService modules) {
+    public PipelineExecutor(
+            File directory, String iri, PluginServiceHolder modules) {
         // We assume that the directory we are executing is in the
         // directory with other executions.
         MDC.put(LoggerFacade.EXECUTION_MDC, null);
@@ -297,7 +298,7 @@ public class PipelineExecutor {
                                 "This component is banned on this instance."));
                 LOG.error("Banned component.", ex);
                 loadingFailed = true;
-            } catch (ModuleException ex) {
+            } catch (PluginException ex) {
                 execution.onCantLoadComponentJar(component, ex);
                 LOG.error("Can't load component.", ex);
                 loadingFailed = true;

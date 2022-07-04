@@ -36,7 +36,6 @@ public class PropertiesToConfiguration {
                 getString(properties, "executor.osgi.working.directory"),
                 getString(properties, "executor.osgi.lib.directory"),
                 getString(properties, "storage.jars.directory"),
-                getString(properties, "storage.uri "),
                 getList(properties, "executor.banned_jar_iri_patterns")
         );
     }

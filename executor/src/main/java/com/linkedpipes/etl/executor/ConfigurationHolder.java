@@ -19,8 +19,8 @@ public class ConfigurationHolder {
         return configuration.httpPort();
     }
 
-    public String getOsgiStorageDirectory() {
-        return configuration.osgiWorkingDirectory();
+    public File getOsgiStorageDirectory() {
+        return new File(configuration.osgiWorkingDirectory());
     }
 
     public File getOsgiLibDirectory() {
@@ -29,10 +29,6 @@ public class ConfigurationHolder {
 
     public File getOsgiComponentDirectory() {
         return new File(configuration.pluginsDirectory());
-    }
-
-    public String getStorageAddress() {
-        return configuration.storageUrl();
     }
 
     public List<String> getBannedJarPatterns() {

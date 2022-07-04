@@ -33,10 +33,6 @@ public record Configuration(
          */
         String pluginsDirectory,
         /*
-         * URL of the storage component.
-         */
-        String storageUrl,
-        /*
          * List of regular expressions. If component IRI match any of the
          * patterns and is used in execution the execution fail before
          * executing the component.
@@ -58,7 +54,6 @@ public record Configuration(
             String osgiWorkingDirectory,
             String osgiLibrariesDirectory,
             String pluginsDirectory,
-            String storageUrl,
             List<String> bannedPluginIriPatterns) {
         this(
                 httpPort == null ?
@@ -82,9 +77,6 @@ public record Configuration(
                 pluginsDirectory == null ?
                         configuration.pluginsDirectory :
                         pluginsDirectory,
-                storageUrl == null ?
-                        configuration.storageUrl :
-                        storageUrl,
                 bannedPluginIriPatterns == null ?
                         configuration.bannedPluginIriPatterns :
                         bannedPluginIriPatterns

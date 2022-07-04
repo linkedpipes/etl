@@ -55,14 +55,8 @@ public class RdfToConfiguration {
     private static final String LOG_LEVEL =
             PREFIX + "logLevel";
 
-    private static final String PUBLIC_URL =
-            PREFIX + "url";
-
     private static final String BANNED_PLUGINS =
             PREFIX + "bannedPluginIriPatterns";
-
-    private static final String STORAGE =
-            PREFIX + "Storage";
 
     private final StatementsSelector selector;
 
@@ -81,8 +75,6 @@ public class RdfToConfiguration {
     private Integer httpPort = null;
 
     private List<String> bannedPluginIriPatterns = new ArrayList<>();
-
-    private String storageUrl = null;
 
     private RdfToConfiguration(StatementsSelector selector) {
         this.selector = selector;
@@ -109,7 +101,6 @@ public class RdfToConfiguration {
                 loader.osgiWorking,
                 loader.osgiLibraries,
                 loader.osgiPlugins,
-                loader.storageUrl,
                 loader.bannedPluginIriPatterns);
     }
 
@@ -127,8 +118,6 @@ public class RdfToConfiguration {
                         .stream().map(Value::stringValue).toList();
                 if (types.contains(EXECUTOR)) {
                     loadExecutor(resource);
-                } else if (types.contains(STORAGE)) {
-                    loadStorage(resource);
                 }
             }
         }
@@ -193,19 +182,6 @@ public class RdfToConfiguration {
                     break;
                 case WORKING_DIRECTORY:
                     osgiWorking = value.stringValue();
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    private void loadStorage(Resource subject) {
-        for (Statement statement : selector.withSubject(subject)) {
-            Value value = statement.getObject();
-            switch (statement.getPredicate().stringValue()) {
-                case PUBLIC_URL:
-                    storageUrl = value.stringValue();
                     break;
                 default:
                     break;
