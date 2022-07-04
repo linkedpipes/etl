@@ -9,15 +9,6 @@ import org.mockito.Mockito;
 public class DefaultServiceFactoryTest {
 
     @Test
-    public void exceptionFactory() throws LpException {
-        DefaultServiceFactory factory = new DefaultServiceFactory();
-        ExceptionFactory result = (ExceptionFactory) factory.create(
-                ExceptionFactory.class, null, null, null);
-        Assertions.assertNotNull(result);
-        Assertions.assertNotNull(result.failure("Message"));
-    }
-
-    @Test
     public void progressReport() throws LpException {
         Component.Context context = Mockito.mock(Component.Context.class);
         DefaultServiceFactory factory = new DefaultServiceFactory();

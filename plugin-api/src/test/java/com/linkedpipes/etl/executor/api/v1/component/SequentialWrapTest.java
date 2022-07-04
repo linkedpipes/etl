@@ -5,7 +5,6 @@ import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import com.linkedpipes.etl.executor.api.v1.service.DefaultServiceFactory;
-import com.linkedpipes.etl.executor.api.v1.service.ExceptionFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.service.WorkingDirectory;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
@@ -28,9 +27,6 @@ public class SequentialWrapTest {
 
         @Component.InputPort(iri = "http://dataUnit/output")
         public DataUnit output;
-
-        @Component.Inject
-        public ExceptionFactory exceptionFactory;
 
         @Component.Inject
         public ProgressReport progressReport;
@@ -75,7 +71,6 @@ public class SequentialWrapTest {
         Assertions.assertNotNull(component.input);
         Assertions.assertEquals(input, component.input);
         Assertions.assertEquals(output, component.output);
-        Assertions.assertNotNull(component.exceptionFactory);
         Assertions.assertNotNull(component.progressReport);
         Assertions.assertNotNull(component.workingDirectory);
         Assertions.assertEquals(path.getAbsolutePath(),
