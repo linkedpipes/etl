@@ -48,7 +48,7 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <delete dir="${deploy.directory}/dist"/>
+                                        <delete dir="${deploy.directory}/frontend"/>
                                         <delete dir="${project.basedir}/dist"/>
                                     </target>
                                 </configuration>
@@ -125,7 +125,7 @@
                                         <argument>--production</argument>
                                     </arguments>
                                     <workingDirectory>
-                                        ${deploy.directory}
+                                        ${deploy.directory}/frontend
                                     </workingDirectory>
                                 </configuration>
                             </execution>
