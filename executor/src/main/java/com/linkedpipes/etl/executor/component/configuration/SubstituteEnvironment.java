@@ -91,6 +91,9 @@ class SubstituteEnvironment {
                 value = valueFactory.createLiteral(
                         substitute(env, pair.substitute.stringValue()));
             }
+            if (pair.resource == null || value == null) {
+                continue;
+            }
             nextStatements.add(valueFactory.createStatement(
                     pair.resource, pair.predicate, value));
         }
