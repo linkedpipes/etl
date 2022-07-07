@@ -7,21 +7,21 @@
     </div>
 
     <md-content>
-      <md-switch ng-model="exportPipelines">
-        Export selected pipelines
+      <md-switch ng-model="exportAllPipelines">
+        Export all pipelines
       </md-switch>
       <md-switch ng-model="exportTemplates">
         Export all templates
       </md-switch>
       <md-switch ng-model="removePrivateConfiguration">
-        Remove private configuration
+        Export without credentials
       </md-switch>
       <md-button ng-click="onExport()" class="md-raised md-primary">
         Export
       </md-button>
     </md-content>
 
-    <md-content layout="column" ng-show="exportPipelines">
+    <md-content layout="column" ng-show="!exportAllPipelines">
       Select pipelines to export
       <md-input-container class="md-block">
         <label>Filter</label>

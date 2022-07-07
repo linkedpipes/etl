@@ -22,7 +22,7 @@
       $scope.pipelineRepository =
         pipelineRepository.create($scope.pipelineFilter);
       $scope.working = false;
-      $scope.exportPipelines = true;
+      $scope.exportAllPipelines = true;
       $scope.exportTemplates = true;
       $scope.removePrivateConfiguration = true;
       //
@@ -46,7 +46,7 @@
 
     function onExport() {
       let pipelinesForExport = [];
-      if ($scope.exportPipelines) {
+      if (!$scope.exportAllPipelines) {
         for (const pipeline of $scope.pipelineRepository.data) {
           if (pipeline.selected === true) {
             pipelinesForExport.push(pipeline.iri);
@@ -56,11 +56,11 @@
 
       let url = "./api/v1/export";
 
-      if ($scope.exportPipelines) {
+      if ($scope.exportAllPipelines) {
+        url += "?pipelines=all";
+      } else {
         const exportList = JSON.stringify(pipelinesForExport);
         url += "?pipelines=" + encodeURIComponent(exportList);
-      } else {
-        url += "?pipelines=none";
       }
 
       if ($scope.exportTemplates) {
