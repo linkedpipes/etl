@@ -65,8 +65,11 @@ public class PropertiesToConfiguration {
 
     private static List<String> getList(
             Properties properties, String name) {
-        String value = properties.getProperty(name)
-                .replaceAll("\\\"", "\"").trim();
+        String value = properties.getProperty(name);
+        if (value == null) {
+            return Collections.emptyList();
+        }
+        value = value.replaceAll("\\\"", "\"").trim();
         if (value.isEmpty() || value.isBlank()) {
             return Collections.emptyList();
         }
