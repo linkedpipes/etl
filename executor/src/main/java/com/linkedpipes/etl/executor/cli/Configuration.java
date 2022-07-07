@@ -45,8 +45,7 @@ public record Configuration(
                 bannedPluginIriPatterns);
     }
 
-    public Configuration(
-            Configuration configuration,
+    public Configuration merge(
             Integer httpPort,
             String dataDirectory,
             String logDirectory,
@@ -55,30 +54,30 @@ public record Configuration(
             String osgiLibrariesDirectory,
             String pluginsDirectory,
             List<String> bannedPluginIriPatterns) {
-        this(
+        return new Configuration(
                 httpPort == null ?
-                        configuration.httpPort :
+                        this.httpPort :
                         httpPort,
                 dataDirectory == null ?
-                        configuration.dataDirectory :
+                        this.dataDirectory :
                         dataDirectory,
                 logDirectory == null ?
-                        configuration.logDirectory :
+                        this.logDirectory :
                         logDirectory,
                 logLevel == null ?
-                        configuration.logLevel :
+                        this.logLevel :
                         logLevel,
                 osgiWorkingDirectory == null ?
-                        configuration.osgiWorkingDirectory :
+                        this.osgiWorkingDirectory :
                         osgiWorkingDirectory,
                 osgiLibrariesDirectory == null ?
-                        configuration.osgiLibrariesDirectory :
+                        this.osgiLibrariesDirectory :
                         osgiLibrariesDirectory,
                 pluginsDirectory == null ?
-                        configuration.pluginsDirectory :
+                        this.pluginsDirectory :
                         pluginsDirectory,
                 bannedPluginIriPatterns == null ?
-                        configuration.bannedPluginIriPatterns :
+                        this.bannedPluginIriPatterns :
                         bannedPluginIriPatterns
         );
     }

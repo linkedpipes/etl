@@ -27,8 +27,7 @@ public class PropertiesToConfiguration {
             throw new ExecutorException("Can't load configuration file.", ex);
         }
         //
-        return new Configuration(
-                defaults,
+        return defaults.merge(
                 getInteger(properties, "executor.webserver.port"),
                 getString(properties, "executor.execution.working_directory"),
                 getString(properties, "executor.log.directory"),

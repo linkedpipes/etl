@@ -10,8 +10,7 @@ public class EnvironmentToConfiguration {
     public static Configuration updateConfiguration(
             Configuration defaults)
             throws ExecutorException {
-        return new Configuration(
-                defaults,
+        return defaults.merge(
                 getEnvInteger("LP_ETL_EXECUTOR_PORT"),
                 getEnv("LP_ETL_EXECUTOR_DATA"),
                 null, null,

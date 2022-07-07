@@ -33,7 +33,7 @@ public class ConfigurationLoader {
 
     private void createDefault() {
         configuration = new Configuration(
-                null, null, null, null, null, null, null, null,
+                null, null, null, null, null, null, null,
                 Collections.emptyList());
     }
 

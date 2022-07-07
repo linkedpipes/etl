@@ -92,8 +92,7 @@ public class RdfToConfiguration {
         StatementsSelector selector = statements.selector();
         RdfToConfiguration loader = new RdfToConfiguration(selector);
         loader.load();
-        return new Configuration(
-                defaults,
+        return defaults.merge(
                 loader.httpPort,
                 loader.dataDirectory,
                 loader.logDirectory,
