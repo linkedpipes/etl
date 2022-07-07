@@ -221,7 +221,7 @@
                         <configuration>
                             <filesets>
                                 <fileset>
-                                    <directory>${deploy.directory}</directory>
+                                    <directory>${deploy.directory}/executor-monitor</directory>
                                     <followSymlinks>false</followSymlinks>
                                 </fileset>
                             </filesets>
