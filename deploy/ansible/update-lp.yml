@@ -1,5 +1,5 @@
 ---
-- hosts: etl 
+- hosts: etl
   tasks:
           - name: Stop LinkedPipes ETL executor
             become: true
@@ -21,6 +21,13 @@
             service:
                     name: lpetl-frontend
                     state: stopped
+          - name: Chown to root
+            become: true
+            file:
+                    dest: /opt/lp/etl
+                    owner: root
+                    group: root
+                    recurse: yes
           - name: Pull LinkedPipes ETL from Git
             git:
                     repo: 'https://github.com/linkedpipes/etl.git'
@@ -28,8 +35,13 @@
                     force: yes
                     version: develop
             become: true
+          - name: npm install frontend
+            shell: npm install
+            args:
+                    chdir: /opt/lp/etl/frontend
+            become: true
           - name: Build LinkedPipes ETL using Maven
-            shell: mvn clean install -DskipTests
+            shell: mvn install -DskipTests
             args:
                     chdir: /opt/lp/etl
             become: true
