@@ -49,20 +49,6 @@ public class Model {
         }
 
         /**
-         * Return value of given property as a string. If there are multiple
-         * values only one is returned.
-         * Can return Null if the value is missing.
-         */
-        public String getPropertyAsStr(IRI property) {
-            Value value = getProperty(property);
-            if (value == null) {
-                return null;
-            } else {
-                return value.stringValue();
-            }
-        }
-
-        /**
          * Set value of given property to point to given entity. In
          * recursive mode also importJarComponent the entity.
          * Any previous values are deleted.
@@ -126,33 +112,9 @@ public class Model {
             properties.put(property, values);
         }
 
-        /**
-         * Set value of given property to given IRI.
-         */
-        public void setIri(IRI property, String iriAsString) {
-            set(property,
-                    SimpleValueFactory.getInstance().createIRI(iriAsString));
-        }
-
         protected Model getModel() {
             return Model.this;
         }
-    }
-
-    public static class EntityList {
-
-        protected LinkedList<Entity> entities = new LinkedList<>();
-
-        /**
-         * Return first entity or null.
-         */
-        public Entity single() {
-            if (entities.isEmpty()) {
-                return null;
-            }
-            return entities.getFirst();
-        }
-
     }
 
     /**
@@ -162,15 +124,6 @@ public class Model {
 
     protected Model() {
 
-    }
-
-    public Entity getOrCreate(Resource resource) {
-        Entity entity = entities.get(resource);
-        if (entity == null) {
-            entity = new Entity(resource);
-            entities.put(resource, entity);
-        }
-        return entity;
     }
 
     /**
@@ -202,64 +155,6 @@ public class Model {
     }
 
     /**
-     * Select entities that match given requirements. Use null as a wildcard.
-     */
-    public EntityList select(Resource resource, IRI predicate, Value object) {
-        EntityList list = new EntityList();
-        entities.values().forEach((entity) -> {
-            if (resource != null && !resource.equals(entity.resource)) {
-                return;
-            }
-            if (predicate == null) {
-                // Scan all.
-                for (List<Value> values : entity.properties.values()) {
-                    if (values.contains(object)) {
-                        list.entities.add(entity);
-                    }
-                }
-            } else {
-                if (!entity.properties.containsKey(predicate)) {
-                    return;
-                }
-                if (entity.properties.get(predicate).contains(object)) {
-                    list.entities.add(entity);
-                }
-            }
-            entity.resource.equals(resource);
-        });
-        return list;
-    }
-
-    /**
-     * Update resources (and references to them) for all stored entities.
-     */
-    public void updateResources(String baseIri) {
-        int counter = 0;
-        ValueFactory vf = SimpleValueFactory.getInstance();
-        Map<Resource, Value> mapping = new HashMap<>();
-        Map<Resource, Entity> newEntities = new HashMap<>();
-        for (Entity entity : entities.values()) {
-            Resource oldResource = entity.resource;
-            entity.resource = vf.createIRI(baseIri + (++counter));
-            mapping.put(oldResource, entity.resource);
-            newEntities.put(entity.resource, entity);
-        }
-        entities.clear();
-        entities.putAll(newEntities);
-        // Replace in references.
-        for (Entity entity : entities.values()) {
-            entity.properties.values().forEach((list) -> {
-                for (int i = 0; i < list.size(); ++i) {
-                    final Value mapped = mapping.get(list.get(i));
-                    if (mapped != null) {
-                        list.set(i, mapped);
-                    }
-                }
-            });
-        }
-    }
-
-    /**
      * Return sub-tree as defined by references in given entity.
      */
     private void getSubTree(Entity entity, Set<Entity> result) {
@@ -285,48 +180,6 @@ public class Model {
         Set<Entity> result = new HashSet<>();
         getSubTree(entity, result);
         return result;
-    }
-
-    /**
-     * Return representation of all entities.
-     */
-    public Collection<Statement> asStatements() {
-        ValueFactory vf = SimpleValueFactory.getInstance();
-        Collection<Statement> statements = new LinkedList<>();
-        entities.values().forEach((entity) -> {
-            entity.properties.entrySet().forEach((entry) -> {
-                entry.getValue().forEach((value) -> {
-                    statements.add(vf.createStatement(entity.resource,
-                            entry.getKey(), value
-                    ));
-                });
-            });
-        });
-        return statements;
-    }
-
-    /**
-     * Representation of the entities as RDF. Only entities recursively
-     * referenced from the given entity are used.
-     */
-    public Collection<Statement> asStatements(Entity root, Resource graph) {
-        ValueFactory vf = SimpleValueFactory.getInstance();
-        Collection<Entity> toOutput = getSubTree(root);
-        toOutput.add(root);
-        Collection<Statement> statements = new LinkedList<>();
-        toOutput.forEach((entity) -> {
-            entity.properties.entrySet().forEach((entry) -> {
-                entry.getValue().forEach((value) -> {
-                    if (value == null) {
-                        return;
-                    }
-                    statements.add(vf.createStatement(entity.resource,
-                            entry.getKey(), value, graph
-                    ));
-                });
-            });
-        });
-        return statements;
     }
 
     /**

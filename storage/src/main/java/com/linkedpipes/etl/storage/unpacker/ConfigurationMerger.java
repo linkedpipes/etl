@@ -2,7 +2,7 @@ package com.linkedpipes.etl.storage.unpacker;
 
 import com.linkedpipes.etl.plugin.configuration.ConfigurationFacade;
 import com.linkedpipes.etl.plugin.configuration.InvalidConfiguration;
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.unpacker.model.GraphCollection;
 import com.linkedpipes.etl.storage.unpacker.model.template.Template;
 import org.eclipse.rdf4j.model.IRI;
@@ -29,7 +29,7 @@ class ConfigurationMerger {
     }
 
     public void loadTemplateConfigAndDescription(Template template)
-            throws BaseException {
+            throws StorageException {
         loadConfigTemplate(template.getIri(),
                 template.getConfigGraph());
         loadConfigDescription(template.getIri(),
@@ -37,7 +37,7 @@ class ConfigurationMerger {
     }
 
     private void loadConfigTemplate(String iri, String graph)
-            throws BaseException {
+            throws StorageException {
         if (graphs.containsKey(graph)) {
             return;
         }
@@ -46,7 +46,7 @@ class ConfigurationMerger {
     }
 
     private void loadConfigDescription(String iri, String graph)
-            throws BaseException {
+            throws StorageException {
         if (graphs.containsKey(graph)) {
             return;
         }
@@ -70,7 +70,7 @@ class ConfigurationMerger {
 
     public void merge(
             Template template, List<String> configurations, String targetGraph)
-            throws BaseException {
+            throws StorageException {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
         ConfigurationFacade configurationFacade = new ConfigurationFacade();
         List<Statement> description = new ArrayList<>(
@@ -88,7 +88,7 @@ class ConfigurationMerger {
                     valueFactory.createIRI(targetGraph)
             );
         } catch (InvalidConfiguration ex) {
-            throw new BaseException(
+            throw new StorageException(
                     "Can't merge configuration for: {}",
                     template.getIri(), ex);
         }

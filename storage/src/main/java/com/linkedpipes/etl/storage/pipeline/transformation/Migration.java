@@ -3,7 +3,7 @@ package com.linkedpipes.etl.storage.pipeline.transformation;
 import com.linkedpipes.etl.storage.SuppressFBWarnings;
 import com.linkedpipes.etl.storage.migration.MigrateV0ToV1;
 import com.linkedpipes.etl.storage.migration.MigrateV1ToV2;
-import com.linkedpipes.etl.storage.pipeline.Pipeline;
+import com.linkedpipes.etl.storage.pipeline.PipelineRef;
 import com.linkedpipes.etl.storage.rdf.RdfObjects;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import com.linkedpipes.etl.storage.rdf.StatementsCollection;
@@ -74,7 +74,7 @@ class Migration {
     }
 
     private void findPipelineResource(Collection<Statement> pipeline) {
-        this.pipelineResource = RdfUtils.find(pipeline, Pipeline.TYPE);
+        this.pipelineResource = RdfUtils.find(pipeline, PipelineRef.TYPE);
     }
 
     private void parseStatements(Collection<Statement> pipeline) {
@@ -89,12 +89,12 @@ class Migration {
 
         this.pipelineObject = new RdfObjects(
                 all.filter(pipelineObjectFilter).getStatements());
-        this.pipelineEntity = this.pipelineObject.getTypeSingle(Pipeline.TYPE);
+        this.pipelineEntity = this.pipelineObject.getTypeSingle(PipelineRef.TYPE);
     }
 
     private int getVersion() {
         try {
-            Value value = pipelineEntity.getProperty(Pipeline.HAS_VERSION);
+            Value value = pipelineEntity.getProperty(PipelineRef.HAS_VERSION);
             return ((Literal) value).intValue();
         } catch (Exception ex) {
             return 0;
@@ -113,8 +113,8 @@ class Migration {
     }
 
     private void updateVersionToLatest(RdfObjects.Entity pipeline) {
-        pipeline.delete(Pipeline.HAS_VERSION);
-        pipeline.add(Pipeline.HAS_VERSION, Pipeline.VERSION_NUMBER);
+        pipeline.delete(PipelineRef.HAS_VERSION);
+        pipeline.add(PipelineRef.HAS_VERSION, PipelineRef.VERSION_NUMBER);
     }
 
     private List<Statement> collect() {

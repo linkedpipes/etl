@@ -5,7 +5,7 @@ import org.slf4j.helpers.MessageFormatter;
 /**
  * A base exception used by storage component.
  */
-public class BaseException extends Exception {
+public class StorageException extends Exception {
 
     private final String message;
 
@@ -13,7 +13,7 @@ public class BaseException extends Exception {
 
     private Throwable cause = null;
 
-    public BaseException(String message, Object... args) {
+    public StorageException(String message, Object... args) {
         // Initialize exception.
         if (args.length > 0) {
             if (args[args.length - 1] instanceof Exception) {
@@ -22,10 +22,9 @@ public class BaseException extends Exception {
         }
         this.message = message;
         this.args = args;
-        //
     }
 
-    public BaseException(Throwable cause) {
+    public StorageException(Throwable cause) {
         this.message = "";
         this.args = new Object[0];
         this.cause = cause;

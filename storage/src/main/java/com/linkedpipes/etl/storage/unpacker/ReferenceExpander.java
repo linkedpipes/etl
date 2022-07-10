@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.storage.unpacker;
 
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.unpacker.model.GraphCollection;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerComponent;
 import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorComponent;
@@ -25,7 +25,7 @@ class ReferenceExpander {
 
     public ExecutorComponent expand(
             DesignerComponent srcComponent, ReferenceTemplate template)
-            throws BaseException {
+            throws StorageException {
         // The reference template add only a configuration.
         mergeWithTemplate(template, srcComponent);
         DesignerComponent component = new DesignerComponent(srcComponent);
@@ -37,7 +37,7 @@ class ReferenceExpander {
 
     private void mergeWithTemplate(
             Template template, DesignerComponent srcComponent)
-            throws BaseException {
+            throws StorageException {
         // Add reference to template configuration and make
         // sure the graph is in graph list.
         String configGraph = template.getConfigGraph();

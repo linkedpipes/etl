@@ -14,15 +14,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-class JarManager {
+class JarService {
 
     private static final Logger LOG
-            = LoggerFactory.getLogger(JarManager.class);
+            = LoggerFactory.getLogger(JarService.class);
 
     private final Configuration config;
 
     @Autowired
-    public JarManager(Configuration config) {
+    public JarService(Configuration config) {
         this.config = config;
     }
 

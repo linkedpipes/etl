@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.storage.template;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.jar.JarComponent;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import com.linkedpipes.etl.storage.template.repository.RepositoryReference;
@@ -68,7 +68,7 @@ final class ImportFromJarFile {
             Collection<Statement> definition = loadDefinition();
             Resource resource = getTemplateResource(definition);
             if (resource == null) {
-                throw new BaseException("Can't read template resource.");
+                throw new StorageException("Can't read template resource.");
             }
             Collection<String> dialogs = copyDialogFiles(id);
             definition.addAll(createDefinitionForDialogs(resource, dialogs));
@@ -119,26 +119,26 @@ final class ImportFromJarFile {
         return repository.getDirectory(templateRef(id));
     }
 
-    private Collection<Statement> loadDefinition() throws BaseException {
+    private Collection<Statement> loadDefinition() throws StorageException {
         JarEntry entry = selectEntryByPrefix("definition.");
         return readAsRdf(entry);
     }
 
-    private JarEntry selectEntryByPrefix(String prefix) throws BaseException {
+    private JarEntry selectEntryByPrefix(String prefix) throws StorageException {
         for (Map.Entry<String, JarEntry> entry : entries.entrySet()) {
             if (entry.getKey().startsWith(prefix)) {
                 return entry.getValue();
             }
         }
-        throw new BaseException("Missing jar file entry: {}", prefix);
+        throw new StorageException("Missing jar file entry: {}", prefix);
     }
 
-    private Collection<Statement> loadConfig() throws BaseException {
+    private Collection<Statement> loadConfig() throws StorageException {
         JarEntry entry = selectEntryByPrefix("config.");
         return readAsRdf(entry);
     }
 
-    private Collection<Statement> loadConfigDescription() throws BaseException {
+    private Collection<Statement> loadConfigDescription() throws StorageException {
         JarEntry entry = selectEntryByPrefix("config-desc.");
         return readAsRdf(entry);
     }
@@ -186,11 +186,11 @@ final class ImportFromJarFile {
     }
 
     private Collection<Statement> readAsRdf(
-            JarEntry entry) throws BaseException {
+            JarEntry entry) throws StorageException {
         try (InputStream stream = jarFile.getInputStream(entry)) {
             return RdfUtils.read(stream, formatForEntry(entry));
-        } catch (IOException | BaseException ex) {
-            throw new BaseException("Can't load definition: {}",
+        } catch (IOException | StorageException ex) {
+            throw new StorageException("Can't load definition: {}",
                     entry.getName(), ex);
         }
     }
@@ -201,7 +201,7 @@ final class ImportFromJarFile {
     }
 
     private Resource getTemplateResource(Collection<Statement> statements) {
-        return RdfUtils.find(statements, JarTemplate.TYPE);
+        return RdfUtils.find(statements, JarTemplateRef.TYPE);
     }
 
     private Collection<Statement> createDefinitionForDialogs(

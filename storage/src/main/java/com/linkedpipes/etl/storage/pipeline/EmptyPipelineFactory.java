@@ -45,9 +45,9 @@ class EmptyPipelineFactory {
     public static Collection<Statement> create(IRI iri) {
         String iriAsStr = iri.stringValue();
         Model model = new LinkedHashModel();
-        model.add(iri, RDF.TYPE, Pipeline.TYPE, iri);
-        Value version = VALUE_FACTORY.createLiteral(Pipeline.VERSION_NUMBER);
-        model.add(iri, Pipeline.HAS_VERSION, version, iri);
+        model.add(iri, RDF.TYPE, PipelineRef.TYPE, iri);
+        Value version = VALUE_FACTORY.createLiteral(PipelineRef.VERSION_NUMBER);
+        model.add(iri, PipelineRef.HAS_VERSION, version, iri);
         Value label = VALUE_FACTORY.createLiteral(iriAsStr);
         model.add(iri, SKOS.PREF_LABEL, label, iri);
         IRI profileIri = VALUE_FACTORY.createIRI(

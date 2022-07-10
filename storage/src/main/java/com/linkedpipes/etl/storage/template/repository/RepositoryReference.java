@@ -4,11 +4,11 @@ import com.linkedpipes.etl.storage.template.Template;
 
 public interface RepositoryReference {
 
-    public String getId();
+    String getId();
 
-    public Template.Type getType();
+    Template.Type getType();
 
-    public static RepositoryReference createJar(String id) {
+    static RepositoryReference createJar(String id) {
         return new RepositoryReference() {
             @Override
             public String getId() {
@@ -22,7 +22,7 @@ public interface RepositoryReference {
         };
     }
 
-    public static RepositoryReference createReference(String id) {
+    static RepositoryReference createReference(String id) {
         return new RepositoryReference() {
             @Override
             public String getId() {

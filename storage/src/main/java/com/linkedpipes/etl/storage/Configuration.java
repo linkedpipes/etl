@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 @Service
@@ -48,7 +49,8 @@ public class Configuration {
         LOG.info("Reading configuration file: {}", propertiesFile);
         // Read properties.
         try (InputStreamReader stream = new InputStreamReader(
-                     new FileInputStream(new File(propertiesFile)),"UTF8")) {
+                new FileInputStream(propertiesFile),
+                StandardCharsets.UTF_8)) {
             properties.load(stream);
         } catch (IOException ex) {
             throw new RuntimeException("Can't load configuration file.", ex);
@@ -111,10 +113,6 @@ public class Configuration {
 
     public String getExecutorMonitorUrl() {
         return executorMonitorUrl;
-    }
-
-    public Properties getProperties() {
-        return properties;
     }
 
     private String getProperty(String name) {

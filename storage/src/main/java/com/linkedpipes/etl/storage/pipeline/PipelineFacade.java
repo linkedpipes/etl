@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.storage.pipeline;
 
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import org.eclipse.rdf4j.model.Statement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,39 +9,38 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 @Service
 public class PipelineFacade {
 
-    private final PipelineManager pipelines;
+    private final PipelineService service;
 
     @Autowired
-    public PipelineFacade(PipelineManager pipelines) {
-        this.pipelines = pipelines;
+    public PipelineFacade(PipelineService service) {
+        this.service = service;
     }
 
-    public Pipeline getPipeline(String iri) {
-        return pipelines.getPipelines().get(iri);
+    public PipelineRef getPipeline(String iri) {
+        return service.getPipelines().get(iri);
     }
 
-    public Collection<Pipeline> getPipelines() {
-        return pipelines.getPipelines().values();
+    public Collection<PipelineRef> getService() {
+        return service.getPipelines().values();
     }
 
     public Collection<Statement> getReferenceAsRdf() {
         Collection<Statement> result = new LinkedList<>();
-        for (Pipeline pipeline : pipelines.getPipelines().values()) {
+        for (PipelineRef pipeline : service.getPipelines().values()) {
             result.addAll(pipeline.getReferenceRdf());
         }
         return result;
     }
 
-    public Collection<Statement> getReferenceAsRdf(Pipeline pipeline) {
+    public Collection<Statement> getReferenceAsRdf(PipelineRef pipeline) {
         return pipeline.getReferenceRdf();
     }
 
-    public Collection<Statement> getPipelineRdf(Pipeline pipeline)
+    public Collection<Statement> getPipelineRdf(PipelineRef pipeline)
             throws OperationFailed {
         File pipelineFile = pipeline.getFile();
         try {
@@ -52,12 +51,12 @@ public class PipelineFacade {
     }
 
     public Collection<Statement> getPipelineRdf(
-            Pipeline pipeline,
+            PipelineRef pipeline,
             boolean includeTemplate,
             boolean includeMapping,
             boolean removePrivateConfig)
-            throws BaseException {
-        return pipelines.getPipelineRdf(
+            throws StorageException {
+        return service.getPipelineRdf(
                 pipeline, includeTemplate, includeMapping, removePrivateConfig);
     }
 
@@ -70,21 +69,21 @@ public class PipelineFacade {
      *
      * <p>If pipelineRdf is empty an "empty pipeline" is used instead.
      */
-    public Pipeline createPipeline(
+    public PipelineRef createPipeline(
             Collection<Statement> pipelineRdf,
             Collection<Statement> optionsRdf)
             throws OperationFailed {
-        return pipelines.createPipeline(pipelineRdf, optionsRdf);
+        return service.createPipeline(pipelineRdf, optionsRdf);
     }
 
     public void updatePipeline(
-            Pipeline pipeline, Collection<Statement> pipelineRdf)
+            PipelineRef pipeline, Collection<Statement> pipelineRdf)
             throws OperationFailed {
-        pipelines.updatePipeline(pipeline, pipelineRdf);
+        service.updatePipeline(pipeline, pipelineRdf);
     }
 
-    public void deletePipeline(Pipeline pipeline) {
-        pipelines.deletePipeline(pipeline);
+    public void deletePipeline(PipelineRef pipeline) {
+        service.deletePipeline(pipeline);
     }
 
     /**
@@ -95,7 +94,7 @@ public class PipelineFacade {
     public Collection<Statement> localizePipeline(
             Collection<Statement> pipelineRdf,
             Collection<Statement> optionsRdf) throws OperationFailed {
-        return pipelines.localizePipeline(pipelineRdf, optionsRdf);
+        return service.localizePipeline(pipelineRdf, optionsRdf);
     }
 
 }

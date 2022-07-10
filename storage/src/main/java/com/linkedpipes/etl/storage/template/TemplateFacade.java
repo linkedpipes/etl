@@ -4,7 +4,7 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.plugin.configuration.ConfigurationFacade;
 import com.linkedpipes.etl.plugin.configuration.InvalidConfiguration;
 import com.linkedpipes.etl.rdf4j.Statements;
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.template.mapping.MappingFacade;
 import com.linkedpipes.etl.storage.template.repository.TemplateRepository;
 import com.linkedpipes.etl.storage.unpacker.TemplateSource;
@@ -37,7 +37,7 @@ public class TemplateFacade implements TemplateSource {
     private static final Logger LOG
             = LoggerFactory.getLogger(TemplateFacade.class);
 
-    private final TemplateManager manager;
+    private final TemplateService service;
 
     private final MappingFacade mapping;
 
@@ -47,12 +47,12 @@ public class TemplateFacade implements TemplateSource {
 
     @Autowired
     public TemplateFacade(
-            TemplateManager manager,
+            TemplateService service,
             MappingFacade mapping) {
-        this.manager = manager;
+        this.service = service;
         this.mapping = mapping;
         this.configurationFacade = new ConfigurationFacade();
-        this.repository = manager.getRepository();
+        this.repository = service.getRepository();
     }
 
     @PostConstruct
@@ -65,7 +65,7 @@ public class TemplateFacade implements TemplateSource {
      */
     private void cleanMapping() {
         List<String> iriToRemove = mapping.getLocalMapping().stream()
-                .filter(iri -> !manager.getTemplates().containsKey(iri))
+                .filter(iri -> !service.getTemplates().containsKey(iri))
                 .collect(Collectors.toList());
         for (String iri : iriToRemove) {
             LOG.debug(
@@ -77,26 +77,26 @@ public class TemplateFacade implements TemplateSource {
     }
 
     public Template getTemplate(String iri) {
-        return manager.getTemplates().get(iri);
+        return service.getTemplates().get(iri);
     }
 
     public Collection<Template> getTemplates() {
-        return manager.getTemplates().values();
+        return service.getTemplates().values();
     }
 
     public Template getParent(Template template) {
-        if (template instanceof ReferenceTemplate) {
-            ReferenceTemplate ref = (ReferenceTemplate) template;
+        if (template instanceof ReferenceTemplateRef) {
+            ReferenceTemplateRef ref = (ReferenceTemplateRef) template;
             return getTemplate(ref.getTemplate());
         }
         return null;
     }
 
     public Template getRootTemplate(Template template) {
-        if (template instanceof JarTemplate) {
+        if (template instanceof JarTemplateRef) {
             return template;
-        } else if (template instanceof ReferenceTemplate) {
-            ReferenceTemplate referenceTemplate = (ReferenceTemplate) template;
+        } else if (template instanceof ReferenceTemplateRef) {
+            ReferenceTemplateRef referenceTemplate = (ReferenceTemplateRef) template;
             return referenceTemplate.getCoreTemplate();
 
         } else {
@@ -120,7 +120,7 @@ public class TemplateFacade implements TemplateSource {
             if (template.getType() == Template.Type.JAR_TEMPLATE) {
                 break;
             } else if (template.getType() == Template.Type.REFERENCE_TEMPLATE) {
-                ReferenceTemplate reference = (ReferenceTemplate) template;
+                ReferenceTemplateRef reference = (ReferenceTemplateRef) template;
                 template = getTemplate(reference.getTemplate());
                 if (template == null) {
                     LOG.warn("Missing template for: {}", reference.getIri());
@@ -168,7 +168,7 @@ public class TemplateFacade implements TemplateSource {
             if (item.getType() != Template.Type.REFERENCE_TEMPLATE) {
                 continue;
             }
-            ReferenceTemplate reference = (ReferenceTemplate) item;
+            ReferenceTemplateRef reference = (ReferenceTemplateRef) item;
             Template parent = getTemplate(reference.getTemplate());
             List<Template> brothers = children.computeIfAbsent(
                     parent, key -> new LinkedList<>());
@@ -179,13 +179,13 @@ public class TemplateFacade implements TemplateSource {
     }
 
     public Collection<Statement> getInterface(Template template)
-            throws BaseException {
+            throws StorageException {
         return repository.getInterface(template);
     }
 
-    public Collection<Statement> getInterfaces() throws BaseException {
+    public Collection<Statement> getInterfaces() throws StorageException {
         List<Statement> output = new ArrayList<>();
-        for (Template template : manager.getTemplates().values()) {
+        for (Template template : service.getTemplates().values()) {
             output.addAll(getInterface(template));
         }
         return output;
@@ -196,7 +196,7 @@ public class TemplateFacade implements TemplateSource {
      * Configuration of all ancestors are applied.
      */
     public Collection<Statement> getConfigEffective(Template template)
-            throws BaseException, InvalidConfiguration {
+            throws StorageException, InvalidConfiguration {
         // TODO Move to extra class and add caching.
         if (!template.isSupportingControl()) {
             // For template without inheritance control, the current
@@ -221,7 +221,7 @@ public class TemplateFacade implements TemplateSource {
      * Return configuration of given template for a dialog.
      */
     public Collection<Statement> getConfig(Template template)
-            throws BaseException {
+            throws StorageException {
         return repository.getConfig(template);
     }
 
@@ -229,7 +229,7 @@ public class TemplateFacade implements TemplateSource {
      * Return configuration for instances of given template.
      */
     public Collection<Statement> getConfigInstance(Template template)
-            throws BaseException, InvalidConfiguration {
+            throws StorageException, InvalidConfiguration {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
         IRI graph = valueFactory.createIRI(template.getIri() + "/new");
         if (template.getType() == Template.Type.JAR_TEMPLATE) {
@@ -248,7 +248,7 @@ public class TemplateFacade implements TemplateSource {
     }
 
     public Collection<Statement> getConfigDescription(Template template)
-            throws BaseException {
+            throws StorageException {
         Template rootTemplate = getRootTemplate(template);
         return repository.getConfigDescription(rootTemplate);
     }
@@ -265,7 +265,7 @@ public class TemplateFacade implements TemplateSource {
     public Template createTemplate(
             Collection<Statement> definition,
             Collection<Statement> configuration)
-            throws BaseException {
+            throws StorageException {
         return createTemplate(definition, configuration, null);
     }
 
@@ -273,38 +273,38 @@ public class TemplateFacade implements TemplateSource {
             Collection<Statement> definition,
             Collection<Statement> configuration,
             Collection<Statement> configurationDescription)
-            throws BaseException {
-        Template template = manager.createTemplate(
+            throws StorageException {
+        Template template = service.createTemplate(
                 definition, configuration, configurationDescription);
         return template;
     }
 
     public void updateInterface(
             Template template, Collection<Statement> diff)
-            throws BaseException {
-        manager.updateTemplateInterface(template, diff);
+            throws StorageException {
+        service.updateTemplateInterface(template, diff);
     }
 
     public void updateConfig(
             Template template, Collection<Statement> statements)
-            throws BaseException {
-        manager.updateConfig(template, statements);
+            throws StorageException {
+        service.updateConfig(template, statements);
     }
 
-    public void remove(Template template) throws BaseException {
-        manager.remove(template);
+    public void remove(Template template) throws StorageException {
+        service.remove(template);
         mapping.remove(template.getIri());
         mapping.save();
     }
 
     public Collection<Statement> getDefinition(Template template)
-            throws BaseException {
+            throws StorageException {
         return repository.getDefinition(template);
     }
 
     @Override
     public Collection<Statement> getDefinition(String iri)
-            throws BaseException {
+            throws StorageException {
         Template template = getTemplate(iri);
         // It requires reference to description which is not presented for
         // reference templates.
@@ -323,13 +323,13 @@ public class TemplateFacade implements TemplateSource {
 
     @Override
     public Collection<Statement> getConfiguration(String iri)
-            throws BaseException {
+            throws StorageException {
         return getConfig(getTemplate(iri));
     }
 
     @Override
     public Collection<Statement> getConfigurationDescription(String iri)
-            throws BaseException {
+            throws StorageException {
         return getConfigDescription(getTemplate(iri));
     }
 

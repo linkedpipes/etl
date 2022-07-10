@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.storage.template.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import org.apache.commons.io.FileUtils;
@@ -37,7 +37,7 @@ public class WritableTemplateRepository extends TemplateRepository {
         loadRepositoryInfo();
     }
 
-    public String reserveReferenceId() throws BaseException {
+    public String reserveReferenceId() throws StorageException {
         for (int i = 0; i < REFERENCE_CREATE_ATTEMPT; ++i) {
             String id = createId();
             File path = getDirectory(RepositoryReference.createReference(id));
@@ -45,12 +45,12 @@ public class WritableTemplateRepository extends TemplateRepository {
                 return id;
             }
         }
-        throw new BaseException("Can not create directory in: {}",
+        throw new StorageException("Can not create directory in: {}",
                 this.repositoryRoot);
     }
 
     private String createId() {
-        return Long.toString((new Date()).getTime()) + "-" + UUID.randomUUID();
+        return (new Date()).getTime() + "-" + UUID.randomUUID();
     }
 
     public void setInterface(

@@ -24,7 +24,7 @@ class TemplateInfo {
     /**
      * IRI of this template.
      */
-    private IRI iri;
+    private final IRI iri;
 
     /**
      * IRI of the parent template.

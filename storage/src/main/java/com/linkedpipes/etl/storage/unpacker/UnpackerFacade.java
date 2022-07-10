@@ -6,9 +6,9 @@ import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.rdf4j.ClosableRdf4jSource;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.rdf4j.StatementsCollector;
-import com.linkedpipes.etl.storage.BaseException;
-import com.linkedpipes.etl.storage.executions.ExecutionFacade;
-import com.linkedpipes.etl.storage.pipeline.Pipeline;
+import com.linkedpipes.etl.storage.StorageException;
+import com.linkedpipes.etl.storage.unpacker.executions.ExecutionFacade;
+import com.linkedpipes.etl.storage.pipeline.PipelineRef;
 import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
 import com.linkedpipes.etl.storage.unpacker.model.GraphCollection;
@@ -37,14 +37,14 @@ public class UnpackerFacade {
     private ExecutionFacade executions;
 
     public Collection<Statement> unpack(
-            Pipeline pipeline, Collection<Statement> configurationRdf)
-            throws BaseException {
+            PipelineRef pipeline, Collection<Statement> configurationRdf)
+            throws StorageException {
         return unpack(pipelines.getPipelineRdf(pipeline), configurationRdf);
     }
 
     public Collection<Statement> unpack(
             Collection<Statement> pipelineRdf,
-            Collection<Statement> configurationRdf) throws BaseException {
+            Collection<Statement> configurationRdf) throws StorageException {
         UnpackOptions options = new UnpackOptions();
         ClosableRdf4jSource optionsSource = Rdf4jSource.wrapInMemory(
                 configurationRdf);
@@ -54,7 +54,7 @@ public class UnpackerFacade {
         } catch (InvalidNumberOfResults ex) {
             // Ignore as the option is optional.
         } catch (RdfUtilsException ex) {
-            throw new BaseException("Can't load execution options.", ex);
+            throw new StorageException("Can't load execution options.", ex);
         } finally {
             optionsSource.close();
         }
@@ -66,7 +66,7 @@ public class UnpackerFacade {
             pipeline = ModelLoader.loadDesignerPipeline(source);
             graphs = ModelLoader.loadConfigurationGraphs(source, pipeline);
         } catch (RdfUtilsException ex) {
-            throw new BaseException("Can't unpack pipeline.", ex);
+            throw new StorageException("Can't unpack pipeline.", ex);
         } finally {
             source.close();
         }

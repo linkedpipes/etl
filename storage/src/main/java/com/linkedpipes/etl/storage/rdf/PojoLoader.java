@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.storage.rdf;
 
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -17,7 +17,7 @@ public class PojoLoader {
     /**
      * TODO Replace with IllegalArgumentException.
      */
-    public static class CantLoadException extends BaseException {
+    public static class CantLoadException extends StorageException {
 
         public CantLoadException(String message, Object... args) {
             super(message, args);
@@ -61,8 +61,7 @@ public class PojoLoader {
      */
     public static void loadFromResource(
             Collection<Statement> statements,
-            Resource resource, Resource graph, Loadable instance)
-            throws CantLoadException {
+            Resource resource, Resource graph, Loadable instance) {
         instance.loadIri(resource.stringValue());
         for (Statement s : statements) {
             boolean sameGraph = graph == null || graph.equals(s.getContext());

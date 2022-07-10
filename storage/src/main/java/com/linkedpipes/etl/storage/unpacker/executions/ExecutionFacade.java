@@ -1,6 +1,6 @@
-package com.linkedpipes.etl.storage.executions;
+package com.linkedpipes.etl.storage.unpacker.executions;
 
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.unpacker.ExecutionSource;
 import org.eclipse.rdf4j.model.Statement;
@@ -12,7 +12,7 @@ import java.util.Collection;
 @Service
 public class ExecutionFacade implements ExecutionSource {
 
-    private HttpExecutionSource source;
+    private final HttpExecutionSource source;
 
     @Autowired
     public ExecutionFacade(Configuration configuration) {
@@ -20,7 +20,7 @@ public class ExecutionFacade implements ExecutionSource {
     }
 
     @Override
-    public Collection<Statement> getExecution(String iri) throws BaseException {
+    public Collection<Statement> getExecution(String iri) throws StorageException {
         return this.source.downloadExecution(iri);
     }
 

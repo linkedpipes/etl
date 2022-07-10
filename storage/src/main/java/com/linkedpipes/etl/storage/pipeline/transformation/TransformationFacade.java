@@ -2,7 +2,7 @@ package com.linkedpipes.etl.storage.pipeline.transformation;
 
 import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.template.mapping.MappingFacade;
-import com.linkedpipes.etl.storage.pipeline.Pipeline;
+import com.linkedpipes.etl.storage.pipeline.PipelineRef;
 import com.linkedpipes.etl.storage.pipeline.PipelineInfo;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Date;
 
 @Service
 public class TransformationFacade {
@@ -61,7 +60,7 @@ public class TransformationFacade {
         pipeline = transformer.localizePipeline(
                 pipeline, options, info, newIri, localPipelinePrefix);
 
-        if (info.getVersion() != Pipeline.VERSION_NUMBER) {
+        if (info.getVersion() != PipelineRef.VERSION_NUMBER) {
             Migration migration = new Migration(templateFacade);
             migration.setThrowOnWarning(false);
             pipeline = migration.migrate(pipeline);
@@ -74,7 +73,7 @@ public class TransformationFacade {
             throws TransformationFailed {
         PipelineInfo info = new PipelineInfo();
         try {
-            PojoLoader.loadOfType(pipeline, Pipeline.TYPE, info);
+            PojoLoader.loadOfType(pipeline, PipelineRef.TYPE, info);
         } catch (PojoLoader.CantLoadException ex) {
             throw new TransformationFailed(
                     "Can't load pipeline info.", ex);

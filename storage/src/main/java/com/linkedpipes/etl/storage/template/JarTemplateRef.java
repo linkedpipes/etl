@@ -8,7 +8,7 @@ import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
-class JarTemplate extends Template implements PojoLoader.Loadable {
+public class JarTemplateRef extends Template implements PojoLoader.Loadable {
 
     public static final IRI TYPE;
 

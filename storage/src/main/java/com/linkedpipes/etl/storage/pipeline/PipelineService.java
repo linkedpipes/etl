@@ -1,11 +1,9 @@
 package com.linkedpipes.etl.storage.pipeline;
 
 import com.linkedpipes.etl.plugin.configuration.InvalidConfiguration;
-import com.linkedpipes.etl.rdf4j.Statements;
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.pipeline.info.InfoFacade;
-import com.linkedpipes.etl.storage.pipeline.transformation.ImportOptions;
 import com.linkedpipes.etl.storage.pipeline.transformation.TransformationFacade;
 import com.linkedpipes.etl.storage.pipeline.transformation.TransformationFailed;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
@@ -25,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Service
-class PipelineManager {
+class PipelineService {
 
     private final Configuration configuration;
 
@@ -33,7 +31,7 @@ class PipelineManager {
 
     private final TransformationFacade transformationFacade;
 
-    private final PipelineStorage storage;
+    private final PipelineRepository storage;
 
     private final ExportPipeline exportPipeline;
 
@@ -49,10 +47,9 @@ class PipelineManager {
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
-
-    public PipelineManager(
+    public PipelineService(
             Configuration configuration, InfoFacade info,
-            TransformationFacade transformation, PipelineStorage storage,
+            TransformationFacade transformation, PipelineRepository storage,
             ExportPipeline exportPipeline) {
         this.configuration = configuration;
         this.infoFacade = info;
@@ -69,16 +66,15 @@ class PipelineManager {
         });
     }
 
-    public Map<String, Pipeline> getPipelines() {
+    public Map<String, PipelineRef> getPipelines() {
         return storage.getPipelines();
     }
-
 
     /**
      * Import pipeline from given statements, if no data are given create
      * an empty pipeline.
      */
-    public Pipeline createPipeline(
+    public PipelineRef createPipeline(
             Collection<Statement> pipelineRdf, Collection<Statement> optionsRdf)
             throws OperationFailed {
         IRI reservedIri = reservePipelineIri();
@@ -88,7 +84,7 @@ class PipelineManager {
             pipelineRdf = localizePipeline(
                     pipelineRdf, optionsRdf, reservedIri);
         }
-        Pipeline pipeline = storage.createPipeline(
+        PipelineRef pipeline = storage.createPipeline(
                 selectPipelineIRI(pipelineRdf), pipelineRdf);
         infoFacade.onPipelineCreate(pipeline, pipelineRdf);
         reserved.remove(reservedIri.stringValue());
@@ -112,7 +108,7 @@ class PipelineManager {
             throws OperationFailed {
         PipelineInfo info = new PipelineInfo();
         try {
-            PojoLoader.loadOfType(pipeline, Pipeline.TYPE, info);
+            PojoLoader.loadOfType(pipeline, PipelineRef.TYPE, info);
         } catch (PojoLoader.CantLoadException ex) {
             throw new OperationFailed(
                     "Can't load pipeline info.", ex);
@@ -121,13 +117,13 @@ class PipelineManager {
     }
 
     public void updatePipeline(
-            Pipeline pipeline, Collection<Statement> rdf)
+            PipelineRef pipeline, Collection<Statement> rdf)
             throws OperationFailed {
         infoFacade.onPipelineUpdate(pipeline, rdf);
         storage.update(pipeline, rdf);
     }
 
-    public void deletePipeline(Pipeline pipeline) {
+    public void deletePipeline(PipelineRef pipeline) {
         infoFacade.onPipelineDelete(pipeline);
         storage.delete(pipeline);
     }
@@ -137,11 +133,11 @@ class PipelineManager {
      * information.
      */
     public Collection<Statement> getPipelineRdf(
-            Pipeline pipeline,
+            PipelineRef pipeline,
             boolean includeTemplate,
             boolean includeMapping,
             boolean removePrivateConfig)
-            throws BaseException {
+            throws StorageException {
         Collection<Statement> rdf = storage.getPipelineRdf(pipeline);
         if (!includeTemplate && !includeMapping && !removePrivateConfig) {
             return rdf;
@@ -163,7 +159,7 @@ class PipelineManager {
             try {
                 exportPipeline.removePrivateConfiguration(rdf);
             } catch (InvalidConfiguration ex) {
-                throw new BaseException(ex);
+                throw new StorageException(ex);
             }
         }
         return rdf;

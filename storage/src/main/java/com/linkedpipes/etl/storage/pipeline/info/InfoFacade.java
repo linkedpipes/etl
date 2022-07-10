@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.storage.pipeline.info;
 
 import com.linkedpipes.etl.storage.Configuration;
-import com.linkedpipes.etl.storage.pipeline.Pipeline;
+import com.linkedpipes.etl.storage.pipeline.PipelineRef;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -97,23 +97,6 @@ public class InfoFacade {
 
         private Resource target;
 
-        private void add(Map<Resource, Resource> instanceToTemplate,
-                         PipelineInfo info) {
-            Resource sourceTemplate = instanceToTemplate.get(source);
-            Resource targetTemplate = instanceToTemplate.get(target);
-            if (sourceTemplate == null || targetTemplate == null) {
-                return;
-            }
-            //
-            TemplateInfo templateInfo = info.followups.get(sourceTemplate);
-            if (templateInfo == null) {
-                templateInfo = new TemplateInfo();
-                info.followups.put(sourceTemplate, templateInfo);
-            }
-            templateInfo.followup.put(target,
-                    templateInfo.followup.getOrDefault(target, 0) + 1);
-        }
-
     }
 
     private static final IRI TYPE;
@@ -154,20 +137,20 @@ public class InfoFacade {
     }
 
     public void onPipelineCreate(
-            Pipeline pipeline, Collection<Statement> pipelineRdf) {
+            PipelineRef pipeline, Collection<Statement> pipelineRdf) {
         PipelineInfo info = createInfo(pipeline, pipelineRdf);
         pipelineInfo.put(pipeline.getIri(), info);
         regenerate();
     }
 
     public void onPipelineUpdate(
-            Pipeline pipeline, Collection<Statement> pipelineRdf) {
+            PipelineRef pipeline, Collection<Statement> pipelineRdf) {
         PipelineInfo info = createInfo(pipeline, pipelineRdf);
         pipelineInfo.put(pipeline.getIri(), info);
         regenerate();
     }
 
-    public void onPipelineDelete(Pipeline pipeline) {
+    public void onPipelineDelete(PipelineRef pipeline) {
         pipelineInfo.remove(pipeline.getIri());
         regenerate();
     }
@@ -227,7 +210,7 @@ public class InfoFacade {
     }
 
     private static PipelineInfo createInfo(
-            Pipeline pipeline, Collection<Statement> pipelineRdf) {
+            PipelineRef pipeline, Collection<Statement> pipelineRdf) {
         PipelineInfo info = new PipelineInfo();
         //
         Map<Resource, Resource> componentTypes = new HashMap<>();

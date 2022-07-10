@@ -25,7 +25,7 @@ import java.util.jar.JarFile;
  * LP-ETL/jar/info.* file, where the extension must be a valid RDF
  * file extension.
  */
-final class JarLoader {
+class JarLoader {
 
     private static final Logger LOG = LoggerFactory.getLogger(JarLoader.class);
 

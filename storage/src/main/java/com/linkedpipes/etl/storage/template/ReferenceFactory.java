@@ -3,7 +3,7 @@ package com.linkedpipes.etl.storage.template;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.rdf.utils.vocabulary.DCTERMS;
 import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import com.linkedpipes.etl.storage.template.repository.RepositoryReference;
 import com.linkedpipes.etl.storage.template.repository.WritableTemplateRepository;
@@ -22,11 +22,9 @@ import java.util.List;
 /**
  * Create new component from user provided input.
  */
-class ReferenceFactory {
+public class ReferenceFactory {
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
-
-    private final TemplateManager manager;
 
     private final WritableTemplateRepository repository;
 
@@ -44,18 +42,16 @@ class ReferenceFactory {
 
     private IRI configIri;
 
-    public ReferenceFactory(
-            TemplateManager manager, WritableTemplateRepository repository) {
-        this.manager = manager;
+    public ReferenceFactory(WritableTemplateRepository repository) {
         this.repository = repository;
     }
 
-    public ReferenceTemplate create(
+    public ReferenceTemplateRef create(
             Collection<Statement> content,
             Collection<Statement> config,
             Collection<Statement> description,
             String id, String iriAsString)
-            throws BaseException {
+            throws StorageException {
         clear();
         parseContent(content);
         iri = valueFactory.createIRI(iriAsString);
@@ -91,10 +87,10 @@ class ReferenceFactory {
     }
 
     private void parseContent(Collection<Statement> statements)
-            throws BaseException {
-        Resource resource = RdfUtils.find(statements, ReferenceTemplate.TYPE);
+            throws StorageException {
+        Resource resource = RdfUtils.find(statements, ReferenceTemplateRef.TYPE);
         if (resource == null) {
-            throw new BaseException("Missing resource of reference type");
+            throw new StorageException("Missing resource of reference type");
         }
         for (Statement statement : statements) {
             switch (statement.getPredicate().stringValue()) {
@@ -118,14 +114,14 @@ class ReferenceFactory {
             }
         }
         if (templateResource == null) {
-            throw new BaseException("Missing template reference.");
+            throw new StorageException("Missing template reference.");
         }
     }
 
     private List<Statement> createInterface() {
         List<Statement> output = new ArrayList<>();
         output.add(valueFactory.createStatement(iri,
-                RDF.TYPE, ReferenceTemplate.TYPE, iri));
+                RDF.TYPE, ReferenceTemplateRef.TYPE, iri));
         output.add(valueFactory.createStatement(iri,
                 valueFactory.createIRI(LP_PIPELINE.HAS_TEMPLATE),
                 templateResource, iri));
@@ -160,7 +156,7 @@ class ReferenceFactory {
     private List<Statement> createDefinition() {
         List<Statement> output = new ArrayList<>();
         output.add(valueFactory.createStatement(iri,
-                RDF.TYPE, ReferenceTemplate.TYPE, iri));
+                RDF.TYPE, ReferenceTemplateRef.TYPE, iri));
         output.add(valueFactory.createStatement(iri,
                 valueFactory.createIRI(LP_PIPELINE.HAS_TEMPLATE),
                 templateResource, iri));

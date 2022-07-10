@@ -9,21 +9,25 @@ import java.util.Collection;
 @Service
 public class JarFacade {
 
+    private final JarService service;
+
     @Autowired
-    private JarManager manager;
+    public JarFacade(JarService service) {
+        this.service = service;
+    }
 
     /**
      * Return collection of all components.
      */
     public Collection<JarComponent> getJarComponents() {
-        return manager.getComponents().values();
+        return service.getComponents().values();
     }
 
     /**
      * Return Null if there is no such component.
      */
     public JarComponent getJarComponent(String name) {
-        return manager.getComponents().get(name);
+        return service.getComponents().get(name);
     }
 
     /**

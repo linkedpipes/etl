@@ -1,9 +1,9 @@
 package com.linkedpipes.etl.storage.pipeline.transformation;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.migration.MigrateV1ToV2;
-import com.linkedpipes.etl.storage.pipeline.Pipeline;
+import com.linkedpipes.etl.storage.pipeline.PipelineRef;
 import com.linkedpipes.etl.storage.template.Template;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
 import com.linkedpipes.etl.storage.template.mapping.Mapping;
@@ -73,7 +73,7 @@ class ImportTemplates {
      * templates are imported.
      */
     public Collection<Statement> importTemplatesFromPipeline(
-            Collection<Statement> pipelineRdf) throws BaseException {
+            Collection<Statement> pipelineRdf) throws StorageException {
         LOG.debug("Import options:");
         LOG.debug("  Import templates: {}", this.importMissing);
         LOG.debug("  Update existing templates: {}", this.updateExisting);
@@ -105,7 +105,7 @@ class ImportTemplates {
                 graphs.put((IRI) statement.getContext(), graph);
             }
             if (statement.getPredicate().equals(RDF.TYPE)
-                    && statement.getObject().equals(Pipeline.TYPE)) {
+                    && statement.getObject().equals(PipelineRef.TYPE)) {
                 pipelineGraph = statement.getContext();
             }
             graph.add(statement);
@@ -116,7 +116,7 @@ class ImportTemplates {
         this.mapping = mappingFacade.createMappingFromStatements(pipelineRdf);
     }
 
-    private void importTemplates() throws BaseException {
+    private void importTemplates() throws StorageException {
         List<TemplateInfo> templates = TemplateInfo.create(graphs);
         List<TemplateInfo> resolvedTemplates = new ArrayList<>();
         // We try to import templates. As there might be hierarchy we should
@@ -140,7 +140,7 @@ class ImportTemplates {
     }
 
     private boolean resolveTemplate(TemplateInfo template)
-            throws BaseException {
+            throws StorageException {
         Template localTemplate;
         // First try to just ask for the URL.
         localTemplate = templateFacade.getTemplate(template.getIri());
@@ -169,7 +169,7 @@ class ImportTemplates {
     }
 
     private void updateLocal(TemplateInfo remote, Template local)
-            throws BaseException {
+            throws StorageException {
         templateFacade.updateInterface(local, remote.getDefinition());
         Template parent = templateFacade.getParent(local);
         prepareTemplateForImport(remote, parent);
@@ -206,7 +206,7 @@ class ImportTemplates {
                     getConfigDescription(remoteTemplate, parent));
             LOG.info("   imported as : {}", template.getIri());
             this.mapping.onImport(template, remoteTemplate.getIri());
-        } catch (BaseException ex) {
+        } catch (StorageException ex) {
             LOG.error("Can't import template: {}", remoteTemplate.getIri(), ex);
             LOG.info("Template is ignored.");
             return true;

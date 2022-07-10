@@ -11,7 +11,7 @@ import java.util.Collection;
 /**
  * Represent a pipeline object.
  */
-public class Pipeline {
+public class PipelineRef {
 
     public static final IRI TYPE;
 
@@ -46,7 +46,7 @@ public class Pipeline {
      */
     private Collection<Statement> referenceRdf = new ArrayList<>();
 
-    Pipeline(File file, PipelineInfo info) {
+    PipelineRef(File file, PipelineInfo info) {
         this.file = file;
         this.info = info;
     }

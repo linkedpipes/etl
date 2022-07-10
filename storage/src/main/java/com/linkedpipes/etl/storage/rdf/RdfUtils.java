@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.storage.rdf;
 
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  */
 public final class RdfUtils {
 
-    public static class RdfException extends BaseException {
+    public static class RdfException extends StorageException {
 
         RdfException(String message, Object... args) {
             super(message, args);
@@ -103,44 +103,6 @@ public final class RdfUtils {
             if (statement.getPredicate().equals(RDF.TYPE)) {
                 result.add(statement.getSubject());
             }
-        }
-        return result;
-    }
-
-    /**
-     * Change names of all typed resource so the use given prefix.
-     * BaseIRI must not end with '/'.
-     */
-    public static Collection<Statement> renameResources(
-            Collection<Statement> statements, String baseIri,
-            Resource context) {
-        if (statements == null || statements.isEmpty()) {
-            // There is nothing to update.
-            return Collections.EMPTY_LIST;
-        }
-        ValueFactory vf = SimpleValueFactory.getInstance();
-        // Create mapping of resources.
-        Map<Resource, Resource> replaceMap = new HashMap<>();
-        for (Resource resource : selectTyped(statements)) {
-            replaceMap.put(
-                    resource, vf.createIRI(baseIri + "/" + replaceMap.size()));
-        }
-        // Replace.
-        Collection<Statement> result = new ArrayList<>(statements.size());
-        for (Statement statement : statements) {
-            // Check for change in resource and object.
-            Resource resource = replaceMap.getOrDefault(
-                    statement.getSubject(), statement.getSubject());
-            Value object;
-            if (statement.getObject() instanceof Resource) {
-                object = replaceMap.getOrDefault(statement.getObject(),
-                        (Resource) statement.getObject());
-            } else {
-                object = statement.getObject();
-            }
-            result.add(vf.createStatement(
-                    resource, statement.getPredicate(),
-                    object, context));
         }
         return result;
     }
@@ -319,14 +281,14 @@ public final class RdfUtils {
     public static void write(
             HttpServletRequest request,
             HttpServletResponse response, Collection<Statement> data)
-            throws BaseException {
+            throws StorageException {
         RDFFormat format =
                 RdfUtils.getFormat(request, RDFFormat.TRIG);
         response.setHeader("content-type", format.getDefaultMIMEType());
         try (OutputStream stream = response.getOutputStream()) {
             RdfUtils.write(stream, format, data);
         } catch (IOException ex) {
-            throw new BaseException(ex);
+            throw new StorageException(ex);
         }
     }
 

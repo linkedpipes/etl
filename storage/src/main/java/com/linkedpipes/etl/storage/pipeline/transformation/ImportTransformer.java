@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.storage.pipeline.transformation;
 
-import com.linkedpipes.etl.storage.BaseException;
-import com.linkedpipes.etl.storage.pipeline.Pipeline;
+import com.linkedpipes.etl.storage.StorageException;
+import com.linkedpipes.etl.storage.pipeline.PipelineRef;
 import com.linkedpipes.etl.storage.pipeline.PipelineInfo;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
@@ -88,7 +88,7 @@ class ImportTransformer {
             throws TransformationFailed {
         PipelineInfo info = new PipelineInfo();
         try {
-            PojoLoader.loadOfType(pipelineRdf, Pipeline.TYPE, info);
+            PojoLoader.loadOfType(pipelineRdf, PipelineRef.TYPE, info);
         } catch (PojoLoader.CantLoadException ex) {
             throw new TransformationFailed(
                     "Can't createMappingFromStatements pipeline.", ex);
@@ -106,7 +106,7 @@ class ImportTransformer {
             this.importTemplates.setPipelineVersion(pipelineVersion);
             return this.importTemplates.importTemplatesFromPipeline(
                     pipelineRdf);
-        } catch (BaseException ex) {
+        } catch (StorageException ex) {
             throw new TransformationFailed(
                     "Can't import templates.", ex);
         }
@@ -133,7 +133,7 @@ class ImportTransformer {
         for (Statement s : pipelineRdf) {
             // Create mapping for all typed resources.
             if (s.getPredicate().equals(RDF.TYPE)) {
-                if (s.getObject().equals(Pipeline.TYPE)) {
+                if (s.getObject().equals(PipelineRef.TYPE)) {
                     // For pipeline we the IRI as it is, event if
                     // we should override existing from the graph.
                     mapping.put(s.getSubject(), this.valueFactory.createIRI(

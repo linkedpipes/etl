@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.storage.unpacker;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerPipeline;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerRunAfter;
 import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorComponent;
@@ -40,7 +40,7 @@ class ExecutionFlow {
         this.runAfter = runAfter;
     }
 
-    public void computeExecutionTypeAndOrder() throws BaseException {
+    public void computeExecutionTypeAndOrder() throws StorageException {
         setExecutionOrder();
         //
         Map<String, Set<String>> dependencies = createDependencyList();
@@ -48,7 +48,7 @@ class ExecutionFlow {
         setComponentExecutionType(options, dependencies);
     }
 
-    private void setExecutionOrder() throws BaseException {
+    private void setExecutionOrder() throws StorageException {
         Map<String, Set<String>> dependencies = createDependencyList();
         int executionOrder = 0;
         List<String> toRemove = new ArrayList<>();
@@ -79,7 +79,7 @@ class ExecutionFlow {
             });
             //
             if (toRemove.isEmpty()) {
-                throw new BaseException("Cycle detected.");
+                throw new StorageException("Cycle detected.");
             }
             toRemove.clear();
         }

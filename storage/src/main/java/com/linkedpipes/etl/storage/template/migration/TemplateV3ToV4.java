@@ -1,8 +1,10 @@
-package com.linkedpipes.etl.storage.template;
+package com.linkedpipes.etl.storage.template.migration;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
+import com.linkedpipes.etl.storage.template.ReferenceFactory;
+import com.linkedpipes.etl.storage.template.Template;
 import com.linkedpipes.etl.storage.template.repository.WritableTemplateRepository;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -13,7 +15,7 @@ import java.util.Collection;
 /**
  * Add configuration graph to interface and definition.
  */
-class TemplateV3ToV4 {
+public class TemplateV3ToV4 {
 
     private final WritableTemplateRepository repository;
 
@@ -21,7 +23,7 @@ class TemplateV3ToV4 {
         this.repository = repository;
     }
 
-    public void migrate(Template template) throws BaseException {
+    public void migrate(Template template) throws StorageException {
         if (!Template.Type.REFERENCE_TEMPLATE.equals(template.getType())) {
             return;
         }

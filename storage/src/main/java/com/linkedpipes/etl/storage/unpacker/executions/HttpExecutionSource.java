@@ -1,6 +1,6 @@
-package com.linkedpipes.etl.storage.executions;
+package com.linkedpipes.etl.storage.unpacker.executions;
 
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.Configuration;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -28,7 +28,8 @@ class HttpExecutionSource {
         this.configuration = configuration;
     }
 
-    Collection<Statement> downloadExecution(String iri) throws BaseException {
+    public Collection<Statement> downloadExecution(String iri)
+            throws StorageException {
         // Download and parse information about the execution.
         HttpClientBuilder builder = HttpClientBuilder.create();
         try (CloseableHttpClient client = builder.build()) {
@@ -38,9 +39,9 @@ class HttpExecutionSource {
             checkResponse(response, iri);
             return responseToRdf(response);
         } catch (MalformedURLException ex) {
-            throw new BaseException("Invalid execution IRI.", ex);
+            throw new StorageException("Invalid execution IRI.", ex);
         } catch (IOException ex) {
-            throw new BaseException("Can't get mapped execution.", ex);
+            throw new StorageException("Can't get mapped execution.", ex);
         }
     }
 
@@ -50,11 +51,11 @@ class HttpExecutionSource {
     }
 
     private void checkResponse(HttpResponse response, String iri)
-            throws BaseException {
+            throws StorageException {
         int status = response.getStatusLine().getStatusCode();
         if (status < HttpStatus.SC_OK
                 || status >= HttpStatus.SC_MULTIPLE_CHOICES) {
-            throw new BaseException(
+            throw new StorageException(
                     "Invalid response code: {} from {}", status, iri);
         }
     }

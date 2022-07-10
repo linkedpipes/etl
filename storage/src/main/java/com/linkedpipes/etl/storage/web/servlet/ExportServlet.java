@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.linkedpipes.etl.plugin.configuration.ConfigurationFacade;
 import com.linkedpipes.etl.plugin.configuration.InvalidConfiguration;
-import com.linkedpipes.etl.storage.BaseException;
-import com.linkedpipes.etl.storage.pipeline.Pipeline;
+import com.linkedpipes.etl.storage.StorageException;
+import com.linkedpipes.etl.storage.pipeline.PipelineRef;
 import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
-import com.linkedpipes.etl.storage.template.ReferenceTemplate;
+import com.linkedpipes.etl.storage.template.ReferenceTemplateRef;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -56,20 +56,20 @@ public class ExportServlet {
             @RequestParam(name = "removePrivateConfig", defaultValue = "false")
                     boolean removePrivateConfig,
             HttpServletResponse response)
-            throws IOException, BaseException {
-        List<Pipeline> pipelines = collectPipelines(
+            throws IOException, StorageException {
+        List<PipelineRef> pipelines = collectPipelines(
                 createFilter(exportPipelines));
-        List<ReferenceTemplate> templates = collectTemplates(
+        List<ReferenceTemplateRef> templates = collectTemplates(
                 createFilter(exportTemplates));
         response.setHeader("Content-Type", "application/zip");
         try (OutputStream stream = response.getOutputStream()) {
             ZipOutputStream zip = new ZipOutputStream(
                     stream, StandardCharsets.UTF_8);
 
-            for (Pipeline pipeline : pipelines) {
+            for (PipelineRef pipeline : pipelines) {
                 pipelineEntry(zip, removePrivateConfig, pipeline);
             }
-            for (ReferenceTemplate template : templates) {
+            for (ReferenceTemplateRef template : templates) {
                 templateEntry(zip, removePrivateConfig, template);
             }
 
@@ -77,7 +77,7 @@ public class ExportServlet {
         }
     }
 
-    private Predicate<String> createFilter(String value) throws BaseException {
+    private Predicate<String> createFilter(String value) throws StorageException {
         if (value == null || EXPORT_NONE.equals(value)) {
             return (iri) -> false;
         }
@@ -88,15 +88,15 @@ public class ExportServlet {
         return positive::contains;
     }
 
-    private List<String> parseAsJsonArray(String value) throws BaseException {
+    private List<String> parseAsJsonArray(String value) throws StorageException {
         JsonNode root;
         try {
             root = mapper.readTree(value);
         } catch (IOException ex) {
-            throw new BaseException("Can't parse query: {}", value);
+            throw new StorageException("Can't parse query: {}", value);
         }
         if (!(root instanceof ArrayNode)) {
-            throw new BaseException("Can't parse query: {}", value);
+            throw new StorageException("Can't parse query: {}", value);
         }
         List<String> result = new ArrayList<>();
         for (JsonNode node : root) {
@@ -105,25 +105,25 @@ public class ExportServlet {
         return result;
     }
 
-    private List<Pipeline> collectPipelines(Predicate<String> predicate) {
-        return pipelines.getPipelines().stream()
+    private List<PipelineRef> collectPipelines(Predicate<String> predicate) {
+        return pipelines.getService().stream()
                 .filter(pipeline -> predicate.test(pipeline.getIri()))
                 .toList();
     }
 
-    private List<ReferenceTemplate> collectTemplates(
+    private List<ReferenceTemplateRef> collectTemplates(
             Predicate<String> predicate) {
         return templates.getTemplates().stream()
                 .filter(item -> predicate.test(item.getIri()))
-                .filter(item -> item instanceof ReferenceTemplate)
-                .map(item -> (ReferenceTemplate) item)
+                .filter(item -> item instanceof ReferenceTemplateRef)
+                .map(item -> (ReferenceTemplateRef) item)
                 .toList();
 
     }
 
     private void pipelineEntry(
             ZipOutputStream zip, boolean removePrivateConfig,
-            Pipeline pipeline) throws BaseException, IOException {
+            PipelineRef pipeline) throws StorageException, IOException {
         Collection<Statement> statements = pipelines.getPipelineRdf(
                 pipeline, false, false, removePrivateConfig);
         String suffix = pipeline.getIri().substring(
@@ -146,8 +146,8 @@ public class ExportServlet {
 
     private void templateEntry(
             ZipOutputStream zip, boolean removePrivateConfig,
-            ReferenceTemplate template)
-            throws BaseException, IOException {
+            ReferenceTemplateRef template)
+            throws StorageException, IOException {
         String directory = "templates/" + template.getIri().substring(
                 template.getIri().lastIndexOf("/") + 1) + "/";
 
@@ -170,8 +170,8 @@ public class ExportServlet {
     }
 
     private void removePrivateConfiguration(
-            ReferenceTemplate template, Collection<Statement> configuration)
-            throws BaseException {
+            ReferenceTemplateRef template, Collection<Statement> configuration)
+            throws StorageException {
         ConfigurationFacade configurationFacade = new ConfigurationFacade();
         Collection<Statement> description =
                 templates.getConfigurationDescription(template.getIri());
@@ -180,7 +180,7 @@ public class ExportServlet {
             privateConfiguration = configurationFacade.selectPrivate(
                     configuration, description);
         } catch (InvalidConfiguration ex) {
-            throw new BaseException("Invalid configuration for '{}.'",
+            throw new StorageException("Invalid configuration for '{}.'",
                     template.getIri(), ex);
         }
         configuration.removeAll(privateConfiguration);

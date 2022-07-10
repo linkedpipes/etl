@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.storage.web.servlet;
 
-import com.linkedpipes.etl.storage.BaseException;
-import com.linkedpipes.etl.storage.pipeline.Pipeline;
+import com.linkedpipes.etl.storage.StorageException;
+import com.linkedpipes.etl.storage.pipeline.PipelineRef;
 import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
 import com.linkedpipes.etl.storage.pipeline.info.InfoFacade;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
@@ -37,7 +37,7 @@ public class PipelineServlet {
     @ResponseBody
     public void getPipelines(
             HttpServletRequest request,
-            HttpServletResponse response) throws BaseException {
+            HttpServletResponse response) throws StorageException {
         RdfUtils.write(request, response, pipelines.getReferenceAsRdf());
     }
 
@@ -52,14 +52,14 @@ public class PipelineServlet {
             @RequestParam(name = "removePrivateConfig", defaultValue = "false")
                     boolean removePrivateConfig,
             HttpServletRequest request, HttpServletResponse response)
-            throws BaseException {
-        Pipeline pipeline = getPipeline(iri);
+            throws StorageException {
+        PipelineRef pipeline = getPipeline(iri);
         RdfUtils.write(request, response, pipelines.getPipelineRdf(pipeline,
                 includeTemplates, includeMapping, removePrivateConfig));
     }
 
-    private Pipeline getPipeline(String iri) throws MissingResource {
-        Pipeline pipeline = pipelines.getPipeline(iri);
+    private PipelineRef getPipeline(String iri) throws MissingResource {
+        PipelineRef pipeline = pipelines.getPipeline(iri);
         if (pipeline == null) {
             throw new MissingResource("Missing pipeline: {}", iri);
         }
@@ -75,10 +75,10 @@ public class PipelineServlet {
             @RequestParam(value = "pipeline", required = false)
                     MultipartFile pipeline,
             HttpServletRequest request, HttpServletResponse response)
-            throws BaseException {
+            throws StorageException {
         Collection<Statement> optionsRdf = RdfUtils.read(options);
         Collection<Statement> pipelineRdf = RdfUtils.read(pipeline);
-        Pipeline pipelineObject = pipelines.createPipeline(
+        PipelineRef pipelineObject = pipelines.createPipeline(
                 pipelineRdf, optionsRdf);
         RdfUtils.write(request, response,
                 pipelines.getReferenceAsRdf(pipelineObject));
@@ -90,9 +90,9 @@ public class PipelineServlet {
     public void updatePipeline(
             @RequestParam(name = "iri") String iri,
             @RequestParam(value = "pipeline") MultipartFile pipeline)
-            throws BaseException {
+            throws StorageException {
         Collection<Statement> pipelineRdf = RdfUtils.read(pipeline);
-        Pipeline pipelineObject = getPipeline(iri);
+        PipelineRef pipelineObject = getPipeline(iri);
         pipelines.updatePipeline(pipelineObject, pipelineRdf);
     }
 
@@ -100,8 +100,8 @@ public class PipelineServlet {
     @ResponseBody
     public void deletePipeline(
             @RequestParam(name = "iri") String iri)
-            throws BaseException {
-        Pipeline pipeline = getPipeline(iri);
+            throws StorageException {
+        PipelineRef pipeline = getPipeline(iri);
         pipelines.deletePipeline(pipeline);
     }
 
@@ -114,14 +114,14 @@ public class PipelineServlet {
             @RequestParam(value = "pipeline", required = false)
                     MultipartFile pipeline,
             HttpServletRequest request, HttpServletResponse response)
-            throws BaseException {
+            throws StorageException {
         Collection<Statement> optionsRdf = RdfUtils.read(options);
         Collection<Statement> pipelineRdf = RdfUtils.read(pipeline);
         Collection<Statement> statements;
         if (iri == null) {
             statements = unpacker.unpack(pipelineRdf, optionsRdf);
         } else {
-            Pipeline pipelineInstance = getPipeline(iri);
+            PipelineRef pipelineInstance = getPipeline(iri);
             statements = unpacker.unpack(pipelineInstance, optionsRdf);
         }
         RdfUtils.write(request, response, statements);
@@ -135,7 +135,7 @@ public class PipelineServlet {
                     MultipartFile options,
             @RequestParam(value = "pipeline") MultipartFile pipeline,
             HttpServletRequest request, HttpServletResponse response)
-            throws BaseException {
+            throws StorageException {
         Collection<Statement> optionsRdf = RdfUtils.read(options);
         Collection<Statement> pipelineRdf = RdfUtils.read(pipeline);
         pipelineRdf = pipelines.localizePipeline(pipelineRdf, optionsRdf);
@@ -146,7 +146,7 @@ public class PipelineServlet {
     @ResponseBody
     public void getDesignInformation(
             HttpServletRequest request,
-            HttpServletResponse response) throws BaseException {
+            HttpServletResponse response) throws StorageException {
         RdfUtils.write(request, response, infoFacade.getInformation());
     }
 

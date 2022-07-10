@@ -34,14 +34,14 @@ class PipelineLoader {
         this.transformation = transformationFacade;
     }
 
-    public Pipeline load(File file) throws OperationFailed {
+    public PipelineRef load(File file) throws OperationFailed {
         this.file = file;
         //
         loadFromFile();
-        if (info.getVersion() != Pipeline.VERSION_NUMBER) {
+        if (info.getVersion() != PipelineRef.VERSION_NUMBER) {
             migratePipeline();
         }
-        return new Pipeline(file, info);
+        return new PipelineRef(file, info);
     }
 
     private void loadFromFile() throws OperationFailed {
@@ -55,7 +55,7 @@ class PipelineLoader {
 
     private void loadPipelineInfo() throws PojoLoader.CantLoadException {
         info = new PipelineInfo();
-        PojoLoader.loadOfType(pipelineRdf, Pipeline.TYPE, info);
+        PojoLoader.loadOfType(pipelineRdf, PipelineRef.TYPE, info);
     }
 
     private void migratePipeline() throws OperationFailed {

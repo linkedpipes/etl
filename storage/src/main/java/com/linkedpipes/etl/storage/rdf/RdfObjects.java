@@ -410,23 +410,6 @@ public class RdfObjects {
         return result;
     }
 
-    public void updateTypedResources(String baseIri) {
-        // Change resource for all entities with types.
-        Integer counter = 0;
-        Map<Resource, Entity> newResources = new HashMap<>();
-        for (Entity object : resources.values()) {
-            if (!object.getReferences(RDF.TYPE).isEmpty()) {
-                final IRI iri = valueFactory.createIRI(
-                        baseIri + "/" + ++counter);
-                newResources.put(iri, object);
-                object.resource = iri;
-            }
-        }
-        //
-        resources.clear();
-        resources.putAll(newResources);
-    }
-
     /**
      * Remove object and all references to it.
      */

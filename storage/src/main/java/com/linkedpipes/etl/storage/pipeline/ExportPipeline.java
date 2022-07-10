@@ -3,7 +3,7 @@ package com.linkedpipes.etl.storage.pipeline;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.plugin.configuration.ConfigurationFacade;
 import com.linkedpipes.etl.plugin.configuration.InvalidConfiguration;
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.template.Template;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
 import com.linkedpipes.etl.storage.template.mapping.MappingFacade;
@@ -42,7 +42,7 @@ class ExportPipeline {
      * Return all used templates in pipelines with their ancestors.
      */
     public Set<Template> getTemplates(
-            Pipeline pipeline, Collection<Statement> rdf) {
+            PipelineRef pipeline, Collection<Statement> rdf) {
         Set<Template> templates = new HashSet<>();
         String iri = pipeline.getIri();
         for (Statement statement : rdf) {
@@ -62,7 +62,7 @@ class ExportPipeline {
     }
 
     public Collection<Statement> getTemplateRdf(Set<Template> templates)
-            throws BaseException {
+            throws StorageException {
         List<Statement> output = new LinkedList<>();
         for (Template template : templates) {
             // Use set to remove duplicities.
@@ -81,7 +81,7 @@ class ExportPipeline {
     }
 
     public void removePrivateConfiguration(Collection<Statement> rdf)
-            throws BaseException, InvalidConfiguration {
+            throws StorageException, InvalidConfiguration {
         // TODO We should check that we are reading from the right graphs.
         Map<Resource, Resource> configurations = new HashMap<>();
         Map<Resource, Resource> types = new HashMap<>();

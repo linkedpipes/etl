@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.storage.unpacker;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.unpacker.model.GraphCollection;
 import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorComponent;
 import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorPort;
@@ -25,7 +25,7 @@ class JarExpander {
 
     public ExecutorComponent expand(
             String iri, List<String> configurations,
-            JarTemplate template) throws BaseException {
+            JarTemplate template) throws StorageException {
 
         component = new ExecutorComponent();
         component.setIri(iri);
@@ -67,7 +67,7 @@ class JarExpander {
 
     private void mergeConfigurations(
             JarTemplate template,
-            List<String> configurations) throws BaseException {
+            List<String> configurations) throws StorageException {
         if (configurations.isEmpty()) {
             if (template.getConfigGraph() != null) {
                 copyConfigurationFromTemplate(template);
@@ -78,7 +78,7 @@ class JarExpander {
     }
 
     private void copyConfigurationFromTemplate(JarTemplate template)
-            throws BaseException {
+            throws StorageException {
         String configIri = component.getIri() + "/configuration";
         component.setConfigGraph(configIri);
 
@@ -88,7 +88,7 @@ class JarExpander {
     }
 
     private ConfigurationMerger createMerger(JarTemplate template)
-            throws BaseException {
+            throws StorageException {
         ConfigurationMerger merger = new ConfigurationMerger(
                 graphs, templateSource);
         merger.loadTemplateConfigAndDescription(template);
@@ -97,7 +97,7 @@ class JarExpander {
 
     private void mergeWithTemplate(
             JarTemplate template, List<String> configurations)
-            throws BaseException {
+            throws StorageException {
         ConfigurationMerger merger = createMerger(template);
         configurations.add(template.getConfigGraph());
         merger.merge(template, configurations, component.getConfigGraph());

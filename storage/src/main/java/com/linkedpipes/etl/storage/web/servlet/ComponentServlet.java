@@ -1,8 +1,8 @@
 package com.linkedpipes.etl.storage.web.servlet;
 
 import com.linkedpipes.etl.plugin.configuration.InvalidConfiguration;
-import com.linkedpipes.etl.storage.BaseException;
-import com.linkedpipes.etl.storage.pipeline.Pipeline;
+import com.linkedpipes.etl.storage.StorageException;
+import com.linkedpipes.etl.storage.pipeline.PipelineRef;
 import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
 import com.linkedpipes.etl.storage.pipeline.info.InfoFacade;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
@@ -51,7 +51,7 @@ public class ComponentServlet {
     public void getAll(
             HttpServletRequest request,
             HttpServletResponse response)
-            throws BaseException {
+            throws StorageException {
         RdfUtils.write(request, response, templateFacade.getInterfaces());
     }
 
@@ -61,7 +61,7 @@ public class ComponentServlet {
             @RequestParam(name = "iri") String iri,
             HttpServletRequest request,
             HttpServletResponse response)
-            throws BaseException {
+            throws StorageException {
         Template template = getTemplate(iri);
         RdfUtils.write(
                 request, response, templateFacade.getInterface(template));
@@ -81,7 +81,7 @@ public class ComponentServlet {
             @RequestParam(name = "iri") String iri,
             HttpServletRequest request,
             HttpServletResponse response)
-            throws BaseException {
+            throws StorageException {
         Template template = getTemplate(iri);
         RdfUtils.write(
                 request, response, templateFacade.getDefinition(template));
@@ -92,7 +92,7 @@ public class ComponentServlet {
     public void updateComponent(
             @RequestParam(name = "iri") String iri,
             @RequestParam(name = "component") MultipartFile componentRdf)
-            throws BaseException {
+            throws StorageException {
         Template template = getTemplate(iri);
         templateFacade.updateInterface(template, RdfUtils.read(componentRdf));
     }
@@ -102,7 +102,7 @@ public class ComponentServlet {
     public void getConfig(
             @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
-            throws BaseException {
+            throws StorageException {
         Template template = getTemplate(iri);
         RdfUtils.write(request, response, templateFacade.getConfig(template));
     }
@@ -112,7 +112,7 @@ public class ComponentServlet {
     public void updateConfig(
             @RequestParam(name = "iri") String iri,
             @RequestParam(name = "configuration") MultipartFile configRdf)
-            throws BaseException {
+            throws StorageException {
         Template template = getTemplate(iri);
         templateFacade.updateConfig(template, RdfUtils.read(configRdf));
     }
@@ -122,7 +122,7 @@ public class ComponentServlet {
     public void getEffectiveConfig(
             @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
-            throws BaseException, InvalidConfiguration {
+            throws StorageException, InvalidConfiguration {
         Template template = getTemplate(iri);
         RdfUtils.write(
                 request, response, templateFacade.getConfigEffective(template));
@@ -133,7 +133,7 @@ public class ComponentServlet {
     public void getConfigTemplate(
             @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
-            throws BaseException, InvalidConfiguration {
+            throws StorageException, InvalidConfiguration {
         Template template = getTemplate(iri);
         RdfUtils.write(
                 request, response, templateFacade.getConfigInstance(template));
@@ -144,7 +144,7 @@ public class ComponentServlet {
     public void getConfigDescription(
             @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
-            throws BaseException {
+            throws StorageException {
         Template template = getTemplate(iri);
         RdfUtils.write(
                 request, response,
@@ -203,7 +203,7 @@ public class ComponentServlet {
             @RequestParam(name = "component") MultipartFile component,
             @RequestParam(name = "configuration") MultipartFile configuration,
             HttpServletRequest request, HttpServletResponse response)
-            throws BaseException, IOException {
+            throws StorageException, IOException {
         Collection<Statement> componentRdf = RdfUtils.read(component);
         Collection<Statement> configurationRdf = RdfUtils.read(configuration);
         // Create template and stream interface as a response.
@@ -219,7 +219,7 @@ public class ComponentServlet {
     public void getUsage(
             @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
-            throws BaseException, IOException {
+            throws StorageException, IOException {
         // TODO Move to pipeline/dpu facade (hide pipeline.info to pipeline).
         Template template = getTemplate(iri);
         // Get components.
@@ -240,7 +240,7 @@ public class ComponentServlet {
                             "http://etl.linkedpipes.com/ontology/Template")));
             Collection<String> usage = infoFacade.getUsage(item.getIri());
             for (String pipelineIri : usage) {
-                final Pipeline pipeline =
+                final PipelineRef pipeline =
                         pipelineFacade.getPipeline(pipelineIri);
                 if (pipeline == null) {
                     continue;
@@ -262,7 +262,7 @@ public class ComponentServlet {
     public void remove(
             @RequestParam(name = "iri") String iri,
             HttpServletResponse response)
-            throws BaseException {
+            throws StorageException {
         Template template = getTemplate(iri);
         templateFacade.remove(template);
         response.setStatus(HttpServletResponse.SC_OK);

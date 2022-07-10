@@ -1,9 +1,13 @@
-package com.linkedpipes.etl.storage.template;
+package com.linkedpipes.etl.storage.template.migration;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.migration.MigrateV1ToV2;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
+import com.linkedpipes.etl.storage.template.JarTemplateRef;
+import com.linkedpipes.etl.storage.template.ReferenceTemplateRef;
+import com.linkedpipes.etl.storage.template.Template;
+import com.linkedpipes.etl.storage.template.TemplateService;
 import com.linkedpipes.etl.storage.template.repository.WritableTemplateRepository;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -14,31 +18,31 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class TemplateV1ToV2 {
+public class TemplateV1ToV2 {
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
-    private final TemplateManager manager;
+    private final TemplateService manager;
 
     private final WritableTemplateRepository repository;
 
     /**
      * Template being updated.
      */
-    private ReferenceTemplate template = null;
+    private ReferenceTemplateRef template = null;
 
     public TemplateV1ToV2(
-            TemplateManager manager, WritableTemplateRepository repository) {
+            TemplateService manager, WritableTemplateRepository repository) {
         this.manager = manager;
         this.repository = repository;
     }
 
-    public void migrate(Template template) throws BaseException {
+    public void migrate(Template template) throws StorageException {
         if (template.getType() == Template.Type.JAR_TEMPLATE) {
             return;
         }
-        this.template = (ReferenceTemplate) template;
-        JarTemplate jarTemplate = getJarTemplate();
+        this.template = (ReferenceTemplateRef) template;
+        JarTemplateRef jarTemplate = getJarTemplate();
         if (MigrateV1ToV2.shouldUpdate(jarTemplate.getIri())) {
             // Update configuration.
             updateConfiguration(jarTemplate);
@@ -49,24 +53,24 @@ class TemplateV1ToV2 {
         updateConfigDescriptionReference();
     }
 
-    private JarTemplate getJarTemplate() throws BaseException {
-        ReferenceTemplate reference = template;
+    private JarTemplateRef getJarTemplate() throws StorageException {
+        ReferenceTemplateRef reference = template;
         while (true) {
             Template parent = manager.getTemplates().get(
                     reference.getTemplate());
             if (parent == null) {
-                throw new BaseException(
+                throw new StorageException(
                         "Missing parent ('{}') for template: {}",
                         reference.getTemplate(), reference.getIri());
             }
             if (parent.getType() == Template.Type.JAR_TEMPLATE) {
-                return (JarTemplate) parent;
+                return (JarTemplateRef) parent;
             }
-            reference = (ReferenceTemplate) parent;
+            reference = (ReferenceTemplateRef) parent;
         }
     }
 
-    private void updateConfiguration(JarTemplate jarTemplate)
+    private void updateConfiguration(JarTemplateRef jarTemplate)
             throws RdfUtils.RdfException {
         Collection<Statement> configuration =
                 this.repository.getConfig(template);

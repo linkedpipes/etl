@@ -4,7 +4,7 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.rdf4j.ClosableRdf4jSource;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.unpacker.model.GraphCollection;
 import com.linkedpipes.etl.storage.unpacker.model.ModelLoader;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerComponent;
@@ -56,7 +56,7 @@ public class DesignerToExecutor {
 
     public void transform(
             DesignerPipeline pipeline, GraphCollection graphs,
-            UnpackOptions options) throws BaseException {
+            UnpackOptions options) throws StorageException {
         this.source = pipeline;
         this.graphs = graphs;
         this.target = new ExecutorPipeline(getExecutionIri(options));
@@ -114,7 +114,7 @@ public class DesignerToExecutor {
         return newConnection;
     }
 
-    private void convertAndExpandComponents() throws BaseException {
+    private void convertAndExpandComponents() throws StorageException {
         jarTemplateExpander.setGraphs(graphs);
         for (DesignerComponent component : source.getComponents()) {
             // TODO Pass connections and runAfter for possible modification
@@ -149,13 +149,13 @@ public class DesignerToExecutor {
     }
 
     private void computeExecutionFlow(UnpackOptions options)
-            throws BaseException {
+            throws StorageException {
         ExecutionFlow flowComputer = new ExecutionFlow(
                 source, target, runAfter, options);
         flowComputer.computeExecutionTypeAndOrder();
     }
 
-    private void configurePorts(UnpackOptions options) throws BaseException {
+    private void configurePorts(UnpackOptions options) {
         for (ExecutorComponent component : target.getComponents()) {
             for (ExecutorPort port : component.getPorts()) {
                 port.setSaveDebugData(options.isSaveDebugData());
@@ -163,7 +163,7 @@ public class DesignerToExecutor {
         }
     }
 
-    private void setPortMapping(UnpackOptions options) throws BaseException {
+    private void setPortMapping(UnpackOptions options) throws StorageException {
         for (UnpackOptions.ExecutionMapping executionMapping
                 : options.getExecutionMapping()) {
             Execution execution = getExecution(executionMapping.getExecution());
@@ -172,13 +172,13 @@ public class DesignerToExecutor {
     }
 
     private Execution getExecution(String iri)
-            throws BaseException {
+            throws StorageException {
         Collection<Statement> statements = executionSource.getExecution(iri);
         ClosableRdf4jSource source = Rdf4jSource.wrapInMemory(statements);
         try {
             return ModelLoader.loadExecution(source);
         } catch (RdfUtilsException ex) {
-            throw new BaseException("Can't load execution.", ex);
+            throw new StorageException("Can't load execution.", ex);
         } finally {
             source.close();
         }

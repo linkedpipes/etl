@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.storage.pipeline;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.storage.BaseException;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.pipeline.transformation.TransformationFacade;
 import com.linkedpipes.etl.storage.rdf.PojoLoader;
@@ -28,28 +28,28 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-class PipelineStorage {
+public class PipelineRepository {
 
     @FunctionalInterface
     public interface OnLoad {
 
-        void action(Pipeline pipeline, Collection<Statement> rdf);
+        void action(PipelineRef pipeline, Collection<Statement> rdf);
 
     }
 
     private static final Logger LOG =
-            LoggerFactory.getLogger(PipelineStorage.class);
+            LoggerFactory.getLogger(PipelineRepository.class);
 
     private final Configuration configuration;
 
     private final TransformationFacade transformation;
 
-    private final Map<String, Pipeline> pipelines = new HashMap<>();
+    private final Map<String, PipelineRef> pipelines = new HashMap<>();
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     @Autowired
-    public PipelineStorage(
+    public PipelineRepository(
             Configuration configuration, TransformationFacade transformation) {
         this.configuration = configuration;
         this.transformation = transformation;
@@ -92,7 +92,7 @@ class PipelineStorage {
      */
     private void loadPipeline(File file, OnLoad onLoad) throws OperationFailed {
         PipelineLoader loader = new PipelineLoader(transformation);
-        Pipeline pipeline = loader.load(file);
+        PipelineRef pipeline = loader.load(file);
         onLoad.action(pipeline, loader.getPipelineRdf());
         createPipelineReference(pipeline);
         pipelines.put(pipeline.getIri(), pipeline);
@@ -101,11 +101,11 @@ class PipelineStorage {
     /**
      * Create pipeline reference object and set it to pipeline.
      */
-    private void createPipelineReference(Pipeline pipeline) {
+    private void createPipelineReference(PipelineRef pipeline) {
         List<Statement> referenceRdf = new ArrayList<>();
         IRI pipelineIri = valueFactory.createIRI(pipeline.getIri());
         referenceRdf.add(valueFactory.createStatement(
-                pipelineIri, RDF.TYPE, Pipeline.TYPE, pipelineIri));
+                pipelineIri, RDF.TYPE, PipelineRef.TYPE, pipelineIri));
         for (Value label : pipeline.getInfo().getLabels()) {
             referenceRdf.add(valueFactory.createStatement(
                     pipelineIri, SKOS.PREF_LABEL, label, pipelineIri));
@@ -118,11 +118,11 @@ class PipelineStorage {
         pipeline.setReferenceRdf(referenceRdf);
     }
 
-    public Map<String, Pipeline> getPipelines() {
+    public Map<String, PipelineRef> getPipelines() {
         return Collections.unmodifiableMap(pipelines);
     }
 
-    public void update(Pipeline pipeline, Collection<Statement> rdf)
+    public void update(PipelineRef pipeline, Collection<Statement> rdf)
             throws OperationFailed {
         updatePipelineInfo(pipeline, rdf);
         createPipelineReference(pipeline);
@@ -130,11 +130,11 @@ class PipelineStorage {
     }
 
     private void updatePipelineInfo(
-            Pipeline pipeline, Collection<Statement> rdf)
+            PipelineRef pipeline, Collection<Statement> rdf)
             throws OperationFailed {
         PipelineInfo info = new PipelineInfo();
         try {
-            PojoLoader.loadOfType(rdf, Pipeline.TYPE, info);
+            PojoLoader.loadOfType(rdf, PipelineRef.TYPE, info);
             pipeline.setInfo(info);
         } catch (PojoLoader.CantLoadException ex) {
             throw new OperationFailed("Can't update pipeline.", ex);
@@ -142,7 +142,7 @@ class PipelineStorage {
     }
 
     private void writePipelineToDisk(
-            Pipeline pipeline, Collection<Statement> rdf)
+            PipelineRef pipeline, Collection<Statement> rdf)
             throws OperationFailed {
         try {
             RdfUtils.atomicWrite(pipeline.getFile(), RDFFormat.TRIG, rdf);
@@ -152,24 +152,24 @@ class PipelineStorage {
         }
     }
 
-    public void delete(Pipeline pipeline) {
+    public void delete(PipelineRef pipeline) {
         pipeline.getFile().delete();
         pipelines.remove(pipeline.getIri());
     }
 
-    public Collection<Statement> getPipelineRdf(Pipeline pipeline)
-            throws BaseException {
+    public Collection<Statement> getPipelineRdf(PipelineRef pipeline)
+            throws StorageException {
         try {
             return RdfUtils.read(pipeline.getFile());
         } catch (RdfUtils.RdfException ex) {
-            throw new BaseException("Can't read file.", ex);
+            throw new StorageException("Can't read file.", ex);
         }
     }
 
-    public Pipeline createPipeline(IRI iri, Collection<Statement> rdf)
+    public PipelineRef createPipeline(IRI iri, Collection<Statement> rdf)
             throws OperationFailed {
         File file = getPipelineFile(iri);
-        Pipeline pipeline = new Pipeline(file, null);
+        PipelineRef pipeline = new PipelineRef(file, null);
         update(pipeline, rdf);
         pipelines.put(iri.stringValue(), pipeline);
         return pipeline;
