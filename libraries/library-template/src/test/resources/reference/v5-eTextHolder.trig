@@ -1,0 +1,36 @@
+
+# configuration.trig
+<http://localhost:8080/resources/components/b44b/configuration> {
+  <http://localhost:8080/resources/components/b44b/configuration/0>
+    a <http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#content> "";
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#contentControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#fileName> "file.ttl";
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#fileNameControl> <http://plugins.linkedpipes.com/resource/configuration/Force> .
+}
+
+# definition.trig
+<http://localhost:8080/resources/components/b44b> {
+  <http://localhost:8080/resources/components/b44b>
+    a <http://linkedpipes.com/ontology/Template>;
+	<http://etl.linkedpipes.com/ontology/version> 5;
+	<http://www.w3.org/2004/02/skos/core#prefLabel> "Turtle holder";
+	<http://purl.org/dc/terms/description> "My text here.";
+	<http://www.w3.org/2004/02/skos/core#note> "Fix this.";
+	<http://linkedpipes.com/ontology/color> "#FF00FF";
+	<http://linkedpipes.com/ontology/keyword> "Text Holder", "Turtle";
+	<http://www.w3.org/2002/07/owl#sameAs> <http://example.com/resources/components/b44b>;	
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/a44f>;
+	<http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0>;	
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/b44b/configuration> .
+}
+
+# interface.trig
+<http://localhost:8080/resources/components/b44b> {
+  <http://localhost:8080/resources/components/b44b>
+    a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0>;
+    
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/b44b/configuration> .
+	  <http://localhost/trace> a <http://localhost/interface> .
+}

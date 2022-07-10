@@ -11,5 +11,7 @@
     <modules>
         <module>library-io</module>
         <module>library-rdf</module>
+        <module>library-template</module>
+        <module>library-pipeline</module>
     </modules>
 </project>
