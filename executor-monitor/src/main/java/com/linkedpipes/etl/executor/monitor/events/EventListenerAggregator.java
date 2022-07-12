@@ -7,11 +7,13 @@ import com.linkedpipes.etl.executor.monitor.execution.ExecutionStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 class EventListenerAggregator implements EventListener {
@@ -35,10 +37,18 @@ class EventListenerAggregator implements EventListener {
         }
         if (configuration.isRetryExecution()) {
             LOG.info("Using ReExecutor.");
-            listeners.add(new ReExecutor(configuration.getRetryLimit()));
+            listeners.add(new ReExecutor(
+                    configuration.getRetryLimit()));
         }
         if (configuration.getHistoryLimit() != null) {
-            listeners.add(new PruneHistory(configuration.getHistoryLimit()));
+            LOG.info("Using history count limit.");
+            listeners.add(new LimitCountHistory(
+                    configuration.getHistoryLimit()));
+        }
+        if (configuration.getHistoryHourLimit() != null) {
+            LOG.info("Using history time limit.");
+            listeners.add(new LimitTimeHistory(
+                    configuration.getHistoryHourLimit()));
         }
     }
 
@@ -66,5 +76,9 @@ class EventListenerAggregator implements EventListener {
         this.configuration = configuration;
     }
 
+    @Scheduled(fixedDelay = 60, initialDelay = 5, timeUnit = TimeUnit.MINUTES)
+    public void onEveryHour() {
+        listeners.forEach(EventListener::onTimeHour);
+    }
 
 }

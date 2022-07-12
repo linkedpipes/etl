@@ -59,6 +59,8 @@ public class Configuration {
 
     private Integer historyLimit = null;
 
+    private Integer historyHourLimit = null;
+
     @PostConstruct
     public void init() {
         String propertiesFile = System.getProperty("configFileLocation");
@@ -110,6 +112,10 @@ public class Configuration {
         historyLimit = getEnvOrOptionalPropertyInteger(
                 "LP_ETL_EXECUTION_HISTORY_COUNT_LIMIT",
                 "executor-monitor.history_limit");
+
+        historyLimit = getEnvOrOptionalPropertyInteger(
+                "LP_ETL_EXECUTION_HISTORY_HOUR_LIMIT",
+                "executor-monitor.history_hour_limit");
 
         //
         validateUri(executorUri, "executor.execution.working_directory");
@@ -284,6 +290,10 @@ public class Configuration {
 
     public Integer getHistoryLimit() {
         return historyLimit;
+    }
+
+    public Integer getHistoryHourLimit() {
+        return historyHourLimit;
     }
 
 }

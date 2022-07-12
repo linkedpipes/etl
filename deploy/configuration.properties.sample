@@ -98,6 +98,9 @@ executor-monitor.ftp.uri = ftp://localhost:2221
 # is finished, the oldest executions outside the limit are removed.
 # executor-monitor.history_limit = 3
 
+# Limit maximum age of executions before they are removed.
+# executor-monitor.history_hour_limit = 168
+
 ##############
 #  Storage   #
 ##############

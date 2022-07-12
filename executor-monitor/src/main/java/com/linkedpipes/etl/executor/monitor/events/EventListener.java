@@ -19,4 +19,8 @@ public interface EventListener {
         // Do nothing;
     }
 
+    default void onTimeHour() {
+        // Do nothing;
+    }
+
 }

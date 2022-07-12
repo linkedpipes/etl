@@ -7,16 +7,18 @@ import org.eclipse.rdf4j.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class PruneHistory implements EventListener {
+class LimitTimeHistory implements EventListener {
 
     private static final Logger LOG =
-            LoggerFactory.getLogger(PruneHistory.class);
+            LoggerFactory.getLogger(LimitTimeHistory.class);
 
     private final List<ExecutionStatus> ignoredStates = Arrays.asList(
             ExecutionStatus.QUEUED,
@@ -25,20 +27,20 @@ class PruneHistory implements EventListener {
             ExecutionStatus.UNRESPONSIVE,
             ExecutionStatus.DELETED);
 
-    private final Integer historyLimit;
+    private final Integer historyHourLimit;
 
     private ExecutionFacade executionFacade = null;
 
-    public PruneHistory(Integer historyLimit) {
-        this.historyLimit = historyLimit;
+    public LimitTimeHistory(Integer historyHourLimit) {
+        this.historyHourLimit = historyHourLimit;
     }
 
     @Override
-    public void onExecutionFacadeReady(ExecutionFacade executions) {
-        EventListener.super.onExecutionFacadeReady(executions);
-        executionFacade = executions;
+    public void onTimeHour() {
+        EventListener.super.onTimeHour();
         pruneOnStartup();
     }
+
 
     private void pruneOnStartup() {
         List<Execution> executions = executionFacade.getExecutions().stream()
@@ -46,12 +48,11 @@ class PruneHistory implements EventListener {
                 .sorted(Comparator.comparing(Execution::getLastOverviewChange)
                         .reversed())
                 .toList();
-        Map<Resource, Integer> counter = new HashMap<>();
+        LocalDateTime now = LocalDateTime.now();
         for (Execution execution : executions) {
-            Resource pipeline = execution.getPipeline();
-            counter.put(pipeline, counter.getOrDefault(pipeline, 0) + 1);
-            Integer count = counter.get(pipeline);
-            if (count > historyLimit) {
+            Long diff = ChronoUnit.HOURS.between(
+                    now, execution.getLastOverviewChange().toInstant());
+            if (diff > historyHourLimit) {
                 deleteExecution(execution);
             }
         }
@@ -61,23 +62,6 @@ class PruneHistory implements EventListener {
         LOG.debug("Removing execution '{}' for '{}'.",
                 execution.getIri(), execution.getPipeline());
         executionFacade.deleteExecution(execution);
-    }
-
-    @Override
-    public void onExecutionHasFinalData(Execution execution) {
-        pruneHistory(execution.getPipeline());
-    }
-
-    private void pruneHistory(Resource pipeline) {
-        List<Execution> executions = executionFacade.getExecutions().stream()
-                .filter(exec -> pipeline.equals(exec.getPipeline()))
-                .filter(exec -> !ignoredStates.contains(exec.getStatus()))
-                .sorted(Comparator.comparing(Execution::getLastOverviewChange)
-                        .reversed())
-                .toList();
-        for (int index = historyLimit; index < executions.size(); ++index) {
-            deleteExecution(executions.get(index));
-        }
     }
 
 }
