@@ -92,7 +92,11 @@ executor-monitor.ftp.uri = ftp://localhost:2221
 
 # Optional property, if set determines how may time an execution is restarted
 # when an execution is terminated. Value must be a positive integer.
-# executor-monitor.retry.limit = 3
+# executor-monitor.retry_limit = 3
+
+# Limits number of executions for a given pipeline. When a new execution
+# is finished, the oldest executions outside the limit are removed.
+# executor-monitor.history_limit = 3
 
 ##############
 #  Storage   #

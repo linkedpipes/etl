@@ -1,0 +1,2 @@
+[etl]
+sk-nkod ansible_user=skoda ansible_host=sk-nkod.projekty.ms.mff.cuni.cz

@@ -57,6 +57,8 @@ public class Configuration {
      */
     private Integer retryLimit = null;
 
+    private Integer historyLimit = null;
+
     @PostConstruct
     public void init() {
         String propertiesFile = System.getProperty("configFileLocation");
@@ -102,8 +104,12 @@ public class Configuration {
                 "executor-monitor.public_working_data_url_prefix");
 
         retryLimit = getOptionalPropertyInteger(
-                "executor-monitor.retry.limit");
+                "executor-monitor.retry_limit");
         retryExecution = retryLimit != null;
+
+        historyLimit = getEnvOrOptionalPropertyInteger(
+                "LP_ETL_EXECUTION_HISTORY_COUNT_LIMIT",
+                "executor-monitor.history_limit");
 
         //
         validateUri(executorUri, "executor.execution.working_directory");
@@ -210,6 +216,19 @@ public class Configuration {
         return value;
     }
 
+    protected Integer getEnvOrOptionalPropertyInteger(String env, String name) {
+        String value = System.getenv(env);
+        if (value != null && !value.isEmpty()) {
+            try {
+                return Integer.parseInt(value);
+            } catch (Exception ex) {
+                LOG.error("Invalid configuration property: '{}'", name);
+                throw new RuntimeException(ex);
+            }
+        }
+        return getOptionalPropertyInteger(name);
+    }
+
     protected Integer getOptionalPropertyInteger(String name) {
         String value;
         try {
@@ -261,6 +280,10 @@ public class Configuration {
 
     public Integer getRetryLimit() {
         return retryLimit;
+    }
+
+    public Integer getHistoryLimit() {
+        return historyLimit;
     }
 
 }

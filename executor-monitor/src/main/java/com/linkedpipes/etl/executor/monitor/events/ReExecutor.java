@@ -93,7 +93,7 @@ class ReExecutor implements EventListener {
             LOG.error("Can't re-execute execution: {}",
                     execution.getId(), ex);
         }
-        LOG.info("Re-executing execution: {}", execution.getId());
+        LOG.debug("Re-executing execution: {}", execution.getId());
     }
 
     @Override

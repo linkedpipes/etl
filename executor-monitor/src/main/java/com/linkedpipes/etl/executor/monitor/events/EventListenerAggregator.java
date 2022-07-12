@@ -37,6 +37,9 @@ class EventListenerAggregator implements EventListener {
             LOG.info("Using ReExecutor.");
             listeners.add(new ReExecutor(configuration.getRetryLimit()));
         }
+        if (configuration.getHistoryLimit() != null) {
+            listeners.add(new PruneHistory(configuration.getHistoryLimit()));
+        }
     }
 
     @Override
