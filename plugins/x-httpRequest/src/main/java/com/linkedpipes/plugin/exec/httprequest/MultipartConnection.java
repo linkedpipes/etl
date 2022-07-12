@@ -18,7 +18,7 @@ class MultipartConnection extends Connection {
     public MultipartConnection(HttpURLConnection connection)
             throws IOException {
         super(connection);
-        this.boundary = "=----------------------" + System.currentTimeMillis();
+        this.boundary = "----------------------" + System.currentTimeMillis();
 
         initializeConnection();
 
