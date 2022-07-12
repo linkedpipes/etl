@@ -21,7 +21,7 @@ public class ManagementServlet {
     @Autowired
     private PipelineFacade pipelineFacade;
 
-    @RequestMapping(value = "/reload", method = RequestMethod.GET)
+    @RequestMapping(value = "/reload", method = RequestMethod.POST)
     public void reloadAll() {
         templateFacade.reload();
         pipelineFacade.reload();
