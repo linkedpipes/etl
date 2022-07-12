@@ -299,4 +299,8 @@ public class TemplateService {
         repository.remove(template);
     }
 
+    public void reload() {
+        reloadTemplates();
+    }
+
 }

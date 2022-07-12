@@ -97,4 +97,8 @@ public class PipelineFacade {
         return service.localizePipeline(pipelineRdf, optionsRdf);
     }
 
+    public void reload() {
+        service.reload();
+    }
+
 }

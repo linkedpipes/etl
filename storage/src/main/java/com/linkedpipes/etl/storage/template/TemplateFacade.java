@@ -333,4 +333,8 @@ public class TemplateFacade implements TemplateSource {
         return getConfigDescription(getTemplate(iri));
     }
 
+    public void reload() {
+        service.reload();
+    }
+
 }

@@ -192,4 +192,18 @@ class PipelineService {
         return pipeline;
     }
 
+    public void reload() {
+        Set<String> existingPipelines = storage.getPipelines().keySet();
+        storage.loadPipelines((pipeline, rdf) -> {
+            if (existingPipelines.contains(pipeline.getIri())) {
+                // Existing pipeline.
+                infoFacade.onPipelineUpdate(pipeline, rdf);
+            } else {
+                // New pipeline.
+                infoFacade.onPipelineCreate(pipeline, rdf);
+                reserved.add(pipeline.getIri());
+            }
+        });
+    }
+
 }
