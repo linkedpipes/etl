@@ -29,9 +29,10 @@ class LimitTimeHistory implements EventListener {
 
     private final Integer historyHourLimit;
 
-    private ExecutionFacade executionFacade = null;
+    private final ExecutionFacade executionFacade = null;
 
     public LimitTimeHistory(Integer historyHourLimit) {
+        LOG.info("Using history time limit with limit: {}", historyHourLimit);
         this.historyHourLimit = historyHourLimit;
     }
 

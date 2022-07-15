@@ -18,9 +18,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 class EventListenerAggregator implements EventListener {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(EventListenerAggregator.class);
-
     private final List<EventListener> listeners = new ArrayList<>();
 
     private Configuration configuration;
@@ -30,23 +27,19 @@ class EventListenerAggregator implements EventListener {
         String slackFinished = configuration.getSlackFinishedWebhook();
         String slackError = configuration.getSlackErrorWebhook();
         if (slackFinished != null || slackError != null) {
-            LOG.info("Using Slack notifications.");
             listeners.add(new SlackNotification(
                     slackFinished, slackError,
                     configuration.getLocalUrl()));
         }
         if (configuration.isRetryExecution()) {
-            LOG.info("Using ReExecutor.");
             listeners.add(new ReExecutor(
                     configuration.getRetryLimit()));
         }
         if (configuration.getHistoryLimit() != null) {
-            LOG.info("Using history count limit.");
             listeners.add(new LimitCountHistory(
                     configuration.getHistoryLimit()));
         }
         if (configuration.getHistoryHourLimit() != null) {
-            LOG.info("Using history time limit.");
             listeners.add(new LimitTimeHistory(
                     configuration.getHistoryHourLimit()));
         }

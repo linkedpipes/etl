@@ -27,6 +27,7 @@ class SlackNotification implements EventListener {
             String slackForFinished,
             String slackForError,
             String localPublicUrl) {
+        LOG.info("Using Slack notifications.");
         this.slackForFinished = slackForFinished;
         this.slackForError = slackForError;
         this.localPublicUrl = localPublicUrl;

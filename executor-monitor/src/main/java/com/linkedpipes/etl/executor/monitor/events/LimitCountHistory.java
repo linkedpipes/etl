@@ -30,6 +30,7 @@ class LimitCountHistory implements EventListener {
     private ExecutionFacade executionFacade = null;
 
     public LimitCountHistory(Integer historyLimit) {
+        LOG.info("Using history count limit with limit: {}", historyLimit);
         this.historyLimit = historyLimit;
     }
 

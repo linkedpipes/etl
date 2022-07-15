@@ -26,6 +26,7 @@ class ReExecutor implements EventListener {
     private ExecutionFacade executionFacade = null;
 
     public ReExecutor(Integer retryCount) {
+        LOG.info("Using ReExecutor with retry count: {}", retryCount);
         this.retryCount = retryCount;
     }
 
