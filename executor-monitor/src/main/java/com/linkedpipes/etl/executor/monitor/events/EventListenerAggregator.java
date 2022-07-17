@@ -18,6 +18,9 @@ import java.util.concurrent.TimeUnit;
 @Service
 class EventListenerAggregator implements EventListener {
 
+    private static final Logger LOG =
+            LoggerFactory.getLogger(EventListenerAggregator.class);
+
     private final List<EventListener> listeners = new ArrayList<>();
 
     private Configuration configuration;
@@ -26,6 +29,7 @@ class EventListenerAggregator implements EventListener {
     public void onInit() {
         String slackFinished = configuration.getSlackFinishedWebhook();
         String slackError = configuration.getSlackErrorWebhook();
+        LOG.info("Initializing event listeners ...");
         if (slackFinished != null || slackError != null) {
             listeners.add(new SlackNotification(
                     slackFinished, slackError,

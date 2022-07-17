@@ -105,7 +105,8 @@ public class Configuration {
         publicWorkingDataUrlPrefix = getOptionalProperty(
                 "executor-monitor.public_working_data_url_prefix");
 
-        retryLimit = getOptionalPropertyInteger(
+        retryLimit = getEnvOrOptionalPropertyInteger(
+                "LP_ETL_EXECUTION_RETRY_LIMIT",
                 "executor-monitor.retry_limit");
         retryExecution = retryLimit != null;
 
@@ -113,7 +114,7 @@ public class Configuration {
                 "LP_ETL_EXECUTION_HISTORY_COUNT_LIMIT",
                 "executor-monitor.history_limit");
 
-        historyLimit = getEnvOrOptionalPropertyInteger(
+        historyHourLimit = getEnvOrOptionalPropertyInteger(
                 "LP_ETL_EXECUTION_HISTORY_HOUR_LIMIT",
                 "executor-monitor.history_hour_limit");
 
