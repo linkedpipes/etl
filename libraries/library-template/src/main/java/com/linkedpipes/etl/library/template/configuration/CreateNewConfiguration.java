@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.library.template.configuration;
 
-import com.linkedpipes.etl.library.template.plugin.model.ConfigurationDescription;
+import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.template.configuration.model.ConfigurationDescription;
 import com.linkedpipes.etl.library.template.vocabulary.LP_V1;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 class CreateNewConfiguration {
 
@@ -59,14 +62,14 @@ class CreateNewConfiguration {
             replaceControls(
                     entry.getValue(), description,
                     entry.getKey(), defaultControl);
+            removeSubstitution(
+                    entry.getValue(), description);
             StatementsUtils.renameSubject(
                     entry.getValue(),
                     entry.getKey(),
                     valueFactory.createIRI(baseIri + "/" + counter));
         }
-        List<Statement> result = collectStatements(entities);
-        result = StatementsUtils.setGraph(result, graph);
-        return result;
+        return collectStatements(entities).withGraph(graph).asList();
     }
 
     private Map<Resource, List<Statement>> splitBySubject(
@@ -110,7 +113,7 @@ class CreateNewConfiguration {
             ConfigurationDescription description, IRI defaultControl) {
         Map<IRI, Value> result = new HashMap<>();
         for (var member : description.members().values()) {
-            result.put(member.controlProperty(), defaultControl);
+            result.put(member.control(), defaultControl);
         }
         return result;
     }
@@ -128,9 +131,22 @@ class CreateNewConfiguration {
         return result;
     }
 
-    private List<Statement> collectStatements(
+    /**
+     * Remove all substitution related content as the new configuration
+     * must not contain any of it.
+     */
+    private void removeSubstitution(
+            List<Statement> statements, ConfigurationDescription description) {
+        Set<IRI> forRemoval = description.members().values().stream()
+                .map(ConfigurationDescription.Member::substitution)
+                .collect(Collectors.toSet());
+        statements.removeIf(
+                (statement -> forRemoval.contains(statement.getPredicate())));
+    }
+
+    private Statements collectStatements(
             Map<Resource, List<Statement>> entities) {
-        List<Statement> result = new ArrayList<>();
+        Statements result = Statements.arrayList();
         for (List<Statement> statements : entities.values()) {
             result.addAll(statements);
         }

@@ -43,10 +43,12 @@
 
 <http://localhost/instance> a component:Configuration ;
     component:first "l-0" ;
+    component:firstSubstitution "LEVEL-0" ;
     component:firstControl config:None ;
     component:second "l-0" ;
     component:secondControl config:None ;
     component:third "l-0" ;
+    component:thirdSubstitution "LEVEL-0" ;
     component:thirdControl config:None ;
     component:fourth "l-0" ;
     component:fourthControl config:None ;
@@ -60,6 +62,7 @@
     component:first "l-1" ;
     component:firstControl config:None ;
     component:second "l-1" ;
+    component:secondSubstitution "LEVEL-1" ;
     component:secondControl config:Force ;
     component:third "l-1" ;
     component:thirdControl config:InheritAndForce ;
@@ -77,6 +80,7 @@
     component:first "l-2" ;
     component:firstControl config:None ;
     component:second "l-2" ;
+    component:secondSubstitution "LEVEL-2" ;
     component:secondControl config:None ;
     component:third "l-2" ;
     component:thirdControl config:None ;
@@ -92,8 +96,10 @@
     component:first "l-2" ;
     component:firstControl config:None ;
     component:second "l-1" ;
+    component:secondSubstitution "LEVEL-1" ;
     component:secondControl config:Forced ;
     component:third "l-0" ;
+    component:thirdSubstitution "LEVEL-0" ;
     component:thirdControl config:Forced ;
     component:fourth "l-1" ;
     component:fourthControl config:None ;

@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.library.template.configuration;
 
 import com.linkedpipes.etl.library.rdf.StatementsSelector;
-import com.linkedpipes.etl.library.template.plugin.model.ConfigurationDescription;
+import com.linkedpipes.etl.library.template.configuration.model.ConfigurationDescription;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 

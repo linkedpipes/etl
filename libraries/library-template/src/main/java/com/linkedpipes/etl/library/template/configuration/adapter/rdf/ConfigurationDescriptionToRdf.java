@@ -1,6 +1,6 @@
-package com.linkedpipes.etl.library.template.plugin.adapter.rdf;
+package com.linkedpipes.etl.library.template.configuration.adapter.rdf;
 
-import com.linkedpipes.etl.library.template.plugin.model.ConfigurationDescription;
+import com.linkedpipes.etl.library.template.configuration.model.ConfigurationDescription;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 import com.linkedpipes.etl.library.template.vocabulary.LP_V1;
@@ -47,7 +47,7 @@ public class ConfigurationDescriptionToRdf {
             StatementsBuilder builder) {
         builder.addIri(resource, RDF.TYPE, LP_V1.MEMBER);
         builder.add(resource, LP_V1.CONFIG_DESC_PROPERTY, property);
-        builder.add(resource, LP_V1.CONFIG_DESC_CONTROL, member.controlProperty());
+        builder.add(resource, LP_V1.CONFIG_DESC_CONTROL, member.control());
         builder.add(resource, LP_V1.IS_PRIVATE, member.isPrivate());
     }
 

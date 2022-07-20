@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.library.template.plugin.adapter.rdf;
 
+import com.linkedpipes.etl.library.template.configuration.adapter.rdf.ConfigurationDescriptionToRdf;
 import com.linkedpipes.etl.library.template.plugin.model.PluginTemplate;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsBuilder;
@@ -47,7 +48,7 @@ public class PluginTemplateToRdf {
                 LP_V1.HAS_CONFIGURATION_ENTITY_DESCRIPTION,
                 template.configurationDescriptionGraph());
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        for (String dialog : template.dialogs()) {
+        for (String dialog : template.dialogs().keySet()) {
             Resource dialogResource = valueFactory.createIRI(
                     template.resource().stringValue()
                             + "/dialog/" + dialog);

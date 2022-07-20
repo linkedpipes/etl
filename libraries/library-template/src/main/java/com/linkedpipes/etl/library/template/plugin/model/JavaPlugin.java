@@ -13,6 +13,10 @@ import java.util.jar.JarFile;
  */
 public record JavaPlugin(
         /*
+         * Plugin identification.
+         */
+        IRI iri,
+        /*
          * Path to plugin file.
          */
         File file,
@@ -21,18 +25,18 @@ public record JavaPlugin(
          */
         JarFile jarFile,
         /*
-         * Plugin identification.
-         */
-        IRI plugin,
-        /*
          * List of all detected file entries with LP ETL specific prefix
          * removed.
          */
-        Map<String, JarEntry> resources,
+        Map<String, JarEntry> entries,
         /*
          * List of templates detected in the plugin.
          */
         List<PluginTemplate> templates
 ) {
+
+    public JarEntry entry(String name) {
+        return entries.get(name);
+    }
 
 }

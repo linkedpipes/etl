@@ -2,8 +2,8 @@ package com.linkedpipes.etl.library.template.configuration;
 
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.template.TestUtils;
-import com.linkedpipes.etl.library.template.plugin.adapter.rdf.RdfToConfigurationDescription;
-import com.linkedpipes.etl.library.template.plugin.model.ConfigurationDescription;
+import com.linkedpipes.etl.library.template.configuration.adapter.rdf.RdfToConfigurationDescription;
+import com.linkedpipes.etl.library.template.configuration.model.ConfigurationDescription;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -13,14 +13,14 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-public class ConfigurationUtilsTest {
+public class ConfigurationFacadeTest {
 
     private final ValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
 
     @Test
     public void createNewFromJarFile() throws Exception {
         var data = TestUtils.statementsFromResource(
-                "configuration/createNew.trig");
+                "configuration/create-new.trig");
         var actual = ConfigurationFacade.createNewFromJarFile(
                 TestUtils.selectGraph(data, "http://input"),
                 loadDescription(data, "http://description"),
@@ -45,7 +45,7 @@ public class ConfigurationUtilsTest {
     @Test
     public void createNewFromTemplate() throws Exception {
         var data = TestUtils.statementsFromResource(
-                "configuration/createNew.trig");
+                "configuration/create-new.trig");
         var actual = ConfigurationFacade.createNewFromTemplate(
                 TestUtils.selectGraph(data, "http://input"),
                 loadDescription(data, "http://description"),
@@ -108,11 +108,11 @@ public class ConfigurationUtilsTest {
         TestUtils.assertIsomorphic(actual, expected);
     }
 
-
     @Test
-    public void mergeTwoLevelInherit() throws Exception {
+    public void merge002Inherit() throws Exception {
+        
         var data = TestUtils.statementsFromResource(
-                "configuration/mergeTwoLevels.trig");
+                "configuration/merge-002.trig");
         var actual = ConfigurationFacade.merge(
                 Arrays.asList(
                         TestUtils.selectGraph(data, "http://parent"),
@@ -128,9 +128,10 @@ public class ConfigurationUtilsTest {
     }
 
     @Test
-    public void mergeTwoLevelInheritAndForce() throws Exception {
+    public void merge002InheritAndForce() throws Exception {
+        
         var data = TestUtils.statementsFromResource(
-                "configuration/mergeTwoLevels.trig");
+                "configuration/merge-002.trig");
         var actual = ConfigurationFacade.merge(
                 Arrays.asList(
                         TestUtils.selectGraph(data, "http://parent"),
@@ -146,9 +147,10 @@ public class ConfigurationUtilsTest {
     }
 
     @Test
-    public void mergeTwoLevelNoControl() throws Exception {
+    public void merge002NoControl() throws Exception {
+        
         var data = TestUtils.statementsFromResource(
-                "configuration/mergeTwoLevels.trig");
+                "configuration/merge-002.trig");
         var actual = ConfigurationFacade.merge(
                 Arrays.asList(
                         TestUtils.selectGraph(data, "http://parent"),
@@ -164,9 +166,10 @@ public class ConfigurationUtilsTest {
     }
 
     @Test
-    public void mergeTwoLevelNone() throws Exception {
+    public void merge002None() throws Exception {
+        
         var data = TestUtils.statementsFromResource(
-                "configuration/mergeTwoLevels.trig");
+                "configuration/merge-002.trig");
         var actual = ConfigurationFacade.merge(
                 Arrays.asList(
                         TestUtils.selectGraph(data, "http://parent"),
@@ -184,8 +187,9 @@ public class ConfigurationUtilsTest {
 
     @Test
     public void mergeGlobalControlIafF() throws Exception {
+        
         var data = TestUtils.statementsFromResource(
-                "configuration/mergeWithGlobal.trig");
+                "configuration/merge-003.trig");
         var actual = ConfigurationFacade.merge(
                 Arrays.asList(
                         TestUtils.selectGraph(data, "http://parent"),
@@ -204,9 +208,10 @@ public class ConfigurationUtilsTest {
     }
 
     @Test
-    public void mergeGlobalControlIIafF() throws Exception {
+    public void merge003IIafF() throws Exception {
+        
         var data = TestUtils.statementsFromResource(
-                "configuration/mergeWithGlobal.trig");
+                "configuration/merge-003.trig");
         var actual = ConfigurationFacade.merge(
                 Arrays.asList(
                         TestUtils.selectGraph(data, "http://parent"),
@@ -226,9 +231,10 @@ public class ConfigurationUtilsTest {
     }
 
     @Test
-    public void mergeGlobalControlFIaF() throws Exception {
+    public void merge003FIaF() throws Exception {
+        
         var data = TestUtils.statementsFromResource(
-                "configuration/mergeWithGlobal.trig");
+                "configuration/merge-003.trig");
         var actual = ConfigurationFacade.merge(
                 Arrays.asList(
                         TestUtils.selectGraph(data, "http://parent"),
@@ -244,5 +250,6 @@ public class ConfigurationUtilsTest {
                 data, "http://expected/parent_force_inheritAndForce");
         TestUtils.assertIsomorphic(actual, expected);
     }
+
 
 }

@@ -1,6 +1,6 @@
-package com.linkedpipes.etl.library.template.plugin.adapter.rdf;
+package com.linkedpipes.etl.library.template.configuration.adapter.rdf;
 
-import com.linkedpipes.etl.library.template.plugin.model.ConfigurationDescription;
+import com.linkedpipes.etl.library.template.configuration.model.ConfigurationDescription;
 import com.linkedpipes.etl.library.rdf.StatementsSelector;
 import com.linkedpipes.etl.library.template.vocabulary.LP_V1;
 import org.eclipse.rdf4j.model.IRI;
@@ -8,6 +8,7 @@ import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 public class RdfToConfigurationDescription {
+
+    private static final String SUBSTITUTION_SUFFIX = "Substitution";
 
     /**
      * This function does not load the resources.
@@ -62,7 +65,7 @@ public class RdfToConfigurationDescription {
     private static void loadMember(
             Resource resource, StatementsSelector statements,
             Map<IRI, ConfigurationDescription.Member> collector) {
-        IRI property = null, controlProperty = null;
+        IRI property = null, control = null;
         boolean isPrivate = false;
         for (Statement statement : statements.withSubject(resource)) {
             Value value = statement.getObject();
@@ -74,7 +77,7 @@ public class RdfToConfigurationDescription {
                     break;
                 case LP_V1.CONFIG_DESC_CONTROL:
                     if (value.isIRI()) {
-                        controlProperty = (IRI) value;
+                        control = (IRI) value;
                     }
                     break;
                 case LP_V1.IS_PRIVATE:
@@ -86,9 +89,16 @@ public class RdfToConfigurationDescription {
                     break;
             }
         }
+        // The substitution property is computed.
+        IRI substitution = null;
+        if (property != null) {
+            substitution = SimpleValueFactory.getInstance().createIRI(
+                    property + SUBSTITUTION_SUFFIX);
+        }
+        //
         ConfigurationDescription.Member member =
                 new ConfigurationDescription.Member(
-                        controlProperty, isPrivate);
+                        property, control, substitution, isPrivate);
         collector.put(property, member);
     }
 

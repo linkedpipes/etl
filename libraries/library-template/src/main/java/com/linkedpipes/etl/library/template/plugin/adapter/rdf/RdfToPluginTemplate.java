@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.library.template.plugin.adapter.rdf;
 
-import com.linkedpipes.etl.library.template.plugin.model.ConfigurationDescription;
+import com.linkedpipes.etl.library.template.configuration.adapter.rdf.RdfToConfigurationDescription;
+import com.linkedpipes.etl.library.template.configuration.model.ConfigurationDescription;
 import com.linkedpipes.etl.library.template.plugin.model.PluginTemplate;
 import com.linkedpipes.etl.library.template.plugin.model.PluginType;
 import com.linkedpipes.etl.library.rdf.Statements;
@@ -16,6 +17,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Information about dialogs is not loaded using this class.
+ * The reason is that we do not store enough information into RDF in
+ * first place. In addition, this method is employed to load data from user
+ * provided RDF specification of a component that does not
+ * contain that information.
+ */
 public class RdfToPluginTemplate {
 
     /**
@@ -49,7 +57,6 @@ public class RdfToPluginTemplate {
         boolean supportControl = false;
         List<String> tags = new ArrayList<>();
         List<PluginTemplate.Port> ports = new ArrayList<>();
-        List<String> dialogs = new ArrayList<>();
         IRI configurationGraph = null, configurationDescriptionGraph = null;
 
         for (Statement statement : statements.withSubject(pluginResource)) {
@@ -81,21 +88,18 @@ public class RdfToPluginTemplate {
                     }
                     break;
                 case LP_V1.HAS_DIALOG:
-                    if (value.isResource()) {
-                        String dialogName =
-                                loadDialog(statements, (Resource) value);
-                        if (dialogName != null) {
-                            dialogs.add(dialogName);
-                        }
-                    }
+                    // Dialogs are not loaded see class comment.
+                    break;
                 case LP_V1.HAS_CONFIGURATION_GRAPH:
                     if (value.isIRI()) {
                         configurationGraph = (IRI) value;
                     }
+                    break;
                 case LP_V1.HAS_CONFIGURATION_ENTITY_DESCRIPTION:
                     if (value.isIRI()) {
                         configurationDescriptionGraph = (IRI) value;
                     }
+                    break;
                 default:
                     break;
             }
@@ -125,7 +129,7 @@ public class RdfToPluginTemplate {
 
         return new PluginTemplate(
                 pluginResource, label, color, type, supportControl,
-                tags, documentation, dialogs, ports, configuration,
+                tags, documentation, null, ports, configuration,
                 configurationGraph, descriptions.get(0),
                 configurationDescriptionGraph);
     }
@@ -151,18 +155,6 @@ public class RdfToPluginTemplate {
             }
         }
         return new PluginTemplate.Port(binding, label, types);
-    }
-
-    private static String loadDialog(
-            StatementsSelector statements, Resource resource) {
-        for (Statement statement : statements.withSubject(resource)) {
-            Value value = statement.getObject();
-            String predicate = statement.getPredicate().stringValue();
-            if (LP_V1.HAS_NAME.equals(predicate)) {
-                return value.stringValue();
-            }
-        }
-        return null;
     }
 
 }

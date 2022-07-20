@@ -1,11 +1,8 @@
-package com.linkedpipes.etl.library.template.plugin.model;
+package com.linkedpipes.etl.library.template.configuration.model;
 
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,7 +30,18 @@ public record ConfigurationDescription(
 ) {
 
     public record Member(
-            IRI controlProperty,
+            /*
+             * IRI of predicate used to store the value.
+             */
+            IRI property,
+            /*
+             * IRI of predicate with control for this member.
+             */
+            IRI control,
+            /*
+             * IRI of predicate with substitution.
+             */
+            IRI substitution,
             boolean isPrivate
     ) {
 

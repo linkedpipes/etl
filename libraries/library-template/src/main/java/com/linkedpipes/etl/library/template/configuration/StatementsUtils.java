@@ -29,19 +29,4 @@ class StatementsUtils {
         statements.addAll(toAdd);
     }
 
-    public static List<Statement> setGraph(
-            List<Statement> statements, Resource graph) {
-        ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        List<Statement> result = new ArrayList<>(statements.size());
-        for (Statement statement : statements) {
-            result.add(valueFactory.createStatement(
-                    statement.getSubject(),
-                    statement.getPredicate(),
-                    statement.getObject(),
-                    graph
-            ));
-        }
-        return result;
-    }
-
 }
