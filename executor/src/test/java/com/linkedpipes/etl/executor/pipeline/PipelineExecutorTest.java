@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.executor.pipeline;
 
 import com.linkedpipes.etl.executor.api.v1.component.Component;
-import com.linkedpipes.etl.executor.api.v1.component.ManageableComponent;
+import com.linkedpipes.etl.executor.plugin.v1.ManageableComponent;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;

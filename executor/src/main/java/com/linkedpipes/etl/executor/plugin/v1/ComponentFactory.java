@@ -1,6 +1,7 @@
-package com.linkedpipes.etl.executor.api.v1.component;
+package com.linkedpipes.etl.executor.plugin.v1;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import org.osgi.framework.BundleContext;
 

@@ -1,18 +1,23 @@
-package com.linkedpipes.etl.executor.api.v1.service;
+package com.linkedpipes.etl.executor.plugin.v1.service;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
+import com.linkedpipes.etl.executor.api.v1.service.DefinitionReader;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import com.linkedpipes.etl.executor.api.v1.service.WorkingDirectory;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
 
 import java.net.URI;
 import java.util.List;
 
-public class DefaultServiceFactory implements ServiceFactory {
+public class ServiceFactory {
 
-    @Override
-    public Object create(
+    protected ServiceFactory() {
+    }
+
+    public static Object create(
             Class<?> serviceType, String component,
             RdfSource definition, Component.Context context)
             throws LpException {
@@ -29,7 +34,7 @@ public class DefaultServiceFactory implements ServiceFactory {
                 serviceType.getName());
     }
 
-    private WorkingDirectory createWorkingDirectory(
+    private static WorkingDirectory createWorkingDirectory(
             String component, RdfSource definition)
             throws LpException {
         List<RdfValue> paths = definition.getPropertyValues(

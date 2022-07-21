@@ -3,7 +3,7 @@ package com.linkedpipes.etl.executor.pipeline;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.PipelineExecutionObserver;
-import com.linkedpipes.etl.executor.api.v1.component.ManageableComponent;
+import com.linkedpipes.etl.executor.plugin.v1.ManageableComponent;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
 import com.linkedpipes.etl.executor.component.ComponentExecutor;
 import com.linkedpipes.etl.executor.dataunit.DataUnitInstanceSource;

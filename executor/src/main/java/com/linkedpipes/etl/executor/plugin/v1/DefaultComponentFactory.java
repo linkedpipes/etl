@@ -1,8 +1,10 @@
-package com.linkedpipes.etl.executor.api.v1.component;
+package com.linkedpipes.etl.executor.plugin.v1;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
-import com.linkedpipes.etl.executor.api.v1.service.DefaultServiceFactory;
+import com.linkedpipes.etl.executor.plugin.v1.service.ServiceFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.wiring.BundleRevision;
@@ -53,8 +55,8 @@ public class DefaultComponentFactory implements ComponentFactory {
         }
         // Create abd return a wrap.
         if (SequentialExecution.class.isAssignableFrom(instance.getClass())) {
-            return new SequentialWrap((SequentialExecution) instance,
-                    component, definition, new DefaultServiceFactory());
+            return new SequentialWrap(
+                    (SequentialExecution) instance, component, definition);
         }
         return null;
     }

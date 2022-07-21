@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.executor.component;
 
 import com.linkedpipes.etl.executor.ExecutorException;
-import com.linkedpipes.etl.executor.api.v1.component.ManageableComponent;
+import com.linkedpipes.etl.executor.plugin.v1.ManageableComponent;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
 import com.linkedpipes.etl.executor.execution.ExecutionObserver;
 import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;

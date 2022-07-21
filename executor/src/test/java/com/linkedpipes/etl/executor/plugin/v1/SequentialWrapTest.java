@@ -1,10 +1,12 @@
-package com.linkedpipes.etl.executor.api.v1.component;
+package com.linkedpipes.etl.executor.plugin.v1;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
-import com.linkedpipes.etl.executor.api.v1.service.DefaultServiceFactory;
+import com.linkedpipes.etl.executor.plugin.v1.service.ServiceFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.service.WorkingDirectory;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
@@ -64,8 +66,7 @@ public class SequentialWrapTest {
         dataUnits.put("http://dataUnit/output", output);
         TestComponent component = new TestComponent();
         SequentialWrap wrap = new SequentialWrap(
-                component, "http://component", rdfSource,
-                new DefaultServiceFactory());
+                component, "http://component", rdfSource);
         //
         wrap.initialize(dataUnits, null);
         Assertions.assertNotNull(component.input);

@@ -1,8 +1,9 @@
-package com.linkedpipes.etl.executor.api.v1.service;
+package com.linkedpipes.etl.executor.plugin.v1.service;
 
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.event.AbstractEvent;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.XSD;
 import org.slf4j.Logger;

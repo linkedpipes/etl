@@ -1,20 +1,21 @@
-package com.linkedpipes.etl.executor.api.v1.component;
+package com.linkedpipes.etl.executor.plugin.v1;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
-import com.linkedpipes.etl.executor.api.v1.service.ServiceFactory;
+import com.linkedpipes.etl.executor.plugin.v1.service.ServiceFactory;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Map;
 
 /**
  * Implementation for default manageable wrap for sequential component.
  */
-class SequentialWrap implements ManageableComponent, SequentialExecution {
+public class SequentialWrap implements ManageableComponent, SequentialExecution {
 
     private final SequentialExecution component;
 
@@ -22,15 +23,12 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
 
     private final RdfSource definition;
 
-    private final ServiceFactory serviceFactory;
-
     public SequentialWrap(
             SequentialExecution component, String componentIri,
-            RdfSource definition, ServiceFactory serviceFactory) {
+            RdfSource definition) {
         this.component = component;
         this.componentIri = componentIri;
         this.definition = definition;
-        this.serviceFactory = serviceFactory;
     }
 
     @Override
@@ -153,7 +151,7 @@ class SequentialWrap implements ManageableComponent, SequentialExecution {
             }
             Object instance;
             try {
-                instance = serviceFactory.create(
+                instance = ServiceFactory.create(
                         field.getType(), componentIri, definition, context);
             } catch (LpException ex) {
                 throw new LpException("Can't instantiate: {} : {}",
