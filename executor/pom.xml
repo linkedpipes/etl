@@ -32,7 +32,8 @@
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>
-            <artifactId>plugin-loader</artifactId>
+            <artifactId>library-template</artifactId>
+            <version>${lp.version}</version>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>

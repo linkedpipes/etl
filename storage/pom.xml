@@ -41,6 +41,11 @@
             <groupId>com.linkedpipes</groupId>
             <artifactId>plugin-configuration</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>library-template</artifactId>
+            <version>${lp.version}</version>
+        </dependency>
         <!-- Spring. -->
         <dependency>
             <groupId>org.springframework</groupId>

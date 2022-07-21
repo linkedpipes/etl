@@ -39,6 +39,11 @@
             <artifactId>rdf4j-rio-nquads</artifactId>
             <version>${rdf4j.version}</version>
         </dependency>
+        <!-- Dependencies for RDF4j -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
         <!-- Testing. -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>

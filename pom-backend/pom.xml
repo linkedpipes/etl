@@ -95,11 +95,6 @@
                 <artifactId>plugin-api</artifactId>
                 <version>${lp.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.linkedpipes</groupId>
-                <artifactId>plugin-loader</artifactId>
-                <version>${lp.version}</version>
-            </dependency>
             <!-- Logback as implementation org.slf4j. -->
             <dependency>
                 <groupId>ch.qos.logback</groupId>

@@ -10,6 +10,7 @@ import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
+import com.linkedpipes.etl.executor.plugin.osgi.OsgiPluginService;
 import com.linkedpipes.etl.executor.rdf.RdfSourceWrap;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
@@ -39,7 +40,7 @@ public class PluginServiceHolder
 
     private final AbstractApplicationContext springContext;
 
-    private final PluginService osgi = PluginService.osgi();
+    private final OsgiPluginService osgi = new OsgiPluginService();
 
     public PluginServiceHolder(
             ConfigurationHolder configuration,

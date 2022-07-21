@@ -3,10 +3,10 @@ package com.linkedpipes.etl.executor.plugin.osgi;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.PipelineExecutionObserver;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
-import com.linkedpipes.etl.executor.plugin.PluginService;
-import com.linkedpipes.plugin.loader.PluginJarFile;
-import com.linkedpipes.plugin.loader.PluginLoader;
-import com.linkedpipes.plugin.loader.PluginLoaderException;
+import com.linkedpipes.etl.library.template.plugin.PluginException;
+import com.linkedpipes.etl.library.template.plugin.PluginTemplateFacade;
+import com.linkedpipes.etl.library.template.plugin.model.JavaPlugin;
+import com.linkedpipes.etl.plugin.api.v2.component.Component;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
-public class OsgiPluginService implements PluginService {
+public class OsgiPluginService {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(OsgiPluginService.class);
@@ -38,7 +38,6 @@ public class OsgiPluginService implements PluginService {
 
     private final Map<String, Bundle> bundles = new HashMap<>();
 
-    @Override
     public void startService(File storageDirectory) throws ExecutorException {
         Map<String, String> config = new HashMap<>();
         config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA,
@@ -57,7 +56,6 @@ public class OsgiPluginService implements PluginService {
         }
     }
 
-    @Override
     public void stopService() {
         if (framework == null) {
             return;
@@ -74,7 +72,6 @@ public class OsgiPluginService implements PluginService {
         LOG.trace("Closing ... done");
     }
 
-    @Override
     public void loadLibraries(File directory) throws ExecutorException {
         LOG.debug("Loading libraries from '{}'.", directory.getAbsolutePath());
         BundleContext context = framework.getBundleContext();
@@ -124,7 +121,6 @@ public class OsgiPluginService implements PluginService {
         }
     }
 
-    @Override
     public void loadPlugins(File directory) throws ExecutorException {
         LOG.debug("Loading plugins from '{}'.", directory.getAbsolutePath());
         List<File> files = listDirectory(directory);
@@ -149,22 +145,30 @@ public class OsgiPluginService implements PluginService {
     }
 
     private void loadPlugin(File file) throws ExecutorException {
-        PluginLoader loader = new PluginLoader();
-        List<PluginJarFile> plugins;
+        JavaPlugin plugin;
         try {
-            plugins = loader.loadReferences(file);
-        } catch (PluginLoaderException ex) {
+            plugin = PluginTemplateFacade.loadJavaFile(file);
+        } catch (PluginException ex) {
             LOG.error("Can't load component.", ex);
             return;
         }
         //
         Bundle bundle = installComponent(file.toURI().toString());
         startBundle(bundle);
-        for (PluginJarFile plugin : plugins) {
-            // As of now we store under JAR iri as a single *.jar
-            // file can contain only one component.
-            bundles.put(plugin.getJar(), bundle);
+        Map<String, Class<?>> classes =
+                OsgiClassLoader.load(bundle.getBundleContext());
+        // TODO: As of now we support only one class per bundle.
+
+        if (plugin.templates().size() != 1) {
+            throw new ExecutorException(
+                    "Invalid number of plugins detected for '{}'", file);
         }
+        if (classes.size() != 1) {
+            throw new ExecutorException(
+                    "Invalid number components classes for '{}'", file);
+        }
+        String iri = plugin.iri().stringValue();
+        bundles.put(iri, bundle);
     }
 
     private Bundle installComponent(String path) throws ExecutorException {
@@ -178,7 +182,6 @@ public class OsgiPluginService implements PluginService {
         return bundle;
     }
 
-    @Override
     public List<PipelineExecutionObserver> getPipelineListeners()
             throws ExecutorException {
         return getServices(PipelineExecutionObserver.class);
@@ -197,13 +200,11 @@ public class OsgiPluginService implements PluginService {
         }
     }
 
-    @Override
     public List<DataUnitFactory> getDataUnitFactories()
             throws ExecutorException {
         return getServices(DataUnitFactory.class);
     }
 
-    @Override
     public BundleContext getComponentBundleContext(String iri)
             throws ExecutorException {
         if (!bundles.containsKey(iri)) {
@@ -212,5 +213,6 @@ public class OsgiPluginService implements PluginService {
         }
         return bundles.get(iri).getBundleContext();
     }
+
 
 }
