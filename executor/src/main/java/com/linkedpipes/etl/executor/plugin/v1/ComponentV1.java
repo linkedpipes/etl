@@ -13,9 +13,9 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 /**
- * Implementation for default manageable wrap for sequential component.
+ * Wrap for V1 components.
  */
-public class SequentialWrap implements ManageableComponent, SequentialExecution {
+public class ComponentV1 implements SequentialExecution {
 
     private final SequentialExecution component;
 
@@ -23,7 +23,7 @@ public class SequentialWrap implements ManageableComponent, SequentialExecution 
 
     private final RdfSource definition;
 
-    public SequentialWrap(
+    public ComponentV1(
             SequentialExecution component, String componentIri,
             RdfSource definition) {
         this.component = component;
@@ -40,7 +40,6 @@ public class SequentialWrap implements ManageableComponent, SequentialExecution 
         }
     }
 
-    @Override
     public void initialize(
             Map<String, DataUnit> dataUnits, Component.Context context)
             throws LpException {
@@ -50,7 +49,6 @@ public class SequentialWrap implements ManageableComponent, SequentialExecution 
         injectServices(context);
     }
 
-    @Override
     public void loadConfiguration(RdfSource definition)
             throws LpException {
         // Load configuration.
@@ -61,7 +59,6 @@ public class SequentialWrap implements ManageableComponent, SequentialExecution 
         }
     }
 
-    @Override
     public RuntimeConfiguration getRuntimeConfiguration() throws LpException {
         final Object fieldValue = getConfigurationObject();
         if (fieldValue == null) {

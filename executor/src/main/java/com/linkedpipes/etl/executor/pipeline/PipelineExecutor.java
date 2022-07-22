@@ -3,7 +3,7 @@ package com.linkedpipes.etl.executor.pipeline;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.PipelineExecutionObserver;
-import com.linkedpipes.etl.executor.plugin.v1.ManageableComponent;
+import com.linkedpipes.etl.executor.plugin.v1.ComponentV1;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
 import com.linkedpipes.etl.executor.component.ComponentExecutor;
 import com.linkedpipes.etl.executor.dataunit.DataUnitInstanceSource;
@@ -61,7 +61,7 @@ public class PipelineExecutor {
      */
     private ComponentExecutor executor = null;
 
-    private final Map<String, ManageableComponent>
+    private final Map<String, ComponentV1>
             componentsInstances = new HashMap<>();
 
     /**
@@ -288,7 +288,7 @@ public class PipelineExecutor {
                 continue;
             }
             String iri = component.getIri();
-            ManageableComponent instance;
+            ComponentV1 instance;
             try {
                 instance = moduleFacade.getComponent(pipeline, iri);
                 componentsInstances.put(component.getIri(), instance);
@@ -362,8 +362,7 @@ public class PipelineExecutor {
 
     private ComponentExecutor getExecutor(PipelineComponent component)
             throws ExecutorException {
-        ManageableComponent instance =
-                componentsInstances.get(component.getIri());
+        ComponentV1 instance = componentsInstances.get(component.getIri());
         return ComponentExecutor.create(
                 pipeline, execution, component, instance);
     }

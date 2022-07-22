@@ -1,12 +1,12 @@
 package com.linkedpipes.etl.executor.pipeline;
 
 import com.linkedpipes.etl.executor.api.v1.component.Component;
-import com.linkedpipes.etl.executor.plugin.v1.ManageableComponent;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.plugin.PluginServiceHolder;
+import com.linkedpipes.etl.executor.plugin.v1.ComponentV1;
 import org.apache.commons.io.FileUtils;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -21,8 +21,11 @@ public class PipelineExecutorTest {
     /**
      * Dummy component, that does nothing.
      */
-    public class DummyComponent implements ManageableComponent,
-            SequentialExecution {
+    public class DummyComponent extends ComponentV1 {
+
+        public DummyComponent() {
+            super(null, null, null);
+        }
 
         @Override
         public void initialize(
@@ -32,7 +35,7 @@ public class PipelineExecutorTest {
 
         @Override
         public void loadConfiguration(RdfSource definition) {
-            LOG.info("loadConfiguration {}");
+            LOG.info("loadConfiguration");
         }
 
         @Override

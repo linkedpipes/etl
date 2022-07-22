@@ -6,7 +6,6 @@ import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
-import com.linkedpipes.etl.executor.plugin.v1.service.ServiceFactory;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.service.WorkingDirectory;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
@@ -65,7 +64,7 @@ public class SequentialWrapTest {
         Mockito.when(output.getBinding()).thenReturn("http://dataUnit/output");
         dataUnits.put("http://dataUnit/output", output);
         TestComponent component = new TestComponent();
-        SequentialWrap wrap = new SequentialWrap(
+        ComponentV1 wrap = new ComponentV1(
                 component, "http://component", rdfSource);
         //
         wrap.initialize(dataUnits, null);

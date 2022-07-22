@@ -4,8 +4,8 @@ import com.linkedpipes.etl.executor.ConfigurationHolder;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.PipelineExecutionObserver;
-import com.linkedpipes.etl.executor.plugin.v1.DefaultComponentFactory;
-import com.linkedpipes.etl.executor.plugin.v1.ManageableComponent;
+import com.linkedpipes.etl.executor.plugin.v1.ComponentFactory;
+import com.linkedpipes.etl.executor.plugin.v1.ComponentV1;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
@@ -54,7 +54,7 @@ public class PluginServiceHolder
         return osgi.getPipelineListeners();
     }
 
-    public ManageableComponent getComponent(Pipeline pipeline, String component)
+    public ComponentV1 getComponent(Pipeline pipeline, String component)
             throws PluginException {
         String jarUrl = getComponentJarUrl(pipeline, component);
         checkIfBundleIsAllowed(jarUrl);
@@ -64,8 +64,8 @@ public class PluginServiceHolder
         } catch (ExecutorException ex) {
             throw new PluginException("Can't load bundle: {}", jarUrl, ex);
         }
-        ManageableComponent result;
-        DefaultComponentFactory factory = new DefaultComponentFactory();
+        ComponentV1 result;
+        ComponentFactory factory = new ComponentFactory();
         try {
             result = factory.create(
                     component, pipeline.getPipelineGraph(),

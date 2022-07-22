@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.executor.component;
 
 import com.linkedpipes.etl.executor.ExecutorException;
-import com.linkedpipes.etl.executor.plugin.v1.ManageableComponent;
+import com.linkedpipes.etl.executor.plugin.v1.ComponentV1;
 import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
 import com.linkedpipes.etl.executor.execution.ExecutionObserver;
 import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
@@ -28,7 +28,7 @@ public interface ComponentExecutor {
 
     static ComponentExecutor create(
             Pipeline pipeline, ExecutionObserver execution,
-            PipelineComponent component, ManageableComponent instance)
+            PipelineComponent component, ComponentV1 instance)
             throws ExecutorException {
         ExecutionComponent execComponent =
                 execution.getModel().getComponent(component);
