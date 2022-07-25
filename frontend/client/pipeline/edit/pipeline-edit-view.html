@@ -68,6 +68,27 @@
             Copy and Open
           </md-button>
         </md-menu-item>
+        <md-menu-item>
+          <md-button ng-click='onOpenLogTail()'>
+            <md-icon class="material-icons">visibility</md-icon>
+            See logs tail
+          </md-button>
+        </md-menu-item>
+        <md-menu-item>
+          <md-button ng-href="{{logsUrl}}" target="_blank">
+            <md-icon class="material-icons">visibility</md-icon>
+            See logs
+          </md-button>
+        </md-menu-item>
+        <md-menu-item>
+          <md-button
+            ng-href="{{logsUrl}}"
+            target="_blank"
+            download="{{pipelineLabel}}.log">
+            <md-icon class="material-icons">file_download</md-icon>
+            Download logs
+          </md-button>
+        </md-menu-item>
       </md-menu-content>
     </md-menu>
 

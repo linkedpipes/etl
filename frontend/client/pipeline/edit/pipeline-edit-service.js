@@ -10,6 +10,7 @@
       "../import/pipeline-import-dialog-ctrl",
       "./template-detail-dialog/template-detail-dialog",
       "./pipeline-edit-dialog-service",
+      "../../execution/log-tail/execution-log-tail-dialog",
       "../pipeline-api",
       "./pipeline-actions",
       "./canvas/pipeline-loader",
@@ -20,7 +21,7 @@
   }
 })((_canvasService, _editModeService, _executionModeService,
     _templateSelectDialog, _pipelineDetailDialog, _componentDetailDialog,
-    _pipelineImportDialog, _templateDialog, _dialogService,
+    _pipelineImportDialog, _templateDialog, _dialogService, _logTailDialog,
     pipelines, actions, loader, executions, statusToIcon, saveAs) => {
   "use strict";
 
@@ -56,6 +57,7 @@
         "style": {}
       };
       $scope.isExecutionCancelable = false;
+      $scope.logsUrl = "./api/v1/executions-logs?iri=" + encodeURIComponent(execution);
       //
       data["pipelineIri"] = pipeline;
       data["executionIri"] = execution;
@@ -357,6 +359,23 @@
       activateExecutionMode();
     }
 
+    function onOpenLogTail() {
+      const useFullScreen = ($mdMedia("sm") || $mdMedia("xs"));
+      $mdDialog.show({
+        "controller": "execution.log-tail.dialog",
+        "template": require("./../../execution/log-tail/execution-log-tail-dialog.html"),
+        "clickOutsideToClose": false,
+        "fullscreen": useFullScreen,
+        "locals": {
+          "execution": {
+            "iri": data["executionIri"],
+            "label": $scope.pipelineLabel,
+            "status-monitor": actions.getExecutionStatus(),
+          }
+        }
+      });
+    }
+
     return {
       "initialize": initialize,
       "onHtmlReady": onHtmlReady,
@@ -378,6 +397,7 @@
       "onCopyNoSave": onCopyPipelineNoSave,
       "onCancel": onCancel,
       "onExecutionMode": onExecutionMode,
+      "onOpenLogTail": onOpenLogTail,
     };
   }
 
@@ -408,6 +428,7 @@
     _pipelineImportDialog(app);
     _templateDialog(app);
     _dialogService(app);
+    _logTailDialog(app);
     app.factory("components.pipeline.canvas.service", factory);
   }
 

@@ -52,6 +52,8 @@
 
     $scope.onExecutionMode = $service.onExecutionMode;
 
+    $scope.onOpenLogTail = $service.onOpenLogTail;
+
     $timeout($service.onHtmlReady);
 
   }

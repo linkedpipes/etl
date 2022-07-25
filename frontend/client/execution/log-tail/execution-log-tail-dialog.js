@@ -30,7 +30,7 @@ define(["angular"], function (angular) {
             scrollToBottom();
           }
           if (isExecutionFinished(execution)) {
-            $interval.cancel(refreshStop);
+            $refresh.remove("log-tail");
           }
         }, (response) => {
         element.textContent = "There are no log data available.";
