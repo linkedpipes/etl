@@ -6,7 +6,6 @@ import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.library.template.plugin.PluginException;
 import com.linkedpipes.etl.library.template.plugin.PluginTemplateFacade;
 import com.linkedpipes.etl.library.template.plugin.model.JavaPlugin;
-import com.linkedpipes.etl.plugin.api.v2.component.Component;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
