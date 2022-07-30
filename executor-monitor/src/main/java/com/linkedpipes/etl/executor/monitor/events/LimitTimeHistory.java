@@ -3,7 +3,6 @@ package com.linkedpipes.etl.executor.monitor.events;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionStatus;
-import org.eclipse.rdf4j.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,9 +10,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 class LimitTimeHistory implements EventListener {
 
@@ -29,7 +26,7 @@ class LimitTimeHistory implements EventListener {
 
     private final Integer historyHourLimit;
 
-    private final ExecutionFacade executionFacade = null;
+    private ExecutionFacade executionFacade = null;
 
     public LimitTimeHistory(Integer historyHourLimit) {
         LOG.info("Using history time limit with limit: {}", historyHourLimit);
@@ -37,13 +34,18 @@ class LimitTimeHistory implements EventListener {
     }
 
     @Override
-    public void onTimeHour() {
-        EventListener.super.onTimeHour();
-        pruneOnStartup();
+    public void onExecutionFacadeReady(ExecutionFacade executions) {
+        EventListener.super.onExecutionFacadeReady(executions);
+        executionFacade = executions;
     }
 
+    @Override
+    public void onTimeHour() {
+        EventListener.super.onTimeHour();
+        prune();
+    }
 
-    private void pruneOnStartup() {
+    private void prune() {
         List<Execution> executions = executionFacade.getExecutions().stream()
                 .filter(exec -> !ignoredStates.contains(exec.getStatus()))
                 .sorted(Comparator.comparing(Execution::getLastOverviewChange)
@@ -51,7 +53,7 @@ class LimitTimeHistory implements EventListener {
                 .toList();
         LocalDateTime now = LocalDateTime.now();
         for (Execution execution : executions) {
-            Long diff = ChronoUnit.HOURS.between(
+            long diff = ChronoUnit.HOURS.between(
                     now, execution.getLastOverviewChange().toInstant());
             if (diff > historyHourLimit) {
                 deleteExecution(execution);
