@@ -23,6 +23,8 @@ public class ExecutorComponent {
 
     private String jar;
 
+    private String template;
+
     private String configGraph;
 
     private String configDescriptionGraph;
@@ -60,6 +62,7 @@ public class ExecutorComponent {
         builder.addType(iri, LP_PIPELINE.COMPONENT);
         builder.add(iri, LP_EXEC.HAS_ORDER_EXEC, executionOrder);
         builder.addIri(iri, LP_PIPELINE.HAS_JAR_URL, jar);
+        builder.addIri(iri, LP_PIPELINE.HAS_TEMPLATE, template);
         builder.addIri(iri, LP_EXEC.HAS_EXECUTION_TYPE, executionType);
         builder.add(iri, SKOS.PREF_LABEL, label);
     }
@@ -115,6 +118,10 @@ public class ExecutorComponent {
 
     public void setJar(String jar) {
         this.jar = jar;
+    }
+
+    public void setTemplate(String template) {
+        this.template = template;
     }
 
     public String getConfigGraph() {

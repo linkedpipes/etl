@@ -31,6 +31,8 @@ public class PipelineComponent implements Loadable {
 
     private String jarPath;
 
+    private String template;
+
     private ConfigurationDescription configurationDescription;
 
     private String execution;
@@ -72,6 +74,10 @@ public class PipelineComponent implements Loadable {
 
     public String getJarPath() {
         return jarPath;
+    }
+
+    public String getTemplate() {
+        return template;
     }
 
     public boolean isPlannedForExecution() {
@@ -125,6 +131,9 @@ public class PipelineComponent implements Loadable {
                 return null;
             case LP_PIPELINE.HAS_JAR_URL:
                 jarPath = object.asString();
+                return null;
+            case LP_PIPELINE.HAS_TEMPLATE:
+                template = object.asString();
                 return null;
             case LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION:
                 configurationDescription =

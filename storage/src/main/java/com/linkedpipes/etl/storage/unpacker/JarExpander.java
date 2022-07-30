@@ -41,6 +41,7 @@ class JarExpander {
 
     private void copyTemplate(JarTemplate template) {
         component.setJar(template.getJar());
+        component.setTemplate(template.getIri());
         component.setRequirements(template.getRequirements());
         component.setTypes(Arrays.asList(LP_PIPELINE.COMPONENT));
         component.setConfigDescriptionGraph(
