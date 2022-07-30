@@ -1,6 +1,5 @@
 package com.linkedpipes.etl.storage.web.servlet;
 
-import com.linkedpipes.etl.plugin.configuration.InvalidConfiguration;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.pipeline.PipelineRef;
 import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
@@ -122,7 +121,7 @@ public class ComponentServlet {
     public void getEffectiveConfig(
             @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
-            throws StorageException, InvalidConfiguration {
+            throws StorageException {
         Template template = getTemplate(iri);
         RdfUtils.write(
                 request, response, templateFacade.getConfigEffective(template));
@@ -133,7 +132,7 @@ public class ComponentServlet {
     public void getConfigTemplate(
             @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
-            throws StorageException, InvalidConfiguration {
+            throws StorageException {
         Template template = getTemplate(iri);
         RdfUtils.write(
                 request, response, templateFacade.getConfigInstance(template));

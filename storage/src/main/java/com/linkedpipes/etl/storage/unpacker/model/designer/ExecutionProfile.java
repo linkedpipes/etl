@@ -1,8 +1,8 @@
 package com.linkedpipes.etl.storage.unpacker.model.designer;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
-import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
+import com.linkedpipes.etl.storage.unpacker.rdf.Loadable;
+import org.eclipse.rdf4j.model.Value;
 
 public class ExecutionProfile implements Loadable {
 
@@ -11,13 +11,13 @@ public class ExecutionProfile implements Loadable {
     private String rdfRepositoryType = LP_PIPELINE.NATIVE_STORE;
 
     @Override
-    public Loadable load(String predicate, BackendRdfValue value) {
+    public Loadable load(String predicate, Value value) {
         switch (predicate) {
             case LP_PIPELINE.HAS_RDF_REPOSITORY_POLICY:
-                rdfRepositoryPolicy = value.asString();
+                rdfRepositoryPolicy = value.stringValue();
                 return null;
             case LP_PIPELINE.HAS_RDF_REPOSITORY_TYPE:
-                rdfRepositoryType = value.asString();
+                rdfRepositoryType = value.stringValue();
                 return null;
             default:
                 return null;

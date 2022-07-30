@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.storage.template.mapping;
 
-import com.linkedpipes.etl.rdf4j.Statements;
+import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import com.linkedpipes.etl.storage.template.Template;
@@ -96,7 +97,7 @@ public class MappingFacade {
 
     private void loadMappingFromFile(File mappingFile) throws IOException {
         Statements statements = Statements.arrayList();
-        statements.addAll(mappingFile);
+        statements.file().addAll(mappingFile);
         statements.stream()
                 .filter((s) -> s.getContext().equals(GRAPH))
                 .filter((s) -> s.getPredicate().equals(OWL.SAMEAS))
@@ -192,7 +193,8 @@ public class MappingFacade {
     }
 
     private Collection<Statement> collectAsStatements() {
-        Statements output = Statements.arrayList(originalToLocal.size());
+        StatementsBuilder output =
+                Statements.arrayList(originalToLocal.size()).builder();
         output.setDefaultGraph(GRAPH);
         for (Map.Entry<String, String> entry : originalToLocal.entrySet()) {
             output.addIri(valueFactory.createIRI(entry.getKey()),

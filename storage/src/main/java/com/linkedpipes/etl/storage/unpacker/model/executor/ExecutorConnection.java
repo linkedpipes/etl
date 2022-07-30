@@ -1,8 +1,7 @@
 package com.linkedpipes.etl.storage.unpacker.model.executor;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
-import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
+import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 
 public class ExecutorConnection {
 
@@ -19,12 +18,12 @@ public class ExecutorConnection {
     public ExecutorConnection() {
     }
 
-    public void write(BackendTripleWriter writer) {
-        writer.iri(iri, RDF.TYPE, LP_PIPELINE.CONNECTION);
-        writer.iri(iri, LP_PIPELINE.HAS_SOURCE_COMPONENT, sourceComponent);
-        writer.string(iri, LP_PIPELINE.HAS_SOURCE_BINDING, sourceBinding, null);
-        writer.iri(iri, LP_PIPELINE.HAS_TARGET_COMPONENT, targetComponent);
-        writer.string(iri, LP_PIPELINE.HAS_TARGET_BINDING, targetBinding, null);
+    public void write(StatementsBuilder builder) {
+        builder.addType(iri, LP_PIPELINE.CONNECTION);
+        builder.addIri(iri, LP_PIPELINE.HAS_SOURCE_COMPONENT, sourceComponent);
+        builder.add(iri, LP_PIPELINE.HAS_SOURCE_BINDING, sourceBinding);
+        builder.addIri(iri, LP_PIPELINE.HAS_TARGET_COMPONENT, targetComponent);
+        builder.add(iri, LP_PIPELINE.HAS_TARGET_BINDING, targetBinding);
     }
 
     public String getIri() {

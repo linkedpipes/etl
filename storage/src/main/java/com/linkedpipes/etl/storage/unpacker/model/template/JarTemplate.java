@@ -1,10 +1,10 @@
 package com.linkedpipes.etl.storage.unpacker.model.template;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
-import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
-import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
+import com.linkedpipes.etl.model.vocabulary.RDF;
+import com.linkedpipes.etl.storage.unpacker.rdf.Loadable;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -24,24 +24,25 @@ public class JarTemplate extends Template {
     private boolean supportControl = false;
 
     @Override
-    public Loadable load(String predicate, BackendRdfValue value)
-            throws RdfUtilsException {
+    public Loadable load(String predicate, Value value) {
         switch (predicate) {
             case RDF.TYPE:
-                types.add(value.asString());
+                types.add(value.stringValue());
                 return null;
             case LP_PIPELINE.HAS_JAR_URL:
-                jar = value.asString();
+                jar = value.stringValue();
                 return null;
             case LP_PIPELINE.HAS_REQUIREMENT:
-                requirements.add(value.asString());
+                requirements.add(value.stringValue());
                 return null;
             case LP_PIPELINE.HAS_DATA_UNIT:
                 TemplatePort port = new TemplatePort();
                 ports.add(port);
                 return port;
             case LP_PIPELINE.HAS_SUPPORT_CONTROL:
-                supportControl = value.asBoolean();
+                if (value instanceof Literal literal) {
+                    supportControl = literal.booleanValue();
+                }
                 return null;
             default:
                 return super.load(predicate, value);

@@ -2,10 +2,8 @@ package com.linkedpipes.etl.storage.unpacker.model.executor;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
-import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
-import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
-import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
+import com.linkedpipes.etl.library.rdf.StatementsBuilder;
+import com.linkedpipes.etl.model.vocabulary.SKOS;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +36,7 @@ public class ExecutorComponent {
      */
     private String execution;
 
-    public void write(BackendTripleWriter writer) {
+    public void write(StatementsBuilder writer) {
         writeSharedInfo(writer);
         switch (executionType) {
             case LP_EXEC.TYPE_EXECUTE:
@@ -55,40 +53,39 @@ public class ExecutorComponent {
         }
     }
 
-    private void writeSharedInfo(BackendTripleWriter writer) {
+    private void writeSharedInfo(StatementsBuilder builder) {
         for (String type : types) {
-            writer.iri(iri, RDF.TYPE, type);
+            builder.addType(iri, type);
         }
-        writer.iri(iri, RDF.TYPE, LP_PIPELINE.COMPONENT);
-        writer.typed(iri, LP_EXEC.HAS_ORDER_EXEC, executionOrder.toString(),
-                XSD.INTEGER);
-        writer.iri(iri, LP_PIPELINE.HAS_JAR_URL, jar);
-        writer.iri(iri, LP_EXEC.HAS_EXECUTION_TYPE, executionType);
-        writer.string(iri, SKOS.PREF_LABEL, label, null);
+        builder.addType(iri, LP_PIPELINE.COMPONENT);
+        builder.add(iri, LP_EXEC.HAS_ORDER_EXEC, executionOrder);
+        builder.addIri(iri, LP_PIPELINE.HAS_JAR_URL, jar);
+        builder.addIri(iri, LP_EXEC.HAS_EXECUTION_TYPE, executionType);
+        builder.add(iri, SKOS.PREF_LABEL, label);
     }
 
-    private void writeExecute(BackendTripleWriter writer) {
+    private void writeExecute(StatementsBuilder builder) {
         for (String requirement : requirements) {
-            writer.iri(iri, LP_PIPELINE.HAS_REQUIREMENT, requirement);
+            builder.addIri(iri, LP_PIPELINE.HAS_REQUIREMENT, requirement);
         }
-        writer.iri(iri, LP_PIPELINE.HAS_CONFIGURATION_GRAPH,
+        builder.addIri(iri, LP_PIPELINE.HAS_CONFIGURATION_GRAPH,
                 configGraph);
-        writer.iri(iri, LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION,
+        builder.addIri(iri, LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION,
                 configDescriptionGraph);
         for (ExecutorPort port : ports) {
-            writer.iri(iri, LP_PIPELINE.HAS_DATA_UNIT, port.getIri());
-            port.write(writer);
+            builder.addIri(iri, LP_PIPELINE.HAS_DATA_UNIT, port.getIri());
+            port.write(builder);
         }
         if (execution != null) {
-            writer.iri(iri, LP_EXEC.HAS_EXECUTION, execution);
+            builder.addIri(iri, LP_EXEC.HAS_EXECUTION, execution);
         }
     }
 
-    private void writeMapped(BackendTripleWriter writer) {
-        writer.iri(iri, LP_EXEC.HAS_EXECUTION, execution);
+    private void writeMapped(StatementsBuilder builder) {
+        builder.addIri(iri, LP_EXEC.HAS_EXECUTION, execution);
         for (ExecutorPort port : ports) {
-            writer.iri(iri, LP_PIPELINE.HAS_DATA_UNIT, port.getIri());
-            port.write(writer);
+            builder.addIri(iri, LP_PIPELINE.HAS_DATA_UNIT, port.getIri());
+            port.write(builder);
         }
     }
 

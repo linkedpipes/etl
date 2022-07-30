@@ -1,9 +1,12 @@
 package com.linkedpipes.etl.storage.template;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.plugin.configuration.ConfigurationFacade;
-import com.linkedpipes.etl.plugin.configuration.InvalidConfiguration;
-import com.linkedpipes.etl.rdf4j.Statements;
+import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.rdf.StatementsBuilder;
+import com.linkedpipes.etl.library.template.configuration.ConfigurationException;
+import com.linkedpipes.etl.library.template.configuration.ConfigurationFacade;
+import com.linkedpipes.etl.library.template.configuration.adapter.rdf.RdfToConfigurationDescription;
+import com.linkedpipes.etl.library.template.configuration.model.ConfigurationDescription;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.template.mapping.MappingFacade;
 import com.linkedpipes.etl.storage.template.repository.TemplateRepository;
@@ -43,15 +46,12 @@ public class TemplateFacade implements TemplateSource {
 
     private final TemplateRepository repository;
 
-    private final ConfigurationFacade configurationFacade;
-
     @Autowired
     public TemplateFacade(
             TemplateService service,
             MappingFacade mapping) {
         this.service = service;
         this.mapping = mapping;
-        this.configurationFacade = new ConfigurationFacade();
         this.repository = service.getRepository();
     }
 
@@ -172,7 +172,7 @@ public class TemplateFacade implements TemplateSource {
             Template parent = getTemplate(reference.getTemplate());
             List<Template> brothers = children.computeIfAbsent(
                     parent, key -> new LinkedList<>());
-            // Create if does not exists.
+            // Create if it does not exist.
             brothers.add(reference);
         }
         return children;
@@ -196,25 +196,40 @@ public class TemplateFacade implements TemplateSource {
      * Configuration of all ancestors are applied.
      */
     public Collection<Statement> getConfigEffective(Template template)
-            throws StorageException, InvalidConfiguration {
+            throws StorageException {
         // TODO Move to extra class and add caching.
         if (!template.isSupportingControl()) {
             // For template without inheritance control, the current
             // configuration is the effective one.
             return getConfig(template);
         }
-        List<Statement> description =
-                (new Statements(getConfigDescription(template))).asList();
         SimpleValueFactory valueFactory = SimpleValueFactory.getInstance();
         List<List<Statement>> configurations = new ArrayList<>();
         for (Template item : getAncestors(template)) {
             configurations.add(new ArrayList<>(getConfig(item)));
         }
-        return configurationFacade.merge(
-                configurations,
-                description,
-                template.getIri() + "/effective/",
-                valueFactory.createIRI(template.getIri()));
+        try {
+            return ConfigurationFacade.merge(
+                    configurations,
+                    loadDescription(template),
+                    template.getIri() + "/effective/",
+                    valueFactory.createIRI(template.getIri()));
+        } catch (ConfigurationException ex) {
+            throw new StorageException("Can't merge configuration.", ex);
+        }
+    }
+
+    private ConfigurationDescription loadDescription(Template template)
+            throws StorageException {
+        List<ConfigurationDescription> candidates =
+                RdfToConfigurationDescription.asConfigurationDescriptions(
+                        Statements.wrap(
+                                getConfigDescription(template)).selector());
+        if (candidates.size() != 1) {
+            throw new StorageException("Missing description for '{}'.",
+                    template.getIri());
+        }
+        return candidates.get(0);
     }
 
     /**
@@ -229,19 +244,19 @@ public class TemplateFacade implements TemplateSource {
      * Return configuration for instances of given template.
      */
     public Collection<Statement> getConfigInstance(Template template)
-            throws StorageException, InvalidConfiguration {
+            throws StorageException {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
         IRI graph = valueFactory.createIRI(template.getIri() + "/new");
         if (template.getType() == Template.Type.JAR_TEMPLATE) {
-            return configurationFacade.createNewFromJarFile(
-                    (new Statements(repository.getConfig(template))).asList(),
-                    (new Statements(getConfigDescription(template))).asList(),
+            return ConfigurationFacade.createNewFromJarFile(
+                    new ArrayList<>(repository.getConfig(template)),
+                    loadDescription(template),
                     graph.stringValue(),
                     graph);
         } else {
-            return configurationFacade.createNewFromTemplate(
-                    (new Statements(repository.getConfig(template))).asList(),
-                    (new Statements(getConfigDescription(template))).asList(),
+            return ConfigurationFacade.createNewFromTemplate(
+                    new ArrayList<>(repository.getConfig(template)),
+                    loadDescription(template),
                     graph.stringValue(),
                     graph);
         }
@@ -308,7 +323,8 @@ public class TemplateFacade implements TemplateSource {
         Template template = getTemplate(iri);
         // It requires reference to description which is not presented for
         // reference templates.
-        Statements output = new Statements(getDefinition(template));
+        StatementsBuilder output =
+                Statements.wrap(getDefinition(template)).builder();
         output.setDefaultGraph(iri);
         if (Template.Type.REFERENCE_TEMPLATE.equals(template.getType())) {
             ValueFactory valueFactory = SimpleValueFactory.getInstance();

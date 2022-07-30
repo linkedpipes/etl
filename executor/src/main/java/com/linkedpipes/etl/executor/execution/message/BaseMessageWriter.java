@@ -1,9 +1,10 @@
 package com.linkedpipes.etl.executor.execution.message;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EVENTS;
+import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jUtils;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
-import com.linkedpipes.etl.rdf4j.Statements;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -31,7 +32,8 @@ class BaseMessageWriter {
     protected final ValueFactory valueFactory =
             SimpleValueFactory.getInstance();
 
-    protected final Statements statements = new Statements(new ArrayList<>());
+    protected final StatementsBuilder statements =
+            Statements.arrayList().builder();
 
     protected final AtomicInteger messageCounter;
 

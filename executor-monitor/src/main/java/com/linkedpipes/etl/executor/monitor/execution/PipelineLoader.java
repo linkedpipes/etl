@@ -3,7 +3,8 @@ package com.linkedpipes.etl.executor.monitor.execution;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
-import com.linkedpipes.etl.rdf4j.Statements;
+import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -12,6 +13,7 @@ import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -44,11 +46,11 @@ class PipelineLoader {
                     execution.getId());
         }
 
-        Statements output = Statements.arrayList();
+        StatementsBuilder output = Statements.arrayList().builder();
         output.setDefaultGraph(execution.getListGraph());
         output.addAll(processMetadata(pipeline));
         output.addAll(processPipeline());
-        selectUsedLabels(pipeline).forEach(output::integrate);
+        selectUsedLabels(pipeline).forEach(output::addToDefaultGraph);
 
         execution.setPipelineStatements(output);
     }
@@ -76,7 +78,7 @@ class PipelineLoader {
     private Statements loadPipelineFile(File file) throws MonitorException {
         Statements statements = Statements.arrayList();
         try {
-            statements.addAll(file);
+            statements.file().addAll(file);
         } catch (IOException ex) {
             throw new MonitorException("Can't load pipeline.", ex);
         }
@@ -104,9 +106,9 @@ class PipelineLoader {
 
     private Statements processMetadata(Statements pipeline) {
         if (pipelineMetadata == null) {
-            return Statements.emptyReadOnly();
+            return Statements.readOnly(Collections.emptyList());
         }
-        Statements statements = Statements.arrayList();
+        StatementsBuilder statements = Statements.arrayList().builder();
         statements.setDefaultGraph(execution.getListGraph());
         statements.addIri(
                 pipelineMetadata,
@@ -130,7 +132,7 @@ class PipelineLoader {
                                     (Resource) st.getObject());
                             break;
                         default:
-                            statements.integrate(st);
+                            statements.add(st);
                             break;
                     }
                 });
@@ -138,7 +140,7 @@ class PipelineLoader {
     }
 
     private Statements processPipeline() {
-        Statements statements = Statements.arrayList();
+        StatementsBuilder statements = Statements.arrayList().builder();
         statements.setDefaultGraph(execution.getListGraph());
         statements.addIri(
                 pipelineResource,

@@ -1,10 +1,11 @@
 package com.linkedpipes.etl.executor.monitor.execution;
 
 import com.linkedpipes.etl.executor.monitor.MonitorException;
-import com.linkedpipes.etl.rdf4j.Statements;
+import com.linkedpipes.etl.library.rdf.Statements;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 
 class ExecutionLoader {
 
@@ -12,10 +13,12 @@ class ExecutionLoader {
             throws MonitorException {
         File file = getExecutionFile(execution);
         if (!file.exists()) {
-            return Statements.emptyReadOnly();
+            return Statements.readOnly(Collections.emptyList());
         }
         try {
-            return Statements.arrayList(file);
+            Statements result = Statements.arrayList();
+            result.file().addAll(file);
+            return result;
         } catch (IOException ex) {
             throw new MonitorException("Can't load execution statements.", ex);
         }

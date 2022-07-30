@@ -2,8 +2,7 @@ package com.linkedpipes.etl.storage.unpacker.model.executor;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
-import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
+import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 
 /**
  * For preserving backwards compatibility.
@@ -28,16 +27,16 @@ public class ExecutorMetadata {
         this.iri = iri;
     }
 
-    public void write(BackendTripleWriter writer) {
-        writer.iri(iri, RDF.TYPE, LP_PIPELINE.EXECUTION_METADATA);
-        writer.bool(iri, LP_PIPELINE.HAS_DELETE_WORKING, deleteWorkingData);
-        writer.bool(iri, LP_PIPELINE.HAS_SAVE_DEBUG_DATA, saveDebugData);
-        writer.iri(iri, LP_PIPELINE.HAS_LOG_POLICY, logPolicy);
-        writer.string(iri, LP_PIPELINE.HAS_LOG_LEVEL, logLevel, null);
+    public void write(StatementsBuilder builder) {
+        builder.addType(iri, LP_PIPELINE.EXECUTION_METADATA);
+        builder.add(iri, LP_PIPELINE.HAS_DELETE_WORKING, deleteWorkingData);
+        builder.add(iri, LP_PIPELINE.HAS_SAVE_DEBUG_DATA, saveDebugData);
+        builder.addIri(iri, LP_PIPELINE.HAS_LOG_POLICY, logPolicy);
+        builder.add(iri, LP_PIPELINE.HAS_LOG_LEVEL, logLevel);
         if (targetComponent != null && !targetComponent.isEmpty()) {
-            writer.iri(iri, LP_EXEC.HAS_TARGET_COMPONENT, targetComponent);
+            builder.addIri(iri, LP_EXEC.HAS_TARGET_COMPONENT, targetComponent);
         }
-        writer.iri(iri, LP_EXEC.HAS_PIPELINE_EXECUTION_TYPE, executionType);
+        builder.addIri(iri, LP_EXEC.HAS_PIPELINE_EXECUTION_TYPE, executionType);
     }
 
     public String getIri() {

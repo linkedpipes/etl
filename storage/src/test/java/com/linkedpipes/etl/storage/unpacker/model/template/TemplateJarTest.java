@@ -1,13 +1,12 @@
 package com.linkedpipes.etl.storage.unpacker.model.template;
 
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jUtils;
+import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.rdf.StatementsSelector;
+import com.linkedpipes.etl.storage.StorageException;
+import com.linkedpipes.etl.storage.TestUtils;
 import com.linkedpipes.etl.storage.unpacker.model.ModelLoader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
 
 public class TemplateJarTest {
 
@@ -19,7 +18,7 @@ public class TemplateJarTest {
             Assertions.fail("Invalid template type.");
         }
 
-        JarTemplate jarTemplate = (JarTemplate)template;
+        JarTemplate jarTemplate = (JarTemplate) template;
 
         Assertions.assertEquals(
                 "http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0",
@@ -52,11 +51,9 @@ public class TemplateJarTest {
     }
 
     private Template loadTemplate(String resourceName)
-            throws IOException, RdfUtilsException {
-        ClosableRdfSource source = Rdf4jUtils.loadAsSource(resourceName);
-        Template template = ModelLoader.loadTemplate(source);
-        source.close();
-        return template;
+            throws StorageException {
+        StatementsSelector selector = TestUtils.statements(resourceName);
+        return ModelLoader.loadTemplate(selector);
     }
 
 }

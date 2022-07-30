@@ -9,7 +9,7 @@ import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
 import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
-import com.linkedpipes.etl.rdf4j.Statements;
+import com.linkedpipes.etl.library.rdf.Statements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -365,10 +365,10 @@ public class ExecutionObserver {
         }
         File file = this.resourceManager.getComponentMessageFile(component);
         if (!file.exists()) {
-            return new Statements(Collections.emptyList());
+            return Statements.empty();
         }
         Statements statements = Statements.arrayList();
-        statements.addAll(file);
+        statements.file().addAll(file);
         return statements;
     }
 

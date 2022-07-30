@@ -1,13 +1,10 @@
 package com.linkedpipes.etl.storage.unpacker.model.designer;
 
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jUtils;
+import com.linkedpipes.etl.storage.StorageException;
+import com.linkedpipes.etl.storage.TestUtils;
 import com.linkedpipes.etl.storage.unpacker.model.ModelLoader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
 
 public class DesignerPipelineTest {
 
@@ -113,11 +110,9 @@ public class DesignerPipelineTest {
     }
 
     private DesignerPipeline loadPipeline(String resourceName)
-            throws IOException, RdfUtilsException {
-        ClosableRdfSource source = Rdf4jUtils.loadAsSource(resourceName);
-        DesignerPipeline pipeline = ModelLoader.loadDesignerPipeline(source);
-        source.close();
-        return pipeline;
+            throws StorageException {
+        return ModelLoader.loadDesignerPipeline(
+                TestUtils.statements(resourceName));
     }
 
 }

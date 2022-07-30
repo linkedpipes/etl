@@ -1,9 +1,7 @@
 package com.linkedpipes.etl.storage.unpacker;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.rdf4j.ClosableRdf4jSource;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
+import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.unpacker.model.GraphCollection;
 import com.linkedpipes.etl.storage.unpacker.model.ModelLoader;
@@ -174,14 +172,7 @@ public class DesignerToExecutor {
     private Execution getExecution(String iri)
             throws StorageException {
         Collection<Statement> statements = executionSource.getExecution(iri);
-        ClosableRdf4jSource source = Rdf4jSource.wrapInMemory(statements);
-        try {
-            return ModelLoader.loadExecution(source);
-        } catch (RdfUtilsException ex) {
-            throw new StorageException("Can't load execution.", ex);
-        } finally {
-            source.close();
-        }
+        return ModelLoader.loadExecution(Statements.wrap(statements));
     }
 
     private void mapExecution(

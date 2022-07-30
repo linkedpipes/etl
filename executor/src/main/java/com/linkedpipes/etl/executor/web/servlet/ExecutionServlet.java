@@ -7,7 +7,7 @@ import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
 import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import com.linkedpipes.etl.executor.pipeline.PipelineExecutor;
 import com.linkedpipes.etl.executor.plugin.PluginServiceHolder;
-import com.linkedpipes.etl.rdf4j.Statements;
+import com.linkedpipes.etl.library.rdf.Statements;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,7 +160,7 @@ class ExecutionServlet {
             HttpServletResponse response)
             throws IOException, MissingResource {
         PipelineExecutor executorSnp = getExecutor();
-        Statements statements = new Statements(
+        Statements statements = Statements.wrap(
                 executorSnp.getExecution()
                         .getPipelineMessages()
                         .getStatements());

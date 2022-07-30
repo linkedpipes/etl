@@ -3,7 +3,9 @@ package com.linkedpipes.etl.executor.monitor.execution;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OVERVIEW;
 import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewFactory;
-import com.linkedpipes.etl.rdf4j.Statements;
+import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.rdf.StatementsBuilder;
+import com.linkedpipes.etl.library.rdf.StatementsCompare;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -27,12 +29,12 @@ public class StatusSetterTest {
         // the the values can be same as getLastChange.
         Assertions.assertFalse(beforeDate.after(execution.getLastChange()));
         Assertions.assertFalse(afterDate.before(execution.getLastChange()));
-        Statements expected = Statements.arrayList();
+        StatementsBuilder expected = Statements.arrayList().builder();
         expected.setDefaultGraph(execution.getListGraph());
         expected.addIri(execution.getIri(), LP_OVERVIEW.HAS_STATUS,
                 ExecutionStatus.RUNNING.asStr());
-        Statements actual = new Statements(execution.getOverviewStatements());
-        Assertions.assertTrue(actual.containsAllLogMissing(expected));
+        Statements actual = Statements.wrap(execution.getOverviewStatements());
+        Assertions.assertTrue(StatementsCompare.equal(expected, actual));
     }
 
 }

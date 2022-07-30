@@ -1,7 +1,10 @@
 package com.linkedpipes.etl.storage.unpacker;
 
-import com.linkedpipes.etl.plugin.configuration.ConfigurationFacade;
-import com.linkedpipes.etl.plugin.configuration.InvalidConfiguration;
+import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.template.configuration.ConfigurationException;
+import com.linkedpipes.etl.library.template.configuration.ConfigurationFacade;
+import com.linkedpipes.etl.library.template.configuration.adapter.rdf.RdfToConfigurationDescription;
+import com.linkedpipes.etl.library.template.configuration.model.ConfigurationDescription;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.unpacker.model.GraphCollection;
 import com.linkedpipes.etl.storage.unpacker.model.template.Template;
@@ -64,7 +67,7 @@ class ConfigurationMerger {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
         IRI graphIri = valueFactory.createIRI(graph);
         return statements.stream().map(s -> valueFactory.createStatement(
-                s.getSubject(), s.getPredicate(), s.getObject(), graphIri))
+                        s.getSubject(), s.getPredicate(), s.getObject(), graphIri))
                 .collect(Collectors.toList());
     }
 
@@ -72,7 +75,6 @@ class ConfigurationMerger {
             Template template, List<String> configurations, String targetGraph)
             throws StorageException {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        ConfigurationFacade configurationFacade = new ConfigurationFacade();
         List<Statement> description = new ArrayList<>(
                 graphs.get(template.getConfigDescriptionGraph()));
         List<Statement> result;
@@ -80,16 +82,25 @@ class ConfigurationMerger {
                 .map(iri -> new ArrayList<>(graphs.get(iri)))
                 .collect(Collectors.toList());
         Collections.reverse(configurationsRdf);
+
+        List<ConfigurationDescription> candidateDescriptions =
+                RdfToConfigurationDescription.asConfigurationDescriptions(
+                        Statements.wrap(description).selector());
+        if (candidateDescriptions.size() != 1) {
+            throw new StorageException(
+                    "Invalid number of descriptions for '{}'.",
+                    template.getIri());
+        }
         try {
-            result = configurationFacade.merge(
+            result = ConfigurationFacade.merge(
                     configurationsRdf,
-                    description,
+                    candidateDescriptions.get(0),
                     targetGraph,
                     valueFactory.createIRI(targetGraph)
             );
-        } catch (InvalidConfiguration ex) {
+        } catch (ConfigurationException ex) {
             throw new StorageException(
-                    "Can't merge configuration for: {}",
+                    "Can't merge configurations for '{}'.",
                     template.getIri(), ex);
         }
         graphs.put(targetGraph, result);

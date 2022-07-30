@@ -8,7 +8,9 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_LIST;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OVERVIEW;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionStatus;
-import com.linkedpipes.etl.rdf4j.Statements;
+import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.rdf.StatementsBuilder;
+import com.linkedpipes.etl.library.rdf.StatementsCompare;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -40,10 +42,10 @@ public class OverviewToListStatementsTest {
         Mockito.when(execution.getIri()).thenReturn(iri);
         Statements actual = this.toStatements.asStatements(execution, node);
         //
-        Statements expected = Statements.arrayList();
+        StatementsBuilder expected = Statements.arrayList().builder();
         expected.setDefaultGraph(graph);
         expected.addIri(iri, RDF.TYPE, LP_LIST.TOMBSTONE);
-        Assertions.assertTrue(actual.containsAllLogMissing(expected));
+        Assertions.assertTrue(StatementsCompare.equal(expected, actual));
     }
 
     @Test
@@ -73,20 +75,20 @@ public class OverviewToListStatementsTest {
         String iri = "http://execution";
         Mockito.when(execution.getIri()).thenReturn(iri);
         //
-        Statements expected = Statements.arrayList();
+        StatementsBuilder expected = Statements.arrayList().builder();
         expected.setDefaultGraph(graph);
         expected.addIri(iri, RDF.TYPE, LP_EXEC.EXECUTION);
-        expected.addLong(iri, LP_EXEC.HAS_SIZE, 1204L);
+        expected.add(iri, LP_EXEC.HAS_SIZE, 1204L);
         expected.addIri(iri, LP_OVERVIEW.HAS_PIPELINE, pipeline);
-        expected.addDate(iri, LP_OVERVIEW.HAS_START, start);
-        expected.addDate(iri, LP_OVERVIEW.HAS_END, finished);
-        expected.addInt(iri, LP_OVERVIEW.HAS_PROGRESS_CURRENT, 3);
-        expected.addInt(iri, LP_OVERVIEW.HAS_PROGRESS_TOTAL, 10);
+        expected.add(iri, LP_OVERVIEW.HAS_START, start);
+        expected.add(iri, LP_OVERVIEW.HAS_END, finished);
+        expected.add(iri, LP_OVERVIEW.HAS_PROGRESS_CURRENT, 3);
+        expected.add(iri, LP_OVERVIEW.HAS_PROGRESS_TOTAL, 10);
 
         expected.addIri(
                 iri, LP_OVERVIEW.HAS_STATUS, ExecutionStatus.QUEUED.asStr());
         Statements actual = this.toStatements.asStatements(execution, root);
-        Assertions.assertTrue(actual.containsAllLogMissing(expected));
+        Assertions.assertTrue(StatementsCompare.equal(expected, actual));
     }
 
     @Test
@@ -119,23 +121,23 @@ public class OverviewToListStatementsTest {
         String iri = "http://execution";
         Mockito.when(execution.getIri()).thenReturn(iri);
         //
-        Statements expected = Statements.arrayList();
+        StatementsBuilder expected = Statements.arrayList().builder();
         expected.setDefaultGraph(graph);
         expected.addIri(iri, RDF.TYPE, LP_EXEC.EXECUTION);
-        expected.addLong(iri, LP_EXEC.HAS_SIZE, 1204L);
+        expected.add(iri, LP_EXEC.HAS_SIZE, 1204L);
         expected.addIri(iri, LP_OVERVIEW.HAS_PIPELINE, pipeline);
-        expected.addDate(iri, LP_OVERVIEW.HAS_START, start);
-        expected.addDate(iri, LP_OVERVIEW.HAS_END, finished);
-        expected.addInt(iri, LP_OVERVIEW.HAS_PROGRESS_CURRENT, 3);
-        expected.addInt(iri, LP_OVERVIEW.HAS_PROGRESS_TOTAL, 10);
-        expected.addInt(iri, LP_OVERVIEW.HAS_PROGRESS_TOTAL_MAP, 5);
-        expected.addInt(iri, LP_OVERVIEW.HAS_PROGRESS_MAPPED, 2);
-        expected.addInt(iri, LP_OVERVIEW.HAS_PROGRESS_EXECUTED, 1);
+        expected.add(iri, LP_OVERVIEW.HAS_START, start);
+        expected.add(iri, LP_OVERVIEW.HAS_END, finished);
+        expected.add(iri, LP_OVERVIEW.HAS_PROGRESS_CURRENT, 3);
+        expected.add(iri, LP_OVERVIEW.HAS_PROGRESS_TOTAL, 10);
+        expected.add(iri, LP_OVERVIEW.HAS_PROGRESS_TOTAL_MAP, 5);
+        expected.add(iri, LP_OVERVIEW.HAS_PROGRESS_MAPPED, 2);
+        expected.add(iri, LP_OVERVIEW.HAS_PROGRESS_EXECUTED, 1);
 
         expected.addIri(
                 iri, LP_OVERVIEW.HAS_STATUS, ExecutionStatus.QUEUED.asStr());
         Statements actual = this.toStatements.asStatements(execution, root);
-        Assertions.assertTrue(actual.containsAllLogMissing(expected));
+        Assertions.assertTrue(StatementsCompare.equal(expected, actual));
     }
 
 }

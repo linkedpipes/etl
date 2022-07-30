@@ -21,8 +21,16 @@ public class StatementsBuilder extends Statements {
         super(collection);
     }
 
+    public void setDefaultGraph(String defaultGraph) {
+        if (defaultGraph == null) {
+            this.defaultGraph = null;
+        } else {
+            this.defaultGraph = valueFactory.createIRI(defaultGraph);
+        }
+    }
+
     /**
-     * If no graph is provided when adding into this colleciotn, this
+     * If no graph is provided when adding into this collection, this
      * graph is used.
      */
     public void setDefaultGraph(Resource defaultGraph) {
@@ -220,6 +228,15 @@ public class StatementsBuilder extends Statements {
         }
         collection.add(valueFactory.createStatement(
                 s, p, o, defaultGraph));
+    }
+
+    public boolean addToDefaultGraph(Statement statement) {
+        return collection.add(valueFactory.createStatement(
+                statement.getSubject(),
+                statement.getPredicate(),
+                statement.getObject(),
+                defaultGraph
+        ));
     }
 
     public void addList(Resource s, String p, Collection<Resource> o) {

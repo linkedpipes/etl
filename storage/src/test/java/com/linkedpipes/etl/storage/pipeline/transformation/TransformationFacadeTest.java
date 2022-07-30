@@ -1,7 +1,8 @@
 package com.linkedpipes.etl.storage.pipeline.transformation;
 
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jUtils;
-import com.linkedpipes.etl.rdf4j.Statements;
+import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.rdf.StatementsBuilder;
+import com.linkedpipes.etl.library.rdf.StatementsCompare;
 import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.TestUtils;
 import com.linkedpipes.etl.storage.template.Template;
@@ -23,10 +24,10 @@ public class TransformationFacadeTest {
 
     @Test
     public void importVisualisationPipeline() throws Exception {
-        Statements input = new Statements(TestUtils.rdfFromResource(
-                "pipeline/transformation/visualisationPipelineInput.trig"));
-        Statements expected = new Statements(TestUtils.rdfFromResource(
-                "pipeline/transformation/visualisationPipelineExpected.trig"));
+        Statements input = TestUtils.statements(
+                "pipeline/transformation/visualisationPipelineInput.trig");
+        Statements expected = TestUtils.statements(
+                "pipeline/transformation/visualisationPipelineExpected.trig");
         Statements options = Statements.arrayList();
 
         Template sparqlEndpoint = Mockito.mock(Template.class);
@@ -50,8 +51,7 @@ public class TransformationFacadeTest {
                 input, options,
                 this.valueFactory.createIRI("http://localhost/ppl"));
 
-        Rdf4jUtils.rdfEqual(expected, actual);
-        Assertions.assertTrue(Models.isomorphic(expected, actual));
+        Assertions.assertTrue(StatementsCompare.equal(expected, actual));
     }
 
 
@@ -60,13 +60,13 @@ public class TransformationFacadeTest {
      */
     @Test
     public void localWithTemplatesExpected() throws Exception {
-        Statements input = new Statements(TestUtils.rdfFromResource(
-                "pipeline/transformation/localWithTemplatesInput.trig"));
-        Statements expected = new Statements(TestUtils.rdfFromResource(
-                "pipeline/transformation/localWithTemplatesExpected.trig"));
+        Statements input = TestUtils.statements(
+                "pipeline/transformation/localWithTemplatesInput.trig");
+        Statements expected = TestUtils.statements(
+                "pipeline/transformation/localWithTemplatesExpected.trig");
 
-        Statements options = Statements.arrayList();
-        options.addBoolean("http://options",
+        StatementsBuilder options = Statements.arrayList().builder();
+        options.add("http://options",
                 "http://etl.linkedpipes.com/ontology/local",
                 true);
 
@@ -78,8 +78,7 @@ public class TransformationFacadeTest {
                 input, options,
                 this.valueFactory.createIRI("http://localhost/ppl"));
 
-        Rdf4jUtils.rdfEqual(expected, actual);
-        Assertions.assertTrue(Models.isomorphic(expected, actual));
+        Assertions.assertTrue(StatementsCompare.equal(expected, actual));
     }
 
 }

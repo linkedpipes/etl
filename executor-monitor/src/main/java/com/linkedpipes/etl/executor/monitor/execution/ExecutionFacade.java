@@ -5,7 +5,7 @@ import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
 import com.linkedpipes.etl.executor.monitor.debug.DebugDataSource;
 import com.linkedpipes.etl.executor.monitor.events.EventListener;
-import com.linkedpipes.etl.rdf4j.Statements;
+import com.linkedpipes.etl.library.rdf.Statements;
 import org.eclipse.rdf4j.model.Statement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;

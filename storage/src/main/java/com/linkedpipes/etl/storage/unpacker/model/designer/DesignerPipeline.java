@@ -1,10 +1,10 @@
 package com.linkedpipes.etl.storage.unpacker.model.designer;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
-import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
-import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
+import com.linkedpipes.etl.model.vocabulary.SKOS;
+import com.linkedpipes.etl.storage.unpacker.rdf.Loadable;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -36,16 +36,17 @@ public class DesignerPipeline implements Loadable {
     }
 
     @Override
-    public Loadable load(String predicate, BackendRdfValue value)
-            throws RdfUtilsException {
+    public Loadable load(String predicate, Value value) {
         switch (predicate) {
             case LP_PIPELINE.HAS_PROFILE:
                 return executionProfile;
             case SKOS.PREF_LABEL:
-                label = value.asString();
+                label = value.stringValue();
                 return null;
             case LP_PIPELINE.HAS_VERSION:
-                version = (int) value.asLong();
+                if (value instanceof Literal literal) {
+                    version = literal.intValue();
+                }
                 return null;
             default:
                 return null;

@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.storage.unpacker.model.executor;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
+import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 
 public class ExecutorProfile {
 
@@ -15,11 +15,12 @@ public class ExecutorProfile {
         this.iri = iri;
     }
 
-    public void write(BackendTripleWriter writer) {
+    public void write(StatementsBuilder builder) {
         // TODO Add class for ExecutionProfile
-        writer.iri(
+        builder.addIri(
                 iri, LP_PIPELINE.HAS_RDF_REPOSITORY_POLICY, repositoryPolicy);
-        writer.iri(iri, LP_PIPELINE.HAS_RDF_REPOSITORY_TYPE, repositoryType);
+        builder.addIri(
+                iri, LP_PIPELINE.HAS_RDF_REPOSITORY_TYPE, repositoryType);
     }
 
     public String getIri() {

@@ -1,5 +1,7 @@
 package com.linkedpipes.etl.storage;
 
+import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.rdf.StatementsSelector;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import org.eclipse.rdf4j.model.Statement;
 
@@ -29,6 +31,12 @@ public class TestUtils {
             throws RdfUtils.RdfException {
         File file = fileFromResource(fileName);
         return RdfUtils.read(file);
+    }
+
+    public static StatementsSelector statements(String resourceName)
+            throws RdfUtils.RdfException {
+        return Statements.wrap(
+                TestUtils.rdfFromResource(resourceName)).selector();
     }
 
 }

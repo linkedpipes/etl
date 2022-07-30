@@ -1,16 +1,20 @@
 package com.linkedpipes.etl.storage.unpacker;
 
-import com.linkedpipes.etl.rdf.utils.RdfUtils;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
-import com.linkedpipes.etl.rdf.utils.rdf4j.ClosableRdf4jSource;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jUtils;
-import com.linkedpipes.etl.rdf.utils.rdf4j.StatementsCollector;
+import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.rdf.StatementsBuilder;
+import com.linkedpipes.etl.library.rdf.StatementsCompare;
+import com.linkedpipes.etl.library.rdf.StatementsSelector;
+import com.linkedpipes.etl.storage.StorageException;
+import com.linkedpipes.etl.storage.TestUtils;
+import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import com.linkedpipes.etl.storage.unpacker.model.GraphCollection;
 import com.linkedpipes.etl.storage.unpacker.model.ModelLoader;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerPipeline;
 import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorPipeline;
+import com.linkedpipes.etl.storage.unpacker.rdf.Loadable;
+import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.Models;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,8 +32,8 @@ public class DesignerToExecutorTest {
             String resource = "unpacker/template/definition/"
                     + getFileName(iri) + ".trig";
             try {
-                return Rdf4jUtils.loadAsStatements(resource);
-            } catch (IOException ex) {
+                return TestUtils.statements(resource);
+            } catch (RdfUtils.RdfException ex) {
                 throw new RuntimeException(ex);
             }
         }
@@ -39,8 +43,8 @@ public class DesignerToExecutorTest {
             String resource = "unpacker/template/config/"
                     + getFileName(iri) + ".trig";
             try {
-                return Rdf4jUtils.loadAsStatements(resource);
-            } catch (IOException ex) {
+                return TestUtils.statements(resource);
+            } catch (RdfUtils.RdfException ex) {
                 throw new RuntimeException(ex);
             }
         }
@@ -50,8 +54,8 @@ public class DesignerToExecutorTest {
             String resource = "unpacker/template/config-description/"
                     + getFileName(iri) + ".trig";
             try {
-                return Rdf4jUtils.loadAsStatements(resource);
-            } catch (IOException ex) {
+                return TestUtils.statements(resource);
+            } catch (RdfUtils.RdfException ex) {
                 throw new RuntimeException(ex);
             }
         }
@@ -70,8 +74,8 @@ public class DesignerToExecutorTest {
             String resource = "unpacker/executions/"
                     + getFileName(iri) + ".trig";
             try {
-                return Rdf4jUtils.loadAsStatements(resource);
-            } catch (IOException ex) {
+                return TestUtils.statements(resource);
+            } catch (RdfUtils.RdfException ex) {
                 throw new RuntimeException(ex);
             }
         }
@@ -178,20 +182,17 @@ public class DesignerToExecutorTest {
     }
 
     private void testUnpacking(
-            String pipelineResource, String optionResource,
-            String unpackedResource) throws Exception {
+            String pipelineFile, String optionFile,
+            String unpackedFile) throws Exception {
+        StatementsSelector pipelineStatements =
+                TestUtils.statements(pipelineFile);
+        DesignerPipeline pipeline =
+                ModelLoader.loadDesignerPipeline(pipelineStatements);
+        GraphCollection graphs =
+                ModelLoader.loadConfigurationGraphs(
+                        pipelineStatements, pipeline);
 
-        ClosableRdf4jSource source = Rdf4jUtils.loadAsSource(pipelineResource);
-        DesignerPipeline pipeline;
-        GraphCollection graphs;
-        try {
-            pipeline = ModelLoader.loadDesignerPipeline(source);
-            graphs = ModelLoader.loadConfigurationGraphs(source, pipeline);
-        } finally {
-            source.close();
-        }
-
-        UnpackOptions options = loadOptions(optionResource);
+        UnpackOptions options = loadOptions(optionFile);
 
         DesignerToExecutor transformer = new DesignerToExecutor(
                 templateSource, executionSource);
@@ -199,35 +200,30 @@ public class DesignerToExecutorTest {
 
         ExecutorPipeline actualModel = transformer.getTarget();
 
-        StatementsCollector collector = new StatementsCollector(
-                "http://localhost/pipeline");
-        actualModel.write(collector);
+        StatementsBuilder actual = Statements.arrayList().builder();
+        actual.setDefaultGraph("http://localhost/pipeline");
+        actualModel.write(actual);
 
         for (String graph : actualModel.getReferencedGraphs()) {
-            graphs.get(graph).forEach((statement -> {
-                collector.add(statement);
-            }));
+            actual.addAll(graphs.get(graph));
         }
 
-        List<Statement> expected = Rdf4jUtils.loadAsStatements(
-                unpackedResource);
-
-        Rdf4jUtils.rdfEqual(expected, collector.getStatements());
-
-        Assertions.assertTrue(Models.isomorphic(expected,
-                collector.getStatements()));
+        Statements expected = TestUtils.statements(unpackedFile);
+        Assertions.assertTrue(StatementsCompare.equal(expected, actual));
     }
 
     private UnpackOptions loadOptions(String resourceName)
-            throws IOException, RdfUtilsException {
-        ClosableRdfSource source = Rdf4jUtils.loadAsSource(resourceName);
-        UnpackOptions unpackOptions = new UnpackOptions();
-        try {
-            RdfUtils.loadByType(source, "http://options", unpackOptions,
-                    UnpackOptions.TYPE);
-        } finally {
-            source.close();
+            throws StorageException {
+        StatementsSelector selector = TestUtils.statements(resourceName);
+        Collection<Resource> resources =
+                selector.selectByType(UnpackOptions.TYPE)
+                        .selector().selectByGraph("http://options")
+                        .subjects();
+        if (resources.size() != 1) {
+            throw new StorageException("Invalid number of resources.");
         }
+        UnpackOptions unpackOptions = new UnpackOptions();
+        Loadable.load(selector, unpackOptions, resources.iterator().next());
         return unpackOptions;
     }
 

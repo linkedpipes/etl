@@ -10,8 +10,9 @@ import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import com.linkedpipes.etl.executor.pipeline.model.Port;
+import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jUtils;
-import com.linkedpipes.etl.rdf4j.Statements;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -38,7 +39,8 @@ public class ExecutionInformation {
      * Holds only statements that do not change over time (like component
      * status).
      */
-    private final Statements statements = Statements.arrayList();
+    private final StatementsBuilder statements =
+            Statements.arrayList().builder();
 
     private IRI iri;
 
@@ -117,8 +119,7 @@ public class ExecutionInformation {
 
         statements.add(componentIri, ETL_PREFIX + "dataUnit", portIri);
         statements.addIri(portIri, RDF.TYPE, ETL_PREFIX + "DataUnit");
-        statements.addString(
-                portIri, ETL_PREFIX + "binding", port.getBinding());
+        statements.add(portIri, ETL_PREFIX + "binding", port.getBinding());
 
         DataSource source = port.getDataSource();
         if (source != null) {
@@ -129,7 +130,7 @@ public class ExecutionInformation {
     private void addPipelinePortSource(IRI portIri, DataSource source) {
         statements.addIri(
                 portIri, LP_EXEC.HAS_EXECUTION, source.getExecution());
-        statements.addString(
+        statements.add(
                 portIri, LP_EXEC.HAS_LOAD_PATH, source.getDataPath());
     }
 
@@ -145,14 +146,14 @@ public class ExecutionInformation {
         for (DataUnit dataUnit : component.getDataUnits()) {
             IRI dataUnitIri = valueFactory.createIRI(dataUnit.getIri());
 
-            statements.addString(dataUnitIri,
+            statements.add(dataUnitIri,
                     "http://etl.linkedpipes.com/ontology/dataPath",
                     dataUnit.getRelativeSaveDataPath());
 
             if (!dataUnit.getPort().isSaveDebugData()) {
                 continue;
             }
-            statements.addString(dataUnitIri,
+            statements.add(dataUnitIri,
                     "http://etl.linkedpipes.com/ontology/debug",
                     dataUnit.getVirtualDebugPath());
         }
@@ -183,7 +184,7 @@ public class ExecutionInformation {
     }
 
     private Statements buildChangingValues() {
-        Statements dynamic = Statements.arrayList();
+        StatementsBuilder dynamic = Statements.arrayList().builder();
         dynamic.setDefaultGraph(iri);
 
         dynamic.addIri(iri,

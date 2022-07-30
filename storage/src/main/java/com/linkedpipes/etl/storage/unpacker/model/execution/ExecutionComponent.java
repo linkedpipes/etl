@@ -1,8 +1,8 @@
 package com.linkedpipes.etl.storage.unpacker.model.execution;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
-import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
-import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
+import com.linkedpipes.etl.storage.unpacker.rdf.Loadable;
+import org.eclipse.rdf4j.model.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +21,14 @@ public class ExecutionComponent implements Loadable {
     }
 
     @Override
-    public Loadable load(String predicate, BackendRdfValue value) {
+    public Loadable load(String predicate, Value value) {
         switch (predicate) {
             case LP_EXEC.HAS_DATA_UNIT:
                 ExecutionPort newPort = new ExecutionPort();
                 ports.add(newPort);
                 return newPort;
             case LP_EXEC.HAS_EXECUTION:
-                execution = value.asString();
+                execution = value.stringValue();
                 return null;
             default:
                 return null;

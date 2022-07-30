@@ -1,8 +1,10 @@
 package com.linkedpipes.etl.storage.pipeline;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.plugin.configuration.ConfigurationFacade;
-import com.linkedpipes.etl.plugin.configuration.InvalidConfiguration;
+import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.template.configuration.ConfigurationFacade;
+import com.linkedpipes.etl.library.template.configuration.adapter.rdf.RdfToConfigurationDescription;
+import com.linkedpipes.etl.library.template.configuration.model.ConfigurationDescription;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.template.Template;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
@@ -28,14 +30,11 @@ class ExportPipeline {
 
     private final MappingFacade mappingFacade;
 
-    private final ConfigurationFacade configurationFacade;
-
     @Autowired
     public ExportPipeline(
             TemplateFacade templates, MappingFacade mapping) {
         this.templatesFacade = templates;
         this.mappingFacade = mapping;
-        this.configurationFacade = new ConfigurationFacade();
     }
 
     /**
@@ -81,7 +80,7 @@ class ExportPipeline {
     }
 
     public void removePrivateConfiguration(Collection<Statement> rdf)
-            throws StorageException, InvalidConfiguration {
+            throws StorageException {
         // TODO We should check that we are reading from the right graphs.
         Map<Resource, Resource> configurations = new HashMap<>();
         Map<Resource, Resource> types = new HashMap<>();
@@ -108,10 +107,18 @@ class ExportPipeline {
             Collection<Statement> description =
                     templatesFacade.getConfigurationDescription(
                             template.getIri());
+            List<ConfigurationDescription> candidateDescriptions =
+                    RdfToConfigurationDescription.asConfigurationDescriptions(
+                            Statements.wrap(description).selector());
+            if (candidateDescriptions.size() != 1) {
+                throw new StorageException(
+                        "Invalid number of descriptions for '{}'.",
+                        entry.getValue());
+            }
             Collection<Statement> privateProperties =
-                    configurationFacade.selectPrivate(
-                            configuration,
-                            new ArrayList<>(description));
+                    ConfigurationFacade.selectPrivateStatements(
+                            Statements.wrap(configuration).selector(),
+                            candidateDescriptions.get(0));
             rdf.removeAll(privateProperties);
         }
     }

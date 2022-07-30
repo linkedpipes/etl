@@ -10,7 +10,7 @@ import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewObject;
 import com.linkedpipes.etl.executor.monitor.executor.ExecutionSource;
 import com.linkedpipes.etl.executor.monitor.executor.Executor;
 import com.linkedpipes.etl.executor.monitor.executor.ExecutorEventListener;
-import com.linkedpipes.etl.rdf4j.Statements;
+import com.linkedpipes.etl.library.rdf.Statements;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.model.Statement;
 import org.slf4j.Logger;

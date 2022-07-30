@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.monitor.execution;
 
-import com.linkedpipes.etl.rdf4j.Statements;
+import com.linkedpipes.etl.library.rdf.Statements;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,9 +18,7 @@ class MessagesLoader {
         String fileName = name + ".trig";
         File file = new File(execution.getDirectory(), "messages/" + fileName);
         Statements statements = Statements.arrayList();
-        if (file.exists()) {
-            statements.addAll(file);
-        }
+        statements.file().addAllIfExists(file);
         return statements;
     }
 

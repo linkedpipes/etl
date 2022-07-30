@@ -3,8 +3,10 @@ package com.linkedpipes.etl.storage.web.servlet;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.linkedpipes.etl.plugin.configuration.ConfigurationFacade;
-import com.linkedpipes.etl.plugin.configuration.InvalidConfiguration;
+import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.template.configuration.ConfigurationFacade;
+import com.linkedpipes.etl.library.template.configuration.adapter.rdf.RdfToConfigurationDescription;
+import com.linkedpipes.etl.library.template.configuration.model.ConfigurationDescription;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.pipeline.PipelineRef;
 import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
@@ -172,17 +174,20 @@ public class ExportServlet {
     private void removePrivateConfiguration(
             ReferenceTemplateRef template, Collection<Statement> configuration)
             throws StorageException {
-        ConfigurationFacade configurationFacade = new ConfigurationFacade();
-        Collection<Statement> description =
-                templates.getConfigurationDescription(template.getIri());
-        Collection<Statement> privateConfiguration;
-        try {
-            privateConfiguration = configurationFacade.selectPrivate(
-                    configuration, description);
-        } catch (InvalidConfiguration ex) {
-            throw new StorageException("Invalid configuration for '{}.'",
-                    template.getIri(), ex);
+        List<ConfigurationDescription> candidateDescription =
+        RdfToConfigurationDescription.asConfigurationDescriptions(
+                Statements.wrap(
+                        templates.getConfigurationDescription(
+                                template.getIri())).selector());
+        if (candidateDescription.size() != 1) {
+            throw new StorageException(
+                    "Invalid configuration description for {}",
+                    template.getIri());
         }
+        Collection<Statement> privateConfiguration;
+        privateConfiguration = ConfigurationFacade.removePrivateStatements(
+                Statements.wrap(configuration).selector(),
+                candidateDescription.get(0));
         configuration.removeAll(privateConfiguration);
     }
 

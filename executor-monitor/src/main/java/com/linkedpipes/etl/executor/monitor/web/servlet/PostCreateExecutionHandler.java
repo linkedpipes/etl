@@ -4,7 +4,7 @@ import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
 import com.linkedpipes.etl.executor.monitor.executor.ExecutorService;
-import com.linkedpipes.etl.rdf4j.Statements;
+import com.linkedpipes.etl.library.rdf.Statements;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,7 +65,7 @@ class PostCreateExecutionHandler {
         }
         Statements statements = Statements.arrayList();
         try (InputStream stream = pipeline.getInputStream()) {
-            statements.addAll(stream, format.get());
+            statements.file().addAll(stream, format.get());
         } catch (IOException ex) {
             throw new MonitorException("Can't read pipeline.", ex);
         }

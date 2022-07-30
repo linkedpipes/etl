@@ -2,9 +2,9 @@ package com.linkedpipes.etl.storage.unpacker;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
-import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
+import com.linkedpipes.etl.storage.unpacker.rdf.Loadable;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -18,21 +18,20 @@ class UnpackOptions implements Loadable {
     public static final String TYPE =
             "http://etl.linkedpipes.com/ontology/ExecutionOptions";
 
-    public static class ComponentMapping
-            implements Loadable {
+    public static class ComponentMapping   implements Loadable {
 
         private String source;
 
         private String target;
 
         @Override
-        public Loadable load(String predicate, BackendRdfValue value) {
+        public Loadable load(String predicate, Value value) {
             switch (predicate) {
                 case "http://etl.linkedpipes.com/ontology/mappingSource":
-                    source = value.asString();
+                    source = value.stringValue();
                     break;
                 case "http://etl.linkedpipes.com/ontology/mappingTarget":
-                    target = value.asString();
+                    target = value.stringValue();
                     break;
                 default:
                     break;
@@ -49,8 +48,7 @@ class UnpackOptions implements Loadable {
         }
     }
 
-    public static class ExecutionMapping
-            implements Loadable {
+    public static class ExecutionMapping implements Loadable {
 
         private String execution;
 
@@ -59,10 +57,10 @@ class UnpackOptions implements Loadable {
         private final List<ComponentMapping> resumes = new LinkedList<>();
 
         @Override
-        public Loadable load(String predicate, BackendRdfValue value) {
+        public Loadable load(String predicate, Value value) {
             switch (predicate) {
                 case "http://etl.linkedpipes.com/ontology/execution":
-                    execution = value.asString();
+                    execution = value.stringValue();
                     return null;
                 case "http://etl.linkedpipes.com/ontology/mapping":
                     ComponentMapping mapping = new ComponentMapping();
@@ -106,30 +104,33 @@ class UnpackOptions implements Loadable {
     private String logLevel = "DEBUG";
 
     @Override
-    public Loadable load(String predicate, BackendRdfValue value)
-            throws RdfUtilsException {
+    public Loadable load(String predicate, Value value) {
         switch (predicate) {
             case "http://etl.linkedpipes.com/ontology/runTo":
-                runToComponent = value.asString();
+                runToComponent = value.stringValue();
                 return null;
             case "http://etl.linkedpipes.com/ontology/executionMapping":
                 final ExecutionMapping mapping = new ExecutionMapping();
                 executionMapping.add(mapping);
                 return mapping;
             case "http://linkedpipes.com/ontology/saveDebugData":
-                saveDebugData = value.asBoolean();
+                if (value instanceof Literal literal) {
+                    saveDebugData = literal.booleanValue();
+                }
                 return null;
             case "http://linkedpipes.com/ontology/deleteWorkingData":
-                deleteWorkingDirectory = value.asBoolean();
+                if (value instanceof Literal literal) {
+                    deleteWorkingDirectory = literal.booleanValue();
+                }
                 return null;
             case LP_EXEC.HAS_EXECUTION:
-                executionIri = value.asString();
+                executionIri = value.stringValue();
                 return null;
             case LP_PIPELINE.HAS_LOG_POLICY:
-                logPolicy = value.asString();
+                logPolicy = value.stringValue();
                 return null;
             case LP_PIPELINE.HAS_LOG_LEVEL:
-                logLevel = value.asString();
+                logLevel = value.stringValue();
                 return null;
             default:
                 return null;

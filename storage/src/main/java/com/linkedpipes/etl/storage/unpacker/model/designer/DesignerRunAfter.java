@@ -1,8 +1,8 @@
 package com.linkedpipes.etl.storage.unpacker.model.designer;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
-import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
+import com.linkedpipes.etl.storage.unpacker.rdf.Loadable;
+import org.eclipse.rdf4j.model.Value;
 
 public class DesignerRunAfter implements Loadable {
 
@@ -20,13 +20,13 @@ public class DesignerRunAfter implements Loadable {
     }
 
     @Override
-    public Loadable load(String predicate, BackendRdfValue value) {
+    public Loadable load(String predicate, Value value) {
         switch (predicate) {
             case LP_PIPELINE.HAS_SOURCE_COMPONENT:
-                sourceComponent = value.asString();
+                sourceComponent = value.stringValue();
                 return null;
             case LP_PIPELINE.HAS_TARGET_COMPONENT:
-                targetComponent = value.asString();
+                targetComponent = value.stringValue();
                 return null;
             default:
                 return null;

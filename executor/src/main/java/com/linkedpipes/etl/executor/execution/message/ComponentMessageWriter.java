@@ -88,18 +88,18 @@ public class ComponentMessageWriter extends BaseMessageWriter {
 
         // Format into a message.
         if (lpException != null) {
-            this.statements.addString(iri,
+            this.statements.add(iri,
                     LP_PREFIX + "events/reason",
                     lpException.getMessage());
         }
         if (rootCause.getMessage() == null) {
-            this.statements.addString(iri,
+            this.statements.add(iri,
                     LP_PREFIX + "events/rootException",
                     rootCause.getClass().getSimpleName());
         } else {
             String message = rootCause.getClass().getSimpleName()
                     + " : " + rootCause.getMessage();
-            this.statements.addString(iri,
+            this.statements.add(iri,
                     LP_PREFIX + "events/rootException",
                     message);
         }

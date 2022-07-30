@@ -1,8 +1,8 @@
 package com.linkedpipes.etl.storage.template;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.vocabulary.DCTERMS;
-import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
+import com.linkedpipes.etl.model.vocabulary.DCTERMS;
+import com.linkedpipes.etl.model.vocabulary.SKOS;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import com.linkedpipes.etl.storage.template.repository.RepositoryReference;

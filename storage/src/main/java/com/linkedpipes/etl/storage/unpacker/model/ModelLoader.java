@@ -1,9 +1,8 @@
 package com.linkedpipes.etl.storage.unpacker.model;
 
-import com.linkedpipes.etl.rdf.utils.RdfUtils;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
+import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.rdf.StatementsSelector;
+import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerComponent;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerConnection;
 import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerPipeline;
@@ -12,6 +11,8 @@ import com.linkedpipes.etl.storage.unpacker.model.execution.Execution;
 import com.linkedpipes.etl.storage.unpacker.model.template.JarTemplate;
 import com.linkedpipes.etl.storage.unpacker.model.template.ReferenceTemplate;
 import com.linkedpipes.etl.storage.unpacker.model.template.Template;
+import com.linkedpipes.etl.storage.unpacker.rdf.Loadable;
+import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 
 import java.util.ArrayList;
@@ -24,26 +25,42 @@ public class ModelLoader {
 
     }
 
-    public static DesignerPipeline loadDesignerPipeline(BackendRdfSource source)
-            throws RdfUtilsException {
+    public static DesignerPipeline loadDesignerPipeline(Statements source)
+            throws StorageException {
+        StatementsSelector selector = source.selector();
+        Collection<Resource> candidatePipelines =
+                selector.selectByType(DesignerPipeline.TYPE).subjects();
+        if (candidatePipelines.size() != 1) {
+            throw new StorageException("Invalid number of pipelines '{}'.",
+                    candidatePipelines.size());
+        }
         DesignerPipeline pipelineModel = new DesignerPipeline();
-        RdfUtils.loadByType(source, null, pipelineModel, DesignerPipeline.TYPE);
-
-        pipelineModel.getConnections().addAll((RdfUtils.loadList(source, null,
-                DesignerConnection.class, DesignerConnection.TYPE)));
-
-        pipelineModel.getRunAfter().addAll((RdfUtils.loadList(source, null,
-                DesignerRunAfter.class, DesignerRunAfter.TYPE)));
-
-        pipelineModel.getComponents().addAll((RdfUtils.loadList(source, null,
-                DesignerComponent.class, DesignerComponent.TYPE)));
-
+        Loadable.load(
+                selector, pipelineModel,
+                candidatePipelines.iterator().next());
+        for (Resource subject :
+                selector.selectByType(DesignerConnection.TYPE).subjects()) {
+            DesignerConnection connection = new DesignerConnection();
+            Loadable.load(selector, connection, subject);
+            pipelineModel.getConnections().add(connection);
+        }
+        for (Resource subject :
+                selector.selectByType(DesignerRunAfter.TYPE).subjects()) {
+            DesignerRunAfter connection = new DesignerRunAfter();
+            Loadable.load(selector, connection, subject);
+            pipelineModel.getRunAfter().add(connection);
+        }
+        for (Resource subject :
+                selector.selectByType(DesignerComponent.TYPE).subjects()) {
+            DesignerComponent component = new DesignerComponent();
+            Loadable.load(selector, component, subject);
+            pipelineModel.getComponents().add(component);
+        }
         return pipelineModel;
     }
 
     public static GraphCollection loadConfigurationGraphs(
-            Rdf4jSource source, DesignerPipeline pipeline)
-            throws RdfUtilsException {
+            Statements source, DesignerPipeline pipeline) {
         GraphCollection collection = new GraphCollection();
         for (DesignerComponent component : pipeline.getComponents()) {
             for (String graph : component.getConfigurationGraphs()) {
@@ -53,45 +70,53 @@ public class ModelLoader {
         return collection;
     }
 
-    public static Execution loadExecution(BackendRdfSource source)
-            throws RdfUtilsException {
+    public static Execution loadExecution(Statements source)
+            throws StorageException {
+        List<Resource> resources = new ArrayList<>(
+                source.selector().selectByType(Execution.TYPE)
+                        .subjects());
+        if (resources.size() != 1) {
+            throw new StorageException(
+                    "Invalid count of executions '{}'.",
+                    resources.size());
+        }
         Execution execution = new Execution();
-        RdfUtils.loadByType(source, null, execution, Execution.TYPE);
+        Loadable.load(source.selector(), execution, resources.get(0));
         return execution;
     }
 
     private static Collection<Statement> extractGraph(
-            Rdf4jSource source, String graph) throws RdfUtilsException {
-        List<Statement> statements = new ArrayList<>();
-        source.statements(graph, statement -> statements.add(statement));
-        return statements;
+            Statements source, String graph) {
+        return source.selector().selectByGraph(graph);
     }
 
-    public static Template loadTemplate(BackendRdfSource source)
-            throws RdfUtilsException {
-        List<String> jar = RdfUtils.getResourcesOfType(
-                source, null, JarTemplate.TYPE);
+    public static Template loadTemplate(Statements source)
+            throws StorageException {
+        List<Resource> jar = new ArrayList<>(
+                source.selector().selectByType(JarTemplate.TYPE)
+                        .subjects());
         if (jar.size() == 1) {
             JarTemplate template = new JarTemplate();
-            RdfUtils.load(source, jar.get(0), null, template);
+            Loadable.load(source.selector(), template, jar.get(0));
             return template;
         } else if (jar.size() > 1) {
-            throw new RdfUtilsException(
+            throw new StorageException(
                     "Invalid count of jar templates: {}",
                     jar.size());
         }
-        List<String> reference = RdfUtils.getResourcesOfType(
-                source, null, ReferenceTemplate.TYPE);
+        List<Resource> reference = new ArrayList<>(
+                source.selector().selectByType(ReferenceTemplate.TYPE)
+                        .subjects());
         if (reference.size() == 1) {
             ReferenceTemplate template = new ReferenceTemplate();
-            RdfUtils.load(source, reference.get(0), null, template);
+            Loadable.load(source.selector(), template, reference.get(0));
             return template;
         } else if (reference.size() > 1) {
-            throw new RdfUtilsException(
+            throw new StorageException(
                     "Invalid count of reference templates: {}",
                     reference.size());
         }
-        throw new RdfUtilsException(
+        throw new StorageException(
                 "Invalid count of templates: {} (jar) {} (reference)",
                 jar.size(), reference.size());
     }

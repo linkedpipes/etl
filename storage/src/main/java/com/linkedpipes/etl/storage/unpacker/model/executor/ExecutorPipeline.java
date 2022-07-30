@@ -2,9 +2,8 @@ package com.linkedpipes.etl.storage.unpacker.model.executor;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
-import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
-import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
+import com.linkedpipes.etl.library.rdf.StatementsBuilder;
+import com.linkedpipes.etl.model.vocabulary.SKOS;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -15,7 +14,7 @@ import java.util.List;
 
 public class ExecutorPipeline {
 
-    private String iri;
+    private final String iri;
 
     private String label;
 
@@ -23,9 +22,9 @@ public class ExecutorPipeline {
 
     private final List<ExecutorConnection> connections = new LinkedList<>();
 
-    private ExecutorMetadata executorMetadata;
+    private final ExecutorMetadata executorMetadata;
 
-    private ExecutorProfile executorProfile;
+    private final ExecutorProfile executorProfile;
 
     public ExecutorPipeline(String iri) {
         this.iri = iri;
@@ -33,31 +32,32 @@ public class ExecutorPipeline {
         this.executorProfile = new ExecutorProfile(iri + "/profile");
     }
 
-    public void write(BackendTripleWriter writer) {
-        writer.iri(iri, RDF.TYPE, LP_PIPELINE.PIPELINE);
-        writer.string(iri, SKOS.PREF_LABEL, label, null);
-        writer.iri(iri, LP_EXEC.HAS_METADATA, executorMetadata.getIri());
+    public void write(StatementsBuilder writer) {
+        writer.setDefaultGraph(iri);
+        writer.addType(iri, LP_PIPELINE.PIPELINE);
+        writer.add(iri, SKOS.PREF_LABEL, label);
+        writer.addIri(iri, LP_EXEC.HAS_METADATA, executorMetadata.getIri());
         executorMetadata.write(writer);
-        writer.iri(
+        writer.addIri(
                 iri, LP_EXEC.HAS_EXECUTION_PROFILE, executorProfile.getIri());
         executorProfile.write(writer);
         for (ExecutorComponent component : components) {
-            writer.iri(iri, LP_PIPELINE.HAS_COMPONENT, component.getIri());
+            writer.addIri(iri, LP_PIPELINE.HAS_COMPONENT, component.getIri());
             component.write(writer);
         }
         for (ExecutorConnection connection : connections) {
-            writer.iri(iri, LP_PIPELINE.HAS_CONNECTION, connection.getIri());
+            writer.addIri(iri, LP_PIPELINE.HAS_CONNECTION, connection.getIri());
             connection.write(writer);
         }
         writeStatic(writer);
     }
 
-    private void writeStatic(BackendTripleWriter writer) {
+    private void writeStatic(StatementsBuilder builder) {
         String sesameIri = "http://localhost/repository/sesame";
-        writer.iri(iri, "http://linkedpipes.com/ontology/repository",
+        builder.addIri(iri, "http://linkedpipes.com/ontology/repository",
                 sesameIri);
-        writer.iri(sesameIri, RDF.TYPE, LP_PIPELINE.RDF_REPOSITORY);
-        writer.iri(
+        builder.addType(sesameIri, LP_PIPELINE.RDF_REPOSITORY);
+        builder.addIri(
                 sesameIri, LP_PIPELINE.HAS_REQUIREMENT,
                 LP_PIPELINE.HAS_REQ_WORKING);
     }

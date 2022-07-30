@@ -3,7 +3,8 @@ package com.linkedpipes.etl.executor.monitor.debug;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.monitor.TestUtils;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
-import com.linkedpipes.etl.rdf4j.Statements;
+import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -51,20 +52,20 @@ public class DebugDataTest {
     }
 
     private Statements twoDataUnitsWithValidAndInvalidDebugFiles() {
-        Statements statements = Statements.arrayList();
+        StatementsBuilder statements = Statements.arrayList().builder();
         statements.addIri(
                 "http://valid", RDF.TYPE.stringValue(), LP_EXEC.DATA_UNIT);
-        statements.addString(
+        statements.add(
                 "http://valid", LP_EXEC.HAS_DEBUG, "valid");
-        statements.addString(
+        statements.add(
                 "http://valid", LP_EXEC.HAS_DATA_PATH, "valid-info");
         statements.addIri(
                 "http://invalid", RDF.TYPE.stringValue(), LP_EXEC.DATA_UNIT);
-        statements.addString(
+        statements.add(
                 "http://invalid", LP_EXEC.HAS_DEBUG, "invalid");
-        statements.addString(
+        statements.add(
                 "http://invalid", LP_EXEC.HAS_DATA_PATH, "invalid-info");
-        statements.addString(
+        statements.add(
                 "http://invalid",
                 LP_EXEC.HAS_EXECUTION_ETL,
                 "http://executions/123");

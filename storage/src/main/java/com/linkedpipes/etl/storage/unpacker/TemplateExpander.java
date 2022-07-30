@@ -1,8 +1,6 @@
 package com.linkedpipes.etl.storage.unpacker;
 
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
+import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.unpacker.model.GraphCollection;
 import com.linkedpipes.etl.storage.unpacker.model.ModelLoader;
@@ -59,14 +57,7 @@ class TemplateExpander {
 
     private Template loadTemplate(Collection<Statement> templateAsRdf)
             throws StorageException {
-        ClosableRdfSource source = Rdf4jSource.wrapInMemory(templateAsRdf);
-        try {
-            return ModelLoader.loadTemplate(source);
-        } catch (RdfUtilsException ex) {
-            throw new StorageException("Can't load object.", ex);
-        } finally {
-            source.close();
-        }
+       return ModelLoader.loadTemplate(Statements.wrap(templateAsRdf));
     }
 
     private ExecutorComponent expandJarTemplate(

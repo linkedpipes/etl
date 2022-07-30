@@ -1,12 +1,11 @@
 package com.linkedpipes.etl.storage.unpacker.model.designer;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
-import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
-import com.linkedpipes.etl.rdf.utils.pojo.LoaderException;
-import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
-import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
+import com.linkedpipes.etl.model.vocabulary.RDF;
+import com.linkedpipes.etl.model.vocabulary.SKOS;
+import com.linkedpipes.etl.storage.unpacker.rdf.Loadable;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -46,28 +45,29 @@ public class DesignerComponent implements Loadable {
     }
 
     @Override
-    public void resource(String resource) throws LoaderException {
+    public void resource(String resource)  {
         iri = resource;
     }
 
     @Override
-    public Loadable load(String predicate, BackendRdfValue value)
-            throws RdfUtilsException {
+    public Loadable load(String predicate, Value value) {
         switch (predicate) {
             case RDF.TYPE:
-                types.add(value.asString());
+                types.add(value.stringValue());
                 return null;
             case LP_PIPELINE.HAS_CONFIGURATION_GRAPH:
-                configurationGraphs.add(value.asString());
+                configurationGraphs.add(value.stringValue());
                 return null;
             case LP_PIPELINE.HAS_TEMPLATE:
-                template = value.asString();
+                template = value.stringValue();
                 return null;
             case SKOS.PREF_LABEL:
-                label = value.asString();
+                label = value.stringValue();
                 return null;
             case LP_PIPELINE.HAS_DISABLED:
-                disabled = value.asBoolean();
+                if (value instanceof Literal literal) {
+                    disabled = literal.booleanValue();
+                }
                 return null;
             default:
                 return null;
