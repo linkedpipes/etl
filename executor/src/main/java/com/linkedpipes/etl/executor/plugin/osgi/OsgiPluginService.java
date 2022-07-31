@@ -3,6 +3,8 @@ package com.linkedpipes.etl.executor.plugin.osgi;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.PipelineExecutionObserver;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
+import com.linkedpipes.etl.executor.plugin.PluginHolder;
+import com.linkedpipes.etl.executor.plugin.PluginService;
 import com.linkedpipes.etl.library.template.plugin.PluginException;
 import com.linkedpipes.etl.library.template.plugin.PluginTemplateFacade;
 import com.linkedpipes.etl.library.template.plugin.model.JavaPlugin;
@@ -26,7 +28,7 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
-public class OsgiPluginService {
+public class OsgiPluginService implements PluginService {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(OsgiPluginService.class);
@@ -35,8 +37,12 @@ public class OsgiPluginService {
 
     private final List<Bundle> libraries = new LinkedList<>();
 
-    private final Map<String, Bundle> bundles = new HashMap<>();
+    /**
+     * For given IRI store a template.
+     */
+    private final Map<String, PluginHolder> components = new HashMap<>();
 
+    @Override
     public void startService(File storageDirectory) throws ExecutorException {
         Map<String, String> config = new HashMap<>();
         config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA,
@@ -55,6 +61,7 @@ public class OsgiPluginService {
         }
     }
 
+    @Override
     public void stopService() {
         if (framework == null) {
             return;
@@ -71,6 +78,7 @@ public class OsgiPluginService {
         LOG.trace("Closing ... done");
     }
 
+    @Override
     public void loadLibraries(File directory) throws ExecutorException {
         LOG.debug("Loading libraries from '{}'.", directory.getAbsolutePath());
         BundleContext context = framework.getBundleContext();
@@ -120,6 +128,7 @@ public class OsgiPluginService {
         }
     }
 
+    @Override
     public void loadPlugins(File directory) throws ExecutorException {
         LOG.debug("Loading plugins from '{}'.", directory.getAbsolutePath());
         List<File> files = listDirectory(directory);
@@ -140,7 +149,8 @@ public class OsgiPluginService {
                             "see logs for more details.",
                     failedLoadings, files.size());
         }
-        LOG.debug("Loaded {} component bundles.", bundles.size());
+        LOG.info("Loaded '{}' component bundles from '{}' files.",
+                components.size(), files.size());
     }
 
     private void loadPlugin(File file) throws ExecutorException {
@@ -151,23 +161,10 @@ public class OsgiPluginService {
             LOG.error("Can't load component.", ex);
             return;
         }
-        //
         Bundle bundle = installComponent(file.toURI().toString());
         startBundle(bundle);
-        Map<String, Class<?>> classes =
-                OsgiClassLoader.load(bundle.getBundleContext());
-        // TODO: As of now we support only one class per bundle.
-
-        if (plugin.templates().size() != 1) {
-            throw new ExecutorException(
-                    "Invalid number of plugins detected for '{}'", file);
-        }
-        if (classes.size() != 1) {
-            throw new ExecutorException(
-                    "Invalid number components classes for '{}'", file);
-        }
-        String iri = plugin.iri().stringValue();
-        bundles.put(iri, bundle);
+        components.putAll(OsgiClassLoader.load(
+                plugin, bundle.getBundleContext()));
     }
 
     private Bundle installComponent(String path) throws ExecutorException {
@@ -181,6 +178,7 @@ public class OsgiPluginService {
         return bundle;
     }
 
+    @Override
     public List<PipelineExecutionObserver> getPipelineListeners()
             throws ExecutorException {
         return getServices(PipelineExecutionObserver.class);
@@ -199,19 +197,19 @@ public class OsgiPluginService {
         }
     }
 
+    @Override
     public List<DataUnitFactory> getDataUnitFactories()
             throws ExecutorException {
         return getServices(DataUnitFactory.class);
     }
 
-    public BundleContext getComponentBundleContext(String iri)
+    @Override
+    public PluginHolder getPlugin(String iri)
             throws ExecutorException {
-        if (!bundles.containsKey(iri)) {
-            throw new ExecutorException(
-                    "Missing bundle for '{}'.", iri);
+        if (!components.containsKey(iri)) {
+            throw new ExecutorException("Missing template '{}'.", iri);
         }
-        return bundles.get(iri).getBundleContext();
+        return components.get(iri);
     }
-
 
 }

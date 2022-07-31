@@ -15,18 +15,18 @@ import java.util.Map;
 /**
  * Wrap for V1 components.
  */
-public class ComponentV1 implements SequentialExecution {
+public class PluginV1Instance implements SequentialExecution {
 
-    private final SequentialExecution component;
+    private final SequentialExecution instance;
 
     private final String componentIri;
 
     private final RdfSource definition;
 
-    public ComponentV1(
+    public PluginV1Instance(
             SequentialExecution component, String componentIri,
             RdfSource definition) {
-        this.component = component;
+        this.instance = component;
         this.componentIri = componentIri;
         this.definition = definition;
     }
@@ -34,7 +34,7 @@ public class ComponentV1 implements SequentialExecution {
     @Override
     public void execute(Component.Context context) throws LpException {
         try {
-            component.execute(context);
+            instance.execute(context);
         } catch (Throwable t) {
             throw new LpException("Execution failed.", t);
         }
@@ -52,7 +52,7 @@ public class ComponentV1 implements SequentialExecution {
     public void loadConfiguration(RdfSource definition)
             throws LpException {
         // Load configuration.
-        for (Field field : component.getClass().getFields()) {
+        for (Field field : instance.getClass().getFields()) {
             if (field.getAnnotation(Component.Configuration.class) != null) {
                 loadConfigurationForField(field, definition);
             }
@@ -85,7 +85,7 @@ public class ComponentV1 implements SequentialExecution {
         }
         RdfToPojoLoader.loadByReflection(definition, instance);
         try {
-            field.set(component, instance);
+            field.set(this.instance, instance);
         } catch (IllegalAccessException | IllegalArgumentException ex) {
             throw new LpException("Can't set value to {}",
                     field.getName(), ex);
@@ -96,7 +96,7 @@ public class ComponentV1 implements SequentialExecution {
      * Bind all ports (dataunits) fields.
      */
     private void bingPorts(Map<String, DataUnit> dataUnits) throws LpException {
-        for (Field field : component.getClass().getFields()) {
+        for (Field field : instance.getClass().getFields()) {
             Component.InputPort input =
                     field.getAnnotation(Component.InputPort.class);
             if (input != null) {
@@ -132,7 +132,7 @@ public class ComponentV1 implements SequentialExecution {
                     field.getType().getSimpleName());
         }
         try {
-            field.set(component, dataUnit);
+            field.set(instance, dataUnit);
         } catch (IllegalAccessException | IllegalArgumentException ex) {
             throw new LpException("Can't set data unit: {}", id, ex);
         }
@@ -142,7 +142,7 @@ public class ComponentV1 implements SequentialExecution {
      * Construct and inject services.
      */
     private void injectServices(Component.Context context) throws LpException {
-        for (Field field : component.getClass().getFields()) {
+        for (Field field : instance.getClass().getFields()) {
             if (field.getAnnotation(Component.Inject.class) == null) {
                 continue;
             }
@@ -155,7 +155,7 @@ public class ComponentV1 implements SequentialExecution {
                         field.getName(), field.getType().getSimpleName(), ex);
             }
             try {
-                field.set(component, instance);
+                field.set(this.instance, instance);
             } catch (IllegalAccessException | IllegalArgumentException ex) {
                 throw new LpException("Can't inject object: {} of {}",
                         field.getName(), instance.getClass().getSimpleName(),
@@ -165,14 +165,14 @@ public class ComponentV1 implements SequentialExecution {
     }
 
     private Object getConfigurationObject() throws LpException {
-        for (Field field : component.getClass().getFields()) {
+        for (Field field : instance.getClass().getFields()) {
             Component.ContainsConfiguration annotation =
                     field.getAnnotation(Component.ContainsConfiguration.class);
             if (annotation == null) {
                 continue;
             }
             try {
-                return field.get(component);
+                return field.get(instance);
             } catch (IllegalAccessException ex) {
                 throw new LpException("Can't get runtime configuration.", ex);
             }

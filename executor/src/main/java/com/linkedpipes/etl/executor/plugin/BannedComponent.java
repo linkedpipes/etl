@@ -1,9 +1,11 @@
 package com.linkedpipes.etl.executor.plugin;
 
-public class BannedComponent extends PluginException {
+import com.linkedpipes.etl.executor.ExecutorException;
+
+public class BannedComponent extends ExecutorException {
 
     public BannedComponent(Object... args) {
-        super("Required component: {} is banned by: {}", args);
+        super("Required component '{}' is banned by '{}'.", args);
     }
 
 }

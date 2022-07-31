@@ -1,7 +1,10 @@
 package com.linkedpipes.etl.executor.plugin.osgi;
 
 import com.linkedpipes.etl.executor.ExecutorException;
-import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.plugin.PluginHolder;
+import com.linkedpipes.etl.executor.plugin.v1.PluginV1Holder;
+import com.linkedpipes.etl.library.template.plugin.model.JavaPlugin;
+import com.linkedpipes.etl.library.template.plugin.model.PluginTemplate;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.wiring.BundleRevision;
@@ -16,22 +19,29 @@ import java.util.Map;
 
 class OsgiClassLoader {
 
-    private static final String EMPTY_NAME = "None";
+    private static final String V1_EMPTY_NAME = "None";
 
     private static final Logger LOG =
             LoggerFactory.getLogger(OsgiClassLoader.class);
 
+    private final Map<String, PluginTemplate> unusedTemplates = new HashMap<>();
+
     private final Map<String, Class<?>> classes = new HashMap<>(2);
 
-    protected OsgiClassLoader() {
+    private final Map<String, PluginHolder> holders = new HashMap<>();
+
+    protected OsgiClassLoader(JavaPlugin javaPlugin) {
+        for (PluginTemplate template : javaPlugin.templates()) {
+            unusedTemplates.put(template.resource().stringValue(), template);
+        }
     }
 
-    public static Map<String, Class<?>> load(
-            BundleContext bundleContext)
+    public static Map<String, PluginHolder> load(
+            JavaPlugin javaPlugin, BundleContext bundleContext)
             throws ExecutorException {
-        OsgiClassLoader result = new OsgiClassLoader();
+        OsgiClassLoader result = new OsgiClassLoader(javaPlugin);
         result.scan(bundleContext.getBundle());
-        return result.classes;
+        return result.holders;
     }
 
     private void scan(Bundle bundle) throws ExecutorException {
@@ -49,6 +59,7 @@ class OsgiClassLoader {
             }
             tryToLoadAndRegisterClass(bundle, className);
         }
+        checkForV1Component();
     }
 
     private Enumeration<URL> listClassEntries(Bundle bundle) {
@@ -64,21 +75,39 @@ class OsgiClassLoader {
         return className.contains("$");
     }
 
-    private void tryToLoadAndRegisterClass(Bundle bundle, String className) {
+    /**
+     * Return matching template.
+     */
+    private void tryToLoadAndRegisterClass(
+            Bundle bundle, String className) {
         Class<?> candidateClass;
         try {
             candidateClass = bundle.loadClass(className);
         } catch (ClassNotFoundException ex) {
-            LOG.info("Can't load class: {}", className, ex);
+            LOG.warn("Can't load class: {}", className, ex);
             return;
         }
-        if (!Component.class.isAssignableFrom(candidateClass)) {
-            return;
+        if (com.linkedpipes.etl.executor.api.v1.component.Component.class.
+                isAssignableFrom(candidateClass)) {
+            classes.put(V1_EMPTY_NAME, candidateClass);
         }
-        //
         // TODO This is where we need to implement support for v2 components.
-        //
-        classes.put(EMPTY_NAME, candidateClass);
+    }
+
+    private void checkForV1Component() {
+        // The version one contain only one template definition and
+        // one instance of Component class.
+        if (!classes.containsKey(V1_EMPTY_NAME) ||
+                unusedTemplates.size() != 1) {
+            return;
+        }
+        PluginTemplate template =
+                unusedTemplates.values().iterator().next();
+        Class<?> componentClass = classes.get(V1_EMPTY_NAME);
+        // Create as a default.
+        holders.put(
+                template.resource().stringValue(),
+                new PluginV1Holder(template, componentClass));
     }
 
 }

@@ -2,7 +2,7 @@ package com.linkedpipes.etl.executor.component;
 
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.executor.plugin.v1.ComponentV1;
+import com.linkedpipes.etl.executor.plugin.v1.PluginV1Instance;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
@@ -44,7 +44,7 @@ class ExecuteComponent implements ComponentExecutor {
 
     private final ExecutionComponent execComponent;
 
-    private final ComponentV1 instance;
+    private final PluginV1Instance instance;
 
     private final ExecutionContext context;
 
@@ -55,7 +55,7 @@ class ExecuteComponent implements ComponentExecutor {
             ExecutionObserver execution,
             PipelineComponent component,
             ExecutionComponent execComponent,
-            ComponentV1 instance) {
+            PluginV1Instance instance) {
         this.pipeline = pipeline;
         this.pplComponent = component;
         this.execComponent = execComponent;

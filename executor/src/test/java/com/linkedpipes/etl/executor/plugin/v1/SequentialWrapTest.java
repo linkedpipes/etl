@@ -64,7 +64,7 @@ public class SequentialWrapTest {
         Mockito.when(output.getBinding()).thenReturn("http://dataUnit/output");
         dataUnits.put("http://dataUnit/output", output);
         TestComponent component = new TestComponent();
-        ComponentV1 wrap = new ComponentV1(
+        PluginV1Instance wrap = new PluginV1Instance(
                 component, "http://component", rdfSource);
         //
         wrap.initialize(dataUnits, null);

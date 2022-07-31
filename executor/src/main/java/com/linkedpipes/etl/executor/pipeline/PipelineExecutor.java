@@ -3,7 +3,7 @@ package com.linkedpipes.etl.executor.pipeline;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.PipelineExecutionObserver;
-import com.linkedpipes.etl.executor.plugin.v1.ComponentV1;
+import com.linkedpipes.etl.executor.plugin.v1.PluginV1Instance;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
 import com.linkedpipes.etl.executor.component.ComponentExecutor;
 import com.linkedpipes.etl.executor.dataunit.DataUnitInstanceSource;
@@ -13,11 +13,11 @@ import com.linkedpipes.etl.executor.execution.ResourceManager;
 import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
 import com.linkedpipes.etl.executor.logging.LoggerFacade;
 import com.linkedpipes.etl.executor.plugin.BannedComponent;
-import com.linkedpipes.etl.executor.plugin.PluginException;
 import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.plugin.PluginServiceHolder;
 import com.linkedpipes.etl.executor.rdf.RdfSourceWrap;
+import com.linkedpipes.etl.library.template.plugin.PluginException;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -61,7 +61,7 @@ public class PipelineExecutor {
      */
     private ComponentExecutor executor = null;
 
-    private final Map<String, ComponentV1>
+    private final Map<String, PluginV1Instance>
             componentsInstances = new HashMap<>();
 
     /**
@@ -288,7 +288,7 @@ public class PipelineExecutor {
                 continue;
             }
             String iri = component.getIri();
-            ComponentV1 instance;
+            PluginV1Instance instance;
             try {
                 instance = moduleFacade.getComponent(pipeline, iri);
                 componentsInstances.put(component.getIri(), instance);
@@ -298,7 +298,7 @@ public class PipelineExecutor {
                                 "This component is banned on this instance."));
                 LOG.error("Banned component.", ex);
                 loadingFailed = true;
-            } catch (PluginException ex) {
+            } catch (ExecutorException ex) {
                 execution.onCantLoadComponentJar(component, ex);
                 LOG.error("Can't load component.", ex);
                 loadingFailed = true;
@@ -362,7 +362,7 @@ public class PipelineExecutor {
 
     private ComponentExecutor getExecutor(PipelineComponent component)
             throws ExecutorException {
-        ComponentV1 instance = componentsInstances.get(component.getIri());
+        PluginV1Instance instance = componentsInstances.get(component.getIri());
         return ComponentExecutor.create(
                 pipeline, execution, component, instance);
     }

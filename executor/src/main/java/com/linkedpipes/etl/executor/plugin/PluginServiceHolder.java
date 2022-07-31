@@ -4,17 +4,16 @@ import com.linkedpipes.etl.executor.ConfigurationHolder;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.PipelineExecutionObserver;
-import com.linkedpipes.etl.executor.plugin.v1.ComponentFactory;
-import com.linkedpipes.etl.executor.plugin.v1.ComponentV1;
+import com.linkedpipes.etl.executor.plugin.v1.PluginV1Instance;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
 import com.linkedpipes.etl.executor.plugin.osgi.OsgiPluginService;
+import com.linkedpipes.etl.executor.plugin.v1.PluginV1Holder;
 import com.linkedpipes.etl.executor.rdf.RdfSourceWrap;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -54,50 +53,38 @@ public class PluginServiceHolder
         return osgi.getPipelineListeners();
     }
 
-    public ComponentV1 getComponent(Pipeline pipeline, String component)
-            throws PluginException {
-        String jarUrl = getComponentJarUrl(pipeline, component);
-        checkIfBundleIsAllowed(jarUrl);
-        BundleContext componentContext;
-        try {
-            componentContext = osgi.getComponentBundleContext(jarUrl);
-        } catch (ExecutorException ex) {
-            throw new PluginException("Can't load bundle: {}", jarUrl, ex);
+    public PluginV1Instance getComponent(Pipeline pipeline, String component)
+            throws ExecutorException {
+        String template = getComponentTemplateIri(pipeline, component);
+        checkIfBundleIsAllowed(template);
+        PluginHolder pluginHolder = osgi.getPlugin(template);
+        if (pluginHolder instanceof PluginV1Holder v1Holder) {
+            return v1Holder.createInstance(pipeline, component);
         }
-        ComponentV1 result;
-        ComponentFactory factory = new ComponentFactory();
-        try {
-            result = factory.create(
-                    component, pipeline.getPipelineGraph(),
-                    wrapPipeline(pipeline), componentContext);
-        } catch (LpException ex) {
-            throw new PluginException(
-                    "Can't create component from a bundle.", ex);
-        }
-        if (result == null) {
-            throw new PluginException("Can't load component from: {}", jarUrl);
-        }
-        return result;
+        throw new ExecutorException("Unknown plugin holder '{}'.",
+                pluginHolder.getClass().getName());
     }
 
-    private String getComponentJarUrl(Pipeline pipeline, String component)
-            throws PluginException {
-        String query = getJarUrlQuery(component, pipeline.getPipelineGraph());
+    private String getComponentTemplateIri(Pipeline pipeline, String component)
+            throws ExecutorException {
+        String query = getComponentTemplateQuery(
+                component, pipeline.getPipelineGraph());
         try {
             return RdfUtils.sparqlSelectSingle(
-                    pipeline.getSource(), query, "jar");
+                    pipeline.getSource(), query, "iri");
         } catch (RdfUtilsException ex) {
-            throw new PluginException("Can't load component jar path.", ex);
+            throw new ExecutorException("Can't load component jar path.", ex);
         }
     }
 
-    private static String getJarUrlQuery(String component, String graph) {
-        return "SELECT ?jar WHERE { GRAPH <" + graph + "> { "
-                + " <" + component + "> <" + LP_PIPELINE.HAS_JAR_URL
-                + "> ?jar }}";
+    private static String getComponentTemplateQuery(
+            String component, String graph) {
+        return "SELECT ?iri WHERE { GRAPH <" + graph + "> { "
+                + " <" + component + "> <" + LP_PIPELINE.HAS_TEMPLATE
+                + "> ?iri }}";
     }
 
-    private void checkIfBundleIsAllowed(String iri) throws PluginException {
+    private void checkIfBundleIsAllowed(String iri) throws ExecutorException {
         for (String pattern : configuration.getBannedJarPatterns()) {
             if (iri.matches(pattern)) {
                 throw new BannedComponent(iri, pattern);
@@ -105,14 +92,10 @@ public class PluginServiceHolder
         }
     }
 
-    private RdfSourceWrap wrapPipeline(Pipeline pipeline) {
-        return new RdfSourceWrap(
-                pipeline.getSource(), pipeline.getPipelineGraph());
-    }
-
     public ManageableDataUnit getDataUnit(Pipeline pipeline, String subject)
             throws ExecutorException {
-        RdfSourceWrap source = wrapPipeline(pipeline);
+        RdfSourceWrap source = new RdfSourceWrap(
+                pipeline.getSource(), pipeline.getPipelineGraph());
         for (DataUnitFactory factory : osgi.getDataUnitFactories()) {
             try {
                 ManageableDataUnit dataUnit = factory.create(
@@ -121,12 +104,13 @@ public class PluginServiceHolder
                     return dataUnit;
                 }
             } catch (LpException ex) {
-                LOG.error("Can't create data unit '{}' with: {}",
+                LOG.error("Can't create data unit '{}' with '{}'.",
                         subject, factory.getClass().getName(), ex);
             }
         }
-        throw new PluginException(
-                "No factory can instantiate required data unit.");
+        throw new ExecutorException(
+                "No factory can instantiate required data uni '{}'.",
+                subject);
     }
 
     @Override
