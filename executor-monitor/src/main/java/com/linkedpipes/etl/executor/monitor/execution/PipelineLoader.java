@@ -56,10 +56,6 @@ class PipelineLoader {
     }
 
     private File getPipelineFile() throws MonitorException {
-        File pipelineFile = new File(execution.getDirectory(), "pipeline.trig");
-        if (pipelineFile.exists()) {
-            return pipelineFile;
-        }
         File definitionFile = new File(
                 execution.getDirectory(), "definition/definition.trig");
         if (definitionFile.exists()) {
@@ -69,6 +65,10 @@ class PipelineLoader {
                 execution.getDirectory(), "definition/definition.jsonld");
         if (definitionFileJsonld.exists()) {
             return definitionFileJsonld;
+        }
+        File pipelineFile = new File(execution.getDirectory(), "pipeline.trig");
+        if (pipelineFile.exists()) {
+            return pipelineFile;
         }
         throw new MonitorException(
                 "Missing pipeline file for execution: {}",
