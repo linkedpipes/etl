@@ -1,10 +1,10 @@
 package com.linkedpipes.etl.storage.template;
 
+import com.linkedpipes.etl.library.template.plugin.model.JavaPlugin;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.SuppressFBWarnings;
-import com.linkedpipes.etl.storage.jar.JarComponent;
-import com.linkedpipes.etl.storage.jar.JarFacade;
+import com.linkedpipes.etl.storage.jar.JavaPluginService;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
 import com.linkedpipes.etl.storage.template.migration.TemplateV1ToV2;
 import com.linkedpipes.etl.storage.template.migration.TemplateV2ToV3;
@@ -45,7 +45,7 @@ public class TemplateService {
     private static final Logger LOG =
             LoggerFactory.getLogger(TemplateService.class);
 
-    private final JarFacade jarFacade;
+    private final JavaPluginService jarFacade;
 
     private final Configuration configuration;
 
@@ -57,7 +57,7 @@ public class TemplateService {
 
     @Autowired
     public TemplateService(
-            JarFacade jarFacade,
+            JavaPluginService jarFacade,
             Configuration configuration,
             WritableTemplateRepository repository) {
         this.jarFacade = jarFacade;
@@ -89,8 +89,8 @@ public class TemplateService {
     private void importJarFiles() {
         ImportFromJarFile copyJarTemplates =
                 new ImportFromJarFile(repository);
-        for (JarComponent item : jarFacade.getJarComponents()) {
-            copyJarTemplates.importJarComponent(item);
+        for (JavaPlugin plugin : jarFacade.getJavaPlugins()) {
+            copyJarTemplates.importJavaPlugin(plugin);
         }
     }
 
@@ -228,12 +228,12 @@ public class TemplateService {
         try {
             ReferenceTemplateRef template = factory.create(
                     interfaceRdf, configurationRdf,
-                    descriptionRdf, id, iri);
+                    descriptionRdf, iri);
             template.setCoreTemplate(findCoreTemplate(template));
             templates.put(template.getIri(), template);
             return template;
         } catch (StorageException ex) {
-            repository.remove(RepositoryReference.createReference(id));
+            repository.remove(RepositoryReference.createReference(iri));
             throw ex;
         }
     }

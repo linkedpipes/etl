@@ -5,10 +5,10 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 public enum PluginType {
     QUALITY("http://etl.linkedpipes.com/ontology/component/type/Quality"),
-    EXECUTOR("http://etl.linkedpipes.com/ontology/component/type/Extractor"),
+    EXTRACTOR("http://etl.linkedpipes.com/ontology/component/type/Extractor"),
     LOADER("http://etl.linkedpipes.com/ontology/component/type/Loader"),
     TRANSFORMER("http://etl.linkedpipes.com/ontology/component/type/Transformer"),
-    OTHER("http://etl.linkedpipes.com/ontology/component/type/Executor");
+    EXECUTOR("http://etl.linkedpipes.com/ontology/component/type/Executor");
 
     private final IRI identifier;
 

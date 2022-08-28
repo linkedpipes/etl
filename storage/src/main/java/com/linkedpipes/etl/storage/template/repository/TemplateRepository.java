@@ -65,7 +65,6 @@ public class TemplateRepository {
     public File getDirectory(RepositoryReference ref) {
         switch (ref.getType()) {
             case JAR_TEMPLATE:
-                return new File(repositoryRoot, ref.getId());
             case REFERENCE_TEMPLATE:
                 return new File(repositoryRoot, ref.getId());
             default:
@@ -122,10 +121,12 @@ public class TemplateRepository {
             if (!file.isDirectory()) {
                 continue;
             }
-            if (file.getName().startsWith("jar-")) {
-                output.add(RepositoryReference.createJar(file.getName()));
+            if (RepositoryReference.isJarId(file.getName())) {
+                output.add(RepositoryReference.createJarFromId(
+                        file.getName()));
             } else {
-                output.add(RepositoryReference.createReference(file.getName()));
+                output.add(RepositoryReference.createReferenceFromId(
+                        file.getName()));
             }
         }
         return output;

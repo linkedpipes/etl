@@ -5,6 +5,7 @@ import com.linkedpipes.etl.executor.plugin.PluginHolder;
 import com.linkedpipes.etl.executor.plugin.v1.PluginV1Holder;
 import com.linkedpipes.etl.library.template.plugin.model.JavaPlugin;
 import com.linkedpipes.etl.library.template.plugin.model.PluginTemplate;
+import com.linkedpipes.etl.plugin.api.v2.LinkedPipesPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.wiring.BundleRevision;
@@ -87,11 +88,22 @@ class OsgiClassLoader {
             LOG.warn("Can't load class: {}", className, ex);
             return;
         }
+        String componentIri = getComponentIri(candidateClass);
         if (com.linkedpipes.etl.executor.api.v1.component.Component.class.
                 isAssignableFrom(candidateClass)) {
-            classes.put(V1_EMPTY_NAME, candidateClass);
+            classes.put(componentIri, candidateClass);
         }
         // TODO This is where we need to implement support for v2 components.
+    }
+
+    private String getComponentIri(Class<?> candidateClass) {
+        var annotation = candidateClass.getAnnotation(
+                LinkedPipesPlugin.IRI.class);
+        if (annotation == null) {
+            return V1_EMPTY_NAME;
+        } else {
+            return annotation.value();
+        }
     }
 
     private void checkForV1Component() {

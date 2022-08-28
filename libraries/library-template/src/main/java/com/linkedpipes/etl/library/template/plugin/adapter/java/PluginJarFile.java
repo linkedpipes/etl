@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.library.template.plugin.adapter.java;
 
 import com.linkedpipes.etl.library.template.plugin.PluginException;
-import com.linkedpipes.etl.library.template.plugin.adapter.rdf.RdfAsJarPluginDefinition;
+import com.linkedpipes.etl.library.template.plugin.adapter.rdf.RdfToJavaPluginDefinition;
 import com.linkedpipes.etl.library.template.plugin.model.JavaPluginDefinition;
 import com.linkedpipes.etl.library.rdf.Statements;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -75,7 +75,7 @@ class PluginJarFile {
             return Collections.emptyList();
         }
         Statements statements = loadAsStatement(entry);
-        return RdfAsJarPluginDefinition.asJarPluginDefinitions(
+        return RdfToJavaPluginDefinition.asJarPluginDefinitions(
                 statements.selector());
     }
 

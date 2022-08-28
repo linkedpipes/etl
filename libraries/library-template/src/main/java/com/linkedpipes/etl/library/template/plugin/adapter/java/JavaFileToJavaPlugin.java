@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.library.template.plugin.adapter.java;
 
 import com.linkedpipes.etl.library.template.plugin.PluginException;
-import com.linkedpipes.etl.library.template.plugin.adapter.rdf.RdfAsJarPluginDefinition;
+import com.linkedpipes.etl.library.template.plugin.adapter.rdf.RdfToJavaPluginDefinition;
 import com.linkedpipes.etl.library.template.plugin.adapter.rdf.RdfToPluginTemplate;
 import com.linkedpipes.etl.library.template.plugin.model.JavaPluginDefinition;
 import com.linkedpipes.etl.library.template.plugin.model.JavaPlugin;
@@ -12,12 +12,9 @@ import org.eclipse.rdf4j.model.IRI;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.jar.JarEntry;
-import java.util.stream.Collectors;
 
 public class JavaFileToJavaPlugin {
 
@@ -57,7 +54,7 @@ public class JavaFileToJavaPlugin {
     private void loadPluginTemplateV1(JarEntry entry) throws PluginException {
         Statements statements = jarFile.loadAsStatement(entry);
         List<JavaPluginDefinition> definitions =
-                RdfAsJarPluginDefinition.asJarPluginDefinitions(
+                RdfToJavaPluginDefinition.asJarPluginDefinitions(
                         statements.selector());
         if (definitions.size() != 1) {
             throw new PluginException("Invalid number of definitions.");
@@ -126,7 +123,7 @@ public class JavaFileToJavaPlugin {
     private void loadPluginTemplateV2(JarEntry entry) throws PluginException {
         Statements statements = jarFile.loadAsStatement(entry);
         List<JavaPluginDefinition> definitions =
-                RdfAsJarPluginDefinition.asJarPluginDefinitions(
+                RdfToJavaPluginDefinition.asJarPluginDefinitions(
                         statements.selector());
         if (definitions.size() != 1) {
             throw new PluginException("Invalid number of definitions.");
@@ -143,9 +140,6 @@ public class JavaFileToJavaPlugin {
         Statements definition = jarFile.loadAsStatement(
                 jarFile.selectByPrefix(
                         directory + "/definition."));
-        Statements configuration = jarFile.loadAsStatement(
-                jarFile.selectByPrefix(
-                        directory + "/configuration."));
         Statements configurationDescription = jarFile.loadAsStatement(
                 jarFile.selectByPrefix(
                         directory + "/configuration-description."));
@@ -161,6 +155,11 @@ public class JavaFileToJavaPlugin {
                     "Invalid number of plugins ({}) detected for '{}'.",
                     templates.size(), jarFile.fileName());
         }
+
+        Statements configuration = jarFile.loadAsStatement(
+                jarFile.selectByPrefix(
+                        directory + "/configuration."));
+
         PluginTemplate template = templates.get(0);
         return new PluginTemplate(
                 template.resource(),

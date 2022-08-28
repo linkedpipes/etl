@@ -50,7 +50,7 @@ public class ReferenceFactory {
             Collection<Statement> content,
             Collection<Statement> config,
             Collection<Statement> description,
-            String id, String iriAsString)
+            String iriAsString)
             throws StorageException {
         clear();
         parseContent(content);
@@ -62,7 +62,8 @@ public class ReferenceFactory {
         List<Statement> definitionRdf = createDefinition();
         List<Statement> configRdf = updateConfig(config);
         //
-        RepositoryReference ref = RepositoryReference.createReference(id);
+        RepositoryReference ref = RepositoryReference.createReference(
+                iriAsString);
         repository.setInterface(ref, interfaceRdf);
         repository.setDefinition(ref, definitionRdf);
         repository.setConfig(ref, configRdf);
@@ -74,7 +75,7 @@ public class ReferenceFactory {
         //
         TemplateLoader loader = new TemplateLoader(repository);
         return loader.loadReferenceTemplate(
-                RepositoryReference.createReference(id));
+                RepositoryReference.createReference(iriAsString));
     }
 
     public static String createConfigurationIri(String templateIri) {

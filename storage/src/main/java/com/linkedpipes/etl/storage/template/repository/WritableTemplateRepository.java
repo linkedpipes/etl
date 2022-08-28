@@ -40,7 +40,8 @@ public class WritableTemplateRepository extends TemplateRepository {
     public String reserveReferenceId() throws StorageException {
         for (int i = 0; i < REFERENCE_CREATE_ATTEMPT; ++i) {
             String id = createId();
-            File path = getDirectory(RepositoryReference.createReference(id));
+            File path = getDirectory(
+                    RepositoryReference.createReferenceFromId(id));
             if (path.mkdir()) {
                 return id;
             }

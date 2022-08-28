@@ -38,7 +38,7 @@ public class PluginTemplateToRdf {
         for (String keyword : template.tags()) {
             result.add(resource, LP_V1.HAS_KEYWORD, keyword);
         }
-        result.add(resource,
+        result.addIri(resource,
                 LP_V1.HAS_INFO_LINK, template.documentation());
         result.add(resource,
                 LP_V1.HAS_CONFIGURATION_GRAPH,
