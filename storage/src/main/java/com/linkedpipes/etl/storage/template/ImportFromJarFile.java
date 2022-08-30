@@ -76,7 +76,7 @@ class ImportFromJarFile {
             throws IOException, PluginException {
         root.mkdirs();
         for (var entry : template.dialogs().entrySet()) {
-            String directory = entry.getKey();
+            String directory = "dialog" + File.separator + entry.getKey();
             Map<String, String> files = entry.getValue();
             for (Map.Entry<String, String> fileEntry : files.entrySet()) {
                 String fileName = fileEntry.getKey();
