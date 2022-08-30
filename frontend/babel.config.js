@@ -3,14 +3,8 @@ module.exports = (api) => {
   api.cache.using(() => process.env.NODE_ENV);
 
   const presets = [
-    [
-      "@babel/preset-env",
-      {
-        "targets": {
-          "chrome": 70
-        }
-      }
-    ]
+    "@babel/preset-env",
+    "@babel/preset-typescript",
   ];
 
   const plugins = [
@@ -19,9 +13,7 @@ module.exports = (api) => {
     "angularjs-annotate"
   ];
 
-  const ignore = [
-
-  ];
+  const ignore = [/node_modules/];
 
   return {
     "presets": presets,

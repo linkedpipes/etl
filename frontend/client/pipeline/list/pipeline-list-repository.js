@@ -153,7 +153,7 @@
     }
     initialized = true;
     _personalization(app);
-    app.service("view-pipelines-list.repository", service);
+    app.service("pipelines-list.repository", service);
   }
 
 });

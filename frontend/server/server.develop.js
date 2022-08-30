@@ -42,8 +42,8 @@ function initializeStatic(app) {
 }
 
 function initializeHtmlFiles(app, webpackCompiler) {
-  // webpackMiddleware will server files as ./index.html and ./debug.html
-  // but we wan't it to be '/' and '/debug'
+  // webpackMiddleware will server files as ./index.html and ./debug.html,
+  // but we want it to be '/' and '/debug'
   const webpackFileSystem = webpackCompiler.outputFileSystem;
 
   const clientPath = path.join(webpackCompiler.outputPath, "client.html");
@@ -59,6 +59,16 @@ function initializeHtmlFiles(app, webpackCompiler) {
     path.join(webpackCompiler.outputPath, "client-debug.html");
   app.get("/debug", (req, res) => {
     webpackFileSystem.readFile(clientDebugPath, (err, result) => {
+      res.set("content-type", "text/html");
+      res.send(result);
+      res.end();
+    });
+  });
+
+  const clientReactPath =
+    path.join(webpackCompiler.outputPath, "client-react.html");
+  app.get("/react", (req, res) => {
+    webpackFileSystem.readFile(clientReactPath, (err, result) => {
       res.set("content-type", "text/html");
       res.send(result);
       res.end();

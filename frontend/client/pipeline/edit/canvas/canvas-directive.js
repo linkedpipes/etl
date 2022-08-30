@@ -26,15 +26,20 @@ define([
       "snapLinks": {
         "radius": 50
       },
-      "defaultLink": new joint.dia.Link({
-        "attrs": {
-          ".marker-target": {"d": "M 10 0 L 0 5 L 10 10 z"}
-        }
-      }),
+      "defaultLink": createDefaultLink(),
       "validateConnection": connectionValidator,
       "markAvailable": true,
       "interactive": interactiveFnc
     });
+  }
+
+  function createDefaultLink() {
+    const ControlLink = joint.dia.Link.define("linkedpipes.control", {
+      "attrs" : {
+        ".marker-target": {"d": "M 10 0 L 0 5 L 10 10 z"},
+      }
+    });
+    return new ControlLink();
   }
 
   function directive($service) {

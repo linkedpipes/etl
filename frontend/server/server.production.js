@@ -23,6 +23,10 @@ function initializeStatic(app) {
     res.sendFile(path.join(__dirname, "..", "dist", "client-debug.html"));
   });
 
+  app.get("/react", (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "dist", "client-react.html"));
+  });
+
 }
 
 // Add event handlers.

@@ -1,3 +1,6 @@
+/**
+ * Provide selection capabilities to the canvas.
+ */
 ((definition) => {
   if (typeof define === "function" && define.amd) {
     define(["./events"], definition);

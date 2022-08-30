@@ -2,7 +2,7 @@
  * Directive for embedding controller and HTML template.
  */
 
-define([], function () {
+define(["angular"], function (angular) {
   "use strict";
 
   // We had used RequireJS, which is no longer true.

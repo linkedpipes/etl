@@ -1,11 +1,23 @@
 {
   "compilerOptions": {
-    // Aligns with Vue's browser support.
-    "target": "es5",
-    "strict": true,
-    "module": "es2015",
-    "moduleResolution": "node",
+    "target": "es2015",
+    "lib": [
+      "es2019",
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
-    "sourceMap": true
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "jsx": "react",
+    "skipLibCheck": true,
+    "strict": true,
+    "sourceMap": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noErrorTruncation": true,
+    "resolveJsonModule": true
   }
 }

@@ -8,7 +8,8 @@ const gitRevisionPlugin = new GitRevisionPlugin();
 module.exports = {
   "entry": {
     "client": path.join(__dirname, "..", "client", "index.js"),
-    "client-debug": path.join(__dirname, "..", "client-debug", "index.js")
+    "client-debug": path.join(__dirname, "..", "client-debug", "index.js"),
+    "client-react": path.join(__dirname, "..", "client-react", "index.js")
   },
   "output": {
     "path": path.join(__dirname, "..", "dist"),
@@ -19,9 +20,39 @@ module.exports = {
     "splitChunks": {
       "cacheGroups": {
         "angular": {
-          "test": /[\\/]node_modules[\\/]angular/,
+          "test": (module) => {
+            // `module.resource` contains the absolute path of the file on disk.
+            return (
+              module.resource &&
+              partOfPackage(
+                module.resource,
+                ["angular", "ng-"]
+              ));
+          },
           "filename": "assets/scripts/[name].[chunkhash].js",
           "name": "angular",
+          "chunks": "all",
+          "priority": 10
+        },
+        "jointjs": {
+          "test": (module) => {
+            // `module.resource` contains the absolute path of the file on disk.
+            return (
+              module.resource &&
+              partOfPackage(
+                module.resource,
+                ["jointjs", "jquery", "lodash", "backbone"]
+              ));
+          },
+          "filename": "assets/scripts/[name].[chunkhash].js",
+          "name": "jointjs",
+          "chunks": "all",
+          "priority": 10
+        },
+        "triply": {
+          "test": /[\\/]node_modules[\\/]@triply/,
+          "filename": "assets/scripts/[name].[chunkhash].js",
+          "name": "triply",
           "chunks": "all",
           "priority": 10
         },
@@ -29,6 +60,13 @@ module.exports = {
           "test": /[\\/]node_modules[\\/]vue/,
           "filename": "assets/scripts/[name].[chunkhash].js",
           "name": "vue",
+          "chunks": "all",
+          "priority": 10
+        },
+        "react": {
+          "test": /[\\/]node_modules[\\/]react/,
+          "filename": "assets/scripts/[name].[chunkhash].js",
+          "name": "react",
           "chunks": "all",
           "priority": 10
         },
@@ -43,7 +81,7 @@ module.exports = {
   },
   "resolve": {
     "modules": ["node_modules"],
-    "extensions": [".js", ".vue", ".ts"],
+    "extensions": [".js", ".vue", ".ts", ".tsx"],
     "alias": {
       "@client": path.resolve("client"),
       "@client-debug": path.resolve("client-debug")
@@ -78,7 +116,7 @@ module.exports = {
       "filename": "client.html",
       "template": path.join(__dirname, "..", "public", "client.html"),
       "inject": true,
-      "chunks": ["client", "commons", "angular"]
+      "chunks": ["client", "commons", "angular", "jointjs", "triply"]
     }),
     new HtmlWebpackPlugin({
       "filename": "client-debug.html",
@@ -86,8 +124,29 @@ module.exports = {
       "inject": true,
       "chunks": ["client-debug", "webpack-hot-middleware", "commons", "vue"]
     }),
+    new HtmlWebpackPlugin({
+      "filename": "client-react.html",
+      "template": path.join(__dirname, "..", "public", "client-debug.html"),
+      "inject": true,
+      "chunks": ["client-react", "webpack-hot-middleware", "commons", "react"]
+    }),
     new webpack.DefinePlugin({
       "__GIT_COMMIT__": JSON.stringify(gitRevisionPlugin.commithash())
     })
   ]
 };
+
+function partOfPackage(modulePath, packages) {
+  if (!modulePath.includes("node_modules")) {
+    return false;
+  }
+  const prefixes = packages.map(
+    item => `${path.sep}node_modules${path.sep}${item}`
+  );
+  for (const prefix of prefixes) {
+    if (modulePath.includes(prefix)) {
+      return true;
+    }
+  }
+  return false;
+}

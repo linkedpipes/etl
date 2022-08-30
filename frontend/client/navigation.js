@@ -51,7 +51,7 @@ define([
       })
       .when("/pipelines", {
         "template": require("./pipeline/list/pipeline-list-view.html"),
-        "controller": "view-pipelines-list",
+        "controller": "pipelines-list.controller",
         "activeView": "pipelines",
         "pageTitle": "Pipelines",
         "color": "#2196F3"
@@ -83,9 +83,9 @@ define([
   }
 
   return (app) => {
-    _about(app);
+    _about.default(app);
     _personalization(app);
-    _pipelineList(app);
+    _pipelineList.default(app);
     _executionList(app);
     _templateList(app);
     _pipelineUpload(app);

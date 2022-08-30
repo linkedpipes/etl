@@ -1,75 +1,73 @@
-((definition) => {
-  if (typeof define === "function" && define.amd) {
-    define([
-      "angular",
-      "./pipeline-list-service"
-    ], definition);
+import angular from "angular";
+import serviceRegistration from "./pipeline-list-service";
+
+function controller(
+  $scope, $mdMedia, $lpScrollWatch, $http, $location, $mdDialog,
+  $status, $clipboard, service
+) {
+
+  service.initialize($scope, $mdMedia);
+
+  $scope.getTagsMatchingQuery = service.getTagsMatchingQuery;
+
+  $scope.onExecute = service.executePipeline;
+
+  $scope.onExecuteWithoutDebugData = service.executeWithoutDebugData;
+
+  $scope.onCreate = service.create;
+
+  $scope.onUpload = service.redirectToUpload;
+
+  $scope.onCopy = service.copy;
+
+  $scope.onCopyIri = service.copyIri;
+
+  $scope.onDelete = service.delete;
+
+  $scope.chipsFilter = service.onChipsFilterChange;
+
+  $scope.$watch("filter.labelSearch", service.onSearchStringChange);
+
+  $scope.noAction = () => {
+    // This is a do nothing action, we need it else the menu is open
+    // on click to item. This cause menu to open which together
+    // with navigation break the application.
+  };
+
+  let callbackReference = null;
+
+  callbackReference = $lpScrollWatch.registerCallback(
+    service.increaseVisibleItemLimit);
+
+  $scope.$on("$destroy", () => {
+    $lpScrollWatch.unRegisterCallback(callbackReference);
+  });
+
+  angular.element(function initialize() {
+    $lpScrollWatch.updateReference();
+    service.load();
+  });
+}
+
+controller.$inject = [
+  "$scope",
+  "$mdMedia",
+  "scrollWatch",
+  "$http",
+  "$location",
+  "$mdDialog",
+  "status",
+  "clipboard",
+  "pipelines-list.service",
+];
+
+let initialized = false;
+
+export default function register(app) {
+  if (initialized) {
+    return;
   }
-})((angular, _pipelineListService) => {
-  "use strict";
-
-  function controller($scope, $mdMedia, $lpScrollWatch, service) {
-
-    service.initialize($scope, $mdMedia);
-
-    $scope.getTagsMatchingQuery = service.getTagsMatchingQuery;
-
-    $scope.onExecute = service.executePipeline;
-
-    $scope.onExecuteWithoutDebugData = service.executeWithoutDebugData;
-
-    $scope.onCreate = service.create;
-
-    $scope.onUpload = service.redirectToUpload;
-
-    $scope.onCopy = service.copy;
-
-    $scope.onCopyIri = service.copyIri;
-
-    $scope.onDelete = service.delete;
-
-    $scope.chipsFilter = service.onChipsFilterChange;
-
-    $scope.$watch("filter.labelSearch", service.onSearchStringChange);
-
-    $scope.noAction = () => {
-      // This is do nothing action, we need it else the menu is open
-      // on click to item. This cause menu to open which together
-      // with navigation break the application.
-    };
-
-    let callbackReference = null;
-
-    callbackReference = $lpScrollWatch.registerCallback(
-      service.increaseVisibleItemLimit);
-
-    $scope.$on("$destroy", () => {
-      $lpScrollWatch.unRegisterCallback(callbackReference);
-    });
-
-    function initialize() {
-      $lpScrollWatch.updateReference();
-      service.load();
-    }
-
-    angular.element(initialize);
-  }
-
-  controller.$inject = [
-    "$scope",
-    "$mdMedia",
-    "scrollWatch",
-    "view-pipelines-list.service"
-  ];
-
-  let initialized = false;
-  return function init(app) {
-    if (initialized) {
-      return;
-    }
-    initialized = true;
-    _pipelineListService(app);
-    app.controller("view-pipelines-list", controller);
-  }
-
-});
+  initialized = true;
+  serviceRegistration(app);
+  app.controller("pipelines-list.controller", controller);
+}

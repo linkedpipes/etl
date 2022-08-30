@@ -27,7 +27,7 @@ module.exports = merge({
   "module": {
     "rules": [
       {
-        "test": /\.css$/,
+        "test": /\.css$/i,
         "exclude": vueStyleDirectories,
         "use": [
           MiniCssExtractPlugin.loader,
@@ -46,10 +46,7 @@ module.exports = merge({
   "plugins": [
     new webpack.HotModuleReplacementPlugin(),
     new MiniCssExtractPlugin({
-      "filename": "assets/styles/[name].[hash].css"
+      "filename": "assets/styles/[name].[contenthash].css"
     }),
-    // new ESLintPlugin({
-    //   "extensions": ["js", "vue"],
-    // }),
   ]
 }, common);

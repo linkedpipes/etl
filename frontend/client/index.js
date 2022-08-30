@@ -1,3 +1,5 @@
+// Required by angular, otherwise jqLite is utilized. jqLite is limited
+// in functionality.
 import angular from "angular";
 import ngRoute from "angular-route";
 import ngResource from "angular-resource";
@@ -13,7 +15,10 @@ import appLayout from "./app-layout/layout-directive";
 
 import "angular-material/angular-material.css";
 import "angular-ui-notification/dist/angular-ui-notification.css";
-import "jointjs/dist/joint.core.css";
+// This is not imported using import, I have no idea why.
+// May be related to https://github.com/webpack-contrib/css-loader/issues/117
+// it works for jointjs2
+require("jointjs/dist/joint.core.css");
 import "./style.css";
 
 const APP_NAME = "lp-application";
@@ -63,7 +68,7 @@ function configureTheme(app) {
     $mdThemingProvider.theme("default")
       .primaryPalette("light-blue")
       .accentPalette("orange");
-    
+
   }]);
 }
 

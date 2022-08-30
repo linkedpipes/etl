@@ -1,28 +1,22 @@
-((definition) => {
-  if (typeof define === "function" && define.amd) {
-    define(["angular"], definition);
-  }
-})((angular) => {
-  "use strict";
+import angular from "angular";
 
-  function controller($scope) {
+function controller($scope) {
 
-    function initialize() {
-      $scope.commit = __GIT_COMMIT__;
-    }
-
-    angular.element(initialize);
+  function initialize() {
+    $scope.commit = __GIT_COMMIT__;
   }
 
-  controller.$inject = ["$scope"];
+  angular.element(initialize);
+}
 
-  let initialized = false;
-  return function init(app) {
-    if (initialized) {
-      return;
-    }
-    initialized = true;
-    app.controller("view-about", controller);
+controller.$inject = ["$scope"];
+
+let initialized = false;
+
+export default function register(app) {
+  if (initialized) {
+    return;
   }
-
-});
+  initialized = true;
+  app.controller("view-about", controller);
+}

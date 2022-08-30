@@ -1,11 +1,11 @@
-"use strict";
+const propertiesReader = require("properties-reader");
+const logger = require("./logging");
 
-console.log("Loading configuration from: ", process.env.configFileLocation);
+logger.info("Loading configuration from: ", process.env.configFileLocation);
 if (process.env.configFileLocation === undefined) {
   throw new Error("Missing configuration file!")
 }
 
-const propertiesReader = require("properties-reader");
 const properties = propertiesReader(process.env.configFileLocation);
 
 const domain = process.env["LP_ETL_DOMAIN"]

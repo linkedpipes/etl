@@ -1,5 +1,5 @@
 /**
- * Add scroll capability to canvas.
+ * Add scroll capability to the canvas.
  */
 define([
   "jquery",
