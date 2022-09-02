@@ -1,6 +1,5 @@
-package com.linkedpipes.plugin.extractor.httpget;
+package com.linkedpipes.plugin.ehttpgetfile;
 
-import com.linkedpipes.etl.executor.api.v1.LpException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -20,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
-class Downloader {
+public class Downloader {
 
     public static class Task {
 

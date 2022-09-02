@@ -1,6 +1,10 @@
-package com.linkedpipes.plugin.extractor.httpget;
+package com.linkedpipes.plugin.ehttpgetfile.main;
 
-public final class HttpGetVocabulary {
+public final class HttpGetFileVocabulary {
+
+    public static final String IRI =
+            "http://etl.linkedpipes.com/resources/components/e-httpGetFile/" +
+                    "0.0.0";
 
     private static final String PREFIX
             = "http://plugins.linkedpipes.com/ontology/e-httpGetFile#";
@@ -19,7 +23,7 @@ public final class HttpGetVocabulary {
 
     public static final String ENCODE_URL = PREFIX + "encodeUrl";
 
-    private HttpGetVocabulary() {
+    private HttpGetFileVocabulary() {
     }
 
 }

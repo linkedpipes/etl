@@ -361,12 +361,6 @@
                                         </dependency>
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
-                                            <artifactId>e-httpGetFiles</artifactId>
-                                            <version>0.0.0</version>
-                                            <outputDirectory>${deploy.directory}/jars/core/e-httpGetFiles/</outputDirectory>
-                                        </dependency>
-                                        <dependency>
-                                            <groupId>com.linkedpipes</groupId>
                                             <artifactId>e-pipelineInput</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/core/e-pipelineInput/</outputDirectory>

@@ -1,6 +1,7 @@
 package com.linkedpipes.plugin.extractor.httpget;
 
 import com.linkedpipes.etl.test.suite.TestConfigurationDescription;
+import com.linkedpipes.plugin.ehttpgetfile.main.HttpGetFileConfiguration;
 import org.junit.jupiter.api.Test;
 
 public class ValidationTest {
@@ -9,7 +10,7 @@ public class ValidationTest {
     public void verifyConfigurationDescription() throws Exception {
         final TestConfigurationDescription test =
                 new TestConfigurationDescription();
-        test.test(HttpGetConfiguration.class);
+        test.test(HttpGetFileConfiguration.class);
     }
 
 }

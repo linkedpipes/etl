@@ -1,4 +1,4 @@
-package com.linkedpipes.plugin.extractor.httpget;
+package com.linkedpipes.plugin.ehttpgetfile.main;
 
 import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
@@ -6,6 +6,8 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import com.linkedpipes.etl.plugin.api.v2.ComponentV2;
+import com.linkedpipes.plugin.ehttpgetfile.Downloader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,9 +18,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class HttpGet implements Component, SequentialExecution {
+@ComponentV2.IRI(HttpGetFileVocabulary.IRI)
+public final class HttpGetFile implements Component, SequentialExecution {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HttpGet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HttpGetFile.class);
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
@@ -28,7 +31,7 @@ public final class HttpGet implements Component, SequentialExecution {
     public WritableFilesDataUnit output;
 
     @Component.Configuration
-    public HttpGetConfiguration configuration;
+    public HttpGetFileConfiguration configuration;
 
     @Component.Inject
     public ProgressReport progressReport;
@@ -56,11 +59,11 @@ public final class HttpGet implements Component, SequentialExecution {
     private void checkConfiguration() throws LpException {
         if (isNullOrEmpty(configuration.getUri())) {
             throw new LpException("Missing property: {}",
-                    HttpGetVocabulary.HAS_URI);
+                    HttpGetFileVocabulary.HAS_URI);
         }
         if (isNullOrEmpty(configuration.getFileName())) {
             throw new LpException("Missing property: {}",
-                    HttpGetVocabulary.HAS_NAME);
+                    HttpGetFileVocabulary.HAS_NAME);
         }
     }
 

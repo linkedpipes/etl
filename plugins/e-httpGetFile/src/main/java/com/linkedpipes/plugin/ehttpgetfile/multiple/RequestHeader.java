@@ -1,4 +1,4 @@
-package com.linkedpipes.plugin.extractor.httpgetfiles;
+package com.linkedpipes.plugin.ehttpgetfile.multiple;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 

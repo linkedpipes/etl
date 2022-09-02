@@ -1,6 +1,10 @@
-package com.linkedpipes.plugin.extractor.httpgetfiles;
+package com.linkedpipes.plugin.ehttpgetfile.multiple;
 
 public final class HttpGetFilesVocabulary {
+
+    public static final String IRI =
+            "http://etl.linkedpipes.com/resources/components/e-httpGetFiles/" +
+                    "0.0.0";
 
     private HttpGetFilesVocabulary() {
     }

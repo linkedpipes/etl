@@ -1,14 +1,15 @@
-package com.linkedpipes.plugin.extractor.httpget;
+package com.linkedpipes.plugin.ehttpgetfile.main;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+import com.linkedpipes.plugin.ehttpgetfile.Downloader;
 
-@RdfToPojo.Type(iri = HttpGetVocabulary.CONFIG)
-public class HttpGetConfiguration {
+@RdfToPojo.Type(iri = HttpGetFileVocabulary.CONFIG)
+public class HttpGetFileConfiguration {
 
-    @RdfToPojo.Property(iri = HttpGetVocabulary.HAS_URI)
+    @RdfToPojo.Property(iri = HttpGetFileVocabulary.HAS_URI)
     private String uri;
 
-    @RdfToPojo.Property(iri = HttpGetVocabulary.HAS_NAME)
+    @RdfToPojo.Property(iri = HttpGetFileVocabulary.HAS_NAME)
     private String fileName;
 
     /**
@@ -19,19 +20,19 @@ public class HttpGetConfiguration {
      * <p>
      * If true DPU follow redirect to any location and protocol.
      */
-    @RdfToPojo.Property(iri = HttpGetVocabulary.HAS_FOLLOW_REDIRECT)
+    @RdfToPojo.Property(iri = HttpGetFileVocabulary.HAS_FOLLOW_REDIRECT)
     private boolean manualFollowRedirect;
 
-    @RdfToPojo.Property(iri = HttpGetVocabulary.HAS_UTF8_REDIRECT)
+    @RdfToPojo.Property(iri = HttpGetFileVocabulary.HAS_UTF8_REDIRECT)
     private boolean utf8Redirect;
 
-    @RdfToPojo.Property(iri = HttpGetVocabulary.HAS_USER_AGENT)
+    @RdfToPojo.Property(iri = HttpGetFileVocabulary.HAS_USER_AGENT)
     private String userAgent = null;
 
-    @RdfToPojo.Property(iri = HttpGetVocabulary.ENCODE_URL)
+    @RdfToPojo.Property(iri = HttpGetFileVocabulary.ENCODE_URL)
     private boolean encodeUrl = false;
 
-    public HttpGetConfiguration() {
+    public HttpGetFileConfiguration() {
     }
 
     public String getUri() {

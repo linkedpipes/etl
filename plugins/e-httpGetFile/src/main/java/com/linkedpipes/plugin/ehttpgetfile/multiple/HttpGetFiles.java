@@ -1,10 +1,9 @@
-package com.linkedpipes.plugin.extractor.httpgetfiles;
+package com.linkedpipes.plugin.ehttpgetfile.multiple;
 
 import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecution;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
@@ -13,34 +12,40 @@ import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import com.linkedpipes.etl.plugin.api.v2.ComponentV2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+@ComponentV2.IRI(HttpGetFilesVocabulary.IRI)
 public final class HttpGetFiles extends TaskExecution<DownloadTask> {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(HttpGetFiles.class);
 
-    @Component.ContainsConfiguration
-    @Component.InputPort(iri = "Configuration")
+    @ContainsConfiguration
+    @InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
-    @Component.OutputPort(iri = "FilesOutput")
+    @OutputPort(iri = "FilesOutput")
     public WritableFilesDataUnit output;
 
-    @Component.InputPort(iri = "ReportRdf")
+    @InputPort(iri = "ReportRdf")
     public WritableSingleGraphDataUnit reportRdf;
 
-    @Component.Configuration
+    @Configuration
     public HttpGetFilesConfiguration configuration;
 
-    @Component.Inject
+    @Inject
     public ProgressReport progressReport;
 
     private List<DownloadTask> tasks;

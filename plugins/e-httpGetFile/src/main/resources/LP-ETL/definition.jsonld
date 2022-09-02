@@ -1,0 +1,8 @@
+{
+    "@id": "http://etl.linkedpipes.com/resources/jars/e-httpGetFile",
+    "@type": "http://etl.linkedpipes.com/ontology/JarFile",
+    "http://etl.linkedpipes.com/ontology/directory": [
+        "main",
+        "multiple"
+    ]
+}
