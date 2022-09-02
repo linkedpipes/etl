@@ -125,6 +125,10 @@ public class OverviewObject {
         return pipeline;
     }
 
+    public void setPipeline(String pipeline) {
+        this.pipeline = pipeline;
+    }
+
     public Integer getProgressCurrent() {
         return progressCurrent;
     }

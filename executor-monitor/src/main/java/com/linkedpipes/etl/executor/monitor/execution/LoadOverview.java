@@ -90,6 +90,15 @@ public class LoadOverview {
     private void updateExecutionFromOverview(Execution execution) {
         OverviewObject overview =
                 OverviewObject.fromJson(execution.getOverviewJson());
+        // In case of failure, where pipeline can not be loaded, it is
+        // not present in the overview file. As a result,
+        // pipeline is not visible in the execution list.
+        // The null check is for backward compatibility.
+        if (overview.getPipeline() == null
+                || overview.getPipeline().equals("null")) {
+            overview.setPipeline(execution.getPipeline().stringValue());
+        }
+        //
         UpdateExecutionStatus updater = new UpdateExecutionStatus();
         boolean statusChanged = updater.update(execution, overview);
         updateStatements(execution, overview);

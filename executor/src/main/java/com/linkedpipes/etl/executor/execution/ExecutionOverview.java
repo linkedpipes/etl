@@ -116,7 +116,9 @@ public class ExecutionOverview {
         responseNode.put("@type", LP_OVERVIEW.OVERVIEW);
 
         ObjectNode pipelineNode = mapper.createObjectNode();
-        pipelineNode.put("@id", pipelineIri);
+        if (pipelineIri != null) {
+            pipelineNode.put("@id", pipelineIri);
+        }
         responseNode.set("pipeline", pipelineNode);
 
         ObjectNode executionNode = mapper.createObjectNode();
