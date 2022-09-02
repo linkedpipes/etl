@@ -173,6 +173,9 @@ final public class LP_V1 {
     public static final String CHUNKED_TRIPLES_DATA_UNIT =
             PREFIX + "dataUnit/sesame/1.0/rdf/Chunked";
 
+    public static final String REQUIREMENT =
+            "http://linkedpipes.com/ontology/requirement";
+
     /**
      * Define requirement for working directory.
      */

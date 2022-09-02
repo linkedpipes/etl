@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * Interface with plugin annotations.
  */
-public interface JavaPlugin {
+public interface ComponentV2 {
 
     /**
      * IRI of a Java plugin implementation.

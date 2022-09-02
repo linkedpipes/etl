@@ -12,6 +12,10 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 public class PluginTemplateToRdf {
 
+    public static final String PIPELINE_INPUT =
+            "http://etl.linkedpipes.com/resources/components/" +
+                    "e-pipelineInput/0.0.0";
+
     public static Statements asRdf(PluginTemplate template) {
         StatementsBuilder result = Statements.arrayList().builder();
         result.addAll(definitionAsRdf(template));
@@ -69,6 +73,17 @@ public class PluginTemplateToRdf {
             }
             result.add(portResource, LP_V1.PREF_LABEL, port.label());
             result.add(portResource, LP_V1.HAS_BINDING, port.binding());
+            // TODO We require working directory for all, this should be
+            //  removed later.
+            result.addIri(portResource,
+                    LP_V1.REQUIREMENT, LP_V1.WORKING_DIRECTORY);
+        }
+        // TODO And working directory for the component.
+        result.addIri(resource,
+                LP_V1.REQUIREMENT, LP_V1.WORKING_DIRECTORY);
+        if (resource.stringValue().equals(PIPELINE_INPUT)) {
+            result.addIri(resource,
+                    LP_V1.REQUIREMENT, LP_V1.INPUT_DIRECTORY);
         }
         return result;
     }
