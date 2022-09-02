@@ -1,5 +1,5 @@
 # LinkedPipes ETL
-[![Build Status](https://travis-ci.com/linkedpipes/etl.svg?branch=develop)](https://travis-ci.com/linkedpipes/etl)
+[![Travis Status](https://travis-ci.com/linkedpipes/etl.svg?branch=develop)](https://travis-ci.com/linkedpipes/etl)
 
 LinkedPipes ETL is an RDF based, lightweight ETL tool.
 - [REST API](https://github.com/linkedpipes/etl/wiki) based set of components for easy integration
@@ -15,7 +15,7 @@ LinkedPipes ETL is an RDF based, lightweight ETL tool.
 - [Java] 17
 - [Git]
 - [Maven]
-- [Node.js] 17 & npm
+- [Node.js] 18 & npm
 
 ## Installation and startup
 You can run LP-ETL in Docker, or build it from the source.

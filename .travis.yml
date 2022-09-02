@@ -6,7 +6,7 @@ jdk:
   - openjdk17
 
 env:
-  - NODE_VERSION=17.0.1
+  - NODE_VERSION=18.8.0
 
 cache:
   directories:
