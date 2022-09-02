@@ -1,12 +1,14 @@
+# https://docs.travis-ci.com/user/reference/linux/
 os: linux
-dist: focal
+# https://docs.travis-ci.com/user/reference/jammy/
+dist: jammy
 
 language: java
 jdk:
   - openjdk17
 
 env:
-  - NODE_VERSION=18.8.0
+  - TRAVIS_NODE_VERSION=17.1.0
 
 cache:
   directories:
