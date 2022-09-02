@@ -1,6 +1,6 @@
 ((definition) => {
   if (typeof define === "function" && define.amd) {
-    define(["jquery", "jointjs", "../canvas/events"], definition);
+    define(["jquery", "jointjs", "../../canvas/events"], definition);
   }
 })((jQuery, joint, EVENTS) => {
 
@@ -207,7 +207,7 @@
   }
 
   function onComponentResize(cell, size) {
-    if (cell === undefined ||
+    if (cell === undefined || componentMenu.cell === undefined ||
       cell.id !== componentMenu.cell.model.id) {
       return;
     }

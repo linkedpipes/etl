@@ -52,9 +52,20 @@
     component.order = jsonld.r.getInteger(resource, LP.HAS_EXEC_ORDER);
     component.dataUnits = jsonld.r.getIRIs(resource, LP.HAS_DU);
     component.mapping = convertMapping(component.status);
+    component.start = jsonld.r.getDate(resource,
+      "http://etl.linkedpipes.com/ontology/executionStart");
+    component.end = jsonld.r.getDate(resource,
+      "http://etl.linkedpipes.com/ontology/executionEnd");
+    //
     const execution = jsonld.r.getIRI(resource, LP.HAS_EXECUTION);
     if (execution) {
       component.execution = execution;
+    }
+    // Computed properties.
+    if (component.start && component.end) {
+      component.duration = component.end - component.start;
+    } else {
+      component.duration = undefined;
     }
   }
 
@@ -94,6 +105,11 @@
         }
       }
     });
+    // Compute statistics.
+    model.execution.duration = 0;
+    for (const component of Object.values(model.components)) {
+      model.execution.duration += component.duration ?? 0;
+    }
     console.timeEnd("Loading pipeline execution");
   }
 

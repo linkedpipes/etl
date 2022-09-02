@@ -3,7 +3,7 @@
     define([
       "./pipeline-edit-service",
       "./canvas/canvas-directive",
-      "./edit-mode/edit-directive/canvas-edit-directive"
+      "./mode/edit/edit-directive/canvas-edit-directive"
     ], definition);
   }
 })((_service, _canvasDirective, _editDirective) => {
@@ -53,6 +53,8 @@
     $scope.onExecutionMode = $service.onExecutionMode;
 
     $scope.onOpenLogTail = $service.onOpenLogTail;
+
+    $scope.onChangeVisual = $service.onChangeVisual;
 
     $timeout($service.onHtmlReady);
 

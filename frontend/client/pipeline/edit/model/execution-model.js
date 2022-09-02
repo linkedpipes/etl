@@ -147,6 +147,18 @@
     return component.status;
   };
 
+  service.getComponentDurationMs = (model, component) => {
+    return component.duration;
+  };
+
+  service.getTotalDurationMs = (model) => {
+    return model.execution.duration;
+  };
+
+  service.getComponentCount = (model) => {
+    return Object.keys(model.components).length;
+  };
+
   service.enableMapping = (model, component) => {
     switch (component.mapping) {
       case MAPPING_STATUS.FINISHED:

@@ -19,7 +19,7 @@
       </md-button>
     </div>
 
-    <md-menu style="padding-top: 4px;padding-bottom: 4px" ng-show="isEditMode">
+    <md-menu style="padding-top: 4px;padding-bottom: 4px">
       <md-button class="md-icon-button"
                  ng-click="$mdMenu.open($event)">
         <md-icon md-menu-origin class="material-icons lp-icon">
@@ -27,13 +27,32 @@
         </md-icon>
       </md-button>
       <md-menu-content>
-        <md-menu-item>
+        <md-menu-item >
+          <md-button  ng-click="onChangeVisual('default')">
+            <md-icon class="material-icons lp-icon"
+                     ng-show="activeVisual === 'default'">
+              check
+            </md-icon>
+            Select default visual
+          </md-button>
+        </md-menu-item>
+        <md-menu-item ng-show="hasExecution">
+          <md-button ng-click="onChangeVisual('execution-time')">
+            <md-icon class="material-icons lp-icon"
+                     ng-show="activeVisual === 'execution-time'">
+              check
+            </md-icon>
+            Select execution time visual
+          </md-button>
+        </md-menu-item>
+
+        <md-menu-item ng-show="isEditMode">
           <md-button ng-click="onDisableAllLoaders()">
             <md-icon class="material-icons lp-icon">flash_off</md-icon>
             Disable loaders
           </md-button>
         </md-menu-item>
-        <md-menu-item>
+        <md-menu-item ng-show="isEditMode">
           <md-button ng-click="onEnableAllLoaders()">
             <md-icon class="material-icons lp-icon">flash_on</md-icon>
             Enable loaders

@@ -8,7 +8,7 @@
     return new joint.dia.Link({
       "source": {"id": source, "port": sourcePort},
       "target": {"id": target, "port": targetPort},
-      "type": "link",
+      "type": "linkedpipes.link.data",
       "attrs": {
         ".marker-target": {
           "d": "M 10 0 L 0 5 L 10 10 z"
@@ -22,7 +22,7 @@
     return new joint.dia.Link({
       "source": {"id": source},
       "target": {"id": target},
-      "type": "control",
+      "type": "linkedpipes.link.control",
       "attrs": {
         ".connection": {
           "stroke": "blue"

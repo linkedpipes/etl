@@ -10,7 +10,7 @@
     "portLabelMarkup": "<text class=\"port-label\"/>",
     "portContainerMarkup": "<g class=\"joint-port\"/>",
     "defaults": joint.util.deepSupplement({
-        "type": "component.Model",
+        "type": "linkedpipes.link.component",
         "inPorts": [],
         "outPorts": [],
         "size": {
@@ -171,7 +171,7 @@
   }
 
   function createCell(x, y, ports) {
-    const newCell =  new ComponentShape({
+    return new ComponentShape({
       "position": {
         "x": x,
         "y": y
@@ -181,27 +181,25 @@
         "items": ports["cells"]
       }
     });
-    return newCell;
   }
 
   function updateCell(api, template, component, cell) {
     const label = api.getComponentLabel(component);
     const description = api.getComponentDescription(component);
 
+    const hasDescription = (description ?? "").trim().length > 0;
     let componentLabel = label;
-    if (description !== undefined) {
-      componentLabel += "\n";
-      componentLabel += description;
+    if (hasDescription) {
+      componentLabel += "\n" + description;
     }
-
-    updateLabel(cell, componentLabel, description);
+    updateLabel(cell, componentLabel, !hasDescription);
     updateSize(api, cell, template, componentLabel);
     updateColor(api, cell, component, template);
     updateRect(api, cell, component);
   }
 
-  function updateLabel(shape, extendedLabel, description) {
-    if (description === undefined) {
+  function updateLabel(shape, extendedLabel, alignMiddle) {
+    if (alignMiddle) {
       shape.attr(".label", {
         "text": extendedLabel,
         "ref-y": "50%",

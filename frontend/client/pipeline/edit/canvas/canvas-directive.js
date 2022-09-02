@@ -34,7 +34,7 @@ define([
   }
 
   function createDefaultLink() {
-    const ControlLink = joint.dia.Link.define("linkedpipes.control", {
+    const ControlLink = joint.dia.Link.define("linkedpipes.link.data", {
       "attrs" : {
         ".marker-target": {"d": "M 10 0 L 0 5 L 10 10 z"},
       }

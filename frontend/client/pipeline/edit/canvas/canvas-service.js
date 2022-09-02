@@ -267,7 +267,7 @@
       if (cellS === cellT) {
         return false;
       }
-      // Allow connect of target only to outputs and source
+      // Allow connection of target only to outputs and source
       // only to inputs.
       if (magnetT && magnetT.getAttribute("port-group") === "output") {
         return false;
@@ -323,9 +323,9 @@
       "idToIri": {},
       "areEventsDisabled": false,
       // A new connection can be created by drag from
-      // the port. However we need to report this connection
+      // the port. However, we need to report this connection
       // only when it is attached to a target and
-      // user is no longer moving with it (ie. cell pointer up
+      // user is no longer moving with it (i.e. cell pointer up
       "newConnectionCell": undefined,
       // User can drag connection across several ports,
       // we need to emit event only when the port is finally attached.

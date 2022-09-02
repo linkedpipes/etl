@@ -1,7 +1,7 @@
 ((definition) => {
   if (typeof define === "function" && define.amd) {
     define([
-      "./execution-mode/detail-dialog/component-execution-ctrl"
+      "./mode/execution/detail-dialog/component-execution-ctrl"
     ], definition);
   }
 })((_executionDetailDialog) => {
@@ -88,7 +88,7 @@
       component, componentExecution, execution) => {
       return $mdDialog.show({
         "controller": "components.component.execution.dialog",
-        "template": require("./execution-mode/detail-dialog/component-execution-view.html"),
+        "template": require("./mode/execution/detail-dialog/component-execution-view.html"),
         "hasBackdrop": false,
         "clickOutsideToClose": true,
         "fullscreen": false,

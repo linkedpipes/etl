@@ -2,8 +2,8 @@
   if (typeof define === "function" && define.amd) {
     define([
       "./canvas/canvas-service",
-      "./edit-mode/canvas-edit-mode-service",
-      "./execution-mode/canvas-execution-mode-service",
+      "./mode/edit/canvas-edit-mode-service",
+      "./mode/execution/canvas-execution-mode-service",
       "@client/template/select-dialog/template-select-dialog",
       "./detail-dialog/pipeline-detail-dialog-ctrl",
       "../../component/detail-dialog/instance-detail-dialog",
@@ -58,9 +58,13 @@
       };
       $scope.isExecutionCancelable = false;
       $scope.logsUrl = "./api/v1/executions-logs?iri=" + encodeURIComponent(execution);
+      $scope.hasExecution = (execution ?? "").length > 0;
+      $scope.activeVisual = "default";
       //
       data["pipelineIri"] = pipeline;
       data["executionIri"] = execution;
+      //
+      actions.updateVisual($scope.activeVisual);
     }
 
     function onHtmlReady() {
@@ -376,6 +380,11 @@
       });
     }
 
+    function onChangeVisual(visualName) {
+      actions.updateVisual(visualName);
+      $scope.activeVisual = visualName;
+    }
+
     return {
       "initialize": initialize,
       "onHtmlReady": onHtmlReady,
@@ -398,6 +407,7 @@
       "onCancel": onCancel,
       "onExecutionMode": onExecutionMode,
       "onOpenLogTail": onOpenLogTail,
+      "onChangeVisual": onChangeVisual,
     };
   }
 

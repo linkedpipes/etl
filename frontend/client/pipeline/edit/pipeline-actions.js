@@ -10,16 +10,22 @@
       "./model/execution-model",
       "./canvas/pipeline-loader",
       "@client/app-service/vocabulary",
-      "./default-visual",
+      "./visual/default-visual",
+      "./visual/execution-time-visual",
       "./pipeline-events",
       "../pipeline-api",
       "../../execution/execution-api"
     ], definition);
   }
 })((jQuery, jsonld, pplModel, execModel, loader, vocabulary,
-    defaultVisual, pipelineEvents, pipelinesApi, executionApi) => {
+    defaultVisual, executionTimeVisual,
+    pipelineEvents, pipelinesApi, executionApi) => {
 
   const LP = vocabulary.LP;
+
+  let activeVisual = defaultVisual;
+
+  const availableVisuals = [defaultVisual, executionTimeVisual];
 
   let $pipeline;
 
@@ -365,10 +371,15 @@
     //
     // CANVAS VISUAL API
     //
-    "getComponentLabel": defaultVisual.getComponentLabel,
-    "getComponentDescription": defaultVisual.getComponentDescription,
-    "getComponentFillColor": defaultVisual.getComponentFillColor,
-    "getComponentRectStyle": defaultVisual.getComponentRectStyle,
+    "getComponentLabel":
+      (component) => activeVisual.getComponentLabel(component),
+    "getComponentDescription":
+      (component) => activeVisual.getComponentDescription(component),
+    "getComponentFillColor":
+      (template, component) => activeVisual.getComponentFillColor(
+        template, component),
+    "getComponentRectStyle":
+      (component) => activeVisual.getComponentRectStyle(component),
     //
     // EDIT API
     //
@@ -380,13 +391,17 @@
     //
     "pipelineFromJsonLd": (data) => {
       $pipeline = pplModel.createFromJsonLd(data);
-      defaultVisual.setPipeline($pipeline);
+      for (const visual of availableVisuals) {
+        visual.setPipeline($pipeline);
+      }
       pipelineEvents.setPipeline($pipeline);
       return $pipeline;
     },
     "executionFromJsonLd": (data, iri) => {
       $execution = execModel.createFromJsonLd(data, iri);
-      defaultVisual.setExecution($execution);
+      for (const visual of availableVisuals) {
+        visual.setExecution($execution);
+      }
       pipelineEvents.setExecution($execution);
       $canvasService.updateAllComponents();
       return $execution;
@@ -417,6 +432,22 @@
       return pplModel.asJsonLd($pipeline);
     },
     "savePipeline": savePipeline,
+    /**
+     * Update current visual style.
+     */
+    "updateVisual": (visualName) => {
+      if (visualName === activeVisual.name) {
+        return;
+      }
+      activeVisual = defaultVisual;
+      for (const visual of availableVisuals) {
+        if (visual.name === visualName) {
+          activeVisual = visual;
+          break;
+        }
+      }
+      $canvasService.updateAllComponents();
+    },
     // Execution API.
     "executePipeline": executePipeline,
     "cancelExecution": cancelExecution,

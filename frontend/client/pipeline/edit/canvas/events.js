@@ -20,6 +20,6 @@
   , "emptyClick": "lp:emptyclick"
   // Component definition have changed.
   , "changeComponent": "lp:component:changed"
-  // Called when an resource was deleted.
+  // Called when a resource was deleted.
   , "delete": "lp:resource:remove"
 }));
