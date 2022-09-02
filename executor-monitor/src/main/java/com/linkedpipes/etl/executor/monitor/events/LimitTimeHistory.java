@@ -7,9 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 class LimitTimeHistory implements EventListener {
@@ -29,7 +31,7 @@ class LimitTimeHistory implements EventListener {
     private ExecutionFacade executionFacade = null;
 
     public LimitTimeHistory(Integer historyHourLimit) {
-        LOG.info("Using history time limit with limit: {}", historyHourLimit);
+        LOG.info("Using history time limit with limit: {}h", historyHourLimit);
         this.historyHourLimit = historyHourLimit;
     }
 
@@ -37,6 +39,7 @@ class LimitTimeHistory implements EventListener {
     public void onExecutionFacadeReady(ExecutionFacade executions) {
         EventListener.super.onExecutionFacadeReady(executions);
         executionFacade = executions;
+        prune();
     }
 
     @Override
@@ -53,8 +56,12 @@ class LimitTimeHistory implements EventListener {
                 .toList();
         LocalDateTime now = LocalDateTime.now();
         for (Execution execution : executions) {
+            LocalDateTime lastChange = execution.getLastOverviewChange()
+                    .toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime();
             long diff = ChronoUnit.HOURS.between(
-                    now, execution.getLastOverviewChange().toInstant());
+                    now, lastChange);
             if (diff > historyHourLimit) {
                 deleteExecution(execution);
             }
@@ -64,7 +71,7 @@ class LimitTimeHistory implements EventListener {
     private void deleteExecution(Execution execution) {
         LOG.debug("Removing execution '{}' for '{}'.",
                 execution.getIri(), execution.getPipeline());
-        executionFacade.deleteExecution(execution);
+         executionFacade.deleteExecution(execution);
     }
 
 }
