@@ -35,6 +35,30 @@ public class WritableTemplateRepository extends TemplateRepository {
     @PostConstruct
     public void initialize() {
         loadRepositoryInfo();
+        purgeJarTemplates();
+    }
+
+    /**
+     * We remove all jar- directories on start, as we do not need to
+     * preserve them. In fact preserving them would break if templates
+     * are changed.
+     */
+    private void purgeJarTemplates() {
+        String[] names = repositoryRoot.list();
+        for (String name : names) {
+            if (!name.startsWith("jar-")) {
+                continue;
+            }
+            File file = new File(repositoryRoot, name);
+            if (!file.isDirectory()) {
+                continue;
+            }
+            try {
+                FileUtils.deleteDirectory(file);
+            } catch (IOException ex) {
+                LOG.warn("Can't delete jar- plugin directory.", ex);
+            }
+        }
     }
 
     public String reserveReferenceId() throws StorageException {
