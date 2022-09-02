@@ -33,6 +33,9 @@ import java.util.Map;
  */
 public class Pipeline {
 
+    private static final String DESCRIPTION =
+            "http://plugins.linkedpipes.com/ontology/ConfigurationDescription";
+
     private PipelineModel model;
 
     /**
@@ -93,14 +96,14 @@ public class Pipeline {
                 continue;
             }
             try {
-                // TODO Implement more efficient approach
-                String descriptionGraph = RdfUtils.sparqlSelectSingle(source,
-                        "SELECT ?graph WHERE { GRAPH ?graph {"
-                                + "<" + description.getIri() + "> ?p ?o "
+                String descriptionResource = RdfUtils.sparqlSelectSingle(
+                        source,
+                        "SELECT ?s WHERE { "
+                                + "GRAPH <" + description.getIri() + "> {"
+                                + "?s ?p <" + DESCRIPTION + "> "
                                 + "} } LIMIT 1", "graph");
-
-                RdfUtils.load(source, description.getIri(),
-                        descriptionGraph, description);
+                RdfUtils.load(source, descriptionResource,
+                        description.getIri(), description);
             } catch (RdfUtilsException ex) {
                 throw new ExecutorException("Can't load pipeline model.", ex);
             }

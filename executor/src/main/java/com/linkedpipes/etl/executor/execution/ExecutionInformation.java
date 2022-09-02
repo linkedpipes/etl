@@ -20,10 +20,22 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ExecutionInformation {
+
+    private static class ComponentStatus {
+
+        public String status = LP_EXEC.STATUS_QUEUED;
+
+        public LocalDateTime start = null;
+
+        public LocalDateTime end = null;
+
+    }
 
     // TODO Replace with vocabulary.
     private static final String ETL_PREFIX =
@@ -50,7 +62,7 @@ public class ExecutionInformation {
 
     private final ExecutionStatusMonitor executionStatus;
 
-    private Map<String, String> componentStatus = new HashMap<>();
+    private Map<String, ComponentStatus> componentStatus = new HashMap<>();
 
     private final File file;
 
@@ -111,7 +123,7 @@ public class ExecutionInformation {
             addPipelinePort(componentIri, port);
         }
 
-        componentStatus.put(component.getIri(), LP_EXEC.STATUS_QUEUED);
+        componentStatus.put(component.getIri(), new ComponentStatus());
     }
 
     private void addPipelinePort(IRI componentIri, Port port) {
@@ -135,8 +147,15 @@ public class ExecutionInformation {
     }
 
     public void onComponentBegin(ExecutionComponent component) {
-        componentStatus.put(component.getIri(), LP_EXEC.STATUS_RUNNING);
+        ComponentStatus componentStatus = getComponentStatus(component);
+        componentStatus.status = LP_EXEC.STATUS_RUNNING;
+        componentStatus.start = LocalDateTime.now();
         writeDebugData(component);
+    }
+
+    private ComponentStatus getComponentStatus(ExecutionComponent component) {
+        return componentStatus.computeIfAbsent(
+                component.getIri(), (key) -> new ComponentStatus());
     }
 
     private void writeDebugData(ExecutionComponent component) {
@@ -161,20 +180,22 @@ public class ExecutionInformation {
 
     public void onComponentEnd(
             ExecutionComponent component, boolean cancelled) {
+        ComponentStatus componentStatus = getComponentStatus(component);
         if (cancelled) {
-            componentStatus.put(component.getIri(), LP_EXEC.STATUS_CANCELLED);
+            componentStatus.status = LP_EXEC.STATUS_CANCELLED;
         } else {
-            componentStatus.put(component.getIri(), LP_EXEC.STATUS_FINISHED);
+            componentStatus.status  = LP_EXEC.STATUS_FINISHED;
         }
+        componentStatus.end = LocalDateTime.now();
     }
 
     public void onMapComponentSuccessful(ExecutionComponent component) {
-        componentStatus.put(component.getIri(), LP_EXEC.STATUS_MAPPED);
+        getComponentStatus(component).status = LP_EXEC.STATUS_MAPPED;
         writeDebugData(component);
     }
 
     public void onComponentFailed(ExecutionComponent component) {
-        componentStatus.put(component.getIri(), LP_EXEC.STATUS_FAILED);
+        getComponentStatus(component).status = LP_EXEC.STATUS_FAILED;
     }
 
     public Statements getStatements() {
@@ -191,11 +212,18 @@ public class ExecutionInformation {
                 "http://etl.linkedpipes.com/ontology/status",
                 executionStatus.getStatus().getIri());
 
-        for (Map.Entry<String, String> entry : componentStatus.entrySet()) {
+        for (var entry : componentStatus.entrySet()) {
             IRI componentIri = valueFactory.createIRI(entry.getKey());
+            ComponentStatus status = entry.getValue();
             dynamic.addIri(componentIri,
                     "http://etl.linkedpipes.com/ontology/status",
-                    entry.getValue());
+                    status.status);
+            dynamic.add(componentIri,
+                    "http://etl.linkedpipes.com/ontology/executionStart",
+                    status.start);
+            dynamic.add(componentIri,
+                    "http://etl.linkedpipes.com/ontology/executionEnd",
+                    status.end);
         }
         return dynamic;
     }

@@ -38,23 +38,28 @@ class OsgiPackageList {
             + "org.apache.log4j.api;version=\"1.7.18\","
             + "org.apache.log4j.xml;version=\"1.7.18\"";
 
-    private static final String LP_PACKAGE =
+    private static final String LP_PACKAGE_V1 =
             "com.linkedpipes.etl.executor.api.v1";
 
+    private static final String LP_PACKAGE_V2 =
+            "com.linkedpipes.etl.plugin.api.v2";
+
     private static final String LP = ""
-            + LP_PACKAGE + ";version=\"0.0.0\","
-            + LP_PACKAGE + ".component;version=\"0.0.0\","
-            + LP_PACKAGE + ".component.chunk;version=\"0.0.0\","
-            + LP_PACKAGE + ".component.task;version=\"0.0.0\","
-            + LP_PACKAGE + ".dataunit;version=\"0.0.0\","
-            + LP_PACKAGE + ".event;version=\"0.0.0\","
-            + LP_PACKAGE + ".rdf;version=\"0.0.0\","
-            + LP_PACKAGE + ".rdf.model;version=\"0.0.0\","
-            + LP_PACKAGE + ".rdf.pojo;version=\"0.0.0\","
-            + LP_PACKAGE + ".service;version=\"0.0.0\","
-            + LP_PACKAGE + ".report;version=\"0.0.0\","
-            + LP_PACKAGE + ".vocabulary;version=\"0.0.0\","
-            + "com.linkedpipes.etl.rdf.utils;version=\"0.0.0\"";
+            + LP_PACKAGE_V1 + ";version=\"0.0.0\","
+            + LP_PACKAGE_V1 + ".component;version=\"0.0.0\","
+            + LP_PACKAGE_V1 + ".component.chunk;version=\"0.0.0\","
+            + LP_PACKAGE_V1 + ".component.task;version=\"0.0.0\","
+            + LP_PACKAGE_V1 + ".dataunit;version=\"0.0.0\","
+            + LP_PACKAGE_V1 + ".event;version=\"0.0.0\","
+            + LP_PACKAGE_V1 + ".rdf;version=\"0.0.0\","
+            + LP_PACKAGE_V1 + ".rdf.model;version=\"0.0.0\","
+            + LP_PACKAGE_V1 + ".rdf.pojo;version=\"0.0.0\","
+            + LP_PACKAGE_V1 + ".service;version=\"0.0.0\","
+            + LP_PACKAGE_V1 + ".report;version=\"0.0.0\","
+            + LP_PACKAGE_V1 + ".vocabulary;version=\"0.0.0\","
+            + "com.linkedpipes.etl.rdf.utils;version=\"0.0.0\","
+            // Version 2 API.
+            + LP_PACKAGE_V2 + ";version=\"0.0.0\"";
 
     public static final String EXPORT_PACKAGE_LIST = ""
             + JAVAX + ","

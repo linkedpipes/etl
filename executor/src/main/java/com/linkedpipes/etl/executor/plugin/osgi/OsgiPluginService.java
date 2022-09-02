@@ -141,6 +141,7 @@ public class OsgiPluginService implements PluginService {
                 loadPlugin(file);
             } catch (ExecutorException ex) {
                 ++failedLoadings;
+                LOG.error("Can't load plugin file '{}'.", file, ex);
             }
         }
         if (failedLoadings > 0) {

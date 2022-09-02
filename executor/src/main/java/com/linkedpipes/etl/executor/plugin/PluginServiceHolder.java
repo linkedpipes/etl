@@ -109,7 +109,7 @@ public class PluginServiceHolder
             }
         }
         throw new ExecutorException(
-                "No factory can instantiate required data uni '{}'.",
+                "No factory can instantiate required data unit '{}'.",
                 subject);
     }
 
