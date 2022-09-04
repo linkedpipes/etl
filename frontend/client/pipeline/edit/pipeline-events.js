@@ -56,7 +56,7 @@
 
   function onConnectionCreate(type, source, sPort, target, tPort) {
     let connection;
-    if (type === "link") {
+    if (type === "linkedpipes.link.data") {
       connection = pplModel.createDataLink($pipeline);
     } else {
       connection = pplModel.createRunAfterLink($pipeline);
