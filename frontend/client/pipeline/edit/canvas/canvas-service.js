@@ -141,7 +141,7 @@
 
   function cellPointerUp(cell) {
     // User may raise the pointer on top of the port, however
-    // if there is a newConnectionCell they was dragging a connection.
+    // if there is a newConnectionCell they were dragging a connection.
     if ($serviceData.newConnectionCell) {
       onAddLink($serviceData.newConnectionCell);
     } else if ($serviceData.changeCell) {
