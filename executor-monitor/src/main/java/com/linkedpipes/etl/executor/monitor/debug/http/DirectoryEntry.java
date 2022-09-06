@@ -28,7 +28,7 @@ class DirectoryEntry extends DebugEntry {
         ResponseContent content = prepareResponse(
                 directory, source, nameFilter, sourceFilter, offset, limit,
                 createPublicPath);
-        contentAsString = content.asJsonString();
+        contentAsJsonString = content.asJsonString();
         return this;
     }
 
@@ -67,10 +67,12 @@ class DirectoryEntry extends DebugEntry {
                 data.add(new ResponseContent.Entry(
                         ResponseContent.TYPE_DIR,
                         file.getName(),
+                        file.getName(),
                         source));
             } else {
                 data.add(new ResponseContent.Entry(
                         ResponseContent.TYPE_FILE,
+                        file.getName(),
                         file.getName(),
                         source,
                         file.length(),

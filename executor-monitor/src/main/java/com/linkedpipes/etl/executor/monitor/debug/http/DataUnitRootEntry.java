@@ -31,7 +31,7 @@ class DataUnitRootEntry extends DebugEntry {
         ResponseContent content = new ResponseContent(data);
         content.metadata.count = totalEntryCount;
         content.metadata.type = ResponseContent.TYPE_DIR;
-        contentAsString = content.asJsonString();
+        contentAsJsonString = content.asJsonString();
         return this;
     }
 
@@ -66,10 +66,12 @@ class DataUnitRootEntry extends DebugEntry {
                     data.add(new ResponseContent.Entry(
                             ResponseContent.TYPE_DIR,
                             file.getName(),
+                            file.getName(),
                             directory.getName()));
                 } else {
                     data.add(new ResponseContent.Entry(
                             ResponseContent.TYPE_FILE,
+                            file.getName(),
                             file.getName(),
                             directory.getName(),
                             file.length(),

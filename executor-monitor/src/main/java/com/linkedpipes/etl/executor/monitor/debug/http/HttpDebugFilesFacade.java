@@ -64,8 +64,7 @@ public class HttpDebugFilesFacade {
             List<String> path, DataUnit dataUnit) {
         if (path.size() == 2) {
             return Optional.of(new DataUnitRootEntry(
-                    dataUnit,
-                    (fileToResolve) -> preparePublicPath(fileToResolve)));
+                    dataUnit, this::preparePublicPath));
         }
         // The same file can be in multiple data units.
         List<DebugEntry> entriesFound = new ArrayList<>(2);
@@ -76,8 +75,7 @@ public class HttpDebugFilesFacade {
             }
             if (resolved.isDirectory()) {
                 entriesFound.add(new DirectoryEntry(
-                        resolved, file.getName(),
-                        (fileToResolve) -> preparePublicPath(fileToResolve)));
+                        resolved, file.getName(), this::preparePublicPath));
             } else {
                 entriesFound.add(new FileContentEntry(
                         dataUnit, resolved, file.getName(),
@@ -90,8 +88,7 @@ public class HttpDebugFilesFacade {
             return Optional.of(entriesFound.get(0));
         } else {
             return Optional.of(new AmbiguousEntry(
-                    entriesFound,
-                    (fileToResolve) -> preparePublicPath(fileToResolve)));
+                    entriesFound, this::preparePublicPath));
         }
     }
 
@@ -101,7 +98,7 @@ public class HttpDebugFilesFacade {
             return currentFile;
         }
         File nextFile = new File(currentFile, path.get(pathIndex));
-        if (nextFile.exists() || nextFile.isDirectory()) {
+        if (nextFile.exists()) {
             return resolvePath(path, pathIndex + 1, nextFile);
         } else {
             return null;

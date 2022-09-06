@@ -14,18 +14,19 @@ public abstract class DebugEntry {
 
     }
 
-    protected String contentAsString = null;
+    protected String contentAsJsonString = null;
 
     public abstract DebugEntry prepareData(
             String nameFilter, String sourceFilter, long offset, long limit)
             throws IOException;
 
     public int getSize() {
-        return contentAsString.length();
+        return contentAsJsonString.length();
     }
 
     public void write(OutputStream outputStream) throws IOException {
-        outputStream.write(contentAsString.getBytes(StandardCharsets.UTF_8));
+        byte[] content = contentAsJsonString.getBytes(StandardCharsets.UTF_8);
+        outputStream.write(content);
     }
 
 }

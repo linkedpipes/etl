@@ -34,7 +34,7 @@ class ExecutionRootEntry extends DebugEntry {
         ResponseContent content = new ResponseContent(data);
         content.metadata.count = (long)debugData.getDataUnits().size();
         content.metadata.type = ResponseContent.TYPE_DIR;
-        contentAsString = content.asJsonString();
+        contentAsJsonString = content.asJsonString();
         return this;
     }
 
@@ -42,6 +42,7 @@ class ExecutionRootEntry extends DebugEntry {
             Map.Entry<String, DataUnit> entry) {
         return new ResponseContent.Entry(
                 ResponseContent.TYPE_DIR,
+                entry.getKey(),
                 entry.getKey(),
                 null);
     }

@@ -22,6 +22,16 @@ class ResponseContent {
 
         public String name;
 
+        /**
+         * Relative path, this is used for ambiguous entries. For example
+         * the entry may represent two ambiguous files and a directory. In
+         * such a case the metadata entry must be ambiguous, yet
+         * it is not clear how to navigate to the listed entries. As the
+         * name may lead to an invalid path. This is solved using
+         * this property as it may be empty.
+         */
+        public String path;
+
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public String source;
 
@@ -44,19 +54,21 @@ class ResponseContent {
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public String publicDataPath;
 
-        public Entry(String type, String name, String source) {
+        public Entry(String type, String name, String path, String source) {
             this.type = type;
             this.name = name;
+            this.path = path;
             this.source = source;
             this.size = null;
             this.mimeType = null;
         }
 
         public Entry(
-                String type, String name, String source,
+                String type, String name, String path, String source,
                 Long size, String mimeType, String publicDataPath) {
             this.type = type;
             this.name = name;
+            this.path = path;
             this.source = source;
             this.size = size;
             this.mimeType = mimeType;

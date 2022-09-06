@@ -35,7 +35,7 @@ public class FileContentEntry extends DebugEntry {
         content.metadata.size = getFileSize();
         content.metadata.mimeType = getFileMimeType();
         content.metadata.publicDataPath = publicPath;
-        contentAsString = content.asJsonString();
+        contentAsJsonString = content.asJsonString();
         return this;
     }
 

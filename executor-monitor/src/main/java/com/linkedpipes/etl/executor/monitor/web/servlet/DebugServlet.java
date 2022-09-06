@@ -29,7 +29,7 @@ public class DebugServlet {
     @ResponseBody
     @RequestMapping(value = "/metadata/**", method = RequestMethod.GET)
     public void getMetadata(
-            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "name", required = false) String filter,
             @RequestParam(value = "source", required = false) String source,
             @RequestParam(value = "offset", required = false) Long offset,
             @RequestParam(value = "limit", required = false) Long limit,
@@ -39,7 +39,7 @@ public class DebugServlet {
         String iri = request.getPathInfo().substring(
                 "/debug/metadata/".length());
         Optional<DebugEntry> dataHolder = debugFacade.resolve(iri);
-        if (!dataHolder.isPresent()) {
+        if (dataHolder.isEmpty()) {
             throw new MissingResource("Missing debug entry: {}", iri);
         }
         if (offset == null) {
@@ -52,7 +52,7 @@ public class DebugServlet {
         limit = Math.max(1, limit);
         //
         DebugEntry data = dataHolder.get()
-                .prepareData(name, source, offset, limit);
+                .prepareData(filter, source, offset, limit);
         response.setHeader("Content-Type", "application/json");
         response.setStatus(HttpServletResponse.SC_OK);
         data.write(response.getOutputStream());
@@ -62,18 +62,18 @@ public class DebugServlet {
     @ResponseBody
     @RequestMapping(value = "/data/**", method = RequestMethod.GET)
     public void getData(
-            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "name", required = false) String filter,
             @RequestParam(value = "source", required = false) String source,
             HttpServletRequest request,
             HttpServletResponse response)
             throws MissingResource, IOException {
         String iri = request.getPathInfo().substring("/debug/data/".length());
         Optional<DebugEntry> dataHolder = debugFacade.resolve(iri);
-        if (!dataHolder.isPresent()) {
+        if (dataHolder.isEmpty()) {
             throw new MissingResource("Missing debug entry: {}", iri);
         }
         //
-        DebugEntry data = dataHolder.get().prepareData(name, source, 0, 1);
+        DebugEntry data = dataHolder.get().prepareData(filter, source, 0, 1);
         if (!(data instanceof FileContentEntry)) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;

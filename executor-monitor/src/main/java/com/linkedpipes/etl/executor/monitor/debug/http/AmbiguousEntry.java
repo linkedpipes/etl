@@ -42,7 +42,7 @@ class AmbiguousEntry extends DebugEntry {
         //
         ResponseContent content = prepareResponseContent(
                 nameFilter, sourceFilter, offset, limit);
-        contentAsString = content.asJsonString();
+        contentAsJsonString = content.asJsonString();
         return this;
     }
 
@@ -89,7 +89,6 @@ class AmbiguousEntry extends DebugEntry {
                 data.addAll(collectFromFile(
                         (FileContentEntry) entry,
                         nameFilter, sourceFilter, offset, limit));
-
             } else {
                 // Ignore entry.
             }
@@ -133,9 +132,11 @@ class AmbiguousEntry extends DebugEntry {
         }
         //
         collectedEntries++;
-        return Arrays.asList(new ResponseContent.Entry(
+        return List.of(new ResponseContent.Entry(
                 ResponseContent.TYPE_FILE,
                 entry.file.getName(),
+                // This file is represented by this path.
+                "",
                 entry.source,
                 entry.getFileSize(),
                 entry.getFileMimeType(),
