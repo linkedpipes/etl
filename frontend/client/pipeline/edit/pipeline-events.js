@@ -337,7 +337,8 @@
     }
     const execIri = execModel.getIri($execution);
     const executionId = execIri.substring(execIri.lastIndexOf("executions/") + 11);
-    const url = "./debug#/" + executionId + "/?path=" +
+    const url = "./react#/debug?execution=" +
+      encodeURIComponent(executionId) + "&path=" +
       encodeURIComponent(dataUnit.debug);
     window.open(url, "_blank");
   }
