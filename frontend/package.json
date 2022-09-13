@@ -6,7 +6,7 @@
   "repository": "github:linkedpipes/etl",
   "scripts": {
     "dev": "cross-env configFileLocation=../deploy/configuration.properties node ./server/server.develop.js",
-    "lint": "eslint --ext .js,.vue,.ts,.tsx --ignore-path .gitignore . --fix",
+    "lint": "eslint --ext .js,.vue,.ts,.tsx --ignore-path ../.gitignore . --fix",
     "test": "jest",
     "build": "cross-env NODE_ENV=production NODE_OPTIONS='--max-old-space-size=2048' webpack --config build/webpack.production.js",
     "start": "node server/server.production.js"
@@ -24,8 +24,13 @@
   "devDependencies": {
     "@babel/core": "^7.18.13",
     "@babel/preset-env": "^7.18.10",
+    "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
     "@mdi/font": "^5.9.55",
+    "@mui/icons-material": "^5.10.3",
+    "@mui/material": "^5.10.5",
     "@triply/yasqe": "^4.2.27",
     "@types/jest": "^29.0.0",
     "@types/jsonld": "^1.5.6",
@@ -66,6 +71,9 @@
     "ng-file-upload": "^12.2.13",
     "postcss": "^8.4.16",
     "postcss-loader": "^7.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.3.0",
     "style-loader": "^3.3.1",
     "stylelint": "^14.11.0",
     "terser-webpack-plugin": "^5.3.6",

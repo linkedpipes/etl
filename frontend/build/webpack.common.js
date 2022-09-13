@@ -8,8 +8,7 @@ const gitRevisionPlugin = new GitRevisionPlugin();
 module.exports = {
   "entry": {
     "client": path.join(__dirname, "..", "client", "index.js"),
-    "client-debug": path.join(__dirname, "..", "client-debug", "index.js"),
-    "client-react": path.join(__dirname, "..", "client-react", "index.js")
+    "client-react": path.join(__dirname, "..", "client-react", "index.jsx")
   },
   "output": {
     "path": path.join(__dirname, "..", "dist"),
@@ -81,7 +80,7 @@ module.exports = {
   },
   "resolve": {
     "modules": ["node_modules"],
-    "extensions": [".js", ".vue", ".ts", ".tsx"],
+    "extensions": [".js", ".jsx", ".vue", ".ts", ".tsx"],
     "alias": {
       "@client": path.resolve("client"),
       "@client-debug": path.resolve("client-debug")
@@ -93,7 +92,7 @@ module.exports = {
         "test": /\.vue$/,
         "use": "vue-loader"
       }, {
-        "test": /\.js$/,
+        "test": /\.jsx?$/,
         "use": "babel-loader"
       },
       {
@@ -119,16 +118,10 @@ module.exports = {
       "chunks": ["client", "commons", "angular", "jointjs", "triply"]
     }),
     new HtmlWebpackPlugin({
-      "filename": "client-debug.html",
-      "template": path.join(__dirname, "..", "public", "client-debug.html"),
-      "inject": true,
-      "chunks": ["client-debug", "webpack-hot-middleware", "commons", "vue"]
-    }),
-    new HtmlWebpackPlugin({
       "filename": "client-react.html",
-      "template": path.join(__dirname, "..", "public", "client-debug.html"),
+      "template": path.join(__dirname, "..", "public", "client-react.html"),
       "inject": true,
-      "chunks": ["client-react", "webpack-hot-middleware", "commons", "react"]
+      "chunks": ["client-react", "commons", "react"]
     }),
     new webpack.DefinePlugin({
       "__GIT_COMMIT__": JSON.stringify(gitRevisionPlugin.commithash())

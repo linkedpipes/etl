@@ -5,7 +5,7 @@ import {
   getEntitiesByType,
   getValue,
   getValues,
-} from "../../jsonld";
+} from "../jsonld";
 
 const VOCABULARY = {
   "PIPELINE": "http://linkedpipes.com/ontology/Pipeline",
@@ -15,7 +15,6 @@ const VOCABULARY = {
 
 export function jsonLdToPipelineList(jsonld: JsonLdDocument): PipelineList {
   const result: PipelineList = {items: []};
-  console.log(jsonld);
   for (const graph of jsonld) {
     const pipelines = getEntitiesByType(graph.entities, VOCABULARY.PIPELINE);
     for (const pipeline of pipelines) {

@@ -1,4 +1,4 @@
-import {jsonToJsonLdEntities} from "../../jsonld";
+import {jsonToJsonLdEntities} from "../jsonld";
 import {jsonLdToPipelineList} from "./pipeline-list-adapter";
 
 test("Parse pipeline list.", () => {

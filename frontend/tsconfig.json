@@ -18,6 +18,11 @@
     "module": "esnext",
     "moduleResolution": "node",
     "noErrorTruncation": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "react": [
+        "./node_modules/@types/react"
+      ]
+    }
   }
 }
