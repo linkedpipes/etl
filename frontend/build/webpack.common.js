@@ -1,6 +1,5 @@
 const path = require("path");
 const webpack = require("webpack");
-const {VueLoaderPlugin} = require("vue-loader");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const {GitRevisionPlugin} = require("git-revision-webpack-plugin");
 const gitRevisionPlugin = new GitRevisionPlugin();
@@ -55,13 +54,6 @@ module.exports = {
           "chunks": "all",
           "priority": 10
         },
-        "vue": {
-          "test": /[\\/]node_modules[\\/]vue/,
-          "filename": "assets/scripts/[name].[chunkhash].js",
-          "name": "vue",
-          "chunks": "all",
-          "priority": 10
-        },
         "react": {
           "test": /[\\/]node_modules[\\/]react/,
           "filename": "assets/scripts/[name].[chunkhash].js",
@@ -80,7 +72,7 @@ module.exports = {
   },
   "resolve": {
     "modules": ["node_modules"],
-    "extensions": [".js", ".jsx", ".vue", ".ts", ".tsx"],
+    "extensions": [".js", ".jsx", ".ts", ".tsx"],
     "alias": {
       "@client": path.resolve("client"),
       "@client-debug": path.resolve("client-debug")
@@ -89,9 +81,6 @@ module.exports = {
   "module": {
     "rules": [
       {
-        "test": /\.vue$/,
-        "use": "vue-loader"
-      }, {
         "test": /\.jsx?$/,
         "use": "babel-loader"
       },
@@ -110,7 +99,6 @@ module.exports = {
     ]
   },
   "plugins": [
-    new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       "filename": "client.html",
       "template": path.join(__dirname, "..", "public", "client.html"),
