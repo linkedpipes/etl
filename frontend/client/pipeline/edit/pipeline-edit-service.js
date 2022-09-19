@@ -280,6 +280,7 @@
 
     function onExecute() {
       actions.savePipeline().then(() => {
+        $scope.hasExecution = true;
         actions.executePipeline({
           "keepDebugData": true
         }).catch(onCantExecute);
@@ -288,6 +289,7 @@
 
     function onExecuteWithoutDebugData() {
       actions.savePipeline().then(() => {
+        $scope.hasExecution = true;
         actions.executePipeline({
           "keepDebugData": false
         }).catch(onCantExecute);
