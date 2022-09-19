@@ -20,6 +20,9 @@
     }
     const durationMs = execModel.getComponentDurationMs(
       $execution, executionComponent);
+    if (isNaN(durationMs)) {
+      return "";
+    }
     const durationS = Math.floor(durationMs / 1000);
     if (durationS === 0) {
       return "Duration: < 1s";
@@ -27,8 +30,8 @@
     const durationM = Math.floor(durationS / 60);
     const durationH = Math.floor(durationM / 60);
     return "Duration: "
-      + String(durationH).padStart(2, '0') + ":"
-      + String(durationM).padStart(2, '0') + ":"
+      + String(durationH % 60).padStart(2, '0') + ":"
+      + String(durationM % 60).padStart(2, '0') + ":"
       + String(durationS).padStart(2, '0');
   }
 
