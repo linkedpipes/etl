@@ -20,7 +20,6 @@ public interface Loadable {
     static void load(
             StatementsSelector statements,
             Loadable target, Resource resource) {
-        target.resource(resource.stringValue());
         Map<Loadable, Resource> entities = new HashMap<>();
         Stack<Loadable> queue = new Stack<>();
         entities.put(target, resource);
@@ -28,6 +27,7 @@ public interface Loadable {
         while (!queue.isEmpty()) {
             Loadable next = queue.pop();
             Resource subject = entities.get(next);
+            next.resource(subject.stringValue());
             for (Statement statement : statements.withSubject(subject)) {
                 Value value = statement.getObject();
                 Loadable newEntity = next.load(
