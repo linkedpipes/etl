@@ -179,7 +179,7 @@
   }
 
   function deletePipeline($http, iri) {
-    const url = "./api/v1/Pipelines?iri=" + encodeURIComponent(iri);
+    const url = "./api/v1/pipelines?iri=" + encodeURIComponent(iri);
     return $http({
       "method": "DELETE",
       "url": url
@@ -187,7 +187,7 @@
   }
 
   function savePipeline($http, iri, jsonld, unchecked) {
-    const url = "./api/v1/Pipelines?iri=" + encodeURIComponent(iri);
+    const url = "./api/v1/pipelines?iri=" + encodeURIComponent(iri);
     return $http({
       "method": "PUT",
       "url": url,
