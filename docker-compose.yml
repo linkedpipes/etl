@@ -8,22 +8,21 @@
 #
 # Use pre-build images from docker hub.
 #
-
-version: '3'
+version: 3
 services:
   storage:
     image: linkedpipes/etl-storage
     volumes:
-       - data-storage:/data/lp/etl/storage
-       - configuration:/data/lp/etl/configuration
-       - data-logs:/data/lp/etl/logs
+      - data-storage:/data/lp-etl/storage
+      - configuration:/data/lp-etl/configuration
+      - data-logs:/data/lp-etl/logs
     environment:
       - LP_ETL_DOMAIN
     restart: always
   frontend:
     image: linkedpipes/etl-frontend
     volumes:
-      - configuration:/data/lp/etl/configuration
+      - configuration:/data/lp-etl/configuration
     ports:
       - ${LP_ETL_PORT-8080}:8080
     environment:
@@ -32,31 +31,26 @@ services:
   executor-monitor:
     image: linkedpipes/etl-executor-monitor
     volumes:
-      - data-execution:/data/lp/etl/executor
-      - data-logs:/data/lp/etl/logs
-      - configuration:/data/lp/etl/configuration
+      - data-execution:/data/lp-etl/executor
+      - data-logs:/data/lp-etl/logs
+      - configuration:/data/lp-etl/configuration
     environment:
       - LP_ETL_DOMAIN
     restart: always
   executor:
     image: linkedpipes/etl-executor
     volumes:
-      - data-execution:/data/lp/etl/executor
-      - data-logs:/data/lp/etl/logs
-      - configuration:/data/lp/etl/configuration
+      - data-execution:/data/lp-etl/executor
+      - data-logs:/data/lp-etl/logs
+      - configuration:/data/lp-etl/configuration
     environment:
       - LP_ETL_DOMAIN
     restart: always
 volumes:
   data-logs:
   data-execution:
-# Uncomment following lines to allow local data binding.
-#    driver_opts:
-#      type: none
-#      device: /opt/lp/etl-docker/data
-#      o: bind
   data-storage:
   configuration:
-# When binding configuration it need to contain file configuration.properties .
-# Do not forget that LP_ETL_DOMAIN will overwrite domain.uri in the
-# configuration file.
+  # When binding configuration it must contain file configuration.properties.
+  # Do not forget that LP_ETL_DOMAIN will overwrite domain.uri in the
+  # configuration file.
