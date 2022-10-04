@@ -155,7 +155,7 @@ public class ExportServlet {
 
         Collection<Statement> configuration = templates.getConfig(template);
         if (removePrivateConfig) {
-            removePrivateConfiguration(template, configuration);
+            configuration = removePrivateConfiguration(template, configuration);
         }
 
         zip.putNextEntry(new ZipEntry(directory + "configuration.trig"));
@@ -171,7 +171,7 @@ public class ExportServlet {
         zip.closeEntry();
     }
 
-    private void removePrivateConfiguration(
+    private Collection<Statement> removePrivateConfiguration(
             ReferenceTemplateRef template, Collection<Statement> configuration)
             throws StorageException {
         List<ConfigurationDescription> candidateDescription =
@@ -184,11 +184,9 @@ public class ExportServlet {
                     "Invalid configuration description for {}",
                     template.getIri());
         }
-        Collection<Statement> privateConfiguration;
-        privateConfiguration = ConfigurationFacade.removePrivateStatements(
+        return ConfigurationFacade.removePrivateStatements(
                 Statements.wrap(configuration).selector(),
                 candidateDescription.get(0));
-        configuration.removeAll(privateConfiguration);
     }
 
 }
