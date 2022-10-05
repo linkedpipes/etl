@@ -2,16 +2,12 @@
 # Environment variables:
 # * LP_ETL_DOMAIN - URL prefix, for example http://localhost:9080
 # * LP_ETL_PORT - port number to expose LP-ETL on
+# * LP_VERSION - 'main' by default or 'develop'
 #
-# How to run:
-#  LP_ETL_PORT=9080 LP_ETL_DOMAIN=http://localhost:9080 docker-compose up
-#
-# Use pre-build images from docker hub.
-#
-version: 3
+version: "3"
 services:
   storage:
-    image: linkedpipes/etl-storage
+    image: linkedpipes/etl-storage:${LP_VERSION-main}
     volumes:
       - data-storage:/data/lp-etl/storage
       - configuration:/data/lp-etl/configuration
@@ -20,7 +16,7 @@ services:
       - LP_ETL_DOMAIN
     restart: always
   frontend:
-    image: linkedpipes/etl-frontend
+    image: linkedpipes/etl-frontend:${LP_VERSION-main}
     volumes:
       - configuration:/data/lp-etl/configuration
     ports:
@@ -29,7 +25,7 @@ services:
       - LP_ETL_DOMAIN
     restart: always
   executor-monitor:
-    image: linkedpipes/etl-executor-monitor
+    image: linkedpipes/etl-executor-monitor:${LP_VERSION-main}
     volumes:
       - data-execution:/data/lp-etl/executor
       - data-logs:/data/lp-etl/logs
@@ -38,7 +34,7 @@ services:
       - LP_ETL_DOMAIN
     restart: always
   executor:
-    image: linkedpipes/etl-executor
+    image: linkedpipes/etl-executor:${LP_VERSION-main}
     volumes:
       - data-execution:/data/lp-etl/executor
       - data-logs:/data/lp-etl/logs
@@ -52,5 +48,5 @@ volumes:
   data-storage:
   configuration:
   # When binding configuration it must contain file configuration.properties.
-  # Do not forget that LP_ETL_DOMAIN will overwrite domain.uri in the
+  # Do not forget that LP_ETL_DOMAIN overwrites domain.uri in the
   # configuration file.
