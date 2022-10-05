@@ -2,7 +2,6 @@
 [![Travis Status](https://travis-ci.com/linkedpipes/etl.svg?branch=develop)](https://travis-ci.com/linkedpipes/etl)
 
 LinkedPipes ETL is an RDF based, lightweight ETL tool.
-- [REST API](https://github.com/linkedpipes/etl/wiki) based set of components for easy integration
 - [Library of components](https://etl.linkedpipes.com/components) to get you started faster
 - [Sharing of configuration](https://etl.linkedpipes.com/templates/) among individual pipelines using templates
 - RDF configuration of transformation pipelines
@@ -12,7 +11,7 @@ LinkedPipes ETL is an RDF based, lightweight ETL tool.
 - [Docker], [Docker Compose]
 
 ### For building locally
-- [Java] 17
+- [Java] 17, 18
 - [Git]
 - [Maven]
 - [Node.js] 18 & npm
@@ -27,30 +26,27 @@ git clone https://github.com/linkedpipes/etl.git
 cd etl
 docker-compose up
 ```
-Note that on Windows, there is an [issue with buildkit](https://github.com/moby/buildkit/issues/1684).
-See the [temporary workaround](https://github.com/linkedpipes/etl/issues/851#issuecomment-814058925).
+This would use pre-build images from [DockerHub].
 
-When running this on Windows, you might get a build error. There is a [workaround](https://github.com/linkedpipes/etl/issues/851) for that.
+Alternatively you can use one liner.
+For example to run LP-ETL from ```develop``` branch on ```http://localhost:9080``` use can use following command:
+```
+curl https://raw.githubusercontent.com/linkedpipes/etl/develop/docker-compose-github.yml | LP_ETL_PORT=9080 LP_VERSION=develop docker-compose -f - up
+```
 
 You may need to run the ```docker-compose``` command as ```sudo``` or be in the ```docker``` group.
 
+#### Building Docker images
+You can build LP-ETL images your self.
+Note that on Windows, there is an [issue with buildkit](https://github.com/moby/buildkit/issues/1684).
+See the [temporary workaround](https://github.com/linkedpipes/etl/issues/851#issuecomment-814058925).
+
 #### Configuration
-Each component (executor, executor-monitor, storage, frontend) has separate ```Dockerfile```.
-
 Environment variables:
- * ```LP_ETL_BUILD_BRANCH``` - The ```Dockerfiles``` are designed to run build from the github repository, the branch is set using this property, default is ```master```.
- * ```LP_ETL_BUILD_JAVA_TEST``` - Set to empty to allow to run Java tests, this will slow down the build.
- * ```LP_ETL_DOMAIN``` - The URL of the instance, this is used instead of the ```domain.uri``` from the configuration.
- * ```LP_ETL_FTP``` - The URL of the FTP server, this is used instead of the ```executor-monitor.ftp.uri``` from the configuration. 
- 
-For [Docker Compose], there are additional environment variables:
- * ```LP_ETL_PORT``` - Specify port mapping for frontend, this is where you can connect to your instance.
-This does NOT have to be the same as port in ```LP_ETL_DOMAIN``` in case of reverse-proxying.
-
-For example to run LP-ETL from ```develop``` branch on ```http://localhost:9080``` use can use following command:
-```
-curl https://raw.githubusercontent.com/linkedpipes/etl/develop/docker-compose-github.yml | LP_ETL_PORT=9080 LP_ETL_DOMAIN=http://localhost:9080 LP_ETL_BUILD_BRANCH=develop docker-compose -f - up
-```
+- ```LP_VERSION``` - default value ```main```, determine the version of Docker images.
+- ```LP_ETL_DOMAIN``` - The URL of the instance, this is used instead of the ```domain.uri``` from the configuration. 
+- ```LP_ETL_PORT``` - Specify port mapping for frontend, this is where you can connect to your instance.
+  This does NOT have to be the same as port in ```LP_ETL_DOMAIN``` in case of reverse-proxying.
 
 ```docker-compose``` utilizes several volumes that can be used to access/provide data.
 See ```docker-compose.yml``` comments for examples and configuration.
@@ -131,7 +127,7 @@ If you need to create your own component, you can copy an existing component and
 
 > Update note 2: When upgrading from master prior to 2016-11-04, you need to move your pipelines folder from e.g., ```/data/lp/etl/pipelines``` to ```/data/lp/etl/storage/pipelines```, update the configuration.properites file and possibly the update/restart scripts as there is a new component, ```storage```.
 
-> Update note: When upgrading from master prior to 2016-04-07, you need to delete your old execution data (e.g., in /data/lp/etl/working/data)
+> Update note 1: When upgrading from master prior to 2016-04-07, you need to delete your old execution data (e.g., in /data/lp/etl/working/data)
 
 [Java]: <http://www.oracle.com/technetwork/java/javase/downloads/index.html>
 [Git]: <https://git-scm.com/>
@@ -141,3 +137,4 @@ If you need to create your own component, you can copy an existing component and
 [Bash on Ubuntu on Windows]: <https://msdn.microsoft.com/en-us/commandline/wsl/about>
 [Docker]: <https://www.docker.com/>
 [Docker Compose]: <https://docs.docker.com/compose/>
+[DockerHub]: <https://hub.docker.com/>
