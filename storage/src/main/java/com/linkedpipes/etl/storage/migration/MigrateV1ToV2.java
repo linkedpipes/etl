@@ -1,8 +1,8 @@
 package com.linkedpipes.etl.storage.migration;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
+import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.storage.rdf.RdfObjects;
-import com.linkedpipes.etl.storage.rdf.StatementsCollection;
 import com.linkedpipes.etl.storage.template.Template;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
 import org.eclipse.rdf4j.model.IRI;
@@ -87,14 +87,14 @@ public class MigrateV1ToV2 {
 
     private final TemplateFacade templateFacade;
 
-    private StatementsCollection configurations;
+    private Statements configurations;
 
     public MigrateV1ToV2(TemplateFacade templateFacade) {
         this.templateFacade = templateFacade;
     }
 
     public void pipeline(
-            StatementsCollection configurations,
+            Statements configurations,
             RdfObjects pipeline) {
         this.configurations = configurations;
         for (RdfObjects.Entity component : pipeline.getTyped(COMPONENT)) {
@@ -130,11 +130,11 @@ public class MigrateV1ToV2 {
     }
 
     private void updateConfigurations(String graph, String coreTemplate) {
-        Collection<Statement> toUpdate = configurations.getStatements()
+        Collection<Statement> toUpdate = configurations
                 .stream()
                 .filter(st -> st.getContext().stringValue().equals(graph))
-                .collect(Collectors.toList());
-        configurations.remove(toUpdate);
+                .toList();
+        configurations.removeAll(toUpdate);
         configurations.addAll(updateConfiguration(toUpdate, coreTemplate));
     }
 

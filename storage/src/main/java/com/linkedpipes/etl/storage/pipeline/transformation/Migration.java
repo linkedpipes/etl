@@ -1,12 +1,12 @@
 package com.linkedpipes.etl.storage.pipeline.transformation;
 
+import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.storage.SuppressFBWarnings;
 import com.linkedpipes.etl.storage.migration.MigrateV0ToV1;
 import com.linkedpipes.etl.storage.migration.MigrateV1ToV2;
 import com.linkedpipes.etl.storage.pipeline.PipelineRef;
 import com.linkedpipes.etl.storage.rdf.RdfObjects;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
-import com.linkedpipes.etl.storage.rdf.StatementsCollection;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
@@ -30,7 +30,7 @@ class Migration {
 
     private final TemplateFacade templateFacade;
 
-    private StatementsCollection configurations;
+    private Statements configurations;
 
     private RdfObjects.Entity pipelineEntity;
 
@@ -78,18 +78,21 @@ class Migration {
     }
 
     private void parseStatements(Collection<Statement> pipeline) {
-        StatementsCollection all = new StatementsCollection(pipeline);
+        Statements all = Statements.wrap(pipeline);
 
         Predicate<Statement> configurationFilter =
                 (s) -> !s.getContext().equals(this.pipelineResource);
-        this.configurations = all.filter(configurationFilter);
+
+        this.configurations = Statements.wrap(
+                all.stream().filter(configurationFilter).toList());
 
         Predicate<Statement> pipelineObjectFilter =
                 (s) -> s.getContext().equals(this.pipelineResource);
 
         this.pipelineObject = new RdfObjects(
-                all.filter(pipelineObjectFilter).getStatements());
-        this.pipelineEntity = this.pipelineObject.getTypeSingle(PipelineRef.TYPE);
+                all.stream().filter(pipelineObjectFilter).toList());
+        this.pipelineEntity =
+                this.pipelineObject.getTypeSingle(PipelineRef.TYPE);
     }
 
     private int getVersion() {
@@ -120,7 +123,7 @@ class Migration {
     private List<Statement> collect() {
         List<Statement> output = new ArrayList<>();
         output.addAll(pipelineObject.asStatements(pipelineResource));
-        output.addAll(configurations.getStatements());
+        output.addAll(configurations);
         return output;
     }
 
