@@ -1,10 +1,12 @@
 package com.linkedpipes.etl.storage.unpacker.model.template;
 
-import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsSelector;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.TestUtils;
-import com.linkedpipes.etl.storage.unpacker.model.ModelLoader;
+import com.linkedpipes.etl.unpacker.model.ModelLoader;
+import com.linkedpipes.etl.unpacker.model.template.JarTemplate;
+import com.linkedpipes.etl.unpacker.model.template.Template;
+import com.linkedpipes.etl.unpacker.model.template.TemplatePort;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -2,7 +2,10 @@ package com.linkedpipes.etl.storage.unpacker.model.designer;
 
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.TestUtils;
-import com.linkedpipes.etl.storage.unpacker.model.ModelLoader;
+import com.linkedpipes.etl.unpacker.model.ModelLoader;
+import com.linkedpipes.etl.unpacker.model.designer.DesignerComponent;
+import com.linkedpipes.etl.unpacker.model.designer.DesignerConnection;
+import com.linkedpipes.etl.unpacker.model.designer.DesignerPipeline;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

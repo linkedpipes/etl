@@ -10,7 +10,7 @@ import com.linkedpipes.etl.library.template.configuration.model.ConfigurationDes
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.template.mapping.MappingFacade;
 import com.linkedpipes.etl.storage.template.repository.TemplateRepository;
-import com.linkedpipes.etl.storage.unpacker.TemplateSource;
+import com.linkedpipes.etl.unpacker.TemplateSource;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;

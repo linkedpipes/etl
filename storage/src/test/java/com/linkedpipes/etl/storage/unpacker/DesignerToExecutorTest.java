@@ -7,21 +7,21 @@ import com.linkedpipes.etl.library.rdf.StatementsSelector;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.TestUtils;
 import com.linkedpipes.etl.storage.rdf.RdfUtils;
-import com.linkedpipes.etl.storage.unpacker.model.GraphCollection;
-import com.linkedpipes.etl.storage.unpacker.model.ModelLoader;
-import com.linkedpipes.etl.storage.unpacker.model.designer.DesignerPipeline;
-import com.linkedpipes.etl.storage.unpacker.model.executor.ExecutorPipeline;
-import com.linkedpipes.etl.storage.unpacker.rdf.Loadable;
+import com.linkedpipes.etl.unpacker.DesignerToExecutor;
+import com.linkedpipes.etl.unpacker.ExecutionSource;
+import com.linkedpipes.etl.unpacker.TemplateSource;
+import com.linkedpipes.etl.unpacker.unpacker.UnpackOptions;
+import com.linkedpipes.etl.unpacker.model.GraphCollection;
+import com.linkedpipes.etl.unpacker.model.ModelLoader;
+import com.linkedpipes.etl.unpacker.model.designer.DesignerPipeline;
+import com.linkedpipes.etl.unpacker.model.executor.ExecutorPipeline;
+import com.linkedpipes.etl.unpacker.rdf.Loadable;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.util.Models;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
 public class DesignerToExecutorTest {
 
