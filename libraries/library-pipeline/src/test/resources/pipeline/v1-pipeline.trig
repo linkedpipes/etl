@@ -1,0 +1,26 @@
+
+<http://localhost:8080/resources/pipelines/created-1621865694389> {
+	<http://localhost:8080/resources/pipelines/created-1621865694389> a <http://linkedpipes.com/ontology/Pipeline> ;
+		<http://etl.linkedpipes.com/ontology/version> "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+		<http://linkedpipes.com/ontology/profile> <http://localhost:8080/resources/pipelines/created-1621865694389/profile/default> ;
+		<http://www.w3.org/2004/02/skos/core#prefLabel> "Pipeline" .
+	
+	<http://localhost:8080/resources/pipelines/created-1621865694389/profile/default> a <http://linkedpipes.com/ontology/ExecutionProfile> ;
+		<http://linkedpipes.com/ontology/rdfRepositoryPolicy> <http://linkedpipes.com/ontology/repository/SingleRepository> ;
+		<http://linkedpipes.com/ontology/rdfRepositoryType> <http://linkedpipes.com/ontology/repository/NativeStore> .
+	
+	<http://localhost:8080/resources/pipelines/created-1621865694389/components/0ec1db00-6d00-4d8c-85fd-08808ed34173> a <http://linkedpipes.com/ontology/Component> ;
+		<http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/created-1621865694389/components/0ec1db00-6d00-4d8c-85fd-08808ed34173/configuration> ;
+		<http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1621865731462> ;
+		<http://linkedpipes.com/ontology/x> "240"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+		<http://linkedpipes.com/ontology/y> "120"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+		<http://www.w3.org/2004/02/skos/core#prefLabel> "SPARQL construct chunked" .
+}
+
+<http://localhost:8080/resources/pipelines/created-1621865694389/components/0ec1db00-6d00-4d8c-85fd-08808ed34173/configuration> {
+	<http://etl.linkedpipes.com/resources/components/t-sparqlConstructChunked/0.0.0/new/1> a <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration> ;
+		<http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#deduplicationControl> <http://plugins.linkedpipes.com/resource/configuration/Inherit> ;
+		<http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query> "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}" ;
+		<http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl> <http://plugins.linkedpipes.com/resource/configuration/Inherit> ;
+		<http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#threadsControl> <http://plugins.linkedpipes.com/resource/configuration/Inherit> .
+}

@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.library.template.reference.migration;
 
 import com.linkedpipes.etl.library.rdf.Statements;
-import com.linkedpipes.etl.library.template.reference.model.ReferenceTemplate;
+import com.linkedpipes.etl.library.template.reference.adapter.RawReferenceTemplate;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -48,7 +48,7 @@ public class ReferenceTemplateV1 {
 
     private final Map<Resource, Resource> templateToPlugin;
 
-    public ReferenceTemplateV1(Map<Resource, Resource>  templateToPlugin) {
+    public ReferenceTemplateV1(Map<Resource, Resource> templateToPlugin) {
         this.templateToPlugin = templateToPlugin;
     }
 
@@ -60,38 +60,25 @@ public class ReferenceTemplateV1 {
      * In addition, some templates also shared parts of configuration
      * vocabulary, especially chunked versions of the components.
      */
-    public ReferenceTemplate migrateToV2(ReferenceTemplate template)
-            throws MigrationFailed {
-        if (template.template() == null) {
-            throw new MigrationFailed(
-                    "Missing template for '{}'.", template.resource());
+    public void migrateToV2(RawReferenceTemplate template)
+            throws ReferenceMigrationFailed {
+        if (template.template == null) {
+            throw new ReferenceMigrationFailed(
+                    "Missing template for '{}'.", template.resource);
         }
-        Resource root = templateToPlugin.get(template.resource());
+        Resource root = templateToPlugin.get(template.template);
         if (root == null) {
-            throw new MigrationFailed(
+            throw new ReferenceMigrationFailed(
                     "Missing root template '{}' for '{}'.",
-                    template.template(),
-                    template.resource());
+                    template.template, template.resource);
         }
         Mapping mapping = MAPPING.get(root.stringValue());
         if (mapping == null) {
-            return template;
+            return;
         }
-        Collection<Statement> configuration = updateConfiguration(
-                template.configuration(), mapping);
-        return new ReferenceTemplate(
-                template.resource(),
-                template.template(),
-                template.label(),
-                template.description(),
-                template.note(),
-                template.color(),
-                template.tags(),
-                template.knownAs(),
-                template.pluginTemplate(),
-                2,
-                Statements.wrap(configuration),
-                template.configurationGraph());
+        template.configuration = Statements.wrap(
+                updateConfiguration(template.configuration, mapping));
+        template.version = 2;
     }
 
     protected Collection<Statement> updateConfiguration(

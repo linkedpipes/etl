@@ -1,15 +1,14 @@
 package com.linkedpipes.etl.library.pipeline.model;
 
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Value;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Connect ports on a single component.
+ * Type of connection to force particular execution order.
  */
-public record PipelineDataFlow(
+public record PipelineControlFlow(
         /*
          * Connection resource.
          */
@@ -19,24 +18,16 @@ public record PipelineDataFlow(
          */
         Resource source,
         /*
-         * Source binding.
-         */
-        Value sourceBinding,
-        /*
          * Connection target template.
          */
         Resource target,
-        /*
-         * Target binding.
-         */
-        Value targetBinding,
         /*
          * Vertices.
          */
         List<PipelineVertex> vertices
 ) {
 
-    public PipelineDataFlow {
+    public PipelineControlFlow {
         vertices = Collections.unmodifiableList(vertices);
     }
 

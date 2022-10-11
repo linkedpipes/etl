@@ -15,9 +15,17 @@ public record ReferenceTemplate(
          */
         Resource resource,
         /*
+         * Reference version.
+         */
+        int version,
+        /*
          * Parent template.
          */
         Resource template,
+        /*
+         * IRI of the top template, i.e. the plugin template.
+         */
+        Resource plugin,
         /*
          * User given label.
          */
@@ -43,14 +51,6 @@ public record ReferenceTemplate(
          * track a single template among instances.
          */
         Resource knownAs,
-        /*
-         * IRI of the top template, i.e. the plugin template.
-         */
-        Resource pluginTemplate,
-        /*
-         * Reference version.
-         */
-        int version,
         /*
          * Configuration in form of RDF as there is no fixed structure.
          * Stored without graph.

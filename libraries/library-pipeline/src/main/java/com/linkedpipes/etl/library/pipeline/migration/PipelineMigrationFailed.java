@@ -1,14 +1,14 @@
-package com.linkedpipes.etl.library.template.reference.migration;
+package com.linkedpipes.etl.library.pipeline.migration;
 
 import org.slf4j.helpers.MessageFormatter;
 
-public class MigrationFailed extends Exception {
+public class PipelineMigrationFailed extends Exception {
 
     protected final String message;
 
     protected final Object[] args;
 
-    public MigrationFailed(String messages, Object... args) {
+    public PipelineMigrationFailed(String messages, Object... args) {
         this.message = messages;
         this.args = args;
         extractCause(args);

@@ -25,7 +25,7 @@ public class ReferenceTemplateToRdf {
         }
         result.add(resource, LP_V1.HAS_KNOWN_AS, template.knownAs());
         result.add(resource, LP_V1.HAS_PLUGIN_TEMPLATE,
-                template.pluginTemplate());
+                template.plugin());
         result.add(resource, LP_V1.HAS_VERSION, template.version());
         result.add(
                 resource, LP_V1.HAS_CONFIGURATION_GRAPH,

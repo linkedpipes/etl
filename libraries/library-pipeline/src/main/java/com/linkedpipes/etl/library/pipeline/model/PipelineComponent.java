@@ -2,25 +2,53 @@ package com.linkedpipes.etl.library.pipeline.model;
 
 import com.linkedpipes.etl.library.rdf.Statements;
 import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Value;
 
 public record PipelineComponent(
+        /*
+         * Component resource.
+         */
         Resource resource,
-        Literal label,
-        Literal description,
-        Literal note,
-        Value color,
-        Literal xPosition,
-        Literal yPosition,
+        /*
+         * User given label.
+         */
+        String label,
+        /*
+         * User given description.
+         */
+        String description,
+        /*
+         * User given note.
+         */
+        String note,
+        /*
+         * User given color.
+         */
+        String color,
+        /*
+         * Position coordinates.
+         */
+        Integer x,
+        /*
+         * Position coordinates.
+         */
+        Integer y,
+        /*
+         * Template.
+         */
         Resource template,
-        Literal disabled,
-        IRI configurationGraph,
+        /*
+         * True if execution of this component is disabled.
+         */
+        boolean disabled,
         /*
          * Configuration stored without graph.
          */
-        Statements configuration
+        Statements configuration,
+        /*
+         * Configuration without graph.
+         */
+        Resource configurationGraph
 ) {
 
     public PipelineComponent {
@@ -34,12 +62,12 @@ public record PipelineComponent(
                 other.description,
                 other.note,
                 other.color,
-                other.xPosition,
-                other.yPosition,
+                other.x,
+                other.y,
                 other.template,
                 other.disabled,
-                other.configurationGraph,
-                other.configuration
+                other.configuration,
+                other.configurationGraph
         );
     }
 

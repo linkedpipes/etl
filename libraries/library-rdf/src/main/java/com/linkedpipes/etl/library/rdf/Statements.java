@@ -61,6 +61,9 @@ public class Statements implements Collection<Statement> {
     }
 
     public static Statements readOnly(Collection<Statement> collection) {
+        if (collection == null) {
+            return null;
+        }
         return new Statements(Collections.unmodifiableCollection(collection));
     }
 

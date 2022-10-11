@@ -1,10 +1,9 @@
-package com.linkedpipes.etl.library.pipeline.adapter;
+package com.linkedpipes.etl.library.pipeline.adapter.rdf;
 
 import com.linkedpipes.etl.library.pipeline.model.Pipeline;
 import com.linkedpipes.etl.library.pipeline.model.PipelineComponent;
-import com.linkedpipes.etl.library.pipeline.model.PipelineConnection;
 import com.linkedpipes.etl.library.pipeline.model.PipelineDataFlow;
-import com.linkedpipes.etl.library.pipeline.model.PipelineExecutionFlow;
+import com.linkedpipes.etl.library.pipeline.model.PipelineControlFlow;
 import com.linkedpipes.etl.library.pipeline.model.PipelineExecutionProfile;
 import com.linkedpipes.etl.library.pipeline.vocabulary.LP_V1;
 import com.linkedpipes.etl.library.rdf.Statements;
@@ -37,13 +36,11 @@ public class PipelineToRdf {
         for (PipelineComponent component : pipeline.components()) {
             writeComponent(component, result);
         }
-        for (PipelineConnection connection : pipeline.connections()) {
-            if (connection instanceof PipelineDataFlow flow) {
-                writeDataFlow(flow, result);
-            }
-            if (connection instanceof PipelineExecutionFlow flow) {
-                writeExecutionFlow(flow, result);
-            }
+        for (PipelineDataFlow flow : pipeline.dataFlows()) {
+            writeDataFlow(flow, result);
+        }
+        for (PipelineControlFlow flow : pipeline.controlFlows()) {
+            writeExecutionFlow(flow, result);
         }
         return result;
     }
@@ -94,19 +91,16 @@ public class PipelineToRdf {
                 definition.configurationGraph());
         statements.add(definition.resource(),
                 LP_V1.HAS_X,
-                definition.xPosition());
+                definition.x());
         statements.add(definition.resource(),
                 LP_V1.HAS_Y,
-                definition.yPosition());
+                definition.y());
         statements.add(definition.resource(),
                 LP_V1.HAS_TEMPLATE,
                 definition.template());
-        if (definition.disabled() != null &&
-                !definition.disabled().booleanValue()) {
-            statements.add(definition.resource(),
-                    LP_V1.HAS_DISABLED,
-                    SimpleValueFactory.getInstance().createLiteral(false));
-        }
+        statements.add(definition.resource(),
+                LP_V1.HAS_DISABLED,
+                definition.disabled());
         if (!definition.configuration().isEmpty()) {
             Statements configuration =
                     Statements.wrap(definition.configuration());
@@ -133,7 +127,7 @@ public class PipelineToRdf {
     }
 
     protected static void writeExecutionFlow(
-            PipelineExecutionFlow definition, StatementsBuilder statements) {
+            PipelineControlFlow definition, StatementsBuilder statements) {
         statements.addType(definition.resource(), LP_V1.RUN_AFTER);
         statements.add(definition.resource(),
                 LP_V1.HAS_SOURCE_COMPONENT,

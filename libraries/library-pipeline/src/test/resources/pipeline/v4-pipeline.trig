@@ -1,0 +1,26 @@
+
+<http://localhost:8080/resources/pipelines/1621937390630> {
+  <http://localhost:8080/resources/pipelines/1621937390630> a <http://linkedpipes.com/ontology/Pipeline>;
+    <http://etl.linkedpipes.com/ontology/version> "2"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/profile> <http://localhost:8080/resources/pipelines/1621937390630/profile/default>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Pipeline" .
+  
+  <http://localhost:8080/resources/pipelines/1621937390630/profile/default> a <http://linkedpipes.com/ontology/ExecutionProfile>;
+    <http://linkedpipes.com/ontology/rdfRepositoryPolicy> <http://linkedpipes.com/ontology/repository/SingleRepository>;
+    <http://linkedpipes.com/ontology/rdfRepositoryType> <http://linkedpipes.com/ontology/repository/NativeStore> .
+  
+  <http://localhost:8080/resources/pipelines/1621937390630/component/266b-a54f> a <http://linkedpipes.com/ontology/Component>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1621937390630/component/266b-a54f/configuration>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1621937467650-899a4740-78e7-4ef5-a1ee-3fbc4c2a0b1c>;
+    <http://linkedpipes.com/ontology/x> 196;
+    <http://linkedpipes.com/ontology/y> 96;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Text holder" .
+}
+
+<http://localhost:8080/resources/pipelines/1621937390630/component/266b-a54f/configuration> {
+  <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/new/1> a <http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#content> "";
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#contentControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#fileName> "";
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#fileNameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}

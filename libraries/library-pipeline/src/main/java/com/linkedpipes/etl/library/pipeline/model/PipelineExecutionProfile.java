@@ -1,10 +1,6 @@
 package com.linkedpipes.etl.library.pipeline.model;
 
-import com.linkedpipes.etl.library.pipeline.vocabulary.LP_V1;
-import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 public record PipelineExecutionProfile(
         /*
@@ -13,10 +9,12 @@ public record PipelineExecutionProfile(
         Resource resource,
         /*
          * How should RDF stores be created.
+         * TODO: Replace with enum.
          */
         Resource rdfRepositoryPolicy,
         /*
          * Type of RDF store to be by data units.
+         * TODO: Replace with enum.
          */
         Resource rdfRepositoryType,
         /*
@@ -40,27 +38,5 @@ public record PipelineExecutionProfile(
          */
         Integer successfulExecutionLimit
 ) {
-
-    private static final IRI DEFAULT_POLICY;
-
-    private static final IRI DEFAULT_TYPE;
-
-    static {
-        ValueFactory factory = SimpleValueFactory.getInstance();
-        DEFAULT_POLICY = factory.createIRI(LP_V1.SINGLE_REPOSITORY);
-        DEFAULT_TYPE = factory.createIRI(LP_V1.NATIVE_STORE);
-    }
-
-    public PipelineExecutionProfile(Resource resource) {
-        this(
-                resource,
-                DEFAULT_POLICY,
-                DEFAULT_TYPE,
-                DataRetentionPolicy.DEFAULT,
-                DataRetentionPolicy.DEFAULT,
-                null,
-                null
-        );
-    }
 
 }

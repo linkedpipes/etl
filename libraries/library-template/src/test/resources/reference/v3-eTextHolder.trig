@@ -1,8 +1,8 @@
 
 # configuration.trig
 
-<http://localhost:8080/resources/components/1621880885677-0ead2138-65f0-4776-91eb-4ff6a7234316/configuration> {
-	<http://localhost:8080/resources/components/1621880885677-0ead2138-65f0-4776-91eb-4ff6a7234316/configuration> a <http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration> ;
+<http://localhost:8080/resources/components/1621875215693/configuration> {
+	<http://localhost:8080/resources/components/1621875215693/configuration/0> a <http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration> ;
 		<http://plugins.linkedpipes.com/ontology/e-textHolder#content> "" ;
 		<http://plugins.linkedpipes.com/ontology/e-textHolder#contentControl> <http://plugins.linkedpipes.com/resource/configuration/None> ;
 		<http://plugins.linkedpipes.com/ontology/e-textHolder#fileName> "file.ttl" ;
@@ -11,15 +11,18 @@
 
 # definition.trig
 
-<http://localhost:8080/resources/components/1621880885677-0ead2138-65f0-4776-91eb-4ff6a7234316> {
-	<http://localhost:8080/resources/components/1621880885677-0ead2138-65f0-4776-91eb-4ff6a7234316> a <http://linkedpipes.com/ontology/Template> ;
+<http://localhost:8080/resources/components/1621875215693> {
+	<http://localhost:8080/resources/components/1621875215693> a <http://linkedpipes.com/ontology/Template> ;
 		<http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0> .
 }
 
 # interface.trig
 
-<http://localhost:8080/resources/components/1621880885677-0ead2138-65f0-4776-91eb-4ff6a7234316> {
-	<http://localhost:8080/resources/components/1621880885677-0ead2138-65f0-4776-91eb-4ff6a7234316> <http://www.w3.org/2004/02/skos/core#prefLabel> "Turtle holder" ;
+<http://localhost:8080/resources/components/1621875215693> {
+	<http://localhost:8080/resources/components/1621875215693> <http://www.w3.org/2004/02/skos/core#prefLabel> "Turtle holder" ;
 		a <http://linkedpipes.com/ontology/Template> ;
-		<http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0> .
+		<http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0> ;
+		<http://purl.org/dc/terms/description> "My text here." ;
+		<http://linkedpipes.com/ontology/keyword> "Text Holder", "Turtle" ;
+		<http://linkedpipes.com/ontology/color> "#FF00FF" .
 }

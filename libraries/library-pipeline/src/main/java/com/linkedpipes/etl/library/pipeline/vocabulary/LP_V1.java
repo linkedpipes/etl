@@ -254,6 +254,9 @@ final public class LP_V1 {
     public static final String HAS_PLUGIN_TEMPLATE =
             "http://linkedpipes.com/ontology/pluginTemplate";
 
+    public static final String HAS_ORDER  =
+            "http://linkedpipes.com/ontology/order";
+
     public static final String HAS_X  =
             "http://linkedpipes.com/ontology/x";
 
@@ -319,5 +322,8 @@ final public class LP_V1 {
 
     public static final String HAS_VERSION =
             "http://etl.linkedpipes.com/ontology/version";
+
+    public static final String HAS_VERTEX =
+            "http://linkedpipes.com/ontology/vertex";
 
 }

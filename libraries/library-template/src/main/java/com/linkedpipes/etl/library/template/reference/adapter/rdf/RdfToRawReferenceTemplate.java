@@ -1,9 +1,8 @@
 package com.linkedpipes.etl.library.template.reference.adapter.rdf;
 
 import com.github.jsonldjava.shaded.com.google.common.base.Objects;
-import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsSelector;
-import com.linkedpipes.etl.library.template.reference.model.ReferenceTemplate;
+import com.linkedpipes.etl.library.template.reference.adapter.RawReferenceTemplate;
 import com.linkedpipes.etl.library.template.vocabulary.LP_V1;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -19,114 +18,111 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RdfToReferenceTemplate {
+public class RdfToRawReferenceTemplate {
 
-    public static List<ReferenceTemplate> asReferenceTemplates(
+    public static List<RawReferenceTemplate> asRawReferenceTemplates(
             StatementsSelector statements) {
-        Collection<Resource> resources = statements.selectByType(
-                LP_V1.REFERENCE_TEMPLATE).subjects();
-        List<ReferenceTemplate> result = new ArrayList<>();
-        for (Resource resource : resources) {
-            result.add(asReferenceTemplate(statements, resource));
+        var candidates = statements.selectByType(
+                LP_V1.REFERENCE_TEMPLATE);
+        List<RawReferenceTemplate> result = new ArrayList<>(candidates.size());
+        for (Statement candidate : candidates) {
+            result.add(asRawReferenceTemplate(
+                    statements,
+                    candidate.getSubject(), candidate.getContext()));
         }
         return loadMappingToVersion5(result, statements);
     }
 
-    private static ReferenceTemplate asReferenceTemplate(
-            StatementsSelector statements, Resource templateResource) {
-        IRI template = null, pluginTemplate = null, knownAs = null;
-        Resource configurationGraph = null;
-        String prefLabel = null, description = null, note = null;
-        int version = 0; // We start with zero as a default version.
-        String color = null;
-        List<String> tags = new ArrayList<>();
-
-        for (Statement statement : statements.withSubject(templateResource)) {
+    private static RawReferenceTemplate asRawReferenceTemplate(
+            StatementsSelector statements, Resource templateResource,
+            Resource templateGraph) {
+        RawReferenceTemplate result = new RawReferenceTemplate();
+        result.resource = templateResource;
+        //
+        for (Statement statement : statements.selector()
+                .withSubject(templateResource)) {
             Value value = statement.getObject();
             String predicate = statement.getPredicate().stringValue();
             switch (predicate) {
                 case LP_V1.HAS_TEMPLATE:
                     if (value instanceof IRI iri) {
-                        template = iri;
+                        result.template = iri;
                     }
                     break;
                 case LP_V1.PREF_LABEL:
                     if (value instanceof Literal literal) {
-                        prefLabel = literal.stringValue();
+                        result.label = literal.stringValue();
                     }
                     break;
                 case LP_V1.HAS_DESCRIPTION:
                     if (value instanceof Literal literal) {
-                        description = literal.stringValue();
+                        result.description = literal.stringValue();
                     }
                     break;
                 case LP_V1.HAS_NOTE:
                     if (value instanceof Literal literal) {
-                        note = literal.stringValue();
+                        result.note = literal.stringValue();
                     }
                     break;
                 case LP_V1.HAS_COLOR:
                     if (value instanceof Literal literal) {
-                        color = value.stringValue();
+                        result.color = literal.stringValue();
                     }
                     break;
                 case LP_V1.HAS_KEYWORD:
                     if (value instanceof Literal literal) {
-                        tags.add(literal.stringValue());
+                        result.tags.add(literal.stringValue());
                     }
                     break;
                 // Added in version 3
                 case LP_V1.HAS_CONFIGURATION_GRAPH:
                     if (value instanceof Resource resource) {
-                        configurationGraph = resource;
+                        result.configurationGraph = resource;
                     }
                     break;
                 // Added in version 5
                 case LP_V1.HAS_PLUGIN_TEMPLATE:
                     if (value instanceof IRI iri) {
-                        pluginTemplate = iri;
+                        result.plugin = iri;
                     }
                     break;
                 case LP_V1.HAS_VERSION:
                     if (value instanceof Literal literal) {
-                        version = literal.intValue();
+                        result.version = literal.intValue();
                     }
                     break;
                 case LP_V1.HAS_KNOWN_AS:
                     if (value instanceof IRI iri) {
-                        knownAs = iri;
+                        result.knownAs = iri;
                     }
                     break;
             }
         }
-        Statements configuration = loadConfiguration(
-                statements, templateResource, configurationGraph);
-        return new ReferenceTemplate(
-                templateResource, template, prefLabel, description, note,
-                color, tags, knownAs, pluginTemplate, version,
-                configuration, configurationGraph);
+        loadConfiguration(statements, result);
+        return result;
     }
 
-    private static Statements loadConfiguration(
-            StatementsSelector statements,
-            Resource templateResource,
-            Resource configurationGraph) {
-        if (configurationGraph == null) {
+    private static void loadConfiguration(
+            StatementsSelector statements, RawReferenceTemplate template) {
+        if (template.configurationGraph == null) {
             // We try to guess the configuration graph. The graph was not
             // present in some versions, but there were a convention
             // in naming the configuration graph.
-            configurationGraph = SimpleValueFactory.getInstance().createIRI(
-                    templateResource.stringValue() + "/configuration");
+            String iri = template.resource.stringValue() + "/configuration";
+            template.configurationGraph =
+                    SimpleValueFactory.getInstance().createIRI(iri);
         }
-        return statements.selectByGraph(configurationGraph).withoutGraph();
+        template.configuration =
+                statements.selectByGraph(template.configurationGraph)
+                        .withoutGraph();
     }
 
     /**
      * Mapping information used to be, prior to version 5, in an extra
      * graph.
      */
-    private static List<ReferenceTemplate> loadMappingToVersion5(
-            List<ReferenceTemplate> templates,
+    private static List<RawReferenceTemplate> loadMappingToVersion5(
+            List<RawReferenceTemplate> templates,
             Collection<Statement> statements) {
         Map<Resource, Resource> localToOriginal = new HashMap<>();
         Resource graph = SimpleValueFactory.getInstance()
@@ -141,17 +137,11 @@ public class RdfToReferenceTemplate {
                         localToOriginal.put((Resource) local, original);
                     }
                 });
-        List<ReferenceTemplate> result = new ArrayList<>();
-        for (ReferenceTemplate template : templates) {
-            Resource knownAs = localToOriginal.get(template.resource());
-            if (template.knownAs() == null && knownAs != null) {
-                result.add(new ReferenceTemplate(
-                        template.resource(), template.template(),
-                        template.label(), template.description(),
-                        template.note(), template.color(),
-                        template.tags(), knownAs, template.pluginTemplate(),
-                        template.version(), template.configuration(),
-                        template.configurationGraph()));
+        List<RawReferenceTemplate> result = new ArrayList<>();
+        for (RawReferenceTemplate template : templates) {
+            Resource knownAs = localToOriginal.get(template.resource);
+            if (template.knownAs == null && knownAs != null) {
+                template.knownAs = knownAs;
             } else {
                 result.add(template);
             }

@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.library.template.reference.migration;
 
-
-import com.linkedpipes.etl.library.template.reference.model.ReferenceTemplate;
+import com.linkedpipes.etl.library.template.reference.adapter.RawReferenceTemplate;
 
 class ReferenceTemplateV2 {
 
@@ -9,22 +8,11 @@ class ReferenceTemplateV2 {
      * Remove configuration description and reference to it and delete the
      * configuration description file.
      * <p>
-     * We do not need to do any of this on this level.
+     * As this is solved by ignoring the data using the raw instance, there
+     * is effectively no change here.
      */
-    public ReferenceTemplate migrateToV3(ReferenceTemplate template) {
-        return new ReferenceTemplate(
-                template.resource(),
-                template.template(),
-                template.label(),
-                template.description(),
-                template.note(),
-                template.color(),
-                template.tags(),
-                template.knownAs(),
-                template.pluginTemplate(),
-                3,
-                template.configuration(),
-                template.configurationGraph());
+    public void migrateToV3(RawReferenceTemplate template) {
+        template.version = 3;
     }
 
 }

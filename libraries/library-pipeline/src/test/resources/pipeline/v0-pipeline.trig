@@ -1,0 +1,39 @@
+
+<http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815> {
+	<http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/98f7f971-2a2b-4157-9ac9-0a896993421b> <http://linkedpipes.com/ontology/y> 60 ;
+		<http://linkedpipes.com/ontology/x> 60 ;
+		<http://www.w3.org/2004/02/skos/core#prefLabel> "HTTP get" ;
+		<http://linkedpipes.com/ontology/configurationGraph> <http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/98f7f971-2a2b-4157-9ac9-0a896993421b/configuration> ;
+		<http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/e-httpGetFile/0.0.0> ;
+		a <http://linkedpipes.com/ontology/Component> .
+	
+	<http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/connection/6936b01b-4dd6-40ea-8326-89e05eb7b33f> <http://linkedpipes.com/ontology/sourceBinding> "FilesOutput" ;
+		<http://linkedpipes.com/ontology/targetBinding> "InputFiles" ;
+		<http://linkedpipes.com/ontology/sourceComponent> <http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/98f7f971-2a2b-4157-9ac9-0a896993421b> ;
+		<http://linkedpipes.com/ontology/targetComponent> <http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/efc4db65-aca0-455d-b3d7-3b1fc70ccfa2> ;
+		a <http://linkedpipes.com/ontology/Connection> .
+	
+	<http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815> <http://etl.linkedpipes.com/ontology/version> "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+		<http://www.w3.org/2004/02/skos/core#prefLabel> "Test CSV conversion" ;
+		a <http://linkedpipes.com/ontology/Pipeline> .
+	
+	<http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/efc4db65-aca0-455d-b3d7-3b1fc70ccfa2> <http://linkedpipes.com/ontology/y> 60 ;
+		<http://linkedpipes.com/ontology/x> 280 ;
+		<http://www.w3.org/2004/02/skos/core#prefLabel> "Excel to CSV" ;
+		<http://linkedpipes.com/ontology/configurationGraph> <http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/efc4db65-aca0-455d-b3d7-3b1fc70ccfa2/configuration> ;
+		<http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/t-excelToCsv/0.0.0> ;
+		a <http://linkedpipes.com/ontology/Component> .
+}
+
+<http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/98f7f971-2a2b-4157-9ac9-0a896993421b/configuration> {
+	<http://localhost/resources/configuration> a <http://plugins.linkedpipes.com/ontology/e-httpGetFile#Configuration> ;
+		<http://plugins.linkedpipes.com/ontology/e-httpGetFile#fileName> "esf_cz_projects.xlsx" ;
+		<http://plugins.linkedpipes.com/ontology/e-httpGetFile#fileUri> "http://www.strukturalni-fondy.cz/getmedia/2447dd2b-b03c-49a7-affc-fda1b9b1334b/Prehled_projektu_20160603upraveno.xlsx?ext=.xlsx" .
+}
+
+<http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/efc4db65-aca0-455d-b3d7-3b1fc70ccfa2/configuration> {
+	<http://localhost/resources/configuration> a <http://plugins.linkedpipes.com/ontology/t-excelToCsv#Configuration> ;
+		<http://plugins.linkedpipes.com/ontology/t-excelToCsv#fileName> "esf_cz_projects.csv" ;
+		<http://plugins.linkedpipes.com/ontology/t-excelToCsv#numericParse> false ;
+		<http://plugins.linkedpipes.com/ontology/t-excelToCsv#sheetFilter> "List1" .
+}

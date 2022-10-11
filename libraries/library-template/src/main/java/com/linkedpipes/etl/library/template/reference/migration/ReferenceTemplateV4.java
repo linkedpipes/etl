@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.library.template.reference.migration;
 
-import com.linkedpipes.etl.library.template.reference.model.ReferenceTemplate;
+import com.linkedpipes.etl.library.template.reference.adapter.RawReferenceTemplate;
 import org.eclipse.rdf4j.model.Resource;
 
 import java.util.Map;
@@ -18,30 +18,18 @@ public class ReferenceTemplateV4 {
      * make reference template definition self-contained and allow
      * for per template migration in the future.
      */
-    public ReferenceTemplate migrateToV5(ReferenceTemplate template)
-            throws MigrationFailed {
-        Resource pluginTemplate = templateToPlugin.get(template.resource());
-        if (pluginTemplate == null) {
-            throw new MigrationFailed(
+    public void migrateToV5(RawReferenceTemplate template)
+            throws ReferenceMigrationFailed {
+        Resource plugin = templateToPlugin.get(template.template);
+        if (plugin == null) {
+            throw new ReferenceMigrationFailed(
                     "Missing root template '{}' for '{}'.",
-                    template.template(),
-                    template.resource());
+                    template.template, template.resource);
         }
         // Mapping is not new information thus it is added, during
         // reading the information from RDF.
-        return new ReferenceTemplate(
-                template.resource(),
-                template.template(),
-                template.label(),
-                template.description(),
-                template.note(),
-                template.color(),
-                template.tags(),
-                template.knownAs(),
-                pluginTemplate,
-                5,
-                template.configuration(),
-                template.configurationGraph());
+        template.plugin = plugin;
+        template.version = 5;
     }
 
 }

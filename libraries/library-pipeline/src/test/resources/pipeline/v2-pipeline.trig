@@ -1,0 +1,26 @@
+
+<http://localhost:8080/resources/pipelines/created-1621874367769> {
+	<http://localhost:8080/resources/pipelines/created-1621874367769> a <http://linkedpipes.com/ontology/Pipeline> ;
+		<http://etl.linkedpipes.com/ontology/version> "2"^^<http://www.w3.org/2001/XMLSchema#int> ;
+		<http://linkedpipes.com/ontology/profile> <http://localhost:8080/resources/pipelines/created-1621874367769/profile/default> ;
+		<http://www.w3.org/2004/02/skos/core#prefLabel> "Pipeline" .
+	
+	<http://localhost:8080/resources/pipelines/created-1621874367769/profile/default> a <http://linkedpipes.com/ontology/ExecutionProfile> ;
+		<http://linkedpipes.com/ontology/rdfRepositoryPolicy> <http://linkedpipes.com/ontology/repository/SingleRepository> ;
+		<http://linkedpipes.com/ontology/rdfRepositoryType> <http://linkedpipes.com/ontology/repository/NativeStore> .
+	
+	<http://localhost:8080/resources/pipelines/created-1621874367769/components/112dfeaa-83cf-4cbd-a9d2-1994d628ea67> a <http://linkedpipes.com/ontology/Component> ;
+		<http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/created-1621874367769/components/112dfeaa-83cf-4cbd-a9d2-1994d628ea67/configuration> ;
+		<http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1621875215693-45315619-badd-4c3d-8f43-0f3ab961a375> ;
+		<http://linkedpipes.com/ontology/x> "340"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+		<http://linkedpipes.com/ontology/y> "240"^^<http://www.w3.org/2001/XMLSchema#integer> ;
+		<http://www.w3.org/2004/02/skos/core#prefLabel> "Text holder" .
+}
+
+<http://localhost:8080/resources/pipelines/created-1621874367769/components/112dfeaa-83cf-4cbd-a9d2-1994d628ea67/configuration> {
+	<http://localhost:8080/resources/pipelines/created-1621874367769/components/112dfeaa-83cf-4cbd-a9d2-1994d628ea67/configuration> a <http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration> ;
+		<http://plugins.linkedpipes.com/ontology/e-textHolder#content> "Content ..." ;
+		<http://plugins.linkedpipes.com/ontology/e-textHolder#contentControl> <http://plugins.linkedpipes.com/resource/configuration/None> ;
+		<http://plugins.linkedpipes.com/ontology/e-textHolder#fileName> "" ;
+		<http://plugins.linkedpipes.com/ontology/e-textHolder#fileNameControl> <http://plugins.linkedpipes.com/resource/configuration/Inherit> .
+}
