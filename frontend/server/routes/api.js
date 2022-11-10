@@ -1,12 +1,15 @@
 "use strict";
 
 const express = require("express");
-const multiparty = require("multiparty");
 const request = require("request"); // https://github.com/request/request
 
 const config = require("../configuration");
 const errors = require("../error-codes");
 const executionFactory = require("../execution-factory");
+
+const {handleImport} = require("./api/import-handler");
+const {handleLocalize} = require("./api/localize-handler");
+const {handlePipelineCopy} = require("./api/pipeline-copy-handler");
 
 const router = express.Router();
 module.exports = router;
@@ -15,6 +18,8 @@ const pipelinesBaseUrl = config.storage.url + "/api/v1/pipelines";
 const componentsBaseUrl = config.storage.url + "/api/v1/components";
 const executionsApiUrl = config.executor.monitor.url + "/api/v1/executions";
 const debugApiUrl = config.executor.monitor.url + "/api/v1/debug";
+
+const HTTP_SERVER_ERROR = 500;
 
 function updateAcceptHeader(headers) {
   // We use json-ld as default to make it easy to see pipelines from
@@ -63,25 +68,20 @@ router.get("/components/:type", (req, res) => {
       url += "iri=" + encodeURIComponent(req.query.iri);
       break;
     case "effective":
-      url += "/configEffective?";
+      url += "/effective-configuration?";
       url += "iri=" + encodeURIComponent(req.query.iri);
       break;
     case "config":
-      url += "/config?";
+      url += "/configuration?";
       url += "iri=" + encodeURIComponent(req.query.iri);
       break;
     case "configTemplate":
-      url += "/configTemplate?";
+      url += "/configuration-template?";
       url += "iri=" + encodeURIComponent(req.query.iri);
       break;
     case "configDescription":
-      url += "/configDescription?";
+      url += "/configuration-description?";
       url += "iri=" + encodeURIComponent(req.query.iri);
-      break;
-    case "static":
-      url += "/static?";
-      url += "iri=" + encodeURIComponent(req.query.iri);
-      url += "&file=" + encodeURIComponent(req.query.file);
       break;
     case "dialog":
       url += "/dialog?";
@@ -119,9 +119,9 @@ router.delete("/components", (req, res) => {
 });
 
 router.post("/components/config", (req, res) => {
-  const url = componentsBaseUrl + "/config?iri=" +
+  const url = componentsBaseUrl + "/configuration?iri=" +
     encodeURIComponent(req.query.iri);
-  req.pipe(request.post(url, {"form": req.body}), {"end": false})
+  req.pipe(request.put(url, {"form": req.body}), {"end": false})
     .on("error", (error) => handleConnectionError(res, error))
     .pipe(res);
 });
@@ -129,7 +129,7 @@ router.post("/components/config", (req, res) => {
 router.post("/components/component", (req, res) => {
   const url = componentsBaseUrl + "/component?iri=" +
     encodeURIComponent(req.query.iri);
-  req.pipe(request.post(url, {"form": req.body}), {"end": false})
+  req.pipe(request.put(url, {"form": req.body}), {"end": false})
     .on("error", (error) => handleConnectionError(res, error))
     .pipe(res);
 });
@@ -189,148 +189,14 @@ router.post("/pipelines", (req, res) => {
 });
 
 router.post("/pipelines-copy", (req, res) => {
-  readRequestContent(req)
-    .then(async content => {
-      const options = content["options"] ?? createDefaultImportOptions();
-      const pipeline = await fetchPipeline(req);
-      const parts = createPipelinePostParts(options, pipeline);
-      const url = pipelinesBaseUrl;
-      postMultipart(url, parts)
-        .on("error", (error) => handleCantPostToStorage(res, error))
-        .pipe(res);
-    })
-    .catch(error => handleCantFetchPipeline(res, error));
-});
-
-function readRequestContent(req) {
-  const form = new multiparty.Form();
-  const result = {};
-  return new Promise((resolve, reject) => {
-    form.on("part", (part) => {
-      const object = {
-        "contentType": part["headers"]["content-type"],
-        "content": "",
-      };
-      result[part.name] = object;
-      part.on("data", (chunk) => object.content += chunk);
-    });
-    form.on("close", () => {
-      resolve(result);
-    });
-    form.on("error", reject);
-    form.parse(req);
-  });
-}
-
-function createDefaultImportOptions() {
-  return {
-    "contentType": "application/ld+json",
-    "content": JSON.stringify({
-      "@id": "http://localhost/options",
-      "@type": "http://linkedpipes.com/ontology/UpdateOptions",
-      "http://etl.linkedpipes.com/ontology/import": true
-    }),
-  };
-}
-
-function fetchPipeline(req) {
-  const options = {
-    "headers": {
-      "accept": "application/ld+json"
-    }
-  };
-  if (isTrue(req.query["fromLocal"])) {
-    // Load directly from the storage.
-    // Useful when public URL is has restricted access.
-    options["url"] = pipelinesBaseUrl + "?iri=" + encodeURIComponent(req.query["iri"]);
-  } else {
-    options["url"] = req.query["iri"];
-  }
-  return new Promise((resolve, reject) => {
-    request.get(options, (error, http, body) => {
-      if (error) {
-        reject(error);
-        return;
+  handlePipelineCopy(req, res).catch(error => {
+    console.error("Can't copy pipeline.", error);
+    res.status(HTTP_SERVER_ERROR).json({
+      "error": {
+        "message": "Can't execute request."
       }
-      resolve(body);
-    }).on("error", reject);
-  });
-}
-
-function isTrue(value) {
-  return value === "1" || value?.toLowerCase() === "true";
-}
-
-function createPipelinePostParts(options, pipeline) {
-  return {
-    "options": {
-      "value": options["content"],
-      "contentType": options["contentType"],
-      "filename": "options",
-    },
-    "pipeline": {
-      "value": pipeline,
-      "contentType": "application/ld+json",
-      "filename": "pipeline",
-    },
-  };
-}
-
-function postMultipart(url, parts) {
-  const formData = {};
-  for (const [name, value] of Object.entries(parts)) {
-    formData[name] = {
-      "value": value["value"],
-      "options": {
-        "contentType": value["contentType"],
-        "filename": value["filename"]
-      }
-    }
-  }
-  const options = {
-    "url": url,
-    "headers": {
-      "Accept": "application/ld+json"
-    },
-    "formData": formData
-  };
-  return request.post(options);
-}
-
-function handleCantPostToStorage(res, error) {
-  console.error("Can't POST data to storage.", error);
-  res.status(503).json({
-    "error": {
-      "type": errors.CONNECTION,
-      "error": error,
-      "message": "Can't POST data to storage."
-    }
-  });
-}
-
-function handleCantFetchPipeline(res, error) {
-  console.error("Can't copy pipeline from remote.", error);
-  res.status(503).json({
-    "error": {
-      "type": errors.CONNECTION,
-      "error": error,
-      "message": "Can't copy pipeline from remote."
-    }
-  });
-}
-
-router.post("/pipelines-localize", (req, res) => {
-  readRequestContent(req)
-    .then(async content => {
-      const options = content["options"] ?? createDefaultImportOptions();
-      const pipeline = await fetchPipeline(req);
-      const parts = createPipelinePostParts(options, pipeline);
-      const url = pipelinesBaseUrl + "/localize";
-      postMultipart(url, parts)
-        .on("error", (error) => handleCantPostToStorage(res, error))
-        .pipe(res);
     })
-    .catch(error => handleCantFetchPipeline(res, error));
+  });
 });
 
 // Execution
@@ -484,18 +350,9 @@ router.get("/usage", (req, res) => {
     .pipe(res);
 });
 
-router.get("/jars/file", (req, res) => {
-  let iri = config.storage.url + "/api/v1/jars/file?";
-  iri += "iri=" + encodeURIComponent(req.query.iri);
-  //
-  request.get(iri)
-    .on("error", (error) => handleConnectionError(res, error))
-    .pipe(res);
-});
-
 router.get("/export", (req, res) => {
   const options = {
-    "url": config.storage.url + "/api/v1/export",
+    "url": config.storage.url + "/api/v1/management/export",
     "qs": req.query,
     "headers": req.headers
   };
@@ -506,7 +363,7 @@ router.get("/export", (req, res) => {
 
 router.get("/designer", (req, res) => {
   const options = {
-    "url": pipelinesBaseUrl + "/info",
+    "url": config.storage.url + "/api/v1/management/assistant",
     "headers": updateAcceptHeader(req.headers),
   };
   request.get(options)
@@ -514,5 +371,24 @@ router.get("/designer", (req, res) => {
     .pipe(res);
 });
 
+router.post("/import", (req, res) => {
+  handleImport(req, res).catch(error => {
+    console.error("Import handler failed.", error);
+    res.status(HTTP_SERVER_ERROR).json({
+      "error": {
+        "message": "Can't execute request."
+      }
+    })
+  });
+});
 
-
+router.post("/localize", (req, res) => {
+  handleLocalize(req, res).catch(error => {
+    console.error("Localize handler failed.", error);
+    res.status(HTTP_SERVER_ERROR).json({
+      "error": {
+        "message": "Can't execute request."
+      }
+    })
+  });
+});

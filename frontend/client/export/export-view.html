@@ -16,10 +16,26 @@
       <md-switch ng-model="removePrivateConfiguration">
         Export without credentials
       </md-switch>
-      <md-button ng-click="onExport()" class="md-raised md-primary">
-        Export
-      </md-button>
     </md-content>
+
+    <md-content>
+      <md-radio-group ng-model="exportType">
+        <md-radio-button value="FILE">
+          Single file.
+        </md-radio-button>
+        <md-radio-button value="ZIP_IRI">
+          Archive, use encoded IRI as file name.
+          Same format as storage.
+        </md-radio-button>
+        <md-radio-button value="ZIP_LABELS">
+          Archive, use labels as file name.
+        </md-radio-button>
+      </md-radio-group>
+    </md-content>
+
+    <md-button ng-click="onExport()" class="md-raised md-primary">
+      Export
+    </md-button>
 
     <md-content layout="column" ng-show="!exportAllPipelines">
       Select pipelines to export

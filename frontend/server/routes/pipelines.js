@@ -43,7 +43,6 @@ function handleConnectionError(res, error) {
   });
 }
 
-// TODO Remove this.
 router.delete("/:id", (req, res) => {
   const url = storageApiUrl + "?iri="
     + encodeURIComponent(config.storage.domain + req.originalUrl);
@@ -73,7 +72,6 @@ router.get("/:id", function (req, res) {
     .pipe(res);
 });
 
-// TODO Remove this.
 router.put("/:id", (req, res) => {
   const urlSuffix = getUrlSuffixWithoutParams(req);
   updatePipeline(res, urlSuffix, req);
@@ -108,7 +106,6 @@ function updatePipeline(res, urlSuffix, bodyStream) {
     .pipe(res);
 }
 
-// TODO Remove this.
 router.post("", (req, res) => {
   const url = storageApiUrl + "";
   if (req.query["pipeline"]) {

@@ -2,31 +2,41 @@
   if (typeof define === "function" && define.amd) {
     define([
       "../../app-service/vocabulary",
-      "angular"
+      "angular",
+      "./import-response-model"
     ], definition);
   }
-})((vocabulary, angular) => {
+})((vocabulary, angular, importResponse) => {
 
   function factory($http, $timeout, $location, $status, $templates) {
+
+    const VIEW_INPUT = "input";
+
+    const VIEW_UPLOADING = "uploading";
+
+    const VIEW_RESULT = "done";
+
+    const PIPELINE_EDIT_URL = "#/pipelines/edit/canvas?pipeline=";
+
+    const TEMPLATE_EDIT_URL = "#/templates/detail?template=";
 
     let $scope;
 
     function initialize(scope) {
       $scope = scope;
       //
+      $scope.view = VIEW_INPUT;
       $scope.fileReady = false;
-      $scope.uploading = false;
-      $scope.log = "";
       $scope.type = "file";
       $scope.importTemplates = true;
       $scope.updateTemplates = false;
       $scope.keepPipelineSuffix = false;
+      $scope.uploadResult = {};
     }
 
     function onWatchFile() {
       if (!$scope.file) {
         $scope.fileReady = false;
-        return;
       } else if ($scope.file.$error) {
         $scope.fileReady = false;
       } else {
@@ -35,7 +45,7 @@
     }
 
     function onUpload() {
-      $scope.uploading = true;
+      $scope.view = VIEW_UPLOADING;
       if ($scope.type === "file") {
         if (!$scope.fileReady) {
           return;
@@ -55,7 +65,7 @@
         "type": "application/ld+json"
       }), "options.jsonld");
       data.append("pipeline", $scope.file);
-      const url = "./api/v1/pipelines";
+      const url = "./api/v1/import";
       postFormData(url, data);
     }
 
@@ -63,10 +73,10 @@
       return {
         "@id": "http://localhost/options",
         "@type": "http://linkedpipes.com/ontology/UpdateOptions",
-        "http://etl.linkedpipes.com/ontology/local": "false",
-        "http://etl.linkedpipes.com/ontology/importTemplates": $scope.importTemplates,
-        "http://etl.linkedpipes.com/ontology/updateTemplates": $scope.updateTemplates,
-        "http://etl.linkedpipes.com/ontology/keepPipelineSuffix": $scope.keepPipelineSuffix
+        "http://etl.linkedpipes.com/ontology/importPipeline": "true",
+        "http://etl.linkedpipes.com/ontology/keepPipelineSuffix": $scope.keepPipelineSuffix,
+        "http://etl.linkedpipes.com/ontology/importNewTemplates": $scope.importTemplates,
+        "http://etl.linkedpipes.com/ontology/updateExistingTemplates": $scope.updateTemplates,
       };
     }
 
@@ -80,14 +90,12 @@
         }
       };
       $http.post(url, data, config).then((response) => {
-        reloadTemplates().then(() => {
-          redirectToPipeline(response);
-        }).catch(() => {
-          $status.httpError("Can't update templates.", response);
-          redirectToPipeline(response);
-        });
+        reloadTemplates()
+          .catch(() => $status.httpError("Can't reload templates.", response))
+          .then(() => handleResponse(response));
       }, (error) => {
-        $status.httpError("Can't copy pipeline.", error);
+        $status.httpError("Import failed.", error)
+        $scope.view = VIEW_INPUT;
       });
     }
 
@@ -95,10 +103,44 @@
       return $templates.forceLoad();
     }
 
-    function redirectToPipeline(response) {
-      $location.path("/pipelines/edit/canvas").search({
-        "pipeline": response.data[0]["@graph"][0]["@id"]
+    function handleResponse(response) {
+
+      const responseModel = importResponse.parseImportResponse(response.data);
+      const pipelines = [];
+      responseModel.pipelines.forEach(item => {
+        if (!item.stored) {
+          return;
+        }
+        pipelines.push({
+          "url": item.local,
+          "label": item.label,
+          "tags": item.tags,
+          "onClickUrl": PIPELINE_EDIT_URL + encodeURIComponent(item.local)
+        });
       });
+      const referenceTemplates = [];
+      responseModel.referenceTemplates.forEach(item => {
+        if (!item.stored) {
+          return;
+        }
+        referenceTemplates.push({
+          "url": item.local,
+          "label": item.label,
+          "tags": item.tags,
+          "onClickUrl": TEMPLATE_EDIT_URL + encodeURIComponent(item.local)
+        });
+      });
+      if (pipelines.length === 1) {
+        // For backwards compatibility.
+        $location.path("/pipelines/edit/canvas").search({
+          "pipeline": pipelines[0]["url"]
+        });
+      }
+      $scope.uploadResult = {
+        "pipelines": pipelines,
+        "referenceTemplates": referenceTemplates
+      };
+      $scope.view = VIEW_RESULT;
     }
 
     function importUrl() {
@@ -107,7 +149,7 @@
       data.append("options", new Blob([JSON.stringify(options)], {
         "type": "application/ld+json"
       }), "options.jsonld");
-      const url = "./api/v1/pipelines-copy?iri=" +
+      const url = "./api/v1/import?iri=" +
         encodeURIComponent($scope.url);
       postFormData(url, data);
     }

@@ -312,7 +312,8 @@
 
   function buildTemplateUpdate(template) {
     const result = {
-      "@id": template.id
+      "@id": template.id,
+      "@type": "http://linkedpipes.com/ontology/Template",
     };
     result[SKOS.PREF_LABEL] = template.label;
     result[LP.HAS_COLOR] = template.color;

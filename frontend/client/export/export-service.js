@@ -25,6 +25,7 @@
       $scope.exportAllPipelines = true;
       $scope.exportTemplates = true;
       $scope.removePrivateConfiguration = true;
+      $scope.exportType = "ZIP_LABELS";
       //
       loadPipelines();
     }
@@ -57,24 +58,33 @@
       let url = "./api/v1/export";
 
       if ($scope.exportAllPipelines) {
-        url += "?pipelines=all";
+        url += "?pipelines=ALL";
       } else {
         const exportList = JSON.stringify(pipelinesForExport);
         url += "?pipelines=" + encodeURIComponent(exportList);
       }
 
       if ($scope.exportTemplates) {
-        url += "&templates=all";
+        url += "&templates=ALL";
       } else {
-        url += "&templates=none";
+        url += "&templates=NONE";
       }
 
       if ($scope.removePrivateConfiguration) {
         url += "&removePrivateConfig=true";
       }
 
-      fetch(url).then(response => response.blob())
-        .then(data => saveAs(data, "export.zip"));
+      url += "&exportType=" + $scope.exportType;
+
+      fetch(url)
+        .then(response => response.blob())
+        .then(data => {
+          let fileName = "export.zip";
+          if ($scope.exportType === "FILE") {
+            fileName = "export.trig";
+          }
+          saveAs(data, fileName)
+        });
 
     }
 

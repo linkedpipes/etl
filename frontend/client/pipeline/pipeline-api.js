@@ -100,7 +100,7 @@
   function copyPipeline($http, pipeline) {
     const data = createPipelineCopyPostData(pipeline);
     const config = createPostConfigWithJsonLd();
-    const url = "./api/v1/pipelines-copy?fromLocal=true&iri=" +
+    const url = "./api/v1/pipelines-copy?local-iri=" +
       encodeURIComponent(pipeline.iri);
     return $http.post(url, data, config);
   }
@@ -114,9 +114,7 @@
 
   function createCopyPipelineOptions(pipeline) {
     return {
-      "@id": "http://localhost/pipelineImportOptions",
       "@type": LP.UPDATE_OPTIONS,
-      "http://etl.linkedpipes.com/ontology/local": true,
       "http://www.w3.org/2004/02/skos/core#prefLabel":
         "Copy of " + pipeline.label,
     };
@@ -125,7 +123,7 @@
   function asLocalFromIri($http, pipelineIri, updateTemplates) {
     const formData = new FormData();
     addTransformOptions(formData, true, updateTemplates);
-    const iri = "./api/v1/pipelines-localize?iri=" +
+    const iri = "./api/v1/localize?iri=" +
       encodeURIComponent(pipelineIri);
     return $http.post(iri, formData, noTransformConfiguration())
       .then((data) => data["data"]);
@@ -135,7 +133,7 @@
     const formData = new FormData();
     formData.append("pipeline", fileWithPipeline);
     addTransformOptions(formData, true, updateTemplates);
-    const iri = "./api/v1/pipelines-localize";
+    const iri = "./api/v1/localize";
     return $http.post(iri, formData, noTransformConfiguration())
       .then((data) => data["data"]);
   }
@@ -144,7 +142,6 @@
     const options = {
       "@id": "http://localhost/pipelineImportOptions",
       "@type": LP.UPDATE_OPTIONS,
-      "http://etl.linkedpipes.com/ontology/local": false
     };
     options[LP.HAS_IMPORT_TEMPLATES] = importTemplates;
     options[LP.HAS_UPDATE_TEMPLATES] = updateTemplates;
@@ -209,7 +206,6 @@
     const options = {
       "@id": "http://localhost/options",
       "@type": "http://linkedpipes.com/ontology/UpdateOptions",
-      "http://etl.linkedpipes.com/ontology/local": true,
       "http://www.w3.org/2004/02/skos/core#prefLabel": label,
     };
     form.append("options",
