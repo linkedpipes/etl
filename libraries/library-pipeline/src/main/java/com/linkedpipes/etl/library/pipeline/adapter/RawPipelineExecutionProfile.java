@@ -59,5 +59,18 @@ public class RawPipelineExecutionProfile {
      * executions stored. Apply only to full execution.
      */
     public Integer successfulExecutionLimit;
-    
+
+    public RawPipelineExecutionProfile() {
+    }
+
+    public RawPipelineExecutionProfile(RawPipelineExecutionProfile other) {
+        this.resource = other.resource;
+        this.rdfRepositoryPolicy = other.rdfRepositoryPolicy;
+        this.rdfRepositoryType = other.rdfRepositoryType;
+        this.logRetentionPolicy = other.logRetentionPolicy;
+        this.debugDataRetentionPolicy = other.debugDataRetentionPolicy;
+        this.failedExecutionLimit = other.failedExecutionLimit;
+        this.successfulExecutionLimit = other.successfulExecutionLimit;
+    }
+
 }

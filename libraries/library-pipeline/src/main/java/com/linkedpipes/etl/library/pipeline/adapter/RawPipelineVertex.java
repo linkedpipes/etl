@@ -24,4 +24,14 @@ public class RawPipelineVertex {
      */
     public Integer y;
 
+    public RawPipelineVertex() {
+    }
+
+    public RawPipelineVertex(RawPipelineVertex other) {
+        this.resource = other.resource;
+        this.order = other.order;
+        this.x = other.x;
+        this.y = other.y;
+    }
+
 }

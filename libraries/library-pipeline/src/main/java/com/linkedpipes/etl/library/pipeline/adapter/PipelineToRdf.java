@@ -1,14 +1,17 @@
-package com.linkedpipes.etl.library.pipeline.adapter.rdf;
+package com.linkedpipes.etl.library.pipeline.adapter;
 
 import com.linkedpipes.etl.library.pipeline.model.Pipeline;
 import com.linkedpipes.etl.library.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.library.pipeline.model.PipelineDataFlow;
 import com.linkedpipes.etl.library.pipeline.model.PipelineControlFlow;
 import com.linkedpipes.etl.library.pipeline.model.PipelineExecutionProfile;
+import com.linkedpipes.etl.library.pipeline.model.PipelineVertex;
 import com.linkedpipes.etl.library.pipeline.vocabulary.LP_V1;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsBuilder;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.Resource;
+
+import java.util.List;
 
 public class PipelineToRdf {
 
@@ -26,6 +29,15 @@ public class PipelineToRdf {
         result.add(pipeline.resource(),
                 LP_V1.NOTE,
                 pipeline.note());
+        result.add(pipeline.resource(),
+                LP_V1.HAS_CREATED,
+                pipeline.created());
+        result.add(pipeline.resource(),
+                LP_V1.HAS_LAST_UPDATE,
+                pipeline.lastUpdate());
+        for (String tag : pipeline.tags()) {
+            result.add(pipeline.resource(), LP_V1.HAS_TAG, tag);
+        }
         //
         result.add(pipeline.resource(),
                 LP_V1.HAS_PROFILE,
@@ -47,7 +59,6 @@ public class PipelineToRdf {
 
     protected static void writeExecutionProfile(
             PipelineExecutionProfile profile, StatementsBuilder statements) {
-        SimpleValueFactory valueFactory = SimpleValueFactory.getInstance();
         statements.addType(profile.resource(), LP_V1.PROFILE);
         statements.add(profile.resource(),
                 LP_V1.HAS_RDF_REPOSITORY_POLICY,
@@ -63,12 +74,10 @@ public class PipelineToRdf {
                 profile.logRetentionPolicy().asIri());
         statements.add(profile.resource(),
                 LP_V1.HAS_FAILED_EXECUTION_LIMIT,
-                valueFactory.createLiteral(
-                        profile.failedExecutionLimit()));
+                profile.failedExecutionLimit());
         statements.add(profile.resource(),
                 LP_V1.HAS_SUCCESSFUL_EXECUTION_LIMIT,
-                valueFactory.createLiteral(
-                        profile.successfulExecutionLimit()));
+                profile.successfulExecutionLimit());
     }
 
     protected static void writeComponent(
@@ -98,14 +107,13 @@ public class PipelineToRdf {
         statements.add(definition.resource(),
                 LP_V1.HAS_TEMPLATE,
                 definition.template());
-        statements.add(definition.resource(),
-                LP_V1.HAS_DISABLED,
-                definition.disabled());
-        if (!definition.configuration().isEmpty()) {
-            Statements configuration =
-                    Statements.wrap(definition.configuration());
-            statements.addAll(
-                    configuration.withGraph(definition.configurationGraph()));
+        if (definition.disabled()) {
+            statements.add(definition.resource(), LP_V1.HAS_DISABLED, true);
+        }
+        if (definition.configuration() != null &&
+                !definition.configuration().isEmpty()) {
+            statements.addAll(definition.configuration()
+                    .withGraph(definition.configurationGraph()));
         }
     }
 
@@ -124,6 +132,19 @@ public class PipelineToRdf {
         statements.add(definition.resource(),
                 LP_V1.HAS_TARGET_BINDING,
                 definition.targetBinding());
+        writeVertices(definition.resource(), definition.vertices(), statements);
+    }
+
+    protected static void writeVertices(
+            Resource owner, List<PipelineVertex> vertices,
+            StatementsBuilder statements) {
+        for (PipelineVertex vertex : vertices) {
+            Resource resource = vertex.resource();
+            statements.add(owner, LP_V1.HAS_VERTEX, resource);
+            statements.add(resource, LP_V1.HAS_X, vertex.x());
+            statements.add(resource, LP_V1.HAS_Y, vertex.y());
+            statements.add(resource, LP_V1.HAS_ORDER, vertex.order());
+        }
     }
 
     protected static void writeExecutionFlow(
@@ -135,6 +156,7 @@ public class PipelineToRdf {
         statements.add(definition.resource(),
                 LP_V1.HAS_TARGET_COMPONENT,
                 definition.target());
+        writeVertices(definition.resource(), definition.vertices(), statements);
     }
 
 }

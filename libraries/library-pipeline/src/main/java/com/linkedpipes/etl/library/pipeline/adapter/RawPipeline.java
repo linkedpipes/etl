@@ -28,11 +28,6 @@ public class RawPipeline {
     public int version;
 
     /**
-     * Pipeline identification on this instance.
-     */
-    public Resource publicResource;
-
-    /**
      * Time when pipeline was created on this instance. May be
      * by import.
      */
@@ -79,9 +74,33 @@ public class RawPipeline {
      */
     public final List<RawPipelineControlFlow> controlFlows = new ArrayList<>();
 
+    public RawPipeline() {
+    }
+
+    public RawPipeline(RawPipeline other) {
+        this.resource = other.resource;
+        this.version = other.version;
+        this.created = other.created;
+        this.lastUpdate = other.lastUpdate;
+        this.label = other.label;
+        this.note = other.note;
+        this.tags.addAll(other.tags);
+        this.executionProfile = new RawPipelineExecutionProfile(
+                this.executionProfile);
+        for (RawPipelineComponent component : other.components) {
+            this.components.add(new RawPipelineComponent(component));
+        }
+        for (RawPipelineDataFlow dataFlow : other.dataFlows) {
+            this.dataFlows.add(new RawPipelineDataFlow(dataFlow));
+        }
+        for (RawPipelineControlFlow controlFlow : other.controlFlows) {
+            this.controlFlows.add(new RawPipelineControlFlow(controlFlow));
+        }
+    }
+
     public Pipeline toPipeline() {
         return new Pipeline(
-                resource, publicResource,
+                resource,
                 created, lastUpdate,
                 label, version, note, tags,
                 new PipelineExecutionProfile(

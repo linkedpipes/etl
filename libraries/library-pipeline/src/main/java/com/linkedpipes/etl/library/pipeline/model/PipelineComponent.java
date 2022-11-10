@@ -42,7 +42,7 @@ public record PipelineComponent(
          */
         boolean disabled,
         /*
-         * Configuration stored without graph.
+         * Configuration stored without graph. Can be null.
          */
         Statements configuration,
         /*

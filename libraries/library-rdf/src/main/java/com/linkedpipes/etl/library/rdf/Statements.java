@@ -222,4 +222,17 @@ public class Statements implements Collection<Statement> {
         collection.clear();
     }
 
+    @Override
+    public int hashCode() {
+        return this.collection.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Statements other) {
+            return collection.equals(other.collection);
+        }
+        return false;
+    }
+
 }

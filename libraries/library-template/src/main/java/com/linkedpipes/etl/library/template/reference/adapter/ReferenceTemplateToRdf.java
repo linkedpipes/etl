@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.library.template.reference.adapter.rdf;
+package com.linkedpipes.etl.library.template.reference.adapter;
 
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsBuilder;
@@ -9,8 +9,14 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 public class ReferenceTemplateToRdf {
 
-    public static Statements definitionAsRdf(
-            ReferenceTemplate template) {
+    public static Statements asRdf(ReferenceTemplate template) {
+        Statements result = Statements.arrayList();
+        result.addAll(definitionAsRdf(template));
+        result.addAll(configurationAsRdf(template));
+        return result;
+    }
+
+    public static Statements definitionAsRdf(ReferenceTemplate template) {
         StatementsBuilder result = Statements.arrayList().builder();
         Resource resource = template.resource();
         result.addIri(resource, RDF.TYPE, LP_V1.REFERENCE_TEMPLATE);

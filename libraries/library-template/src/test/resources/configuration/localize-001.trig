@@ -1,0 +1,38 @@
+
+<http://input> {
+  <http://etl.linkedpipes.com/resources/components/1622805775578-ff2aa41d-16d7-413f-b44b-99b8902a76af/configuration>
+    a <http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#content> "Some non Turtle content here ...";
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#contentControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#fileName> "file.dat";
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#fileNameControl> <http://plugins.linkedpipes.com/resource/configuration/Force> .
+}
+
+<http://description> {
+  <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription>;
+    <http://plugins.linkedpipes.com/ontology/configuration/type> <http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/configuration/member> <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/000>,
+      <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/001> .
+
+  <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/000>
+    a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember>;
+    <http://plugins.linkedpipes.com/ontology/configuration/property> <http://plugins.linkedpipes.com/ontology/e-textHolder#fileName>;
+    <http://plugins.linkedpipes.com/ontology/configuration/control> <http://plugins.linkedpipes.com/ontology/e-textHolder#fileNameControl>;
+    <http://plugins.linkedpipes.com/ontology/configuration/private> false .
+
+  <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/001>
+    a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember>;
+    <http://plugins.linkedpipes.com/ontology/configuration/property> <http://plugins.linkedpipes.com/ontology/e-textHolder#content>;
+    <http://plugins.linkedpipes.com/ontology/configuration/control> <http://plugins.linkedpipes.com/ontology/e-textHolder#contentControl>;
+    <http://plugins.linkedpipes.com/ontology/configuration/private> false .
+}
+
+<http://expected> {
+  <http://localhost/expected/1>
+    a <http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#content> "Some non Turtle content here ...";
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#contentControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#fileName> "file.dat";
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#fileNameControl> <http://plugins.linkedpipes.com/resource/configuration/Force> .
+}

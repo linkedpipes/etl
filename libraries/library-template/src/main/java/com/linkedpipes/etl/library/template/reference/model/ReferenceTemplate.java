@@ -2,6 +2,7 @@ package com.linkedpipes.etl.library.template.reference.model;
 
 import com.linkedpipes.etl.library.rdf.Statements;
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -62,9 +63,18 @@ public record ReferenceTemplate(
         Resource configurationGraph
 ) {
 
+    public static final Integer VERSION = 5;
+
+    private static final String IRI_INFIX = "/resources/components/";
+
     public ReferenceTemplate {
         tags = Collections.unmodifiableList(tags);
         configuration = Statements.readOnly(configuration);
+    }
+
+    public static Resource createResource(String domain, String suffix) {
+        String result = domain + IRI_INFIX + suffix;
+        return SimpleValueFactory.getInstance().createIRI(result);
     }
 
 }

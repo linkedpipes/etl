@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.library.pipeline.model;
 
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -11,10 +12,6 @@ public record Pipeline(
          * Resource.
          */
         Resource resource,
-        /*
-         * Pipeline identification on this instance.
-         */
-        Resource publicResource,
         /*
          * Time when pipeline was created on this instance. May be
          * by import.
@@ -58,6 +55,10 @@ public record Pipeline(
         List<PipelineControlFlow> controlFlows
 ) {
 
+    public static final Integer VERSION = 5;
+
+    private static final String IRI_INFIX = "/resources/pipelines/";
+
     public Pipeline {
         tags = Collections.unmodifiableList(tags);
         components = Collections.unmodifiableList(components);
@@ -68,7 +69,6 @@ public record Pipeline(
     public Pipeline(Pipeline other) {
         this(
                 other.resource,
-                other.publicResource,
                 other.created,
                 other.lastUpdate,
                 other.label,
@@ -80,6 +80,11 @@ public record Pipeline(
                 other.dataFlows,
                 other.controlFlows
         );
+    }
+
+    public static Resource createResource(String domain, String suffix) {
+        String result = domain + IRI_INFIX + suffix;
+        return SimpleValueFactory.getInstance().createIRI(result);
     }
 
 }

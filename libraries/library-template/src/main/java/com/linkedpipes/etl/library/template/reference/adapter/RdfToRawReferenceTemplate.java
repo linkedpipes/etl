@@ -1,6 +1,7 @@
-package com.linkedpipes.etl.library.template.reference.adapter.rdf;
+package com.linkedpipes.etl.library.template.reference.adapter;
 
 import com.github.jsonldjava.shaded.com.google.common.base.Objects;
+import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsSelector;
 import com.linkedpipes.etl.library.template.reference.adapter.RawReferenceTemplate;
 import com.linkedpipes.etl.library.template.vocabulary.LP_V1;
@@ -14,9 +15,12 @@ import org.eclipse.rdf4j.model.vocabulary.OWL;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class RdfToRawReferenceTemplate {
 
@@ -25,7 +29,15 @@ public class RdfToRawReferenceTemplate {
         var candidates = statements.selectByType(
                 LP_V1.REFERENCE_TEMPLATE);
         List<RawReferenceTemplate> result = new ArrayList<>(candidates.size());
+        // As we work with statements as list not as a set,
+        // single component can be loaded multiple times using resource
+        // with given type. To tackle this we filter the candidates here.
+        Set<Resource> visited = new HashSet<>();
         for (Statement candidate : candidates) {
+            if (visited.contains(candidate.getSubject())) {
+                continue;
+            }
+            visited.add(candidate.getSubject());
             result.add(asRawReferenceTemplate(
                     statements,
                     candidate.getSubject(), candidate.getContext()));
@@ -105,6 +117,11 @@ public class RdfToRawReferenceTemplate {
     private static void loadConfiguration(
             StatementsSelector statements, RawReferenceTemplate template) {
         if (template.configurationGraph == null) {
+            if (template.resource.isBNode()) {
+                // There is no configuration and no way to guess graph.
+                template.configuration = Statements.empty();
+                return;
+            }
             // We try to guess the configuration graph. The graph was not
             // present in some versions, but there were a convention
             // in naming the configuration graph.

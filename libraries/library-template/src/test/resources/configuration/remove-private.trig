@@ -1,0 +1,44 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://input> {
+
+<http://instance> a <http://plugin#Configuration> ;
+    <http://plugin#uri> "url" ;
+    <http://plugin#uriControl> <http://keep> ;
+    <http://plugin#passwd> "url" ;
+    <http://plugin#passwdControl> <http://remove> ;
+.
+
+}
+
+<http://description> {
+
+<http://desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugin#Configuration> ;
+    config:member <http://desc/uri> , <http://desc/passwd> ;
+.
+
+<http://desc/uri>
+    a config:ConfigurationMember ;
+    config:property <http://plugin#uri> ;
+    config:control <http://plugin#uriControl> ;
+    config:private false .
+
+<http://desc/passwd>
+    a config:ConfigurationMember ;
+    config:property <http://plugin#passwd> ;
+    config:control <http://plugin#passwdControl> ;
+    config:private true .
+}
+
+<http://expected> {
+
+<http://instance> a <http://plugin#Configuration> ;
+    <http://plugin#uri> "url" ;
+    <http://plugin#uriControl> <http://keep> ;
+    # We preserve the control to not break the hierarachy.
+    <http://plugin#passwdControl> <http://remove> ;
+.
+
+}

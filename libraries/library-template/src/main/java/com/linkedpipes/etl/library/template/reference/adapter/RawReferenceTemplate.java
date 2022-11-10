@@ -58,8 +58,10 @@ public class RawReferenceTemplate{
     public List<String> tags = new ArrayList<>();
 
     /**
-     * When imported the original IRI is saved here; this allows us to
-     * track a single template among instances.
+     * The original IRI is saved here; this allows us to
+     * track a single template among instances. The original IRI is IRI
+     * of the template or value specified by knownAs property. It should
+     * represent the IRI of first instance of this template.
      */
     public Resource knownAs;
 
@@ -73,6 +75,25 @@ public class RawReferenceTemplate{
      * Graph the configuration is stored in.
      */
     public Resource configurationGraph;
+
+    public RawReferenceTemplate() {
+    }
+
+    public RawReferenceTemplate(RawReferenceTemplate other) {
+        this.resource = other.resource;
+        this.version = other.version;
+        this.template = other.template;
+        this.plugin = other.plugin;
+        this.label = other.label;
+        this.description = other.description;
+        this.note = other.note;
+        this.color = other.color;
+        this.tags = new ArrayList<>(other.tags);
+        this.knownAs = other.knownAs;
+        this.configuration = Statements.arrayList();
+        this.configuration.addAll(other.configuration);
+        this.configurationGraph = other.configurationGraph;
+    }
 
     public ReferenceTemplate toReferenceTemplate() {
         return new ReferenceTemplate(

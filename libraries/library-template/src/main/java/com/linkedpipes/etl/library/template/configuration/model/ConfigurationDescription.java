@@ -42,6 +42,9 @@ public record ConfigurationDescription(
              * IRI of predicate with substitution.
              */
             IRI substitution,
+            /*
+             * Represent private (non-public) configuration.
+             */
             boolean isPrivate
     ) {
 

@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.library.template.plugin.adapter.rdf;
+package com.linkedpipes.etl.library.template.plugin.adapter;
 
 import com.linkedpipes.etl.library.template.plugin.model.JavaPluginDefinition;
 import com.linkedpipes.etl.library.rdf.StatementsSelector;

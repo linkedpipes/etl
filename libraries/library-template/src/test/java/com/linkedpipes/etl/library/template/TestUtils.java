@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class TestUtils {
 
-    public static File fileFromResource(String fileName) {
+    public static File file(String fileName) {
         URL url = Thread.currentThread().getContextClassLoader()
                 .getResource(fileName);
         if (url == null) {
@@ -31,9 +31,9 @@ public class TestUtils {
         return new File(url.getPath());
     }
 
-    public static List<Statement> statementsFromResource(String fileName)
+    public static List<Statement> statements(String fileName)
             throws IOException {
-        File file = fileFromResource(fileName);
+        File file = file(fileName);
         try (InputStream stream = new FileInputStream(file)) {
             RDFFormat format = Rio.getParserFormatForFileName(fileName).get();
             return new ArrayList<>(Rio.parse(stream, "http://base", format));

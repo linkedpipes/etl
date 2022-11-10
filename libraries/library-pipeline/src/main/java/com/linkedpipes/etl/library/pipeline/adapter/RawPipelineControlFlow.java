@@ -28,4 +28,17 @@ public class RawPipelineControlFlow {
      */
     public final List<RawPipelineVertex> vertices = new ArrayList<>();
 
+    public RawPipelineControlFlow() {
+
+    }
+
+    public RawPipelineControlFlow(RawPipelineControlFlow other) {
+        this.resource = other.resource;
+        this.source = other.source;
+        this.target = other.target;
+        for (RawPipelineVertex vertex : other.vertices) {
+            this.vertices.add(new RawPipelineVertex(vertex));
+        }
+    }
+
 }

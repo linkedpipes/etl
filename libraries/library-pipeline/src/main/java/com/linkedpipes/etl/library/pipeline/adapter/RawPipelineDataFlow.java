@@ -38,4 +38,18 @@ public class RawPipelineDataFlow {
      */
     public final List<RawPipelineVertex> vertices = new ArrayList<>();
 
+    public RawPipelineDataFlow() {
+    }
+
+    public RawPipelineDataFlow(RawPipelineDataFlow other) {
+        this.resource = other.resource;
+        this.source = other.source;
+        this.sourceBinding = other.sourceBinding;
+        this.target = other.target;
+        this.targetBinding = other.targetBinding;
+        for (RawPipelineVertex vertex : other.vertices) {
+            this.vertices.add(new RawPipelineVertex(vertex));
+        }
+    }
+
 }

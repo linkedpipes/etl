@@ -17,17 +17,23 @@ public class MigratePipeline {
         this.templateToPlugin = templateToPlugin;
     }
 
-    public Pipeline migrate(RawPipeline template)
-            throws PipelineMigrationFailed {
-        int initialVersion = template.version;
+    /**
+     * Does not change given pipeline.
+     */
+    public Pipeline migrate(RawPipeline pipeline) throws PipelineMigrationFailed {
+        RawPipeline working = new RawPipeline(pipeline);
+        int initialVersion = pipeline.version;
         if (initialVersion < 1) {
             (new PipelineV0(templateToPlugin.keySet(), true))
-                    .migrateToV1(template);
+                    .migrateToV1(working);
         }
         if (initialVersion < 2) {
-            (new PipelineV1(templateToPlugin)).migrateToV2(template);
+            (new PipelineV1(templateToPlugin)).migrateToV2(working);
         }
-        return template.toPipeline();
+        if (initialVersion < 5) {
+            (new PipelineV2()).migrateToV5(working);
+        }
+        return working.toPipeline();
     }
 
 }

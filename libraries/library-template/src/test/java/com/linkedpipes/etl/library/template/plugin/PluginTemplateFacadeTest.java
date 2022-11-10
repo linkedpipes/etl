@@ -12,7 +12,7 @@ public class PluginTemplateFacadeTest {
 
     @Test
     public void loadTextHolderV1() throws Exception {
-        File file = TestUtils.fileFromResource("plugin/e-textHolder-v1.jar");
+        File file = TestUtils.file("plugin/e-textHolder-v1.jar");
         JavaPlugin plugin = PluginTemplateFacade.loadJavaFile(file);
 
         Assertions.assertEquals(
@@ -47,7 +47,7 @@ public class PluginTemplateFacadeTest {
 
     @Test
     public void loadTextHolderV2() throws Exception {
-        File file = TestUtils.fileFromResource("plugin/e-textHolder-v2.jar");
+        File file = TestUtils.file("plugin/e-textHolder-v2.jar");
         JavaPlugin plugin = PluginTemplateFacade.loadJavaFile(file);
 
         Assertions.assertEquals(

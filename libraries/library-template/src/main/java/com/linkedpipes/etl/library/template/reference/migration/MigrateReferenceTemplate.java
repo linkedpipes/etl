@@ -18,25 +18,29 @@ public class MigrateReferenceTemplate {
         this.templateToPlugin = templateToPlugin;
     }
 
+    /**
+     * Does not change given template.
+     */
     public ReferenceTemplate migrate(RawReferenceTemplate template)
             throws ReferenceMigrationFailed {
+        RawReferenceTemplate working = new RawReferenceTemplate(template);
         int initialVersion = template.version;
         if (initialVersion < 1) {
-            (new ReferenceTemplateV0()).migrateToV1(template);
+            (new ReferenceTemplateV0()).migrateToV1(working);
         }
         if (initialVersion < 2) {
-            (new ReferenceTemplateV1(templateToPlugin)).migrateToV2(template);
+            (new ReferenceTemplateV1(templateToPlugin)).migrateToV2(working);
         }
         if (initialVersion < 3) {
-            (new ReferenceTemplateV2()).migrateToV3(template);
+            (new ReferenceTemplateV2()).migrateToV3(working);
         }
         if (initialVersion < 4) {
-            (new ReferenceTemplateV3()).migrateToV4(template);
+            (new ReferenceTemplateV3()).migrateToV4(working);
         }
         if (initialVersion < 5) {
-            (new ReferenceTemplateV4(templateToPlugin)).migrateToV5(template);
+            (new ReferenceTemplateV4(templateToPlugin)).migrateToV5(working);
         }
-        return template.toReferenceTemplate();
+        return working.toReferenceTemplate();
     }
 
 }

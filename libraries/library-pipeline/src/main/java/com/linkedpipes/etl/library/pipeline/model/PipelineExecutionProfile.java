@@ -1,6 +1,9 @@
 package com.linkedpipes.etl.library.pipeline.model;
 
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 public record PipelineExecutionProfile(
         /*
@@ -38,5 +41,20 @@ public record PipelineExecutionProfile(
          */
         Integer successfulExecutionLimit
 ) {
+
+    /**
+     * Used to create execution resource from pipeline resource.
+     */
+    private static final String IRI_SUFFIX = "/profile.default";
+
+    public static Resource createResource(Resource pipeline) {
+        ValueFactory valueFactory = SimpleValueFactory.getInstance();
+        if (pipeline instanceof IRI iri) {
+            return valueFactory.createIRI(
+                    iri.stringValue() + IRI_SUFFIX);
+        } else {
+            return valueFactory.createBNode();
+        }
+    }
 
 }

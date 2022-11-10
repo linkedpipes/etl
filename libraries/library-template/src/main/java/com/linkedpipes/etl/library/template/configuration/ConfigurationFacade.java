@@ -1,9 +1,11 @@
 package com.linkedpipes.etl.library.template.configuration;
 
+import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsSelector;
 import com.linkedpipes.etl.library.template.configuration.model.ConfigurationDescription;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +81,25 @@ public class ConfigurationFacade {
             ConfigurationDescription description) {
         return (new SelectPrivateStatements()).selectPrivate(
                 description, configuration);
+    }
+
+    /**
+     * Given a configuration update resources to use given base
+     * resources.
+     */
+    public static Statements localizeConfiguration(
+            ConfigurationDescription description,
+            StatementsSelector statements, Resource resource) {
+        return (new LocalizeConfiguration()).localizeConfiguration(
+                description, statements, resource);
+    }
+
+    /**
+     * Given a template resource return configuration graph resource.
+     */
+    public static Resource configurationGraph(Resource template) {
+        return SimpleValueFactory.getInstance().createIRI(
+                template.stringValue() + "/configuration");
     }
 
 }

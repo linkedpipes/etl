@@ -1,6 +1,6 @@
-package com.linkedpipes.etl.library.template.plugin.adapter.rdf;
+package com.linkedpipes.etl.library.template.plugin.adapter;
 
-import com.linkedpipes.etl.library.template.configuration.adapter.rdf.RdfToConfigurationDescription;
+import com.linkedpipes.etl.library.template.configuration.adapter.RdfToConfigurationDescription;
 import com.linkedpipes.etl.library.template.configuration.model.ConfigurationDescription;
 import com.linkedpipes.etl.library.template.plugin.model.PluginTemplate;
 import com.linkedpipes.etl.library.template.plugin.model.PluginType;

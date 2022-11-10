@@ -3,7 +3,7 @@ package com.linkedpipes.etl.library.template.reference.migration;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.template.TestUtils;
 import com.linkedpipes.etl.library.template.reference.adapter.RawReferenceTemplate;
-import com.linkedpipes.etl.library.template.reference.adapter.rdf.RdfToRawReferenceTemplate;
+import com.linkedpipes.etl.library.template.reference.adapter.RdfToRawReferenceTemplate;
 import com.linkedpipes.etl.library.template.reference.model.ReferenceTemplate;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -61,9 +61,6 @@ public class MigrateReferenceTemplateTest {
 
         expected.configuration = null;
         Assertions.assertEquals(expected.toReferenceTemplate(), actual);
-
-        Assertions.assertEquals(expected, actual);
-
     }
 
     private ReferenceTemplate loadAndMigrate(String fileName) throws Exception {
@@ -74,7 +71,7 @@ public class MigrateReferenceTemplateTest {
 
     private RawReferenceTemplate load(String fileName) throws Exception {
         var statements = Statements.wrap(
-                TestUtils.statementsFromResource(fileName)).selector();
+                TestUtils.statements(fileName)).selector();
         var candidates = RdfToRawReferenceTemplate
                 .asRawReferenceTemplates(statements);
         Assertions.assertEquals(1, candidates.size());

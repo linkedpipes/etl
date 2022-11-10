@@ -1,7 +1,6 @@
-package com.linkedpipes.etl.library.template.plugin.adapter.java;
+package com.linkedpipes.etl.library.template.plugin.adapter;
 
 import com.linkedpipes.etl.library.template.plugin.PluginException;
-import com.linkedpipes.etl.library.template.plugin.adapter.rdf.RdfToJavaPluginDefinition;
 import com.linkedpipes.etl.library.template.plugin.model.JavaPluginDefinition;
 import com.linkedpipes.etl.library.rdf.Statements;
 import org.eclipse.rdf4j.rio.RDFFormat;

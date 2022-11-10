@@ -2,7 +2,7 @@ package com.linkedpipes.etl.library.template.configuration;
 
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.template.TestUtils;
-import com.linkedpipes.etl.library.template.configuration.adapter.rdf.RdfToConfigurationDescription;
+import com.linkedpipes.etl.library.template.configuration.adapter.RdfToConfigurationDescription;
 import com.linkedpipes.etl.library.template.configuration.model.ConfigurationDescription;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -19,14 +19,13 @@ public class ConfigurationFacadeTest {
 
     @Test
     public void createNewFromJarFile() throws Exception {
-        var data = TestUtils.statementsFromResource(
+        var data = TestUtils.statements(
                 "configuration/create-new.trig");
         var actual = ConfigurationFacade.createNewFromJarFile(
                 TestUtils.selectGraph(data, "http://input"),
                 loadDescription(data, "http://description"),
                 "http://base",
-                VALUE_FACTORY.createIRI("http://expected/jar")
-        );
+                VALUE_FACTORY.createIRI("http://expected/jar"));
         var expected = TestUtils.selectGraph(data, "http://expected/jar");
         TestUtils.assertIsomorphic(actual, expected);
     }
@@ -44,21 +43,20 @@ public class ConfigurationFacadeTest {
 
     @Test
     public void createNewFromTemplate() throws Exception {
-        var data = TestUtils.statementsFromResource(
+        var data = TestUtils.statements(
                 "configuration/create-new.trig");
         var actual = ConfigurationFacade.createNewFromTemplate(
                 TestUtils.selectGraph(data, "http://input"),
                 loadDescription(data, "http://description"),
                 "http://base",
-                VALUE_FACTORY.createIRI("http://expected/template")
-        );
+                VALUE_FACTORY.createIRI("http://expected/template"));
         var expected = TestUtils.selectGraph(data, "http://expected/template");
         TestUtils.assertIsomorphic(actual, expected);
     }
 
     @Test
     public void merge000() throws Exception {
-        var data = TestUtils.statementsFromResource(
+        var data = TestUtils.statements(
                 "configuration/merge-000.trig");
         var actual = ConfigurationFacade.merge(
                 Arrays.asList(
@@ -68,8 +66,7 @@ public class ConfigurationFacadeTest {
                 ),
                 loadDescription(data, "http://description"),
                 "http://base",
-                VALUE_FACTORY.createIRI("http://expected")
-        );
+                VALUE_FACTORY.createIRI("http://expected"));
         var expected = TestUtils.selectGraph(
                 data, "http://expected");
         TestUtils.assertIsomorphic(actual, expected);
@@ -77,7 +74,7 @@ public class ConfigurationFacadeTest {
 
     @Test
     public void merge001() throws Exception {
-        var data = TestUtils.statementsFromResource(
+        var data = TestUtils.statements(
                 "configuration/merge-001.trig");
         var description = loadDescription(
                 data,
@@ -100,9 +97,7 @@ public class ConfigurationFacadeTest {
                 configurations,
                 description,
                 "http://localhost/pipeline/3405c1ee/configuration",
-                VALUE_FACTORY.createIRI(
-                        "http://expected")
-        );
+                VALUE_FACTORY.createIRI("http://expected"));
         var expected = TestUtils.selectGraph(
                 data, "http://loexpected");
         TestUtils.assertIsomorphic(actual, expected);
@@ -110,8 +105,7 @@ public class ConfigurationFacadeTest {
 
     @Test
     public void merge002Inherit() throws Exception {
-        
-        var data = TestUtils.statementsFromResource(
+        var data = TestUtils.statements(
                 "configuration/merge-002.trig");
         var actual = ConfigurationFacade.merge(
                 Arrays.asList(
@@ -120,8 +114,7 @@ public class ConfigurationFacadeTest {
                 ),
                 loadDescription(data, "http://description"),
                 "http://base",
-                VALUE_FACTORY.createIRI("http://expected/parent_inherit")
-        );
+                VALUE_FACTORY.createIRI("http://expected/parent_inherit"));
         var expected = TestUtils.selectGraph(
                 data, "http://expected/parent_inherit");
         TestUtils.assertIsomorphic(actual, expected);
@@ -129,8 +122,8 @@ public class ConfigurationFacadeTest {
 
     @Test
     public void merge002InheritAndForce() throws Exception {
-        
-        var data = TestUtils.statementsFromResource(
+
+        var data = TestUtils.statements(
                 "configuration/merge-002.trig");
         var actual = ConfigurationFacade.merge(
                 Arrays.asList(
@@ -139,8 +132,8 @@ public class ConfigurationFacadeTest {
                 ),
                 loadDescription(data, "http://description"),
                 "http://base",
-                VALUE_FACTORY.createIRI("http://expected/parent_inheritAndForce")
-        );
+                VALUE_FACTORY.createIRI(
+                        "http://expected/parent_inheritAndForce"));
         var expected = TestUtils.selectGraph(
                 data, "http://expected/parent_inheritAndForce");
         TestUtils.assertIsomorphic(actual, expected);
@@ -148,8 +141,7 @@ public class ConfigurationFacadeTest {
 
     @Test
     public void merge002NoControl() throws Exception {
-        
-        var data = TestUtils.statementsFromResource(
+        var data = TestUtils.statements(
                 "configuration/merge-002.trig");
         var actual = ConfigurationFacade.merge(
                 Arrays.asList(
@@ -158,8 +150,7 @@ public class ConfigurationFacadeTest {
                 ),
                 loadDescription(data, "http://description"),
                 "http://base",
-                VALUE_FACTORY.createIRI("http://expected/parent_noControl")
-        );
+                VALUE_FACTORY.createIRI("http://expected/parent_noControl"));
         var expected = TestUtils.selectGraph(
                 data, "http://expected/parent_noControl");
         TestUtils.assertIsomorphic(actual, expected);
@@ -167,8 +158,8 @@ public class ConfigurationFacadeTest {
 
     @Test
     public void merge002None() throws Exception {
-        
-        var data = TestUtils.statementsFromResource(
+
+        var data = TestUtils.statements(
                 "configuration/merge-002.trig");
         var actual = ConfigurationFacade.merge(
                 Arrays.asList(
@@ -177,8 +168,7 @@ public class ConfigurationFacadeTest {
                 ),
                 loadDescription(data, "http://description"),
                 "http://base",
-                VALUE_FACTORY.createIRI("http://expected/parent_none")
-        );
+                VALUE_FACTORY.createIRI("http://expected/parent_none"));
         var expected = TestUtils.selectGraph(
                 data, "http://expected/parent_none");
         TestUtils.assertIsomorphic(actual, expected);
@@ -187,8 +177,8 @@ public class ConfigurationFacadeTest {
 
     @Test
     public void mergeGlobalControlIafF() throws Exception {
-        
-        var data = TestUtils.statementsFromResource(
+
+        var data = TestUtils.statements(
                 "configuration/merge-003.trig");
         var actual = ConfigurationFacade.merge(
                 Arrays.asList(
@@ -199,9 +189,7 @@ public class ConfigurationFacadeTest {
                 loadDescription(data, "http://description"),
                 "http://base",
                 VALUE_FACTORY.createIRI(
-                        "http://expected/parent_inheritAndForce_force"
-                )
-        );
+                        "http://expected/parent_inheritAndForce_force"));
         var expected = TestUtils.selectGraph(
                 data, "http://expected/parent_inheritAndForce_force");
         TestUtils.assertIsomorphic(actual, expected);
@@ -209,8 +197,8 @@ public class ConfigurationFacadeTest {
 
     @Test
     public void merge003IIafF() throws Exception {
-        
-        var data = TestUtils.statementsFromResource(
+
+        var data = TestUtils.statements(
                 "configuration/merge-003.trig");
         var actual = ConfigurationFacade.merge(
                 Arrays.asList(
@@ -223,8 +211,7 @@ public class ConfigurationFacadeTest {
                 "http://base",
                 VALUE_FACTORY.createIRI(
                         "http://expected/parent_inherit_inheritAndForce_force"
-                )
-        );
+                ));
         var expected = TestUtils.selectGraph(
                 data, "http://expected/parent_inherit_inheritAndForce_force");
         TestUtils.assertIsomorphic(actual, expected);
@@ -232,8 +219,8 @@ public class ConfigurationFacadeTest {
 
     @Test
     public void merge003FIaF() throws Exception {
-        
-        var data = TestUtils.statementsFromResource(
+
+        var data = TestUtils.statements(
                 "configuration/merge-003.trig");
         var actual = ConfigurationFacade.merge(
                 Arrays.asList(
@@ -244,12 +231,39 @@ public class ConfigurationFacadeTest {
                 loadDescription(data, "http://description"),
                 "http://base",
                 VALUE_FACTORY.createIRI(
-                        "http://expected/parent_force_inheritAndForce")
-        );
+                        "http://expected/parent_force_inheritAndForce"));
         var expected = TestUtils.selectGraph(
                 data, "http://expected/parent_force_inheritAndForce");
         TestUtils.assertIsomorphic(actual, expected);
     }
 
+    @Test
+    public void localizeConfiguration001() throws Exception {
+        var data = TestUtils.statements(
+                "configuration/localize-001.trig");
+        var actual = ConfigurationFacade.localizeConfiguration(
+                loadDescription(data, "http://description"),
+                Statements.wrap(TestUtils.selectGraph(data, "http://input"))
+                        .selector(),
+                VALUE_FACTORY.createIRI("http://localhost/expected"));
+        var expected =
+                Statements.wrap(TestUtils.selectGraph(data, "http://expected"))
+                        .withoutGraph().asList();
+        TestUtils.assertIsomorphic(actual.asList(), expected);
+    }
+
+    @Test
+    public void removePrivate() throws Exception {
+        var data = TestUtils.statements(
+                "configuration/remove-private.trig");
+        var actual = ConfigurationFacade.removePrivateStatements(
+                Statements.wrap(TestUtils.selectGraph(data, "http://input"))
+                        .withoutGraph().selector(),
+                loadDescription(data, "http://description"));
+        var expected =
+                Statements.wrap(TestUtils.selectGraph(data, "http://expected"))
+                        .withoutGraph().asList();
+        TestUtils.assertIsomorphic(expected, actual);
+    }
 
 }

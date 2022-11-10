@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.library.template.configuration.adapter.rdf;
+package com.linkedpipes.etl.library.template.configuration.adapter;
 
 import com.linkedpipes.etl.library.template.configuration.model.ConfigurationDescription;
 import com.linkedpipes.etl.library.rdf.StatementsSelector;

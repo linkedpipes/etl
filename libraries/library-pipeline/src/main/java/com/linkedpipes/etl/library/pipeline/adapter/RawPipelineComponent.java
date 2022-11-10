@@ -60,4 +60,22 @@ public class RawPipelineComponent {
      */
     public Resource configurationGraph;
 
+    public RawPipelineComponent() {
+    }
+
+    public RawPipelineComponent(RawPipelineComponent other) {
+        this.resource = other.resource;
+        this.label = other.label;
+        this.description = other.description;
+        this.note = other.note;
+        this.color = other.color;
+        this.x = other.x;
+        this.y = other.y;
+        this.template = other.template;
+        this.disabled = other.disabled;
+        this.configuration = Statements.arrayList();
+        this.configuration.addAll(other.configuration);
+        this.configurationGraph = other.configurationGraph;
+    }
+
 }

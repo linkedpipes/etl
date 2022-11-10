@@ -326,4 +326,7 @@ final public class LP_V1 {
     public static final String HAS_VERTEX =
             "http://linkedpipes.com/ontology/vertex";
 
+    public static final String HAS_LAST_UPDATE =
+            "http://linkedpipes.com/ontology/lastUpdate";
+
 }

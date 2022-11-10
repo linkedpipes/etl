@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.library.pipeline.adapter.rdf;
+package com.linkedpipes.etl.library.pipeline.adapter;
 
 import com.linkedpipes.etl.library.pipeline.adapter.RawPipeline;
 import com.linkedpipes.etl.library.pipeline.adapter.RawPipelineComponent;
@@ -18,6 +18,8 @@ import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,6 +72,18 @@ public class RdfToRawPipeline {
                                 statements, result.executionProfile);
                     }
                     break;
+                case LP_V1.HAS_CREATED:
+                    if (value instanceof Literal literal) {
+                        result.created = LocalDateTime.from(
+                                literal.temporalAccessorValue());
+                    }
+                    break;
+                case LP_V1.HAS_LAST_UPDATE:
+                    if (value instanceof Literal literal) {
+                        result.lastUpdate = LocalDateTime.from(
+                                literal.temporalAccessorValue());
+                    }
+                    break;
                 default:
                     break;
             }
@@ -82,14 +96,20 @@ public class RdfToRawPipeline {
                 LP_V1.COMPONENT).subjects()) {
             result.components.add(loadComponent(statements, subject));
         }
+        result.components.sort(Comparator.comparing(
+                item -> item.resource.stringValue()));
         for (Resource subject : definition.selectByType(
                 LP_V1.RUN_AFTER).subjects()) {
             result.controlFlows.add(loadExecutionFlow(statements, subject));
         }
+        result.controlFlows.sort(Comparator.comparing(
+                item -> item.resource.stringValue()));
         for (Resource subject : definition.selectByType(
                 LP_V1.CONNECTION).subjects()) {
             result.dataFlows.add(loadDataFlow(statements, subject));
         }
+        result.dataFlows.sort(Comparator.comparing(
+                item -> item.resource.stringValue()));
         sanitizeProfile(result);
         return result;
     }
@@ -225,7 +245,7 @@ public class RdfToRawPipeline {
                     break;
             }
         }
-        loadVertices(statements, flowResource);
+        result.vertices.addAll(loadVertices(statements, flowResource));
         return result;
     }
 
@@ -289,7 +309,7 @@ public class RdfToRawPipeline {
                     break;
             }
         }
-        loadVertices(statements, flowResource);
+        result.vertices.addAll(loadVertices(statements, flowResource));
         return result;
     }
 
@@ -302,7 +322,8 @@ public class RdfToRawPipeline {
         if (pipeline.resource.isBNode()) {
             resource = valueFactory.createBNode();
         } else {
-            resource = valueFactory.createIRI(pipeline + "/profile/default");
+            resource = valueFactory.createIRI(
+                    pipeline.resource.stringValue() + "/profile/default");
         }
         pipeline.executionProfile.resource = resource;
     }
