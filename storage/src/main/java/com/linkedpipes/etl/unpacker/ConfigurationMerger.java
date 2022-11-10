@@ -3,7 +3,7 @@ package com.linkedpipes.etl.unpacker;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.template.configuration.ConfigurationException;
 import com.linkedpipes.etl.library.template.configuration.ConfigurationFacade;
-import com.linkedpipes.etl.library.template.configuration.adapter.rdf.RdfToConfigurationDescription;
+import com.linkedpipes.etl.library.template.configuration.adapter.RdfToConfigurationDescription;
 import com.linkedpipes.etl.library.template.configuration.model.ConfigurationDescription;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.unpacker.model.GraphCollection;

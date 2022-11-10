@@ -2,6 +2,7 @@ package com.linkedpipes.etl.unpacker.executions;
 
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.Configuration;
+import com.linkedpipes.etl.unpacker.ExecutionSource;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
@@ -18,17 +19,17 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
-class HttpExecutionSource {
+public class HttpExecutionSource implements ExecutionSource {
 
     private static final String BASE_URL = "http://localhost/base";
 
     private final Configuration configuration;
 
-    HttpExecutionSource(Configuration configuration) {
+    public HttpExecutionSource(Configuration configuration) {
         this.configuration = configuration;
     }
 
-    public Collection<Statement> downloadExecution(String iri)
+    public Collection<Statement> getExecution(String iri)
             throws StorageException {
         // Download and parse information about the execution.
         HttpClientBuilder builder = HttpClientBuilder.create();

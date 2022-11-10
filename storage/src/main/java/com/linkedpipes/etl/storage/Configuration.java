@@ -2,9 +2,7 @@ package com.linkedpipes.etl.storage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,13 +10,12 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
-@Service
 public class Configuration {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(Configuration.class);
 
-    private int storagePort;
+    private int storageHttpPort;
 
     private String logDirectoryPath;
 
@@ -26,27 +23,22 @@ public class Configuration {
 
     private String jarDirectory;
 
-    private String templatesDirectory;
-
-    private String pipelinesDirectory;
-
-    private String knowledgeDirectory;
-
     private String domainName;
+
+    private String storageDirectory;
 
     private String executorMonitorUrl;
 
     private final Properties properties = new Properties();
 
-    @PostConstruct
-    public void init() {
+    public void initialize() {
         String propertiesFile = System.getProperty("configFileLocation");
         if (propertiesFile == null) {
             LOG.error("Missing property '-configFileLocation' "
                     + "with path to configuration file.");
             throw new RuntimeException("Missing configuration file.");
         }
-        LOG.info("Reading configuration file: {}", propertiesFile);
+        LOG.debug("Reading configuration file: {}", propertiesFile);
         // Read properties.
         try (InputStreamReader stream = new InputStreamReader(
                 new FileInputStream(propertiesFile),
@@ -60,59 +52,22 @@ public class Configuration {
     }
 
     protected void loadProperties() {
-        storagePort = getPropertyInteger("storage.port");
+        storageHttpPort = getPropertyInteger("storage.port");
         logDirectoryPath = getProperty("storage.log.directory");
         logCoreFilter = getProperty("storage.log.core.level");
 
         jarDirectory = getProperty("storage.jars.directory");
         domainName = getEnvOrProperty("LP_ETL_DOMAIN", "domain.uri");
 
-        String storageDirectory = getProperty("storage.directory");
-        templatesDirectory = storageDirectory + File.separator + "templates";
-        pipelinesDirectory = storageDirectory + File.separator + "pipelines";
-        knowledgeDirectory = storageDirectory + File.separator + "knowledge";
+        storageDirectory = getProperty("storage.directory");
 
         executorMonitorUrl = getEnvOrProperty(
-                "LP_ETL_MONITOR_URL", "executor-monitor.webserver.uri")
-                + "/api/v1/";
-    }
+                "LP_ETL_MONITOR_URL",
+                "executor-monitor.webserver.uri");
 
-    public int getStoragePort() {
-        return storagePort;
-    }
+        // Update loaded properties.
 
-    public File getLogDirectory() {
-        File logDirectory = new File(logDirectoryPath);
-        logDirectory.mkdirs();
-        return logDirectory;
-    }
-
-    public String getLogCoreFilter() {
-        return logCoreFilter;
-    }
-
-    public File getJarDirectory() {
-        return new File(jarDirectory);
-    }
-
-    public File getTemplatesDirectory() {
-        return new File(templatesDirectory);
-    }
-
-    public File getPipelinesDirectory() {
-        return new File(pipelinesDirectory);
-    }
-
-    public File getKnowledgeDirectory() {
-        return new File(knowledgeDirectory);
-    }
-
-    public String getDomainName() {
-        return domainName;
-    }
-
-    public String getExecutorMonitorUrl() {
-        return executorMonitorUrl;
+        executorMonitorUrl += "/api/v1/";
     }
 
     private String getProperty(String name) {
@@ -143,12 +98,39 @@ public class Configuration {
     protected Integer getPropertyInteger(String name) {
         String value = getProperty(name);
         try {
-            Integer valueAsInteger = Integer.parseInt(value);
-            return valueAsInteger;
+            return Integer.parseInt(value);
         } catch (Exception ex) {
             LOG.error("Invalid configuration property: '{}'", name);
             throw new RuntimeException(ex);
         }
+    }
+
+    public int getStorageHttpPort() {
+        return storageHttpPort;
+    }
+
+    public File getLogDirectory() {
+        return new File(logDirectoryPath);
+    }
+
+    public String getLogCoreFilter() {
+        return logCoreFilter;
+    }
+
+    public File getJavaPluginsDirectory() {
+        return new File(jarDirectory);
+    }
+
+    public File getStorageDirectory() {
+        return new File(storageDirectory);
+    }
+
+    public String getDomainName() {
+        return domainName;
+    }
+
+    public String getExecutorMonitorUrl() {
+        return executorMonitorUrl;
     }
 
 }

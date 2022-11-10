@@ -11,6 +11,7 @@
     </root>
 
     <logger name="com.linkedpipes" level="DEBUG"/>
-    <logger name="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver" level="ERROR"/>
+    <logger name="org.eclipse.jetty" level="WARN" additivity="true"/>
+    <logger name="org.springframework" level="WARN" additivity="true"/>
 
 </configuration>

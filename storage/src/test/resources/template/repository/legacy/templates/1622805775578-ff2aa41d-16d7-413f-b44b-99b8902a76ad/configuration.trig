@@ -1,0 +1,11 @@
+
+<http://localhost:8080/resources/components/1622805775578-ff2aa41d-16d7-413f-b44b-99b8902a76ad/configuration> {
+  <http://localhost:8080/resources/components/1622805775578-ff2aa41d-16d7-413f-b44b-99b8902a76ad/configuration>
+    a <http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#content> "";
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#contentControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#contentSubstitution> "{ETL_NOT_USED}";
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#fileName> "turtle-file.ttl";
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#fileNameControl> <http://plugins.linkedpipes.com/resource/configuration/Force>;
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#fileNameSubstitution> "{LP_ETL_NAME}.ttl" .
+}

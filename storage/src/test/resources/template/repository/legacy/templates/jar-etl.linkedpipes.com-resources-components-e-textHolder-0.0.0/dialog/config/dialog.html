@@ -1,0 +1,16 @@
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
+<div>
+    <md-input-container class="md-block" ng-hide="dialog.fileName.hide">
+        <label>File name</label>
+        <input ng-model="dialog.fileName.value" placeholder="file.ttl"
+               ng-disabled="dialog.fileName.disabled || dialog.fileName.inherit"
+               required>
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.content.hide">
+        <label>File content</label>
+        <textarea id="query" ng-model="dialog.content.value"
+                  ng-disabled="dialog.content.disabled || dialog.content.inherit"
+                  placeholder="@prefix  rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; ."
+                  required/>
+    </md-input-container>
+</div>

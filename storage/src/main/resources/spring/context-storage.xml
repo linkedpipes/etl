@@ -8,11 +8,11 @@
 		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
     <context:component-scan  base-package="com.linkedpipes.etl.storage" >
-        <context:exclude-filter type="regex" expression="com.linkedpipes.etl.storage.web.*"/>
+        <context:exclude-filter type="regex" expression="com.linkedpipes.etl.storage.http.*"/>
     </context:component-scan>
 
     <!-- Web server initialization and holder. -->
-    <bean class="com.linkedpipes.etl.storage.web.WebServer" />
+    <bean class="com.linkedpipes.etl.storage.http.HttpServer" />
 
     <task:annotation-driven executor="asynchExecutor" />
     <task:executor id="asynchExecutor" pool-size="2" />

@@ -91,7 +91,7 @@ class UnpackOptions implements Loadable {
 
     private String runToComponent;
 
-    private List<ExecutionMapping> executionMapping = new LinkedList<>();
+    private final List<ExecutionMapping> executionMapping = new LinkedList<>();
 
     private boolean saveDebugData = true;
 

@@ -1,0 +1,35 @@
+
+<http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0> {
+  <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0> a <http://linkedpipes.com/ontology/JarTemplate>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Text holder";
+    <http://linkedpipes.com/ontology/color> "#F6D8CE";
+    <http://linkedpipes.com/ontology/componentType> <http://etl.linkedpipes.com/ontology/component/type/Extractor>;
+    <http://linkedpipes.com/ontology/supportControl> true;
+    <http://linkedpipes.com/ontology/keyword> "text", "file";
+    <http://linkedpipes.com/ontology/infoLink> <https://etl.linkedpipes.com/components/e-textholder>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration>;
+    <http://linkedpipes.com/ontology/configurationDescription> <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration-description>;
+    <http://linkedpipes.com/ontology/dialog> <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/dialog/template>,
+      <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/dialog/instance>,
+      <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/dialog/config>;
+    <http://linkedpipes.com/ontology/port> <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/port/FilesOutput>;
+    <http://linkedpipes.com/ontology/requirement> <http://linkedpipes.com/resources/requirement/workingDirectory> .
+  
+  <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/dialog/template>
+    a <http://linkedpipes.com/ontology/Dialog>;
+    <http://linkedpipes.com/ontology/name> "template" .
+  
+  <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/dialog/instance>
+    a <http://linkedpipes.com/ontology/Dialog>;
+    <http://linkedpipes.com/ontology/name> "instance" .
+  
+  <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/dialog/config>
+    a <http://linkedpipes.com/ontology/Dialog>;
+    <http://linkedpipes.com/ontology/name> "config" .
+  
+  <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0/port/FilesOutput>
+    a <http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror>, <http://linkedpipes.com/ontology/Output>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Output";
+    <http://linkedpipes.com/ontology/binding> "FilesOutput";
+    <http://linkedpipes.com/ontology/requirement> <http://linkedpipes.com/resources/requirement/workingDirectory> .
+}

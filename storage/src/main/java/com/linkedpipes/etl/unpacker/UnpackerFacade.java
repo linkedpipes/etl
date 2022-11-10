@@ -3,11 +3,10 @@ package com.linkedpipes.etl.unpacker;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 import com.linkedpipes.etl.library.rdf.StatementsSelector;
+import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.storage.StorageException;
-import com.linkedpipes.etl.unpacker.executions.ExecutionFacade;
-import com.linkedpipes.etl.storage.pipeline.PipelineRef;
-import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
+import com.linkedpipes.etl.unpacker.executions.HttpExecutionSource;
 import com.linkedpipes.etl.unpacker.model.GraphCollection;
 import com.linkedpipes.etl.unpacker.model.ModelLoader;
 import com.linkedpipes.etl.unpacker.model.designer.DesignerPipeline;
@@ -15,30 +14,22 @@ import com.linkedpipes.etl.unpacker.model.executor.ExecutorPipeline;
 import com.linkedpipes.etl.unpacker.rdf.Loadable;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
 /**
  * Provide capabilities to unpack pipeline for execution.
  */
-@Service
 public class UnpackerFacade {
 
-    @Autowired
-    private PipelineFacade pipelines;
+    private TemplateFacade templateFacade;
 
-    @Autowired
-    private TemplateFacade templates;
+    private final HttpExecutionSource executions;
 
-    @Autowired
-    private ExecutionFacade executions;
-
-    public Collection<Statement> unpack(
-            PipelineRef pipeline, Collection<Statement> configurationRdf)
-            throws StorageException {
-        return unpack(pipelines.getPipelineRdf(pipeline), configurationRdf);
+    public UnpackerFacade(
+            Configuration configuration, TemplateFacade templateFacade) {
+        this.templateFacade = templateFacade;
+        this.executions = new HttpExecutionSource(configuration);
     }
 
     public Collection<Statement> unpack(
@@ -52,10 +43,10 @@ public class UnpackerFacade {
         GraphCollection graphs =
                 ModelLoader.loadConfigurationGraphs(
                         pipelineStatements, pipeline);
-        DesignerToExecutor designerToExecutor =
-                new DesignerToExecutor(templates, executions);
+        DesignerToExecutor designerToExecutor = new DesignerToExecutor(
+                new TemplateSource(templateFacade),
+                executions);
         designerToExecutor.transform(pipeline, graphs, options);
-
         ExecutorPipeline executorPipeline = designerToExecutor.getTarget();
         StatementsBuilder builder = Statements.arrayList().builder();
         executorPipeline.write(builder);

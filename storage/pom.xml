@@ -39,6 +39,11 @@
             <artifactId>library-template</artifactId>
             <version>${lp.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>library-pipeline</artifactId>
+            <version>${lp.version}</version>
+        </dependency>
         <!-- Spring. -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -164,7 +169,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <mainClass>
-                                com.linkedpipes.etl.storage.Storage
+                                com.linkedpipes.etl.storage.StorageApplicationEntry
                             </mainClass>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>

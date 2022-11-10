@@ -8,6 +8,7 @@ import com.linkedpipes.etl.unpacker.model.template.ReferenceTemplate;
 import com.linkedpipes.etl.unpacker.model.template.Template;
 
 import java.util.Arrays;
+import java.util.List;
 
 class ReferenceExpander {
 
@@ -30,7 +31,7 @@ class ReferenceExpander {
         mergeWithTemplate(template, srcComponent);
         DesignerComponent component = new DesignerComponent(srcComponent);
         component.setTemplate(template.getTemplate());
-        component.setTypes(Arrays.asList(template.getTemplate()));
+        component.setTypes(List.of(template.getTemplate()));
         //
         return expander.expand(component);
     }
