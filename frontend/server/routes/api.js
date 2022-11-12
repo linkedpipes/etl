@@ -5,11 +5,11 @@ const request = require("request"); // https://github.com/request/request
 
 const config = require("../configuration");
 const errors = require("../error-codes");
-const executionFactory = require("../execution-factory");
 
 const {handleImport} = require("./api/import-handler");
 const {handleLocalize} = require("./api/localize-handler");
 const {handlePipelineCopy} = require("./api/pipeline-copy-handler");
+const {handleCreateExecution} = require("./api/create-execution-handler");
 
 const router = express.Router();
 module.exports = router;
@@ -227,7 +227,14 @@ router.get("/executions", (req, res) => {
 });
 
 router.post("/executions", (req, res) => {
-  executionFactory.create(req, res);
+  handleCreateExecution(req, res).catch(error => {
+    console.error("Can't create execution.", error);
+    res.status(HTTP_SERVER_ERROR).json({
+      "error": {
+        "message": "Can't execute request."
+      }
+    })
+  });
 });
 
 router.post("/executions-cancel", (req, res) => {

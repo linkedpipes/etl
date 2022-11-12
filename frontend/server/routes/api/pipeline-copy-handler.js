@@ -6,10 +6,6 @@ const configuration = require("../../configuration");
 
 const BODY_OPTIONS = "options";
 
-const BODY_CONTENT = "pipeline";
-
-const HTTP_INVALID_REQUEST = 400;
-
 const HTTP_SERVER_ERROR = 500;
 
 const STORAGE_API_URL = configuration.storage.url + "/api/v1";
