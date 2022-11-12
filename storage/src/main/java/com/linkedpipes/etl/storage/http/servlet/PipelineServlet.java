@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,7 +33,6 @@ public class PipelineServlet {
     @RequestMapping(
             value = "/list",
             method = RequestMethod.GET)
-    @ResponseBody
     public void getPipelineList(
             HttpServletRequest request, HttpServletResponse response) {
         ServletUtilities.wrap(request, response, () -> {
@@ -50,7 +48,6 @@ public class PipelineServlet {
     @RequestMapping(
             value = "",
             method = RequestMethod.GET)
-    @ResponseBody
     public void getPipeline(
             @RequestParam(name = "iri")
                     String iri,
@@ -79,7 +76,6 @@ public class PipelineServlet {
             value = "",
             method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseBody
     public void createPipeline(
             @RequestParam(value = "pipeline", required = false)
                     MultipartFile pipeline,
@@ -97,7 +93,6 @@ public class PipelineServlet {
     @RequestMapping(value = "",
             method = RequestMethod.PUT,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseBody
     public void updatePipeline(
             @RequestParam(value = "pipeline") MultipartFile pipeline,
             HttpServletRequest request, HttpServletResponse response) {
@@ -112,7 +107,6 @@ public class PipelineServlet {
     @RequestMapping(
             value = "",
             method = RequestMethod.DELETE)
-    @ResponseBody
     public void deletePipeline(
             @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response) {

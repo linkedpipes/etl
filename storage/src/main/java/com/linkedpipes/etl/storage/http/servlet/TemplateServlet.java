@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,7 +30,6 @@ public class TemplateServlet {
     @RequestMapping(
             value = "/list",
             method = RequestMethod.GET)
-    @ResponseBody
     public void getPipelineList(
             HttpServletRequest request, HttpServletResponse response) {
         ServletUtilities.wrap(request, response, () -> {
@@ -42,7 +40,6 @@ public class TemplateServlet {
     @RequestMapping(
             value = "/",
             method = RequestMethod.GET)
-    @ResponseBody
     public void getComponentInterface(
             @RequestParam(name = "iri") String iri,
             HttpServletRequest request,
@@ -56,7 +53,6 @@ public class TemplateServlet {
     @RequestMapping(
             value = "/configuration",
             method = RequestMethod.GET)
-    @ResponseBody
     public void getConfiguration(
             @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response) {
@@ -69,7 +65,6 @@ public class TemplateServlet {
     @RequestMapping(
             value = "/effective-configuration",
             method = RequestMethod.GET)
-    @ResponseBody
     public void getEffectiveConfiguration(
             @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response) {
@@ -82,7 +77,6 @@ public class TemplateServlet {
     @RequestMapping(
             value = "/configuration-template",
             method = RequestMethod.GET)
-    @ResponseBody
     public void getConfigTemplate(
             @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response) {
@@ -95,7 +89,6 @@ public class TemplateServlet {
     @RequestMapping(
             value = "/configuration-description",
             method = RequestMethod.GET)
-    @ResponseBody
     public void getConfigDescription(
             @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response) {
@@ -108,7 +101,6 @@ public class TemplateServlet {
     @RequestMapping(
             value = "/dialog",
             method = RequestMethod.GET)
-    @ResponseBody
     public void getDialogResource(
             @RequestParam(name = "iri") String iri,
             @RequestParam(name = "name") String dialogName,
@@ -136,7 +128,6 @@ public class TemplateServlet {
     @RequestMapping(
             value = "/component",
             method = RequestMethod.PUT)
-    @ResponseBody
     public void updateComponent(
             @RequestParam(name = "iri") String iri,
             @RequestParam(name = "component") MultipartFile component,
@@ -150,7 +141,6 @@ public class TemplateServlet {
     @RequestMapping(
             value = "/configuration",
             method = RequestMethod.PUT)
-    @ResponseBody
     public void updateConfig(
             @RequestParam(name = "iri") String iri,
             @RequestParam(name = "configuration") MultipartFile configuration,
@@ -166,7 +156,6 @@ public class TemplateServlet {
             value = "",
             method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseBody
     public void createComponent(
             @RequestParam(name = "component") MultipartFile component,
             @RequestParam(name = "configuration") MultipartFile configuration,
@@ -180,7 +169,6 @@ public class TemplateServlet {
     @RequestMapping(
             value = "",
             method = RequestMethod.DELETE)
-    @ResponseBody
     public void remove(
             @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response) {

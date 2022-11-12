@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@RestController
-@ControllerAdvice
+//@RestController
+//@ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final Logger LOG =

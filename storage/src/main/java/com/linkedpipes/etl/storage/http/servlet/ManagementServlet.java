@@ -6,7 +6,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,8 +27,9 @@ public class ManagementServlet {
         this.service = new ManagementServletService(storageService);
     }
 
-    @RequestMapping(value = "/export", method = RequestMethod.GET)
-    @ResponseBody
+    @RequestMapping(
+            value = "/export",
+            method = RequestMethod.GET)
     public void export(
             @RequestParam(name = "templates")
                     String exportTemplatesFilter,
@@ -57,7 +57,6 @@ public class ManagementServlet {
             value = "/import",
             method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseBody
     public void importContent(
             @RequestParam(value = "content")
                     MultipartFile content,
@@ -77,7 +76,6 @@ public class ManagementServlet {
             value = "localize",
             method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseBody
     public void localizeContent(
             @RequestParam(value = "content")
                     MultipartFile content,
@@ -105,7 +103,6 @@ public class ManagementServlet {
     @RequestMapping(
             value = "/assistant",
             method = RequestMethod.GET)
-    @ResponseBody
     public void getDesignInformation(
             HttpServletRequest request, HttpServletResponse response) {
         ServletUtilities.wrap(request, response, () -> {
@@ -118,8 +115,8 @@ public class ManagementServlet {
      */
     @RequestMapping(
             value = "/unpack",
-            method = RequestMethod.POST)
-    @ResponseBody
+            method = RequestMethod.POST,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void unpackPipeline(
             @RequestParam(value = "pipeline")
                     MultipartFile pipeline,

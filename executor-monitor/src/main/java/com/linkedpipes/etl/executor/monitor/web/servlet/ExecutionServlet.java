@@ -46,8 +46,9 @@ public class ExecutionServlet {
         this.executor = executorService;
     }
 
-    @ResponseBody
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(
+            value = "",
+            method = RequestMethod.GET)
     public void getExecutions(
             @RequestParam(value = "changedSince", required = false)
                     Long changedSince,
@@ -72,8 +73,9 @@ public class ExecutionServlet {
                 request.getHeader("Content-Type")).orElse(RDFFormat.JSONLD);
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    @ResponseBody
+    @RequestMapping(
+            value = "/",
+            method = RequestMethod.GET)
     public void getExecution(
             @RequestParam String iri,
             HttpServletRequest request, HttpServletResponse response)
@@ -100,8 +102,9 @@ public class ExecutionServlet {
         return execution;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.DELETE)
-    @ResponseBody
+    @RequestMapping(
+            value = "/",
+            method = RequestMethod.DELETE)
     public void deleteExecution(
             @RequestParam String iri,
             HttpServletResponse response) throws MissingResource {
@@ -110,9 +113,10 @@ public class ExecutionServlet {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
-    @RequestMapping(value = "/cancel", method = RequestMethod.POST,
+    @RequestMapping(
+            value = "/cancel",
+            method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     public void cancelExecution(
             @RequestParam String iri,
             @RequestBody String body,
@@ -123,9 +127,10 @@ public class ExecutionServlet {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
-    @RequestMapping(value = "/logs", method = RequestMethod.GET,
+    @RequestMapping(
+            value = "/logs",
+            method = RequestMethod.GET,
             produces = MediaType.TEXT_PLAIN_VALUE)
-    @ResponseBody
     public FileSystemResource getExecutionLogs(
             @RequestParam String iri,
             HttpServletResponse response) throws MissingResource {
@@ -139,9 +144,10 @@ public class ExecutionServlet {
         return new FileSystemResource(file);
     }
 
-    @RequestMapping(value = "/logs-tail", method = RequestMethod.GET,
+    @RequestMapping(
+            value = "/logs-tail",
+            method = RequestMethod.GET,
             produces = MediaType.TEXT_PLAIN_VALUE)
-    @ResponseBody
     public void getExecutionLogsTail(
             @RequestParam String iri,
             @RequestParam(value = "n", defaultValue = "32") int count,
@@ -185,22 +191,24 @@ public class ExecutionServlet {
         }
     }
 
-    @ResponseBody
-    @RequestMapping(value = "", method = RequestMethod.POST,
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(
+            value = "",
+            method = RequestMethod.POST)
     public PostCreateExecutionHandler.Response createExecution(
-            @RequestParam("pipeline") MultipartFile pipeline,
-            @RequestParam(value = "input", required = false) List<MultipartFile> inputs
-    )
+            @RequestParam("pipeline")
+                    MultipartFile pipeline,
+            @RequestParam(value = "input", required = false)
+                    List<MultipartFile> inputs)
             throws MonitorException {
-        PostCreateExecutionHandler handler = new PostCreateExecutionHandler(
-                this.executions, this.executor);
+        PostCreateExecutionHandler handler =
+                new PostCreateExecutionHandler(this.executions, this.executor);
         return handler.handle(pipeline, inputs);
     }
 
-    @RequestMapping(value = "/overview", method = RequestMethod.GET,
+    @RequestMapping(
+            value = "/overview",
+            method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     public void getExecutionOverview(
             @RequestParam String iri,
             HttpServletResponse response)
