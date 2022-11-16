@@ -10,7 +10,7 @@ import com.linkedpipes.etl.executor.rdf.entity.EntityMerger;
 import com.linkedpipes.etl.executor.rdf.entity.EntityReference;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
 import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
+import com.linkedpipes.etl.rdf.rdf4j.Rdf4jSource;
 
 import java.util.ArrayList;
 import java.util.List;

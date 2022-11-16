@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.rdf.utils.pojo;
 
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

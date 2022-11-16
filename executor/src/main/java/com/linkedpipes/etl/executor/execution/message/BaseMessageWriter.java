@@ -3,7 +3,7 @@ package com.linkedpipes.etl.executor.execution.message;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EVENTS;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsBuilder;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jUtils;
+import com.linkedpipes.etl.rdf.rdf4j.Rdf4jUtils;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 

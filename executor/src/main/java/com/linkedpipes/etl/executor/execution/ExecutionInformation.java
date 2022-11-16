@@ -12,7 +12,7 @@ import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import com.linkedpipes.etl.executor.pipeline.model.Port;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsBuilder;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jUtils;
+import com.linkedpipes.etl.rdf.rdf4j.Rdf4jUtils;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -21,7 +21,6 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 

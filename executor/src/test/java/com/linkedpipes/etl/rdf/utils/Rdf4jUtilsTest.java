@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.rdf.utils;
 
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jUtils;
+import com.linkedpipes.etl.rdf.rdf4j.Rdf4jUtils;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
 import org.eclipse.rdf4j.model.Statement;

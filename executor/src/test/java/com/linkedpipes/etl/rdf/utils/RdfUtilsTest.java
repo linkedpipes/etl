@@ -1,12 +1,12 @@
 package com.linkedpipes.etl.rdf.utils;
 
+import com.linkedpipes.etl.rdf.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
 import com.linkedpipes.etl.rdf.utils.pojo.Descriptor;
 import com.linkedpipes.etl.rdf.utils.pojo.DescriptorFactory;
 import com.linkedpipes.etl.rdf.utils.pojo.LangString;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

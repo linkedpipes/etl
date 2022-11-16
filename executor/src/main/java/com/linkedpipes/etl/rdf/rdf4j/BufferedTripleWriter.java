@@ -1,9 +1,9 @@
-package com.linkedpipes.etl.rdf.utils.rdf4j;
+package com.linkedpipes.etl.rdf.rdf4j;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.model.RdfTriple;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
+import com.linkedpipes.etl.rdf.utils.model.RdfTriple;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;

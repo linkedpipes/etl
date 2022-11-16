@@ -1,4 +1,4 @@
-package com.linkedpipes.etl.rdf.utils.rdf4j;
+package com.linkedpipes.etl.rdf.rdf4j;
 
 import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
 import org.eclipse.rdf4j.repository.Repository;

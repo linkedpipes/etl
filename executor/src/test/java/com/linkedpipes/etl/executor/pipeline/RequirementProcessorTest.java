@@ -6,7 +6,7 @@ import com.linkedpipes.etl.executor.execution.ResourceManager;
 import com.linkedpipes.etl.rdf.utils.RdfBuilder;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
+import com.linkedpipes.etl.rdf.rdf4j.Rdf4jSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

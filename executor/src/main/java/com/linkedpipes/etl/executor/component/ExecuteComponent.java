@@ -17,7 +17,7 @@ import com.linkedpipes.etl.executor.rdf.TripleWriterWrap;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
 import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
+import com.linkedpipes.etl.rdf.rdf4j.Rdf4jSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

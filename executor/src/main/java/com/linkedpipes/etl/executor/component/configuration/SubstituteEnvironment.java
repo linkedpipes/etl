@@ -3,7 +3,7 @@ package com.linkedpipes.etl.executor.component.configuration;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.rdf.entity.EntityReference;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import com.linkedpipes.etl.rdf.utils.rdf4j.Rdf4jSource;
+import com.linkedpipes.etl.rdf.rdf4j.Rdf4jSource;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
