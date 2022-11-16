@@ -46,7 +46,8 @@ function initializeHtmlFiles(app, webpackCompiler) {
   // but we want it to be '/' and '/debug'
   const webpackFileSystem = webpackCompiler.outputFileSystem;
 
-  const clientPath = path.join(webpackCompiler.outputPath, "client.html");
+  const clientPath = path.join(
+    webpackCompiler.outputPath, "client.html");
   app.get("/", (req, res) => {
     webpackFileSystem.readFile(clientPath, (err, result) => {
       res.set("content-type", "text/html");
@@ -55,18 +56,8 @@ function initializeHtmlFiles(app, webpackCompiler) {
     });
   });
 
-  const clientDebugPath =
-    path.join(webpackCompiler.outputPath, "client-debug.html");
-  app.get("/debug", (req, res) => {
-    webpackFileSystem.readFile(clientDebugPath, (err, result) => {
-      res.set("content-type", "text/html");
-      res.send(result);
-      res.end();
-    });
-  });
-
-  const clientReactPath =
-    path.join(webpackCompiler.outputPath, "client-react.html");
+  const clientReactPath = path.join(
+    webpackCompiler.outputPath, "client-react.html");
   app.get("/react", (req, res) => {
     webpackFileSystem.readFile(clientReactPath, (err, result) => {
       res.set("content-type", "text/html");

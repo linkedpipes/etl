@@ -2,10 +2,8 @@ const logger = require("./logging");
 const config = require("./configuration");
 
 function initialize(app) {
-  app.use("/api/v1/", require("./routes/api"));
-  app.use("/resources/components", require("./routes/components"));
-  app.use("/resources/pipelines", require("./routes/pipelines"));
-  app.use("/resources/executions", require("./routes/executions"));
+  app.use("/api/v1/", require("./routes/api-v1"));
+  app.use("/resources/", require("./routes/resources"));
 }
 
 function start(app) {

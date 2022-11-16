@@ -53,24 +53,7 @@
     }
 
     function prepareFromFrontendErrorMessage(error) {
-        switch (error["type"]) {
-            case "CONNECTION":
-                return "Backend service is offline.";
-            case "INVALID_REQUEST":
-                return "Invalid request. <br/> Message: " + error["message"];
-            case "MISSING":
-                if (error["message"]) {
-                    return "Message: " + error["message"];
-                } else {
-                    return "Missing resource."
-                }
-            case "ERROR":
-                // The error message have same structured.
-                return prepareFromErrorMessage(error);
-            default:
-                return "Undefined error type: " + error["type"] + "</br>" +
-                    JSON.stringify(error);
-        }
+        return prepareFromErrorMessage(error);
     }
 
     function prepareFromErrorMessage(error) {

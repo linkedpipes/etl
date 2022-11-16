@@ -12,7 +12,6 @@ const {SPLAT} = require("triple-beam");
   // Do not exit after the uncaught exception.
   logger.exitOnError = false;
 
-
   module.exports = logger;
 }());
 

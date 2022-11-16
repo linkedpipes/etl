@@ -117,6 +117,12 @@
       "@type": LP.UPDATE_OPTIONS,
       "http://www.w3.org/2004/02/skos/core#prefLabel":
         "Copy of " + pipeline.label,
+      "http://etl.linkedpipes.com/ontology/updateExistingTemplates": false,
+      "http://etl.linkedpipes.com/ontology/importNewTemplates": false,
+      "http://etl.linkedpipes.com/ontology/importPipeline": true,
+      "http://etl.linkedpipes.com/ontology/pipeline": {
+        "@id": pipeline.iri,
+      },
     };
   }
 
@@ -197,7 +203,7 @@
     });
   }
 
-  function createPipelineFromData($http, pipeline, label) {
+  function createPipelineFromData($http, pipelineIri, pipeline, label) {
     const form = new FormData();
     form.append("pipeline",
       new Blob([JSON.stringify(pipeline)], {
@@ -207,6 +213,10 @@
       "@id": "http://localhost/options",
       "@type": "http://linkedpipes.com/ontology/UpdateOptions",
       "http://www.w3.org/2004/02/skos/core#prefLabel": label,
+      "http://etl.linkedpipes.com/ontology/importPipeline": true,
+      "http://etl.linkedpipes.com/ontology/pipeline": {
+        "@id": pipelineIri,
+      },
     };
     form.append("options",
       new Blob([JSON.stringify(options)], {
@@ -220,10 +230,21 @@
         "accept": "application/ld+json"
       }
     };
-    return $http.post("./api/v1/pipelines", form, config)
+    return $http.post("./api/v1/import", form, config)
       .then((response) => {
         const jsonld = response.data;
-        return jsonld[0]["@graph"][0]["@id"];
+        let iri = null;
+        for (const item of jsonld) {
+          if (!item["@type"]?.includes("http://linkedpipes.com/ontology/Pipeline")) {
+            continue;
+          }
+          iri = item[ "http://etl.linkedpipes.com/ontology/localResource"][0]["@id"];
+          break;
+        }
+        if (iri == null) {
+          throw new Error("Can't read pipeline IRI from response.");
+        }
+        return iri;
       });
   }
 

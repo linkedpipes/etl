@@ -1,6 +1,7 @@
 const propertiesReader = require("properties-reader");
 const logger = require("./logging");
 
+process.env.configFileLocation = "../deploy/configuration.properties";
 logger.info("Loading configuration from: ", process.env.configFileLocation);
 if (process.env.configFileLocation === undefined) {
   throw new Error("Missing configuration file!")

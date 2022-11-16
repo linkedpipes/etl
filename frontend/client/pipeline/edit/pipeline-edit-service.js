@@ -263,15 +263,15 @@
       $canvas.synchronize();
       const pipeline = actions.asJsonLd();
       const label = "Copy of " + $scope.pipelineLabel;
-      pipelines.createPipelineFromData($http, pipeline, label)
-        .then((iri) => {
-          $status.success("Pipeline has been successfully copied.");
-          $location.path("/pipelines/edit/canvas")
-            .search({"pipeline": iri});
-        })
-        .catch(() => {
-          $status.error("Can't create new pipeline.", error)
-        });
+      pipelines.createPipelineFromData(
+        $http, actions.getPipelineIri(), pipeline, label
+      ).then((iri) => {
+        $status.success("Pipeline has been successfully copied.");
+        $location.path("/pipelines/edit/canvas")
+          .search({"pipeline": iri});
+      }).catch((error) => {
+        $status.error("Can't create new pipeline.", error)
+      });
     }
 
     function onCantExecute(error) {
@@ -326,8 +326,16 @@
       });
     }
 
+    /**
+     * Copy pipeline from server, throw away local changes.
+     * Designed to be called from execution mode, where no changes
+     * can be made.
+     */
     function onCopyPipelineNoSave() {
-      pipelines.copy($http, {"iri": data.pipelineIri})
+      pipelines.copy($http, {
+        "iri": data.pipelineIri,
+        "label":  $scope.pipelineLabel
+      })
         .then(onCopyPipelineSuccess)
         .catch(() => {
           $status.error("Can't create new pipeline.", error)
@@ -336,7 +344,18 @@
 
     function onCopyPipelineSuccess(response) {
       const jsonld = response.data;
-      const iri = jsonld[0]["@graph"][0]["@id"];
+      let iri = null;
+      for (const item of jsonld) {
+        if (!item["@type"]?.includes("http://linkedpipes.com/ontology/Pipeline")) {
+          continue;
+        }
+        iri = item[ "http://etl.linkedpipes.com/ontology/localResource"][0]["@id"];
+        break;
+      }
+      if (iri === null) {
+        $status.error("Can't read pipeline IRI from response.");
+        return;
+      }
       $status.success("Pipeline has been successfully copied.");
       $location.path("/pipelines/edit/canvas")
         .search({"pipeline": iri});
