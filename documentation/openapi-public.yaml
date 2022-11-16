@@ -1,0 +1,104 @@
+openapi: 3.0.3
+info:
+  title: "LinkedPipes ETL"
+  description: |-
+    This document describes public API, exposed by frontend, for LinkedPipes ETL.
+  contact:
+    email: skodapetr@gmail.com
+  license:
+    name: MIT
+    url: https://github.com/linkedpipes/etl/blob/main/LICENSE
+  version: 1.0.0
+servers:
+  - url: https://demo.etl.linkedpipes.com
+paths:
+  '/resources/pipelines':
+    get:
+      summary: List of stored pipelines.
+      responses:
+        '200':
+          description: Successful operation.
+    post:
+      summary: Create new pipeline.
+      responses:
+        '200':
+          description: Successful operation.
+  '/resources/pipelines/{identification}':
+    get:
+      summary: Return pipeline with given identification.
+      parameters:
+        - name: identification
+          in: path
+          description: Pipeline identification.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation.
+    delete:
+      summary: Delete pipeline.
+      parameters:
+        - name: identification
+          in: path
+          description: Pipeline identification.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation.
+    put:
+      summary: Replace pipeline definition.
+      parameters:
+        - name: identification
+          in: path
+          description: Pipeline identification.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation.
+  '/resources/executions':
+    get:
+      summary: List of stored execution.
+      responses:
+        '200':
+          description: Successful operation.
+  '/resources/executions/{identification}':
+    get:
+      summary: Return execution with given identification.
+      parameters:
+        - name: identification
+          in: path
+          description: Execution identification.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation.
+  '/resources/components':
+    get:
+      summary: List of stored components.
+      responses:
+        '200':
+          description: Successful operation.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

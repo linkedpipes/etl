@@ -1,1 +1,0 @@
-This directory contains Python scripts that can be utilized to manipulate pipelines and templates.
