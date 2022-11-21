@@ -12,6 +12,7 @@ const {
 } = require("./handlers/http-request");
 const {handleUpdatePipeline} = require("./handlers/update-pipeline-handler");
 const {HTTP} = require("./handlers/http-codes");
+const {handleCreateExecution} = require("./handlers/create-execution-handler");
 
 const STORAGE_API_URL = configuration.storage.url + "/api/v1";
 
@@ -33,6 +34,17 @@ router.get("/executions/:id", (req, res) => {
   const execution = configuration.storage.domain + "/resources" + req.url;
   httpGetForProxy(MONITOR_API_URL + "/executions/", req, res,
     {"query": {"iri": execution}});
+});
+
+router.post("/executions", (req, res) => {
+  handleCreateExecution(req, res).catch(error => {
+    console.error("Can't create execution.", error);
+    res.status(HTTP.SERVER_ERROR).json({
+      "error": {
+        "message": "Can't execute request."
+      }
+    })
+  });
 });
 
 router.options('/pipelines', cors());
