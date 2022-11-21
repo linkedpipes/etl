@@ -13,7 +13,7 @@ LinkedPipes ETL is an RDF based, lightweight ETL tool.
 ### For building locally
 - [Java] 17, 18
 - [Git]
-- [Maven]
+- Optionally [Maven]
 - [Node.js] 18 & npm
 
 ## Installation and startup
@@ -26,7 +26,8 @@ git clone https://github.com/linkedpipes/etl.git
 cd etl
 docker-compose up
 ```
-This would use pre-build images from [DockerHub].
+This would use pre-build images stored at [DockerHub].
+The images are build from the main branch.
 
 Alternatively you can use one liner.
 For example to run LP-ETL from ```develop``` branch on ```http://localhost:9080``` use can use following command:
@@ -55,7 +56,6 @@ You may want to create your own ```docker-compose.yml``` for custom configuratio
 ### From source on Linux
 
 #### Installation
-
 ```sh
 $ git clone https://github.com/linkedpipes/etl.git
 $ cd etl
@@ -66,7 +66,6 @@ $ mvn install
 The configuration file ```deploy/configuration.properties``` can be edited, mainly changing paths to working, storage, log and library directories. 
 
 #### Startup
-
 ```sh
 $ cd deploy
 $ ./executor.sh >> executor.log &
@@ -87,32 +86,27 @@ git clone https://github.com/linkedpipes/etl.git
 cd etl
 mvn install
 ```
+
 #### Configuration
 The configuration file ```deploy/configuration.properties``` can be edited, mainly changing paths to working, storage, log and library directories. 
 
 #### Startup
 In the ```deploy``` folder, run
- * ```executor.bat```
- * ```executor-monitor.bat```
- * ```storage.bat```
- * ```frontend.bat```
+- ```executor.bat```
+- ```executor-monitor.bat```
+- ```storage.bat```
+- ```frontend.bat```
 
 ## Data import
-You can copy pipelines, templates and mapping data from one instance to another directly iff both instance runs on the same domain.
-As this is, mostly, not the case you need to utilize special script to update the resources.
+You can copy pipelines and templates data from one instance to another directly.
 
-Assume that you have copy of a data directory ```./data-source``` with ```knowledge```, ```pipelines``` and ```templates``` sub-directories. 
+Assume that you have copy of a data directory ```./data-source``` with ```pipelines``` and ```templates``` subdirectories. 
 You can obtain the directory from any running instance, you can even merge content of multiple of those directories together.
 In the next step you would like to import the data into a new instance. 
-The new instance has a data directory ```./data-target``` and the domain, set in configuration as ```domain.uri``` is ```https://example.com```.
+You can just copy the files to respective directories under ```./data-target```.
+Keep in mind that this would preserve the IRIs.
 
-In that case you can utilize a Python script from ```script``` directory.
-The script is called ```change_domain.py``` and requires [installation of rdflib](https://rdflib.readthedocs.io/en/stable/gettingstarted.html#installation),
-Once rdflib is installed you can run the script using the following command:
-```
-python change_domain.py --input ./data-source --domain https://example.com --output ./data-target
-```
-After the script is finished you can start the target instance of LinkedPipes ETL and all the data should be available there.
+Should you need to change the IRIs, you should employ import and export functionality available in the frontend.
 
 ## Plugins - Components
 The components live in the ```jars``` directory.
