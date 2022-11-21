@@ -2,14 +2,14 @@
 This scenario test basic usage on fresh instance.
 
 ## Setup
-* Clean LinkedPipes installation. 
+* Clean LinkedPipes installation.
 * All components up and running.
 
 ## Steps : Pipeline and Component
 * Open pipeline list, it should be empty.
 * Open execution list, it should be empty.
 * Open component list, it should be empty.
-* Create new pipeline, change pipeline name and description. 
+* Create new pipeline, change pipeline name and description.
   Save pipeline.
 * Navigate to pipeline list, there should be the pipeline.
 * Open the pipeline.
