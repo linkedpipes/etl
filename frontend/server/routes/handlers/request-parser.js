@@ -1,11 +1,18 @@
 const multiparty = require("multiparty");
 
 async function parseRequestBody(req, bodyName) {
-  if (req.is("multipart/form-data")) {
+  if (isMultipartFormData(req)) {
     return parseMultipartRequestBody(req);
   } else {
     return parseRawRequestBody(req, bodyName);
   }
+}
+
+function isMultipartFormData(req) {
+  // We can not use req.is("multipart/form-data") as it would not pass
+  // multipart/form-data; boundary==----------------------1669050523527
+  let contentType = req.get("content-type");
+  return contentType.startsWith("multipart/form-data");
 }
 
 async function parseMultipartRequestBody(req) {

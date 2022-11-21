@@ -127,7 +127,7 @@ router.get("/executions", (req, res) => {
 router.post("/executions", (req, res) => {
   handleCreateExecution(req, res).catch(error => {
     console.error("Can't create execution.", error);
-    res.status(HTTP_SERVER_ERROR).json({
+    res.status(HTTP.SERVER_ERROR).json({
       "error": {
         "message": "Can't execute request."
       }

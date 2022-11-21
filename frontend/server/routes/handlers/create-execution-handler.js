@@ -9,6 +9,8 @@ const {httpGetContentJsonLd, httpPostContent} = require("./http-request");
 
 const BODY_OPTIONS = "options";
 
+const BODY_CONFIGURATION = "configuration";
+
 const BODY_CONTENT = "pipeline";
 
 const BODY_INPUTS = "input";
@@ -56,11 +58,18 @@ async function handleCreateExecution(req, res) {
 }
 
 function secureOptions(requestContent) {
-  if (requestContent[BODY_OPTIONS] === undefined) {
-    return createDefaultOptions();
+  // We use BODY_CONFIGURATION for backwards compatibility.
+  let entry;
+  if (requestContent[BODY_OPTIONS] !== undefined) {
+    // TODO Add validation here as taking the first one may not work.
+    entry = requestContent[BODY_OPTIONS][0];
+  } else if (requestContent[BODY_CONFIGURATION] !== undefined) {
+    // TODO Add validation here as taking the first one may not work.
+    entry = requestContent[BODY_CONFIGURATION][0];
+  } else {
+    entry = createDefaultOptions();
   }
-  // TODO Add validation here as taking the first one may not work.
-  const entry = requestContent[BODY_OPTIONS][0];
+  console.log("secureOptions", entry);
   return {
     "contentType": entry["contentType"],
     "fileName": entry["fileName"] ?? guessFileName("options", entry),
