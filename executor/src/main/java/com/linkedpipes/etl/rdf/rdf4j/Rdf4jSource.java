@@ -150,14 +150,14 @@ public class Rdf4jSource
 
     public static ClosableRdf4jSource createInMemory() {
         final Repository repository = new SailRepository(new MemoryStore());
-        repository.initialize();
+        repository.init();
         return new ClosableRdf4jSource(repository);
     }
 
     public static ClosableRdf4jSource wrapInMemory(
             Collection<Statement> statements) {
         final Repository repository = new SailRepository(new MemoryStore());
-        repository.initialize();
+        repository.init();
         Repositories.consume(repository,
                 connection -> connection.add(statements));
         return new ClosableRdf4jSource(repository);

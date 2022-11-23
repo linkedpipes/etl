@@ -50,7 +50,7 @@ public class SparqlEndpointLoaderChunked implements Component,
                 configuration.getEndpoint());
         // No action here.
         try {
-            sparqlRepository.initialize();
+            sparqlRepository.init();
         } catch (Throwable t) {
             throw new LpException(
                     "Can't connect to remote SPARQL.", t);

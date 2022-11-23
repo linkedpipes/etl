@@ -55,7 +55,7 @@ public class Pipeline {
         }
         // Create repository and load pipeline.
         repository = new SailRepository(new NativeStore(repositoryDirectory));
-        repository.initialize();
+        repository.init();
         try (final RepositoryConnection connection
                      = repository.getConnection()) {
             connection.add(file, "http://localhost/base", rdfFormat);

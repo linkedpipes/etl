@@ -107,7 +107,7 @@ public final class SparqlEndpointSelectScrollableCursor
     @Override
     public void execute() throws LpException {
         SPARQLRepository repository = new SPARQLRepository(getEndpoint());
-        repository.initialize();
+        repository.init();
         repository.setHttpClient(getHttpClient());
         //
         LOG.info("Used query: {}", prepareQuery(0));

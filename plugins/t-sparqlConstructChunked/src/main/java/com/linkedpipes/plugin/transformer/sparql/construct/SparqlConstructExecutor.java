@@ -86,7 +86,7 @@ class SparqlConstructExecutor implements Runnable {
 
     private Repository createRepository() {
         Repository repository = new SailRepository(new MemoryStore());
-        repository.initialize();
+        repository.init();
         return repository;
     }
 

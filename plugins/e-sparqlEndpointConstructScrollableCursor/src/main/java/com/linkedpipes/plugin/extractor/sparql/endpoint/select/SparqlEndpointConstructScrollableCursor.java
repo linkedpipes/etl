@@ -56,7 +56,7 @@ public final class SparqlEndpointConstructScrollableCursor
         } else {
             repository = new SPARQLRepository(getEndpoint());
         }
-        repository.initialize();
+        repository.init();
         repository.setHttpClient(getHttpClient());
         //
         LOG.info("Used query: {}", prepareQuery(0));

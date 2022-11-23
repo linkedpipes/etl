@@ -165,7 +165,7 @@ public class DistributionMetadata implements Component, SequentialExecution {
         }
 
         if (!isBlank(schemaUri)) {
-            addValue(distribution, DistributionMetadataVocabulary.WDRS_DESCRIBEDBY, valueFactory.createURI(schemaUri));
+            addValue(distribution, DistributionMetadataVocabulary.WDRS_DESCRIBEDBY, valueFactory.createIRI(schemaUri));
         }
 
         if (!isBlank(configuration.getSchemaType())) {
@@ -173,16 +173,16 @@ public class DistributionMetadata implements Component, SequentialExecution {
         }
 
         if (!isBlank(configuration.getAccessURL())) {
-            addValue(distribution, DistributionMetadataVocabulary.DCAT_ACCESSURL, valueFactory.createURI(configuration.getAccessURL()));
+            addValue(distribution, DistributionMetadataVocabulary.DCAT_ACCESSURL, valueFactory.createIRI(configuration.getAccessURL()));
         }
 
         if (!isBlank(configuration.getDownloadURL())) {
-            addValue(distribution, DistributionMetadataVocabulary.DCAT_DOWNLOADURL, valueFactory.createURI(configuration.getDownloadURL()));
-            addValue(distribution, DistributionMetadataVocabulary.VOID_DATADUMP, valueFactory.createURI(configuration.getDownloadURL()));
+            addValue(distribution, DistributionMetadataVocabulary.DCAT_DOWNLOADURL, valueFactory.createIRI(configuration.getDownloadURL()));
+            addValue(distribution, DistributionMetadataVocabulary.VOID_DATADUMP, valueFactory.createIRI(configuration.getDownloadURL()));
         }
 
         if (!isBlank(configuration.getSparqlEndpointUrl())) {
-            addValue(distribution, DistributionMetadataVocabulary.VOID_SPARQLENDPOINT, valueFactory.createURI(configuration.getSparqlEndpointUrl()));
+            addValue(distribution, DistributionMetadataVocabulary.VOID_SPARQLENDPOINT, valueFactory.createIRI(configuration.getSparqlEndpointUrl()));
         }
 
         if (!isBlank(configuration.getMediaType())) {
@@ -193,12 +193,12 @@ public class DistributionMetadata implements Component, SequentialExecution {
         }
 
         if (!isBlank(license)) {
-            addValue(distribution, DCTERMS.LICENSE, valueFactory.createURI(license));
+            addValue(distribution, DCTERMS.LICENSE, valueFactory.createIRI(license));
         }
 
         // Lists ...
         configuration.getExampleResources().forEach((example) -> {
-            addValue(distribution, DistributionMetadataVocabulary.VOID_EXAMPLERESOURCE, valueFactory.createURI(example));
+            addValue(distribution, DistributionMetadataVocabulary.VOID_EXAMPLERESOURCE, valueFactory.createIRI(example));
         });
 
         // Add all triples.

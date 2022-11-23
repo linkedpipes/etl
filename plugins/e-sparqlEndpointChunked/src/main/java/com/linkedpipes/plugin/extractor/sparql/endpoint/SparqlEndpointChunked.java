@@ -12,7 +12,6 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.eclipse.rdf4j.OpenRDFException;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.query.GraphQuery;
@@ -63,8 +62,8 @@ public final class SparqlEndpointChunked implements Component,
     public void execute() throws LpException {
         final Repository repository = createRepository();
         try {
-            repository.initialize();
-        } catch (OpenRDFException ex) {
+            repository.init();
+        } catch (RepositoryException ex) {
             throw new LpException("Can't connect to endpoint.", ex);
         }
 

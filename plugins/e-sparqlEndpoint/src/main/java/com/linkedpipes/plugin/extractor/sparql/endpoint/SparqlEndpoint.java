@@ -11,7 +11,6 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.eclipse.rdf4j.OpenRDFException;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -65,8 +64,8 @@ public final class SparqlEndpoint implements Component, SequentialExecution {
         final SPARQLRepository repository = createRepository();
         //
         try {
-            repository.initialize();
-        } catch (OpenRDFException ex) {
+            repository.init();
+        } catch (RepositoryException ex) {
             throw new LpException("Can't connnect to endpoint.", ex);
         }
         repository.setHttpClient(getHttpClient());

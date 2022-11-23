@@ -43,7 +43,7 @@ public class SparqlEndpointLoader implements Component, SequentialExecution {
                 configuration.getEndpoint());
         // No action here.
         try {
-            sparqlRepository.initialize();
+            sparqlRepository.init();
         } catch (Throwable t) {
             throw new LpException(
                     "Can't connect to remote SPARQL.", t);

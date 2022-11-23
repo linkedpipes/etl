@@ -5,11 +5,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.linkedpipes</groupId>
 	<artifactId>rdf4j-storage-light</artifactId>
-	<version>3.7.0</version>
+	<version>4.2.1</version>
 	<packaging>bundle</packaging>
 	<name>LinkedPipes Rdf4j Storage Light</name>
 	<description>Lightweight packaged version of RDF4j storage.</description>
-
+	<!--
+	 This pom.xml is expansion of rdf4j-runtime/rdf4j-runtime-osgi that consists of
+	 rdf4j-client and rdf4j-storage.
+	 -->
 	<dependencies>
 		<!-- rdf4j-client -->
 		<dependency>
@@ -20,6 +23,16 @@
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-http-protocol</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-model-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-model-vocabulary</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -40,11 +53,6 @@
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-queryparser-api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.rdf4j</groupId>
-			<artifactId>rdf4j-queryparser-serql</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -184,7 +192,42 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
-			<artifactId>rdf4j-util</artifactId>
+			<artifactId>rdf4j-common-annotation</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-common-exception</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-common-io</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-common-iterator</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-common-text</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-common-transaction</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-common-util</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-common-xml</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- rdf4j-storage -->
@@ -212,10 +255,6 @@
 				<exclusion>
 					<groupId>org.eclipse.rdf4j</groupId>
 					<artifactId>rdf4j-http-client</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.rdf4j</groupId>
-					<artifactId>rdf4j-util</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -288,10 +327,6 @@
 					<groupId>org.eclipse.rdf4j</groupId>
 					<artifactId>rdf4j-rio-turtle</artifactId>
 				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.rdf4j</groupId>
-					<artifactId>rdf4j-util</artifactId>
-				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -310,29 +345,6 @@
 				<exclusion>
 					<groupId>org.eclipse.rdf4j</groupId>
 					<artifactId>rdf4j-queryalgebra-model</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.rdf4j</groupId>
-					<artifactId>rdf4j-util</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.rdf4j</groupId>
-			<artifactId>rdf4j-sail-federation</artifactId>
-			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.rdf4j</groupId>
-					<artifactId>rdf4j-model</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.rdf4j</groupId>
-					<artifactId>rdf4j-rio-turtle</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.rdf4j</groupId>
-					<artifactId>rdf4j-repository-manager</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -359,22 +371,35 @@
 				</exclusion>
 				<exclusion>
 					<groupId>org.eclipse.rdf4j</groupId>
-					<artifactId>rdf4j-queryparser-serql</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.rdf4j</groupId>
 					<artifactId>rdf4j-repository-api</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>org.eclipse.rdf4j</groupId>
 					<artifactId>rdf4j-rio-api</artifactId>
 				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.rdf4j</groupId>
-					<artifactId>rdf4j-util</artifactId>
-				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- We do not support Elasticsearch
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-sail-elasticsearch</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		-->
+		<!-- We do not support Lucene
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-sail-lucene</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		-->
+		<!-- We do not support  Solr
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-sail-solr</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		-->
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-sail-memory</artifactId>
@@ -392,12 +417,29 @@
 					<groupId>org.eclipse.rdf4j</groupId>
 					<artifactId>rdf4j-query</artifactId>
 				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- We do not support lmdb
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-sail-lmdb</artifactId>
+			<version>${project.version}</version>
+			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.rdf4j</groupId>
-					<artifactId>rdf4j-util</artifactId>
+					<artifactId>rdf4j-queryalgebra-model</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.rdf4j</groupId>
+					<artifactId>rdf4j-model</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.rdf4j</groupId>
+					<artifactId>rdf4j-query</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-sail-nativerdf</artifactId>
@@ -415,21 +457,7 @@
 					<groupId>org.eclipse.rdf4j</groupId>
 					<artifactId>rdf4j-query</artifactId>
 				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.rdf4j</groupId>
-					<artifactId>rdf4j-util</artifactId>
-				</exclusion>
 			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.rdf4j</groupId>
-			<artifactId>rdf4j-sail-spin</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.rdf4j</groupId>
-			<artifactId>rdf4j-lucene-spin</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
@@ -455,13 +483,34 @@
 			<artifactId>rdf4j-shacl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<!-- Remove with migration to 4.2.1
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-sail-federation</artifactId>
+			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.rdf4j</groupId>
+					<artifactId>rdf4j-model</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.rdf4j</groupId>
+					<artifactId>rdf4j-rio-turtle</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.rdf4j</groupId>
+					<artifactId>rdf4j-repository-manager</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		-->
 	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<version>5.1.2</version>
+				<version>5.1.8</version>
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
@@ -488,7 +537,7 @@
 					<dependency>
 						<groupId>biz.aQute.bnd</groupId>
 						<artifactId>biz.aQute.bndlib</artifactId>
-						<version>5.3.0</version>
+						<version>6.3.1</version>
 					</dependency>
 				</dependencies>
 			</plugin>

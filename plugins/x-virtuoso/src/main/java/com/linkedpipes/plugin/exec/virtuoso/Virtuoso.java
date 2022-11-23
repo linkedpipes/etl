@@ -50,7 +50,7 @@ public final class Virtuoso implements Component, SequentialExecution {
                 configuration.getUsername(),
                 configuration.getPassword());
         try {
-            repository.initialize();
+            repository.init();
         } catch (RepositoryException ex) {
             throw new LpException(
                     "Can't connect to Virtuoso repository.", ex);

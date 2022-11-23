@@ -136,7 +136,7 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
             repository = new SPARQLRepository(getEndpoint());
         }
         setHeaders(repository);
-        repository.initialize();
+        repository.init();
         repository.setHttpClient(getHttpClient());
         return repository;
     }

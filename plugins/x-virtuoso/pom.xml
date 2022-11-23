@@ -29,17 +29,17 @@
         <!-- Virtuoso. -->
         <dependency>
             <groupId>com.openlinksw.virtuoso</groupId>
-            <artifactId>virt_rdf4j</artifactId>
+            <artifactId>virt_rdf4j_4</artifactId>
             <version>0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/libs/virt_rdf4j.jar</systemPath>
+            <systemPath>${project.basedir}/libs/virt_rdf4j_4.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.openlinksw.virtuoso</groupId>
-            <artifactId>virtjdbc4</artifactId>
+            <artifactId>virtjdbc4_3</artifactId>
             <scope>system</scope>
             <version>0</version>
-            <systemPath>${project.basedir}/libs/virtjdbc4.jar</systemPath>
+            <systemPath>${project.basedir}/libs/virtjdbc4_3.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.linkedpipes</groupId>

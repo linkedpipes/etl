@@ -117,7 +117,7 @@ class RepositoryManager {
             repository = createNativeRepository(group);
         }
         try {
-            repository.initialize();
+            repository.init();
         } catch (RepositoryException ex) {
             throw new LpException("Can't create RDF repository.", ex);
         }

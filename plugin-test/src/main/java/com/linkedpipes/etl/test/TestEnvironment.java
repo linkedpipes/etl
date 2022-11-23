@@ -45,7 +45,7 @@ public class TestEnvironment implements AutoCloseable {
             File componentWorkingDirectory) {
         this.component = component;
         this.dataRepository = new SailRepository(new MemoryStore());
-        this.dataRepository.initialize();
+        this.dataRepository.init();
         this.componentWorkingDirectory = componentWorkingDirectory;
     }
 

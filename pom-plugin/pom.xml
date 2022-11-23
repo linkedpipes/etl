@@ -21,16 +21,15 @@
         </checkstyle.config.location>
         <!-- Libraries. -->
         <slf4j.version>1.7.30</slf4j.version>
-        <logback.version>1.2.3</logback.version>
-        <jackson.version>2.12.3</jackson.version>
-        <rdf4j.version>3.7.0</rdf4j.version>
-        <mockito.version>3.11.0</mockito.version>
-        <junit.version>5.7.2</junit.version>
+        <logback.version>1.4.5</logback.version>
+        <jackson.version>2.14.0</jackson.version>
+        <rdf4j.version>4.2.1</rdf4j.version>
+        <mockito.version>4.9.0</mockito.version>
+        <junit.version>5.9.1</junit.version>
         <lp.version>0.0.0</lp.version>
         <commons-io.version>2.8.0</commons-io.version>
         <commons-net.version>3.8.0</commons-net.version>
         <httpclient-osgi.version>4.5.13</httpclient-osgi.version>
-        <felix.version>7.0.0</felix.version>
     </properties>
 
     <dependencyManagement>
@@ -214,12 +213,12 @@
                     <plugin>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs-maven-plugin</artifactId>
-                        <version>4.2.3</version>
+                        <version>4.7.3.0</version>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
-                        <version>3.1.2</version>
+                        <version>3.2.0</version>
                         <configuration>
                             <includeTestSourceDirectory>
                                 true
@@ -269,7 +268,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>5.1.2</version>
+                    <version>5.1.8</version>
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
@@ -283,7 +282,7 @@
                         <dependency>
                             <groupId>biz.aQute.bnd</groupId>
                             <artifactId>biz.aQute.bndlib</artifactId>
-                            <version>6.0.0</version>
+                            <version>6.3.1</version>
                         </dependency>
                     </dependencies>
                 </plugin>

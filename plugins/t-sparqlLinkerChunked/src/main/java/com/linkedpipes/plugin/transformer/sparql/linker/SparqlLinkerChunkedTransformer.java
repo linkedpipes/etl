@@ -40,7 +40,7 @@ public class SparqlLinkerChunkedTransformer
             ChunkedTriples.Chunk chunk) throws LpException {
         outputStatements.clear();
         Repository repository = new SailRepository(new MemoryStore());
-        repository.initialize();
+        repository.init();
         Collection<Statement> statements = chunk.toCollection();
         populateRepository(repository, statements);
         executeQuery(repository);

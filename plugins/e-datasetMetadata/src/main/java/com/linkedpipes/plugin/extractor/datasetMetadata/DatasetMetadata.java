@@ -74,7 +74,7 @@ public class DatasetMetadata implements Component, SequentialExecution {
         });
 
         configuration.getLanguages().forEach((language) -> {
-            addValue(DCTERMS.LANGUAGE, valueFactory.createURI(language));
+            addValue(DCTERMS.LANGUAGE, valueFactory.createIRI(language));
         });
 
         if (!isBlank(configuration.getContactPoint())) {
@@ -127,7 +127,7 @@ public class DatasetMetadata implements Component, SequentialExecution {
         addStringIfNotBlank(DCTERMS.REFERENCES, configuration.getSchema(), null);
 
         for (String author : configuration.getAuthors()) {
-            addValue(DCTERMS.CREATOR, valueFactory.createURI(author));
+            addValue(DCTERMS.CREATOR, valueFactory.createIRI(author));
         }
 
         if (!isBlank(configuration.getPublisherURI())) {
@@ -141,11 +141,11 @@ public class DatasetMetadata implements Component, SequentialExecution {
         }
 
         if (!isBlank(configuration.getLicense())) {
-            addValue(DCTERMS.LICENSE, valueFactory.createURI(configuration.getLicense()));
+            addValue(DCTERMS.LICENSE, valueFactory.createIRI(configuration.getLicense()));
         }
 
         configuration.getSources().forEach((source) -> {
-            addValue(DCTERMS.SOURCE, valueFactory.createURI(source));
+            addValue(DCTERMS.SOURCE, valueFactory.createIRI(source));
         });
 
 
