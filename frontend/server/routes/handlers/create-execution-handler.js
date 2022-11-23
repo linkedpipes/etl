@@ -69,7 +69,6 @@ function secureOptions(requestContent) {
   } else {
     entry = createDefaultOptions();
   }
-  console.log("secureOptions", entry);
   return {
     "contentType": entry["contentType"],
     "fileName": entry["fileName"] ?? guessFileName("options", entry),
