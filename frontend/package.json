@@ -6,6 +6,7 @@
   "repository": "github:linkedpipes/etl",
   "scripts": {
     "dev": "cross-env configFileLocation=../deploy/configuration.properties node ./server/server.develop.js",
+    "dev-server": "cross-env configFileLocation=../deploy/configuration.properties nodemon ./server/server.production.js",
     "lint": "eslint --ext .js,.ts,.tsx --ignore-path ../.gitignore . --fix",
     "test": "jest",
     "build": "cross-env NODE_ENV=production NODE_OPTIONS='--max-old-space-size=2048' webpack --config build/webpack.production.js",
