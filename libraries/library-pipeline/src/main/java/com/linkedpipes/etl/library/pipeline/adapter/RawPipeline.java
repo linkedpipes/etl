@@ -86,7 +86,7 @@ public class RawPipeline {
         this.note = other.note;
         this.tags.addAll(other.tags);
         this.executionProfile = new RawPipelineExecutionProfile(
-                this.executionProfile);
+                other.executionProfile);
         for (RawPipelineComponent component : other.components) {
             this.components.add(new RawPipelineComponent(component));
         }

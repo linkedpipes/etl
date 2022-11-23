@@ -70,6 +70,7 @@ public class FilePipelineRepository implements PipelineRepository {
         Map<Resource, File> nextPipelineFiles = new HashMap<>();
         List<StorageException> result = new ArrayList<>();
         List<File> files = listPipelineFiles();
+        int migratedCounter = 0;
         for (File file : files) {
             RawPipeline rawPipeline;
             try {
@@ -107,9 +108,12 @@ public class FilePipelineRepository implements PipelineRepository {
             } catch (StorageException ex) {
                 result.add(ex);
             }
+            ++migratedCounter;
         }
         pipelineFiles = nextPipelineFiles;
-        LOG.debug("Loading repository ... done");
+        LOG.debug("Loading repository ... done " +
+                        "(loaded: {}, migrated: {}, failed: {})",
+                files.size(), migratedCounter, result.size());
         return result;
     }
 
@@ -146,7 +150,7 @@ public class FilePipelineRepository implements PipelineRepository {
                 RdfToRawPipeline.asRawPipelines(statements.selector());
         if (candidates.size() != 1) {
             throw new StorageException(
-                    "Invalid number of components '{}', expected one.",
+                    "Invalid number of pipelines '{}', expected one.",
                     candidates.size());
         }
         return candidates.get(0);
@@ -160,14 +164,12 @@ public class FilePipelineRepository implements PipelineRepository {
             throws StorageException {
         // Create a backup.
         File backUpFile = createBackupFile(file);
-        if (backUpFile.exists()) {
-            // We already have a backup.
-            return;
-        }
-        try {
-            Files.copy(file.toPath(), backUpFile.toPath());
-        } catch (IOException ex) {
-            throw new StorageException("Can't create pipeline backup.", ex);
+        if (!backUpFile.exists()) {
+            try {
+                Files.copy(file.toPath(), backUpFile.toPath());
+            } catch (IOException ex) {
+                throw new StorageException("Can't create pipeline backup.", ex);
+            }
         }
         writePipelineToFile(file, pipeline);
     }
@@ -182,11 +184,13 @@ public class FilePipelineRepository implements PipelineRepository {
 
     protected void writePipelineToFile(File file, Pipeline pipeline)
             throws StorageException {
-        Statements statements = PipelineToRdf.asRdf(pipeline);
+        Statements statements  = PipelineToRdf.asRdf(pipeline);
         try {
             statements.file().atomicWriteToFile(file, RDFFormat.TRIG);
-        } catch (IOException ex) {
-            throw new StorageException("Can't write to file.", ex);
+        } catch (IOException | RuntimeException ex) {
+            throw new StorageException(
+                    "Can't write pipeline '{}' to file '{}'.",
+                    pipeline.resource(), file, ex);
         }
     }
 
