@@ -32,10 +32,10 @@
         </dependency>
         <dependency>
             <groupId>com.openlinksw.virtuoso</groupId>
-            <artifactId>virtjdbc4</artifactId>
+            <artifactId>virtjdbc4_3</artifactId>
             <scope>system</scope>
             <version>0</version>
-            <systemPath>${project.basedir}/../x-virtuoso/libs/virtjdbc4.jar</systemPath>
+            <systemPath>${project.basedir}/../x-virtuoso/libs/virtjdbc4_3.jar</systemPath>
         </dependency>
     </dependencies>
 
