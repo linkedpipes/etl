@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.executor.cli;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -54,6 +55,15 @@ public record Configuration(
             String osgiLibrariesDirectory,
             String pluginsDirectory,
             List<String> bannedPluginIriPatterns) {
+        // Banning components is additive.
+        List<String> mergedBanned = new ArrayList<>();
+        if (this.bannedPluginIriPatterns != null) {
+            mergedBanned.addAll(this.bannedPluginIriPatterns);
+        }
+        if (bannedPluginIriPatterns != null) {
+            mergedBanned.addAll(bannedPluginIriPatterns);
+        }
+        //
         return new Configuration(
                 httpPort == null ?
                         this.httpPort :
@@ -76,9 +86,7 @@ public record Configuration(
                 pluginsDirectory == null ?
                         this.pluginsDirectory :
                         pluginsDirectory,
-                bannedPluginIriPatterns == null ?
-                        this.bannedPluginIriPatterns :
-                        bannedPluginIriPatterns
+                mergedBanned
         );
     }
 
