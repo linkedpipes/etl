@@ -30,6 +30,8 @@ public class Executor {
             return;
         }
         initializeLogging();
+        LOG.debug("Banned components: {}",
+                configuration.bannedPluginIriPatterns());
         startSpring();
     }
 

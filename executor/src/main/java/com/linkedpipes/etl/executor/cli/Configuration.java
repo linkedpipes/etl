@@ -57,12 +57,8 @@ public record Configuration(
             List<String> bannedPluginIriPatterns) {
         // Banning components is additive.
         List<String> mergedBanned = new ArrayList<>();
-        if (this.bannedPluginIriPatterns != null) {
-            mergedBanned.addAll(this.bannedPluginIriPatterns);
-        }
-        if (bannedPluginIriPatterns != null) {
-            mergedBanned.addAll(bannedPluginIriPatterns);
-        }
+        mergedBanned.addAll(this.bannedPluginIriPatterns);
+        mergedBanned.addAll(bannedPluginIriPatterns);
         //
         return new Configuration(
                 httpPort == null ?
