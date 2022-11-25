@@ -73,7 +73,13 @@ function handleConnectionError(url, error, res) {
 }
 
 function httpPostForProxy(url, req, res) {
-  req.pipe(request.post(url, {"form": req.body}), {"end": false})
+  const options = {
+    "url": url,
+    "headers": req.headers,
+    "qs": req.query,
+    "form": req.body,
+  };
+  req.pipe(request.post(options), {"end": false})
     .on("error", (error) => handleConnectionError(res, error))
     .pipe(res);
 }
