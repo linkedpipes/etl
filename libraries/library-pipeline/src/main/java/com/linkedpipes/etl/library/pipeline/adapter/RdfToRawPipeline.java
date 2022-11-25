@@ -1,11 +1,5 @@
 package com.linkedpipes.etl.library.pipeline.adapter;
 
-import com.linkedpipes.etl.library.pipeline.adapter.RawPipeline;
-import com.linkedpipes.etl.library.pipeline.adapter.RawPipelineComponent;
-import com.linkedpipes.etl.library.pipeline.adapter.RawPipelineControlFlow;
-import com.linkedpipes.etl.library.pipeline.adapter.RawPipelineDataFlow;
-import com.linkedpipes.etl.library.pipeline.adapter.RawPipelineExecutionProfile;
-import com.linkedpipes.etl.library.pipeline.adapter.RawPipelineVertex;
 import com.linkedpipes.etl.library.pipeline.vocabulary.LP_V1;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsSelector;
@@ -17,24 +11,42 @@ import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class RdfToRawPipeline {
+
+    private static final Logger LOG =
+            LoggerFactory.getLogger(RdfToRawPipeline.class);
 
     private static final String PIPELINE = LP_V1.PIPELINE;
 
     public static List<RawPipeline> asRawPipelines(Statements statements) {
         StatementsSelector selector = statements.selector();
         return selector.selectByType(PIPELINE)
-                .stream().map(statement -> loadPipeline(
+                .stream().map(statement -> safelyLoadPipeline(
                         selector,
                         statement.getSubject(),
                         statement.getContext()))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+
+    private static RawPipeline safelyLoadPipeline(
+            StatementsSelector statements,
+            Resource pipelineResource, Resource pipelineGraph) {
+        try {
+            return loadPipeline(statements, pipelineResource, pipelineGraph);
+        } catch (RuntimeException ex) {
+            LOG.error("Can't load pipeline '{}'.", pipelineGraph, ex);
+            return null;
+        }
     }
 
     private static RawPipeline loadPipeline(

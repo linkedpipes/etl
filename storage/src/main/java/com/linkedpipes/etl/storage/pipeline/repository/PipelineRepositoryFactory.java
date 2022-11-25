@@ -28,9 +28,6 @@ public class PipelineRepositoryFactory {
         for (StorageException exception : exceptions) {
             LOG.error("Error while creating repository.", exception);
         }
-        if (!exceptions.isEmpty()) {
-            throw new StorageException("Can't initialize repository.");
-        }
         return result;
     }
 
