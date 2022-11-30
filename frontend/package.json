@@ -67,7 +67,7 @@
     "jointjs": "^3.6.3",
     "jquery": "^3.6.1",
     "jsonld": "^8.1.0",
-    "mini-css-extract-plugin": "^2.7.1",
+    "mini-css-extract-plugin": "^2.7.0",
     "ng-cache-loader": "0.0.26",
     "ng-file-upload": "^12.2.13",
     "postcss": "^8.4.19",
