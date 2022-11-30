@@ -8,9 +8,12 @@
 
   const LP = vocabulary.LP;
 
-  function executePipeline($http, iri, options) {
+  /**
+   * Create execution for local pipeline.
+   */
+  function executeLocalPipeline($http, iri, options) {
     const config = createExecutionConfiguration(options);
-    return postPipelineExecution($http, iri, config);
+    return postLocalPipelineExecution($http, iri, config);
   }
 
   function createExecutionConfiguration(options) {
@@ -54,8 +57,8 @@
     }));
   }
 
-  function postPipelineExecution($http, iri, config) {
-    const url = "./api/v1/executions?pipeline=" + iri;
+  function postLocalPipelineExecution($http, iri, config) {
+    const url = "./api/v1/executions?local-iri=" + iri;
     return $http.post(url, config);
   }
 
@@ -249,7 +252,7 @@
   }
 
   return {
-    "executePipeline": executePipeline,
+    "executePipeline": executeLocalPipeline,
     "create": createPipeline,
     "copy": copyPipeline,
     "asLocalFromIri": asLocalFromIri,
