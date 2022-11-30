@@ -39,6 +39,7 @@ deploy/storage*
 deploy/frontend*
 deploy/jar
 deploy/osg
+deploy/ansible/hosts
 data/
 dist/
 
