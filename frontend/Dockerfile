@@ -9,8 +9,8 @@ FROM node:16.14.2-bullseye
 ARG LP_ETL_USER=5987
 RUN addgroup --gid $LP_ETL_USER "linkedpipes" \
     && useradd --gid "linkedpipes" --uid $LP_ETL_USER "linkedpipes"
-
-
+RUN mkdir -p /data/lp-etl/logs \
+    && chown -R $LP_ETL_USER:$LP_ETL_USER /data/lp-etl
 
 COPY --from=lp-etl-build --chown=linkedpipes /opt/lp-etl/deploy/configuration.docker.properties /opt/lp-etl/configuration/configuration.properties
 COPY --from=lp-etl-build --chown=linkedpipes /opt/lp-etl/deploy/frontend /opt/lp-etl/frontend

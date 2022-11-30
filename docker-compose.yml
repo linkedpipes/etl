@@ -19,6 +19,7 @@ services:
     image: linkedpipes/etl-frontend:${LP_VERSION-main}
     volumes:
       - configuration:/data/lp-etl/configuration
+      - data-logs:/data/lp-etl/logs
     ports:
       - ${LP_ETL_PORT-8080}:8080
     environment:

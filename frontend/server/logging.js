@@ -1,6 +1,9 @@
 const winston = require("winston");
 const moment = require("moment");
 const {SPLAT} = require("triple-beam");
+require("winston-daily-rotate-file");
+
+const {logFile} = require("./configuration");
 
 (function initialize() {
   const logger = winston.createLogger({
@@ -8,6 +11,10 @@ const {SPLAT} = require("triple-beam");
     "transports": [],
   });
   addConsoleLogger(logger);
+
+  if (logFile !== undefined && logFile !== null) {
+    addFileLogger(logger, logFile);
+  }
 
   // Do not exit after the uncaught exception.
   logger.exitOnError = false;
@@ -46,4 +53,14 @@ function parametersToMessage() {
     }
     return info;
   })();
+}
+
+function addFileLogger(logger, directory) {
+  logger.add(new winston.transports.DailyRotateFile({
+    "dirname": directory,
+    "filename": "frontend-%DATE%",
+    "maxSize": "16m",
+    "maxFiles": "7d",
+    "extension": ".log"
+  }));
 }

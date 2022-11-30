@@ -1,7 +1,7 @@
 const propertiesReader = require("properties-reader");
-const logger = require("./logging");
 
-logger.info("Loading configuration from: ", process.env.configFileLocation);
+// We use console info here as the logger is not ready yet.
+console.info("Loading configuration from: ", process.env.configFileLocation);
 if (process.env.configFileLocation === undefined) {
   throw new Error("Missing configuration file!")
 }
@@ -35,4 +35,5 @@ module.exports = {
     }
   },
   "instanceLabel": label,
+  "logFile": properties.get("frontend.log.directory"),
 };
