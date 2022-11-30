@@ -129,7 +129,8 @@ router.post("/executions", (req, res) => {
     console.error("Can't create execution.", error);
     res.status(HTTP.SERVER_ERROR).json({
       "error": {
-        "message": "Can't execute request."
+        "message": "Can't execute request.",
+        "cause": error.message,
       }
     })
   });

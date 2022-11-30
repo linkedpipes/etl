@@ -5,7 +5,12 @@ const request = require("request");
 const {HTTP} = require("./http-codes");
 
 async function httpGetContentJsonLd(url) {
-  return httpGetContent(url, "application/ld+json");
+  const {response, body} = await httpGetContent(url, "application/ld+json");
+  if (200 <= response.statusCode && response.statusCode < 300) {
+    return body;
+  }
+  throw Error(
+    `Can't get jsonld from '${url}', response code '${response.statusCode}'.`);
 }
 
 async function httpGetContent(url, accept) {
@@ -16,12 +21,12 @@ async function httpGetContent(url, accept) {
     "url": url,
   };
   return new Promise((resolve, reject) => {
-    request.get(options, (error, http, body) => {
+    request.get(options, (error, response, body) => {
       if (error) {
         reject(error);
         return;
       }
-      resolve(body);
+      resolve({response, body});
     });
   });
 }

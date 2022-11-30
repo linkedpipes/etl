@@ -23,6 +23,7 @@ async function handleCreateExecution(req, res) {
   const requestContent = await readRequestBody(req, BODY_OPTIONS);
   const options = secureOptions(requestContent);
   const pipeline = await securePipeline(req, requestContent);
+  console.log(pipeline);
   if (pipeline === null) {
     res.status(HTTP.INVALID_REQUEST).json({
       "error": {
