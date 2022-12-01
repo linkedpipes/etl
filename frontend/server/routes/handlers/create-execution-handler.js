@@ -94,7 +94,8 @@ function createDefaultOptions() {
  */
 async function securePipeline(req, requestContent) {
   // For backwards compatibility.
-  const remote = req.query["iri"] ?? req.query["pipeline"];
+  const remote = req.query["iri"];
+  const local = req.query["local-iri"] ?? req.query["pipeline"];
   if (requestContent[BODY_CONTENT] !== undefined) {
     // TODO Add validation here as taking the first one may not work.
     const entry = requestContent[BODY_CONTENT][0];
@@ -110,8 +111,8 @@ async function securePipeline(req, requestContent) {
       "fileName": "pipeline.jsonld",
       "value": content,
     };
-  } else if (req.query["local-iri"] !== undefined) {
-    const iri = encodeURIComponent(req.query["local-iri"]);
+  } else if (local !== undefined) {
+    const iri = encodeURIComponent(local);
     // We use local access, this also help with firewall limitations.
     const url = STORAGE_API_URL + "/pipelines?iri=" + iri;
     const content = await httpGetContentJsonLd(url);
