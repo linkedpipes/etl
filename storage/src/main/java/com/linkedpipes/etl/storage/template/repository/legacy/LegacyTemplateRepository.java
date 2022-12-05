@@ -172,7 +172,7 @@ public class LegacyTemplateRepository {
             if (mapping.containsKey(reference.resource())) {
                 result.add(new ReferenceTemplate(
                         reference.resource(), reference.version(),
-                        reference.plugin(), reference.plugin(),
+                        reference.template(), reference.plugin(),
                         reference.label(), reference.description(),
                         reference.note(), reference.color(),
                         reference.tags(),
