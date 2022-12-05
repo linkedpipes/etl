@@ -3,7 +3,6 @@ package com.linkedpipes.etl.library.template.reference.adapter;
 import com.github.jsonldjava.shaded.com.google.common.base.Objects;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsSelector;
-import com.linkedpipes.etl.library.template.reference.adapter.RawReferenceTemplate;
 import com.linkedpipes.etl.library.template.vocabulary.LP_V1;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -15,7 +14,6 @@ import org.eclipse.rdf4j.model.vocabulary.OWL;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
