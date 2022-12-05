@@ -18,7 +18,7 @@ async function httpGetContent(url, accept) {
     "headers": {
       "accept": accept,
     },
-    "url": url,
+    "url": sanitizeUrl(url),
   };
   return new Promise((resolve, reject) => {
     request.get(options, (error, response, body) => {
@@ -29,6 +29,13 @@ async function httpGetContent(url, accept) {
       resolve({response, body});
     });
   });
+}
+
+/**
+ * Required to make it work with national characters in URL.
+ */
+function sanitizeUrl(url) {
+  return encodeURI(decodeURI(url));
 }
 
 /**
@@ -49,7 +56,7 @@ function httpPostContent(url, parts, headers) {
     }));
   }
   const options = {
-    "url": url,
+    "url": sanitizeUrl(url),
     "headers": headers,
     "formData": formData
   };
@@ -58,7 +65,7 @@ function httpPostContent(url, parts, headers) {
 
 function httpGetForProxy(url, req, res, extra = {}) {
   const options = {
-    "url": url,
+    "url": sanitizeUrl(url),
     "headers": extra.headers ?? req.headers,
     "qs": extra.query ?? req.query,
   };
@@ -79,7 +86,7 @@ function handleConnectionError(url, error, res) {
 
 function httpPostForProxy(url, req, res) {
   const options = {
-    "url": url,
+    "url": sanitizeUrl(url),
     "headers": req.headers,
     "qs": req.query,
     "form": req.body,
@@ -91,7 +98,7 @@ function httpPostForProxy(url, req, res) {
 
 function httpDeleteForProxy(url, req, res, extra = {}) {
   const options = {
-    "url": url,
+    "url": sanitizeUrl(url),
     "headers": extra.headers ?? req.headers,
     "qs": extra.query ?? req.query,
   };
@@ -102,7 +109,7 @@ function httpDeleteForProxy(url, req, res, extra = {}) {
 
 function httpPutContent(url, req, res, extra = {}) {
   const options = {
-    "url": url,
+    "url": sanitizeUrl(url),
     "qs": req.query,
     "formData": extra?.formData,
   };
@@ -113,7 +120,7 @@ function httpPutContent(url, req, res, extra = {}) {
 
 function httpPutForProxy(url, req, res) {
   const options = {
-    "url": url,
+    "url": sanitizeUrl(url),
     "qs": req.query,
     "form": req.body
   };
