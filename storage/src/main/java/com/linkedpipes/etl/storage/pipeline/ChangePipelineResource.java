@@ -120,7 +120,7 @@ public class ChangePipelineResource {
                 updateResource(remote.source(), pipeline),
                 remote.sourceBinding(),
                 updateResource(remote.target(), pipeline),
-                remote.target(),
+                remote.targetBinding(),
                 updateVertices(remote.vertices(), pipeline));
     }
 
