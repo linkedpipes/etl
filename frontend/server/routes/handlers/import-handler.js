@@ -82,8 +82,8 @@ async function secureContent(req, requestContent) {
       "value": entry["value"],
     }];
   } else if (req.query["iri"] !== undefined) {
-    const url = req.query["iri"];
-    const content = await httpGetContentJsonLd(url);
+    const sanitizedUrl  = encodeURI(decodeURI(req.query["iri"]));
+    const content = await httpGetContentJsonLd(sanitizedUrl);
     return [{
       "contentType": CONTENT.JSONLD,
       "fileName": "content.jsonld",

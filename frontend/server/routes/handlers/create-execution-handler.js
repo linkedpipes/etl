@@ -104,7 +104,8 @@ async function securePipeline(req, requestContent) {
       "value": entry["value"],
     };
   } else if (remote !== undefined) {
-    const content = await httpGetContentJsonLd(remote);
+    const sanitizedUrl  = encodeURI(decodeURI(remote));
+    const content = await httpGetContentJsonLd(sanitizedUrl);
     return {
       "contentType": CONTENT.JSONLD,
       "fileName": "pipeline.jsonld",

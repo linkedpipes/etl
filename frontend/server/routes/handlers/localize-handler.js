@@ -26,8 +26,8 @@ async function handleLocalize(req, res) {
   }
   const url = STORAGE_API_URL + "/management/localize";
   const parts = {
-    "options": options,
-    "content": content,
+    "options": [options],
+    "content": [content],
   };
   const headers = {
     "accept": req.headers["accept"] ?? CONTENT.JSONLD,
@@ -81,8 +81,8 @@ async function secureContent(req, requestContent) {
       "value": entry["value"],
     };
   } else if (req.query["iri"] !== undefined) {
-    const url = req.query["iri"];
-    const content = await httpGetContentJsonLd(url);
+    const sanitizedUrl  = encodeURI(decodeURI(req.query["iri"]));
+    const content = await httpGetContentJsonLd(sanitizedUrl);
     return {
       "contentType": CONTENT.JSONLD,
       "fileName": "content.jsonld",
