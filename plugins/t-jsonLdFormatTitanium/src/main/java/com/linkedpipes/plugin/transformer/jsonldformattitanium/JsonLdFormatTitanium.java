@@ -1,6 +1,5 @@
 package com.linkedpipes.plugin.transformer.jsonldformattitanium;
 
-import com.github.jsonldjava.utils.JsonUtils;
 import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
@@ -10,7 +9,6 @@ import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 
 import java.io.File;
-import java.io.IOException;
 
 public class JsonLdFormatTitanium implements Component, SequentialExecution {
 
@@ -30,17 +28,14 @@ public class JsonLdFormatTitanium implements Component, SequentialExecution {
     @Component.Inject
     public ProgressReport progressReport;
 
-    private Object context;
-
     @Override
     public void execute() throws LpException {
-        initializeContext();
         progressReport.start(inputFiles.size());
         for (FilesDataUnit.Entry entry : inputFiles) {
-            File inputFIle = entry.toFile();
+            File inputFile = entry.toFile();
             File outputFile = outputFiles.createFile(entry.getFileName());
             try {
-                transformFile(inputFIle, outputFile);
+                transformFile(inputFile, outputFile);
             } catch (LpException ex) {
                 throw new LpException(
                         "Can't transform: {}", entry.getFileName(), ex);
@@ -48,19 +43,6 @@ public class JsonLdFormatTitanium implements Component, SequentialExecution {
             progressReport.entryProcessed();
         }
         progressReport.done();
-    }
-
-    private void initializeContext() throws LpException {
-        if (JsonLdFormatTitaniumVocabulary.EXPANDED.equals(
-                configuration.getFormat())) {
-            // Expanded mode does not use context.
-            return;
-        }
-        try {
-            context = JsonUtils.fromString(configuration.getContext());
-        } catch (IOException ex) {
-            throw new LpException("Can't prepare context.", ex);
-        }
     }
 
     private void transformFile(File source, File target) throws LpException {
@@ -76,8 +58,7 @@ public class JsonLdFormatTitanium implements Component, SequentialExecution {
                 operator.expand(source, target);
                 break;
             case JsonLdFormatTitaniumVocabulary.FRAME:
-                operator.frame(
-                        source, configuration.getFrame(), target);
+                operator.frame(source, configuration.getFrame(), target);
                 break;
             case JsonLdFormatTitaniumVocabulary.FRAME_AS_ARRAY:
                 operator.frameAsArray(
