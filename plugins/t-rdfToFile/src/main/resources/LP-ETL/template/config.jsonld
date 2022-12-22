@@ -10,7 +10,7 @@
         "http://plugins.linkedpipes.com/ontology/t-rdfToFile#fileTypeControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         },
-        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#graphUri" : "http://localhost/default",
+        "http://plugins.linkedpipes.com/ontology/t-rdfToFile#graphUri" : "",
         "http://plugins.linkedpipes.com/ontology/t-rdfToFile#graphUriControl" : {
             "@id" : "http://plugins.linkedpipes.com/resource/configuration/None"
         }

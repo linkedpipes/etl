@@ -106,7 +106,8 @@ public final class RdfToFile implements Component, SequentialExecution {
     }
 
     private IRI getOutputGraph() {
-        if (configuration.getGraphUri() == null) {
+        String graph = configuration.getGraphUri();
+        if (graph == null || graph.isEmpty() || graph.isBlank()) {
             return null;
         }
         return SimpleValueFactory.getInstance().createIRI(
