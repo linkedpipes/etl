@@ -44,6 +44,7 @@ public class OsgiPluginService implements PluginService {
 
     @Override
     public void startService(File storageDirectory) throws ExecutorException {
+        createOsgiDirectory(storageDirectory);
         Map<String, String> config = new HashMap<>();
         config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA,
                 OsgiPackageList.EXPORT_PACKAGE_LIST);
@@ -58,6 +59,12 @@ public class OsgiPluginService implements PluginService {
             framework.start();
         } catch (BundleException ex) {
             throw new ExecutorException("Can't start framework!", ex);
+        }
+    }
+
+    private void createOsgiDirectory(File directory) {
+        if (!directory.exists() && !directory.mkdirs()) {
+            LOG.error("Can't create OSGI working directory '{}'.", directory);
         }
     }
 

@@ -70,6 +70,7 @@ public class StorageService {
     @PostConstruct
     public void initialize() throws StorageException {
         LocalDateTime start = LocalDateTime.now();
+        createStorageDirectory();
         initializeJavaPluginService();
         initializeAssistantService();
         initializeTemplateRepository();
@@ -79,6 +80,13 @@ public class StorageService {
 
         long seconds = Duration.between(start, LocalDateTime.now()).toSeconds();
         LOG.debug("Initialization done in {}s", seconds);
+    }
+
+    private void createStorageDirectory() {
+        File directory = configuration.getStorageDirectory();
+        if (!directory.exists() && !directory.mkdirs()) {
+            LOG.error("Can't create template directory '{}'.", directory);
+        }
     }
 
     private void initializeJavaPluginService() {
@@ -125,6 +133,9 @@ public class StorageService {
         PipelineRepositoryFactory factory = new PipelineRepositoryFactory();
         File directory = new File(
                 configuration.getStorageDirectory(), "pipelines");
+        if (!directory.exists() && !directory.mkdirs()) {
+            LOG.error("Can't create pipeline directory '{}'.", directory);
+        }
         pipelineRepository = factory.create(
                 directory, () -> templateFacade.getTemplateToPluginMap());
     }

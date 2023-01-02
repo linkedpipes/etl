@@ -43,8 +43,9 @@ public class TemplateRepositoryFactory {
                     FileTemplateRepository.NAME);
         }
         File templateDirectory = getTemplatesDirectory(directory);
-        if (!templateDirectory.exists()) {
-            templateDirectory.mkdirs();
+        if (!templateDirectory.exists() && !templateDirectory.mkdirs()) {
+            LOG.error("Can't create template directory '{}'.",
+                    templateDirectory);
         }
         TemplateRepository result;
         switch (info.templateRepository()) {

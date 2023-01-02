@@ -74,11 +74,15 @@ class ExecutionStorage
 
     private File getExecutionsDirectory() throws MonitorException {
         File directory = configuration.getWorkingDirectory();
-        if (!directory.isDirectory()) {
-            throw new MonitorException(
-                    "Execution working directory does not exists");
+        if (directory.isDirectory()) {
+            return directory;
         }
-        return directory;
+        if (directory.mkdirs()) {
+            return directory;
+        }
+        throw new MonitorException(
+                "Execution working directory does not exists and we fail " +
+                        "to create it.");
     }
 
     private Execution loadExecutionForFirstTime(File directory) {
