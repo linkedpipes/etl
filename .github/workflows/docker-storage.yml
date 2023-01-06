@@ -1,0 +1,34 @@
+name: docker-storage
+on:
+  push:
+    branches:
+      - 'main'
+      - 'develop'
+    tags:
+      - '*'
+jobs:
+  publish-docker:
+    runs-on: ubuntu-20.04
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Login to Docker Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Storage
+        uses: docker/build-push-action@v3
+        with:
+          context: ./
+          file: ./storage/Dockerfile
+          push: true
+          tags: linkedpipes/etl-storage:${{ github.ref_name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
