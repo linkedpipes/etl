@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - "frontend/**"
+      - "deploy/**"
     branches:
       - 'main'
       - 'develop'
