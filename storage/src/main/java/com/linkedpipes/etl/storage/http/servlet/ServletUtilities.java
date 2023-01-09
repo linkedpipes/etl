@@ -83,7 +83,11 @@ class ServletUtilities {
             HttpServletRequest request, RDFFormat defaultValue) {
         // TODO Add support for text/html; charset=UTF-8 .
         // TODO Add support for content negotiation (text/*;q=0.5,*/*;q=0.1) .
-        String[] mimeTypes = request.getHeader("Accept").split(",");
+        String acceptHeader = request.getHeader("Accept");
+        if (acceptHeader == null) {
+            return defaultValue;
+        }
+        String[] mimeTypes = acceptHeader.split(",");
         for (String mimeTypeString : mimeTypes) {
             Optional<RDFFormat> format =
                     Rio.getParserFormatForMIMEType(mimeTypeString);
