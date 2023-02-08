@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.executor.monitor.debug.http;
 
-import com.linkedpipes.etl.executor.monitor.Configuration;
+import com.linkedpipes.etl.executor.monitor.ConfigurationHolder;
+import com.linkedpipes.etl.executor.monitor.cli.Configuration;
 import com.linkedpipes.etl.executor.monitor.TestUtils;
 import com.linkedpipes.etl.executor.monitor.debug.DataUnit;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
@@ -41,7 +42,8 @@ public class HttpDebugFilesTest {
         dataSource = Mockito.mock(DebugDataSource.class);
         Mockito.when(dataSource.getDebugData(EXECUTION)).thenReturn(debugData);
 
-        Configuration configuration = Mockito.mock(Configuration.class);
+        ConfigurationHolder configuration =
+                Mockito.mock(ConfigurationHolder.class);
         debugFacade = new HttpDebugFilesFacade(configuration, dataSource);
     }
 

@@ -1,10 +1,10 @@
-package com.linkedpipes.etl.executor.cli.adapter;
+package com.linkedpipes.etl.storage.cli.adapter;
 
-import com.linkedpipes.etl.executor.ExecutorException;
-import com.linkedpipes.etl.executor.cli.Configuration;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsSelector;
 import com.linkedpipes.etl.model.vocabulary.RDF;
+import com.linkedpipes.etl.storage.StorageException;
+import com.linkedpipes.etl.storage.cli.Configuration;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -13,7 +13,6 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -28,8 +27,8 @@ public class RdfToConfiguration {
     private static final String PART =
             PREFIX + "hasPart";
 
-    private static final String EXECUTOR =
-            PREFIX + "Executor";
+    private static final String STORAGE =
+            PREFIX + "Storage";
 
     private static final String WORKING_DIRECTORY =
             PREFIX + "workingDirectory";
@@ -43,9 +42,6 @@ public class RdfToConfiguration {
     private static final String PLUGIN_DIRECTORY =
             PREFIX + "pluginDirectory";
 
-    private static final String LIBRARY_DIRECTORY =
-            PREFIX + "libraryDirectory";
-
     private static final String LOG =
             PREFIX + "log";
 
@@ -55,14 +51,18 @@ public class RdfToConfiguration {
     private static final String LOG_LEVEL =
             PREFIX + "logLevel";
 
-    private static final String BANNED_PLUGINS =
-            PREFIX + "bannedPluginIriPatterns";
+    private static final String DOMAIN =
+            PREFIX + "domainName";
+
+    private static final String EXECUTOR_MONITOR =
+            PREFIX + "executorMonitor";
+
+    private static final String INTERNAL_URL =
+            PREFIX + "internalUrl";
 
     private final StatementsSelector selector;
 
     private final Configuration next = new Configuration();
-
-    private List<String> bannedPluginIriPatterns = new ArrayList<>();
 
     private RdfToConfiguration(StatementsSelector selector) {
         this.selector = selector;
@@ -70,17 +70,16 @@ public class RdfToConfiguration {
 
     public static Configuration updateConfiguration(
             Configuration defaults, File file, RDFFormat format)
-            throws ExecutorException {
+            throws StorageException {
         Statements statements = Statements.arrayList();
         try {
             statements.file().addAll(file, format);
         } catch (Exception ex) {
-            throw new ExecutorException("Can't load configuration file.", ex);
+            throw new StorageException("Can't load configuration file.", ex);
         }
         StatementsSelector selector = statements.selector();
         RdfToConfiguration loader = new RdfToConfiguration(selector);
         loader.load();
-        loader.next.bannedPluginIriPatterns = loader.bannedPluginIriPatterns;
         return defaults.merge(loader.next);
     }
 
@@ -96,7 +95,7 @@ public class RdfToConfiguration {
                 List<String> types = selector.select(
                         resource, RDF.TYPE, null).objects()
                         .stream().map(Value::stringValue).toList();
-                if (types.contains(EXECUTOR)) {
+                if (types.contains(STORAGE)) {
                     loadExecutor(resource);
                 }
             }
@@ -120,6 +119,14 @@ public class RdfToConfiguration {
                         loadOsgi(resource);
                     }
                     break;
+                case DOMAIN:
+                    next.baseUrl = value.stringValue();
+                    break;
+                case EXECUTOR_MONITOR:
+                    if (value instanceof Resource resource) {
+                        loadExecutorMonitor(resource);
+                    }
+                    break;
                 case PORT:
                     if (value instanceof Literal literal) {
                         next.httpPort = literal.intValue();
@@ -129,9 +136,6 @@ public class RdfToConfiguration {
                     break;
             }
         }
-        this.bannedPluginIriPatterns =
-                selector.selectList(subject, BANNED_PLUGINS)
-                        .stream().map(Value::stringValue).toList();
     }
 
     private void loadLog(Resource subject) {
@@ -155,13 +159,20 @@ public class RdfToConfiguration {
             Value value = statement.getObject();
             switch (statement.getPredicate().stringValue()) {
                 case PLUGIN_DIRECTORY:
-                    next.pluginsDirectory = value.stringValue();
+                    next.pluginDirectory = value.stringValue();
                     break;
-                case LIBRARY_DIRECTORY:
-                    next.osgiLibrariesDirectory = value.stringValue();
+                default:
                     break;
-                case WORKING_DIRECTORY:
-                    next.osgiWorkingDirectory = value.stringValue();
+            }
+        }
+    }
+
+    private void loadExecutorMonitor(Resource subject) {
+        for (Statement statement : selector.withSubject(subject)) {
+            Value value = statement.getObject();
+            switch (statement.getPredicate().stringValue()) {
+                case INTERNAL_URL:
+                    next.executorMonitorUrl = value.stringValue();
                     break;
                 default:
                     break;

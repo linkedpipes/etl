@@ -4,10 +4,11 @@ import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.execution.ExecutionObserver;
 import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
-import com.linkedpipes.etl.executor.logging.LoggerFacade;
+import com.linkedpipes.etl.executor.logging.ExecutionLogger;
 import org.slf4j.MDC;
 
 class SequentialComponentExecutor implements Runnable {
+
 
     private final SequentialExecution executable;
 
@@ -32,7 +33,7 @@ class SequentialComponentExecutor implements Runnable {
 
     @Override
     public void run() {
-        MDC.put(LoggerFacade.EXECUTION_MDC, null);
+        MDC.put(ExecutionLogger.EXECUTION_MDC, null);
         try {
             execution.onComponentUserCodeBegin(component);
             executable.execute(context);
@@ -42,7 +43,7 @@ class SequentialComponentExecutor implements Runnable {
             exception = new ExecutorException(
                     "PipelineComponent execution failed.", ex);
         }
-        MDC.remove(LoggerFacade.EXECUTION_MDC);
+        MDC.remove(ExecutionLogger.EXECUTION_MDC);
     }
 
     public ExecutorException getException() {

@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.executor.web;
 
 import com.linkedpipes.etl.executor.ConfigurationHolder;
-import com.linkedpipes.etl.executor.logging.LoggerFacade;
+import com.linkedpipes.etl.executor.logging.LoggerUtils;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -31,6 +31,8 @@ import java.io.IOException;
 
 @Service
 class WebServer implements ApplicationListener<ApplicationEvent> {
+
+    public static final String WEB_MDC = "web";
 
     private static final Logger LOG = LoggerFactory.getLogger(WebServer.class);
 
@@ -128,11 +130,11 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
                     String target, Request baseRequest,
                     HttpServletRequest request, HttpServletResponse response)
                     throws IOException, ServletException {
-                MDC.put(LoggerFacade.WEB_MDC, null);
+                MDC.put(WEB_MDC, null);
                 try {
                     super.handle(target, baseRequest, request, response);
                 } finally {
-                    MDC.remove(LoggerFacade.WEB_MDC);
+                    MDC.remove(WEB_MDC);
                 }
             }
 

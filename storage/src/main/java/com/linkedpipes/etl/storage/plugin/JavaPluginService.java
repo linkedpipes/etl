@@ -4,7 +4,7 @@ import com.linkedpipes.etl.library.template.plugin.PluginException;
 import com.linkedpipes.etl.library.template.plugin.adapter.JavaFileToJavaPlugin;
 import com.linkedpipes.etl.library.template.plugin.model.JavaPlugin;
 import com.linkedpipes.etl.library.template.plugin.model.PluginTemplate;
-import com.linkedpipes.etl.storage.Configuration;
+import com.linkedpipes.etl.storage.ConfigurationHolder;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.model.Resource;
 import org.slf4j.Logger;
@@ -22,14 +22,14 @@ public class JavaPluginService {
     private static final Logger LOG =
             LoggerFactory.getLogger(JavaPluginService.class);
 
-    private final Configuration configuration;
+    private final ConfigurationHolder configuration;
 
     private final Map<String, JavaPlugin> plugins = new HashMap<>();
 
     private final Map<Resource, JavaPlugin> pluginTemplateToPlugin =
             new HashMap<>();
 
-    public JavaPluginService(Configuration configuration) {
+    public JavaPluginService(ConfigurationHolder configuration) {
         this.configuration = configuration;
     }
 

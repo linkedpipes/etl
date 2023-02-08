@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.monitor.events;
 
-import com.linkedpipes.etl.executor.monitor.Configuration;
+import com.linkedpipes.etl.executor.monitor.ConfigurationHolder;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionStatus;
@@ -23,7 +23,7 @@ class EventListenerAggregator implements EventListener {
 
     private final List<EventListener> listeners = new ArrayList<>();
 
-    private Configuration configuration;
+    private ConfigurationHolder configuration;
 
     @PostConstruct
     public void onInit() {
@@ -69,7 +69,7 @@ class EventListenerAggregator implements EventListener {
     }
 
     @Autowired
-    private void setConfiguration(Configuration configuration) {
+    private void setConfigurationHolder(ConfigurationHolder configuration) {
         this.configuration = configuration;
     }
 

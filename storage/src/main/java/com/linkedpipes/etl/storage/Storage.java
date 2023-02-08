@@ -1,11 +1,11 @@
-package com.linkedpipes.etl.executor;
+package com.linkedpipes.etl.storage;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
-import com.linkedpipes.etl.executor.cli.Configuration;
-import com.linkedpipes.etl.executor.cli.ConfigurationLoader;
-import com.linkedpipes.etl.executor.logging.LoggerUtils;
+import com.linkedpipes.etl.storage.cli.Configuration;
+import com.linkedpipes.etl.storage.cli.ConfigurationLoader;
+import com.linkedpipes.etl.storage.logging.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -13,14 +13,14 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
 
-public class Executor {
+public class Storage {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Executor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Storage.class);
 
     private Configuration configuration = null;
 
     public static void main(String[] args) {
-        (new Executor()).run(args);
+        (new Storage()).run(args);
     }
 
     private void run(String[] args) {
@@ -30,8 +30,6 @@ public class Executor {
             return;
         }
         initializeLogging();
-        LOG.debug("Banned components: {}",
-                configuration.bannedPluginIriPatterns);
         startSpring();
     }
 
@@ -39,7 +37,7 @@ public class Executor {
         ConfigurationLoader loader = new ConfigurationLoader();
         try {
             loader.load(args);
-        } catch (ExecutorException ex) {
+        } catch (StorageException ex) {
             LOG.error("Can't load configuration.", ex);
         }
         configuration = loader.getConfiguration();
@@ -56,16 +54,12 @@ public class Executor {
             LOG.error("Missing HTTP port.");
             isConfigurationValid = false;
         }
-        if (configuration.osgiLibrariesDirectory == null) {
-            LOG.error("Missing OSGI libraries directory.");
-            isConfigurationValid = false;
-        }
-        if (configuration.osgiWorkingDirectory == null) {
-            LOG.error("Missing OSGI working directory.");
-            isConfigurationValid = false;
-        }
-        if (configuration.pluginsDirectory == null) {
+        if (configuration.pluginDirectory == null) {
             LOG.error("Missing plugin directory.");
+            isConfigurationValid = false;
+        }
+        if (configuration.baseUrl == null) {
+            LOG.error("Missing base URL for creating resources.");
             isConfigurationValid = false;
         }
         return isConfigurationValid;
@@ -85,7 +79,7 @@ public class Executor {
         //
         Appender<ILoggingEvent> appender =
                 LoggerUtils.createRollingFileAppender(
-                        logDirectory, "executor", loggerContext, logLevel);
+                        logDirectory, "storage", loggerContext, logLevel);
         logbackLogger.addAppender(appender);
     }
 

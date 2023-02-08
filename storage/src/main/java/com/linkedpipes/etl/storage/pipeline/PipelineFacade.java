@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.storage.pipeline;
 
 import com.linkedpipes.etl.library.pipeline.model.Pipeline;
-import com.linkedpipes.etl.storage.Configuration;
+import com.linkedpipes.etl.storage.ConfigurationHolder;
 import com.linkedpipes.etl.storage.StorageException;
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.Resource;
@@ -10,14 +10,14 @@ import java.util.Set;
 
 public class PipelineFacade {
 
-    private final Configuration configuration;
+    private final ConfigurationHolder configuration;
 
     private final PipelineService service;
 
     private final PipelineRepository repository;
 
     public PipelineFacade(
-            Configuration configuration,
+            ConfigurationHolder configuration,
             PipelineService service,
             PipelineRepository repository) {
         this.configuration = configuration;

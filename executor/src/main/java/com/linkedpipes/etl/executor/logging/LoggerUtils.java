@@ -5,42 +5,19 @@ import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.filter.ThresholdFilter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
-import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.OutputStreamAppender;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 import ch.qos.logback.core.util.FileSize;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
-public class LoggerFacade {
+public class LoggerUtils {
 
     private static final int HISTORY = 7;
 
-    public static final String EXECUTION_MDC = "execution";
-
-    public static final String WEB_MDC = "web";
-
-    private FileAppender appender = null;
-
-    public void prepareAppendersForExecution(File logFile, String level) {
-        destroyExecutionAppenders();
-        appender = createExecutionAppender(logFile, level);
-    }
-
-    public void destroyExecutionAppenders() {
-        if (appender != null) {
-            destroyAppender(appender);
-            appender = null;
-        }
-    }
-
-    // TODO Extract to another class.
-    // Do not confuse with non static functionality.
     public static Appender<ILoggingEvent> createRollingFileAppender(
             File logDirectory, String logFileName, LoggerContext loggerContext,
             String levelFilter) {
@@ -57,37 +34,7 @@ public class LoggerFacade {
         return appender;
     }
 
-    private static void destroyAppender(FileAppender appender) {
-        LoggerContext loggerContext
-                = (LoggerContext) LoggerFactory.getILoggerFactory();
-        ch.qos.logback.classic.Logger logbackLogger
-                = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
-        logbackLogger.detachAppender(appender);
-        appender.stop();
-    }
-
-    private static FileAppender createExecutionAppender(
-            File logFile, String level) {
-        LoggerContext loggerContext
-                = (LoggerContext) LoggerFactory.getILoggerFactory();
-
-        FileAppender appender = new FileAppender();
-        appender.setContext(loggerContext);
-        appender.setFile(logFile.getPath());
-        addEncoder(appender, loggerContext,
-                "%d [%thread] %-5level %logger{25} - %msg%n");
-        addMdcFilter(appender, EXECUTION_MDC);
-        addThresholdFilter(appender, level);
-        appender.start();
-
-        ch.qos.logback.classic.Logger logbackLogger
-                = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
-        logbackLogger.addAppender(appender);
-
-        return appender;
-    }
-
-    private static void addEncoder(
+    public static void addEncoder(
             OutputStreamAppender appender, LoggerContext loggerContext,
             String patter) {
         PatternLayoutEncoder encoder = new PatternLayoutEncoder();
@@ -97,15 +44,8 @@ public class LoggerFacade {
         encoder.start();
     }
 
-    private static void addMdcFilter(
-            UnsynchronizedAppenderBase appender, String mdc) {
-        MdcKeyFilter mdcFilter = new MdcKeyFilter(mdc);
-        appender.addFilter(mdcFilter);
-        mdcFilter.start();
 
-    }
-
-    private static void addThresholdFilter(
+    public static void addThresholdFilter(
             UnsynchronizedAppenderBase appender, String level) {
         ThresholdFilter thresholdFilter = new ThresholdFilter();
         thresholdFilter.setLevel(level);
@@ -113,7 +53,7 @@ public class LoggerFacade {
         thresholdFilter.start();
     }
 
-    private static void addRollingPolicy(
+    public static void addRollingPolicy(
             RollingFileAppender appender, LoggerContext loggerContext,
             File logDirectory, String fileName) {
         TimeBasedRollingPolicy rollingPolicy = new TimeBasedRollingPolicy();

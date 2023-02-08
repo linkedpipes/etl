@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.unpacker.executions;
 
+import com.linkedpipes.etl.storage.ConfigurationHolder;
 import com.linkedpipes.etl.storage.StorageException;
-import com.linkedpipes.etl.storage.Configuration;
 import com.linkedpipes.etl.unpacker.ExecutionSource;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -23,9 +23,9 @@ public class HttpExecutionSource implements ExecutionSource {
 
     private static final String BASE_URL = "http://localhost/base";
 
-    private final Configuration configuration;
+    private final ConfigurationHolder configuration;
 
-    public HttpExecutionSource(Configuration configuration) {
+    public HttpExecutionSource(ConfigurationHolder configuration) {
         this.configuration = configuration;
     }
 

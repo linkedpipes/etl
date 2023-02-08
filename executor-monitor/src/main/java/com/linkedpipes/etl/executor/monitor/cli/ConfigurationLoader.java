@@ -1,9 +1,9 @@
-package com.linkedpipes.etl.executor.cli;
+package com.linkedpipes.etl.executor.monitor.cli;
 
-import com.linkedpipes.etl.executor.ExecutorException;
-import com.linkedpipes.etl.executor.cli.adapter.EnvironmentToConfiguration;
-import com.linkedpipes.etl.executor.cli.adapter.PropertiesToConfiguration;
-import com.linkedpipes.etl.executor.cli.adapter.RdfToConfiguration;
+import com.linkedpipes.etl.executor.monitor.MonitorException;
+import com.linkedpipes.etl.executor.monitor.cli.adapter.EnvironmentToConfiguration;
+import com.linkedpipes.etl.executor.monitor.cli.adapter.PropertiesToConfiguration;
+import com.linkedpipes.etl.executor.monitor.cli.adapter.RdfToConfiguration;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.slf4j.Logger;
@@ -22,7 +22,7 @@ public class ConfigurationLoader {
 
     private Configuration configuration;
 
-    public String[] load(String[] args) throws ExecutorException {
+    public String[] load(String[] args) throws MonitorException {
         createDefault();
         String[] nextArgs = loadFromArgs(args);
         loadFileFromEnvironment();
@@ -34,14 +34,14 @@ public class ConfigurationLoader {
         configuration = new Configuration();
     }
 
-    private String[] loadFromArgs(String[] args) throws ExecutorException {
+    private String[] loadFromArgs(String[] args) throws MonitorException {
         List<String> result = new ArrayList<>(Arrays.asList(args));
         for (int index = 0; index < result.size(); ++index) {
             String item = result.get(index);
             if (item.startsWith("--configuration-file")) {
                 String[] tokens = item.split("=", 2);
                 if (tokens.length < 2) {
-                    throw new ExecutorException("Invalid argument: {}", item);
+                    throw new MonitorException("Invalid argument: {}", item);
                 }
                 loadFromFile(new File(tokens[1]));
                 result.remove(index);
@@ -55,7 +55,7 @@ public class ConfigurationLoader {
         return result.toArray(new String[0]);
     }
 
-    private void loadFromFile(File file) throws ExecutorException {
+    private void loadFromFile(File file) throws MonitorException {
         LOG.debug("Reading configuration from: {}", file);
         String fileName = file.getName().toLowerCase();
         if (fileName.endsWith(".properties")) {
@@ -70,10 +70,10 @@ public class ConfigurationLoader {
                     .updateConfiguration(configuration, file, format.get());
             return;
         }
-        throw new ExecutorException("Unknown configuration file type.");
+        throw new MonitorException("Unknown configuration file type.");
     }
 
-    private void loadFileFromEnvironment() throws ExecutorException {
+    private void loadFileFromEnvironment() throws MonitorException {
         String file = System.getProperty("configFileLocation");
         if (file == null) {
             return;
@@ -81,7 +81,7 @@ public class ConfigurationLoader {
         loadFromFile(new File(file));
     }
 
-    private void loadFromEnvironment() throws ExecutorException {
+    private void loadFromEnvironment() throws MonitorException {
         configuration = EnvironmentToConfiguration
                 .updateConfiguration(configuration);
     }

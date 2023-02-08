@@ -17,6 +17,5 @@
 
     <task:annotation-driven executor="asynchExecutor" />
     <task:executor id="asynchExecutor" pool-size="2" />
-    <!--<task:scheduler id="scheduler" pool-size="2" />-->
 
 </beans>

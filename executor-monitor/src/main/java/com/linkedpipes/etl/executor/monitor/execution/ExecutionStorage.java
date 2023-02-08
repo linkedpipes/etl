@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.executor.monitor.execution;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.linkedpipes.etl.executor.monitor.Configuration;
+import com.linkedpipes.etl.executor.monitor.ConfigurationHolder;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.debug.DebugDataFactory;
 import com.linkedpipes.etl.executor.monitor.events.EventListener;
@@ -45,7 +45,7 @@ class ExecutionStorage
 
     private static final int TOMBSTONE_TTL = 5 * 60;
 
-    private Configuration configuration = null;
+    private ConfigurationHolder configuration = null;
 
     private EventListener eventListener = null;
 
@@ -56,7 +56,7 @@ class ExecutionStorage
     private final Map<Executor, Execution> executors = new HashMap<>();
 
     @Autowired
-    private void setConfiguration(Configuration configuration) {
+    private void setConfiguration(ConfigurationHolder configuration) {
         this.configuration = configuration;
     }
 

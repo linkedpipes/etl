@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.monitor.web;
 
-import com.linkedpipes.etl.executor.monitor.Configuration;
+import com.linkedpipes.etl.executor.monitor.ConfigurationHolder;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -30,7 +30,7 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
     private static final int MAX_THREADS = 4;
 
     @Autowired
-    private Configuration configuration;
+    private ConfigurationHolder configuration;
 
     @Autowired
     private AbstractApplicationContext appContext;

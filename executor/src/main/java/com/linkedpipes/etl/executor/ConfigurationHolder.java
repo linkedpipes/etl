@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.List;
 
+/**
+ * Wrap the configuration, as we do not provide direct access for services.
+ */
 @Service
 public class ConfigurationHolder {
 
@@ -16,23 +19,23 @@ public class ConfigurationHolder {
     }
 
     public Integer getWebServerPort() {
-        return configuration.httpPort();
+        return configuration.httpPort;
     }
 
     public File getOsgiStorageDirectory() {
-        return new File(configuration.osgiWorkingDirectory());
+        return new File(configuration.osgiWorkingDirectory);
     }
 
     public File getOsgiLibDirectory() {
-        return new File(configuration.osgiLibrariesDirectory());
+        return new File(configuration.osgiLibrariesDirectory);
     }
 
     public File getOsgiComponentDirectory() {
-        return new File(configuration.pluginsDirectory());
+        return new File(configuration.pluginsDirectory);
     }
 
     public List<String> getBannedJarPatterns() {
-        return configuration.bannedPluginIriPatterns();
+        return configuration.bannedPluginIriPatterns;
     }
 
 }

@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.monitor.web;
 
-import com.linkedpipes.etl.executor.monitor.Configuration;
+import com.linkedpipes.etl.executor.monitor.ConfigurationHolder;
 import com.linkedpipes.etl.executor.monitor.debug.ftp.VirtualFileSystem;
 import org.apache.ftpserver.ConnectionConfigFactory;
 import org.apache.ftpserver.DataConnectionConfigurationFactory;
@@ -37,7 +37,7 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
     private AbstractApplicationContext appContext;
 
     @Autowired
-    private Configuration configuration;
+    private ConfigurationHolder configuration;
 
     private org.apache.ftpserver.FtpServer server = null;
 

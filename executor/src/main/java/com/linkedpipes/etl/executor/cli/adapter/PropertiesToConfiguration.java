@@ -15,8 +15,36 @@ import java.util.Properties;
 
 public class PropertiesToConfiguration {
 
+    private final Properties properties;
+
     public static Configuration updateConfiguration(
             Configuration defaults, File file)
+            throws ExecutorException {
+        PropertiesToConfiguration instance = new PropertiesToConfiguration(
+                loadProperties(file));
+        //
+        Configuration next = new Configuration();
+        next.httpPort = instance.getInteger(
+                "executor.webserver.port");
+        next.dataDirectory = instance.getString(
+                "executor.execution.working_directory");
+        next.logDirectory  = instance.getString(
+                "executor.log.directory");
+        next.logLevel = instance.getString(
+                "executor.log.core.level");
+        next.osgiWorkingDirectory = instance.getString(
+                "executor.osgi.working.directory");
+        next.osgiLibrariesDirectory = instance.getString(
+                "executor.osgi.lib.directory");
+        next.pluginsDirectory = instance.getString(
+                "storage.jars.directory");
+        next.bannedPluginIriPatterns = instance.getList(
+                "executor.banned_jar_iri_patterns");
+
+        return defaults.merge(next);
+    }
+
+    private static Properties loadProperties(File file)
             throws ExecutorException {
         Properties properties = new Properties();
         try (var stream = new FileInputStream(file);
@@ -26,21 +54,14 @@ public class PropertiesToConfiguration {
         } catch (IOException ex) {
             throw new ExecutorException("Can't load configuration file.", ex);
         }
-        //
-        return defaults.merge(
-                getInteger(properties, "executor.webserver.port"),
-                getString(properties, "executor.execution.working_directory"),
-                getString(properties, "executor.log.directory"),
-                getString(properties, "executor.log.core.level"),
-                getString(properties, "executor.osgi.working.directory"),
-                getString(properties, "executor.osgi.lib.directory"),
-                getString(properties, "storage.jars.directory"),
-                getList(properties, "executor.banned_jar_iri_patterns")
-        );
+        return properties;
     }
 
-    private static String getString(
-            Properties properties, String name) throws ExecutorException {
+    private PropertiesToConfiguration(Properties properties) {
+        this.properties = properties;
+    }
+
+    private String getString(String name) throws ExecutorException {
         try {
             return properties.getProperty(name);
         } catch (RuntimeException ex) {
@@ -49,9 +70,8 @@ public class PropertiesToConfiguration {
         }
     }
 
-    private static Integer getInteger(
-            Properties properties, String name) throws ExecutorException {
-        String value = getString(properties, name);
+    private Integer getInteger(String name) throws ExecutorException {
+        String value = getString(name);
         if (value == null) {
             return null;
         }
@@ -63,8 +83,7 @@ public class PropertiesToConfiguration {
         }
     }
 
-    private static List<String> getList(
-            Properties properties, String name) {
+    private List<String> getList(String name) {
         String value = properties.getProperty(name);
         if (value == null) {
             return Collections.emptyList();

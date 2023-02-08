@@ -2,7 +2,7 @@ package com.linkedpipes.etl.storage.template;
 
 import com.linkedpipes.etl.library.template.plugin.model.PluginTemplate;
 import com.linkedpipes.etl.library.template.reference.model.ReferenceTemplate;
-import com.linkedpipes.etl.storage.Configuration;
+import com.linkedpipes.etl.storage.ConfigurationHolder;
 import com.linkedpipes.etl.storage.StorageException;
 import org.eclipse.rdf4j.model.Resource;
 
@@ -13,7 +13,7 @@ import java.util.Set;
 public class TemplateFacade
         implements PluginTemplateFacade, ReferenceTemplateFacade {
 
-    private final Configuration configuration;
+    private final ConfigurationHolder configuration;
 
     private final ReferenceTemplateService referenceService;
 
@@ -22,7 +22,7 @@ public class TemplateFacade
     private final TemplateRepository repository;
 
     public TemplateFacade(
-            Configuration configuration,
+            ConfigurationHolder configuration,
             ReferenceTemplateService referenceService,
             PluginTemplateService pluginService,
             TemplateRepository repository) {

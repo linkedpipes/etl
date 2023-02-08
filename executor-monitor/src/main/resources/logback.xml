@@ -1,18 +1,22 @@
 <configuration>
+    <!-- // https://stackoverflow.com/questions/6020545/send-redirect-route-java-util-logging-logger-jul-to-logback-using-slf4j -->
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
-        </filter>
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss} [%thread] %-5level %logger{25} - %msg%n</pattern>
+            <pattern>%d{"HH:mm:ss,SSS"} [thread] %-5level %-60logger{60} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <root level="ALL">
-        <appender-ref ref="STDOUT"/>
-    </root>
+    <logger name="org.eclipse.rdf4j.rio" level="INFO"/>
+    <logger name="org.eclipse.jetty" level="INFO"/>
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="_org.springframework" level="INFO"/>
 
-    <logger name="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver" level="ERROR"/>
+    <root level="DEBUG">
+        <appender-ref ref="console"/>
+    </root>
 
 </configuration>

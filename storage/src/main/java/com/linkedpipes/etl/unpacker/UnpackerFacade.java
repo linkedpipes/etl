@@ -3,7 +3,8 @@ package com.linkedpipes.etl.unpacker;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 import com.linkedpipes.etl.library.rdf.StatementsSelector;
-import com.linkedpipes.etl.storage.Configuration;
+import com.linkedpipes.etl.storage.ConfigurationHolder;
+import com.linkedpipes.etl.storage.cli.Configuration;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
 import com.linkedpipes.etl.unpacker.executions.HttpExecutionSource;
@@ -22,12 +23,12 @@ import java.util.Collection;
  */
 public class UnpackerFacade {
 
-    private TemplateFacade templateFacade;
+    private final TemplateFacade templateFacade;
 
     private final HttpExecutionSource executions;
 
     public UnpackerFacade(
-            Configuration configuration, TemplateFacade templateFacade) {
+            ConfigurationHolder configuration, TemplateFacade templateFacade) {
         this.templateFacade = templateFacade;
         this.executions = new HttpExecutionSource(configuration);
     }

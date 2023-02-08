@@ -11,13 +11,12 @@ import com.linkedpipes.etl.executor.dataunit.DataUnitManager;
 import com.linkedpipes.etl.executor.execution.ExecutionObserver;
 import com.linkedpipes.etl.executor.execution.ResourceManager;
 import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
-import com.linkedpipes.etl.executor.logging.LoggerFacade;
+import com.linkedpipes.etl.executor.logging.ExecutionLogger;
 import com.linkedpipes.etl.executor.plugin.BannedComponent;
 import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.plugin.PluginServiceHolder;
 import com.linkedpipes.etl.executor.rdf.RdfSourceWrap;
-import com.linkedpipes.etl.library.template.plugin.PluginException;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -43,7 +42,7 @@ public class PipelineExecutor {
 
     private final ResourceManager resources;
 
-    private final LoggerFacade loggerFacade = new LoggerFacade();
+    private final ExecutionLogger loggerFacade = new ExecutionLogger();
 
     private final PluginServiceHolder moduleFacade;
 
@@ -75,7 +74,7 @@ public class PipelineExecutor {
             File directory, String iri, PluginServiceHolder modules) {
         // We assume that the directory we are executing is in the
         // directory with other executions.
-        MDC.put(LoggerFacade.EXECUTION_MDC, null);
+        MDC.put(ExecutionLogger.EXECUTION_MDC, null);
         this.resources = new ResourceManager(
                 directory.getParentFile(), directory);
         this.loggerFacade.prepareAppendersForExecution(
@@ -84,12 +83,12 @@ public class PipelineExecutor {
         this.moduleFacade = modules;
         this.execution = new ExecutionObserver(resources, iri);
         this.execution.onExecutionBegin();
-        MDC.remove(LoggerFacade.EXECUTION_MDC);
+        MDC.remove(ExecutionLogger.EXECUTION_MDC);
     }
 
     public void execute() {
         LOG.info("PipelineExecutor.execute ... ");
-        MDC.put(LoggerFacade.EXECUTION_MDC, null);
+        MDC.put(ExecutionLogger.EXECUTION_MDC, null);
         try {
             if (initialize()) {
                 execution.onComponentsExecutionBegin();
@@ -105,7 +104,7 @@ public class PipelineExecutor {
                 LOG.error("Can't cleanup after pipeline execution!", t);
             }
         }
-        MDC.remove(LoggerFacade.EXECUTION_MDC);
+        MDC.remove(ExecutionLogger.EXECUTION_MDC);
         LOG.info("PipelineExecutor.execute ... done ");
     }
 
@@ -114,7 +113,7 @@ public class PipelineExecutor {
             if (cancelExecution) {
                 return;
             }
-            MDC.put(LoggerFacade.EXECUTION_MDC, null);
+            MDC.put(ExecutionLogger.EXECUTION_MDC, null);
             LOG.info("ExecutionObserver cancelled!");
             cancelExecution = true;
             // Notify the executor if it's not null.
@@ -124,7 +123,7 @@ public class PipelineExecutor {
                 currentExecutor.cancel();
             }
             execution.onCancelRequest();
-            MDC.remove(LoggerFacade.EXECUTION_MDC);
+            MDC.remove(ExecutionLogger.EXECUTION_MDC);
         }
     }
 

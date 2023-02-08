@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.monitor.executor;
 
-import com.linkedpipes.etl.executor.monitor.Configuration;
+import com.linkedpipes.etl.executor.monitor.ConfigurationHolder;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionStatus;
@@ -27,7 +27,7 @@ public class ExecutorService {
 
     private final ExecutorEventListener eventListener;
 
-    private final Configuration configuration;
+    private final ConfigurationHolder configuration;
 
     private final List<Executor> executors = new ArrayList<>(2);
 
@@ -41,7 +41,7 @@ public class ExecutorService {
     public ExecutorService(
             ExecutionSource executions,
             ExecutorEventListener eventListener,
-            Configuration configuration,
+            ConfigurationHolder configuration,
             ExecutorRestClient restClient,
             CheckExecutor checker) {
         this.executions = executions;

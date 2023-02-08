@@ -35,11 +35,11 @@ public class StorageService {
     private static final Logger LOG =
             LoggerFactory.getLogger(StorageService.class);
 
-    private static Configuration configuration;
-
     private final PipelineEvents pipelineEvents = new PipelineEvents();
 
     private final TemplateEvents templateEvents = new TemplateEvents();
+
+    private ConfigurationHolder configuration;
 
     private JavaPluginService javaPluginService;
 
@@ -59,12 +59,8 @@ public class StorageService {
 
     private PipelineFacade pipelineFacade;
 
-    public StorageService() {
-        // No operation here.
-    }
-
-    public static void setConfiguration(Configuration configuration) {
-        StorageService.configuration = configuration;
+    public StorageService(ConfigurationHolder configuration) {
+        this.configuration = configuration;
     }
 
     @PostConstruct
@@ -167,7 +163,7 @@ public class StorageService {
         return javaPluginService;
     }
 
-    public Configuration getConfiguration() {
+    public ConfigurationHolder getConfiguration() {
         return configuration;
     }
 

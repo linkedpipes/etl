@@ -10,16 +10,19 @@ public class EnvironmentToConfiguration {
     public static Configuration updateConfiguration(
             Configuration defaults)
             throws ExecutorException {
-        return defaults.merge(
-                getEnvInteger("LP_ETL_EXECUTOR_PORT"),
-                getEnv("LP_ETL_EXECUTOR_DATA"),
-                null, null,
-                getEnv("LP_ETL_EXECUTOR_OSGI"),
-                getEnv("LP_ETL_EXECUTOR_LIBRARIES"),
-                getEnv("LP_ETL_STORAGE_PLUGINS"),
-                Collections.emptyList());
+        Configuration next = new Configuration();
+        next.httpPort = getEnvInteger(
+                "LP_ETL_EXECUTOR_PORT");
+        next.dataDirectory = getEnv(
+                "LP_ETL_EXECUTOR_DATA");
+        next.osgiWorkingDirectory =getEnv(
+                "LP_ETL_EXECUTOR_OSGI") ;
+        next.osgiLibrariesDirectory =getEnv(
+                "LP_ETL_EXECUTOR_LIBRARIES") ;
+        next.pluginsDirectory =getEnv(
+                "LP_ETL_STORAGE_PLUGINS") ;
+        return defaults.merge(next);
     }
-
 
     private static String getEnv(String name) {
         return System.getenv(name);
@@ -37,6 +40,5 @@ public class EnvironmentToConfiguration {
                     "Invalid configuration property: '{}'", name);
         }
     }
-
 
 }

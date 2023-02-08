@@ -169,7 +169,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <mainClass>
-                                com.linkedpipes.etl.storage.StorageApplicationEntry
+                                com.linkedpipes.etl.storage.Storage
                             </mainClass>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>

@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.executor.monitor.executor;
 
-import com.linkedpipes.etl.executor.monitor.Configuration;
+import com.linkedpipes.etl.executor.monitor.ConfigurationHolder;
+import com.linkedpipes.etl.executor.monitor.cli.Configuration;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionStatus;
@@ -15,7 +16,8 @@ public class ExecutorServiceTest {
     public void checkExecutors() {
         ExecutionSource executions = Mockito.mock(ExecutionSource.class);
         ExecutorEventListener eventListener = null;
-        Configuration configuration = Mockito.mock(Configuration.class);
+        ConfigurationHolder configuration =
+                Mockito.mock(ConfigurationHolder.class);
         Mockito.when(configuration.getExecutorUri()).thenReturn("iri");
         ExecutorRestClient restClient = null;
         CheckExecutor checker = Mockito.mock(CheckExecutor.class);
@@ -37,7 +39,8 @@ public class ExecutorServiceTest {
                 .thenReturn(Arrays.asList(execution));
         ExecutorEventListener eventListener = Mockito
                 .mock(ExecutorEventListener.class);
-        Configuration configuration = Mockito.mock(Configuration.class);
+        ConfigurationHolder configuration =
+                Mockito.mock(ConfigurationHolder.class);
         Mockito.when(configuration.getExecutorUri()).thenReturn("iri");
         ExecutorRestClient restClient = Mockito.mock(ExecutorRestClient.class);
         CheckExecutor checker = Mockito.mock(CheckExecutor.class);
@@ -64,7 +67,8 @@ public class ExecutorServiceTest {
         Mockito.when(executions.getExecution(Mockito.any(Executor.class)))
                 .thenReturn(execution);
         ExecutorEventListener eventListener = null;
-        Configuration configuration = Mockito.mock(Configuration.class);
+        ConfigurationHolder configuration =
+                Mockito.mock(ConfigurationHolder.class);
         Mockito.when(configuration.getExecutorUri()).thenReturn("iri");
         ExecutorRestClient restClient = Mockito.mock(ExecutorRestClient.class);
         CheckExecutor checker = Mockito.mock(CheckExecutor.class);

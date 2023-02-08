@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.storage.http;
 
-import com.linkedpipes.etl.storage.Configuration;
+import com.linkedpipes.etl.storage.ConfigurationHolder;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -28,18 +28,17 @@ public class HttpServer implements ApplicationListener<ApplicationEvent> {
 
     private static final int MAX_THREADS = 4;
 
-    protected static Configuration configuration;
+    private final ConfigurationHolder configuration;
 
     private final AbstractApplicationContext appContext;
 
     private Server server = null;
 
-    public HttpServer(AbstractApplicationContext appContext) {
+    public HttpServer(
+            ConfigurationHolder configuration,
+            AbstractApplicationContext appContext) {
+        this.configuration = configuration;
         this.appContext = appContext;
-    }
-
-    public static void setConfiguration(Configuration configuration) {
-        HttpServer.configuration = configuration;
     }
 
     private void start() {
@@ -78,7 +77,7 @@ public class HttpServer implements ApplicationListener<ApplicationEvent> {
 
     private void buildServer() throws IOException {
         LOG.info("Starting HTTP server on port {}",
-                configuration.getStorageHttpPort());
+                configuration.getWebServerPort());
         //
         ServletContextHandler handler;
         handler = new ServletContextHandler();
@@ -98,7 +97,7 @@ public class HttpServer implements ApplicationListener<ApplicationEvent> {
         server = new Server(createThreadPool());
         // Connector.
         ServerConnector http = new ServerConnector(server, 1, 1);
-        http.setPort(configuration.getStorageHttpPort());
+        http.setPort(configuration.getWebServerPort());
         //
         server.addConnector(http);
         server.setHandler(handler);

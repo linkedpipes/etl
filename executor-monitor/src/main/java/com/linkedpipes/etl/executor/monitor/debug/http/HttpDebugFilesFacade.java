@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.monitor.debug.http;
 
-import com.linkedpipes.etl.executor.monitor.Configuration;
+import com.linkedpipes.etl.executor.monitor.ConfigurationHolder;
 import com.linkedpipes.etl.executor.monitor.debug.DataUnit;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
 import com.linkedpipes.etl.executor.monitor.debug.DebugDataSource;
@@ -22,13 +22,13 @@ public class HttpDebugFilesFacade {
     private static final Logger LOG =
             LoggerFactory.getLogger(HttpDebugFilesFacade.class);
 
-    private final Configuration configuration;
+    private final ConfigurationHolder configuration;
 
     private final DebugDataSource dataSource;
 
     @Autowired
     public HttpDebugFilesFacade(
-            Configuration configuration, DebugDataSource dataSource) {
+            ConfigurationHolder configuration, DebugDataSource dataSource) {
         this.configuration = configuration;
         this.dataSource = dataSource;
     }
