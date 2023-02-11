@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.IDN;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -101,12 +102,11 @@ class Downloader {
     }
 
     public void download() throws IOException, LpException {
-        LOG.info("Downloading: {} -> {}", toDownload.getSourceUrl(),
+        LOG.info("Downloading: '{}' as '{}'", toDownload.getSourceUrl(),
                 toDownload.getTargetFile().toString());
         //
         URL url = createUrl(toDownload.getSourceUrl());
         HttpURLConnection connection = null;
-        Date startTime = new Date();
         try {
             connection = connect(url);
             if (configuration.logDetail) {
@@ -115,11 +115,8 @@ class Downloader {
             checkResponseCode(connection);
             saveContentToFile(connection, toDownload.getTargetFile());
         } catch (RuntimeException ex) {
-            throw new IOException("Can't download file.", ex);
+            throw new IOException("Can't download file", ex);
         } finally {
-            long downloadTime = (new Date()).getTime() - startTime.getTime();
-            LOG.debug("Processing of: {} takes: {} ms",
-                    toDownload.getSourceUrl(), downloadTime);
             if (connection != null) {
                 connection.disconnect();
             }
@@ -130,13 +127,13 @@ class Downloader {
         URL url;
         try {
             // Parse so we have access to parts.
-            url = new URL(urlAsString);
+            URL parsedUrl = new URL(urlAsString);
             // Encode the host to support IDN.
             url = new URL(
-                    url.getProtocol(),
-                    IDN.toASCII(url.getHost()),
-                    url.getPort(),
-                    url.getFile());
+                    parsedUrl.getProtocol(),
+                    IDN.toASCII(parsedUrl.getHost()),
+                    parsedUrl.getPort(),
+                    parsedUrl.getFile());
         } catch (IOException ex) {
             throw new IOException("Can't create URL: " + urlAsString, ex);
         }
@@ -192,7 +189,9 @@ class Downloader {
         while (isResponseRedirect(responseCode)) {
             String location = connection.getHeaderField("Location");
             if (configuration.useUtf8ForRedirect) {
-                location = new String(location.getBytes("ISO-8859-1"), "UTF-8");
+                location = new String(
+                        location.getBytes(StandardCharsets.ISO_8859_1),
+                        StandardCharsets.UTF_8);
             }
             connection.disconnect();
             LOG.debug("Resolved redirect to: {}", location);
@@ -211,29 +210,30 @@ class Downloader {
 
     private void checkResponseCode(HttpURLConnection connection)
             throws IOException {
+        String errorContent = "";
+        try (InputStream stream = connection.getErrorStream()) {
+            if (stream != null) {
+                errorContent = new String(
+                        stream.readAllBytes(),
+                        StandardCharsets.UTF_8);
+            }
+        }
+
+        if (configuration.logDetail) {
+            for (var entry : connection.getHeaderFields().entrySet()) {
+                LOG.info("Header: {}", entry.getKey());
+                for (String value : entry.getValue()) {
+                    LOG.info("  {}", value);
+                }
+            }
+        }
+
         int responseCode = connection.getResponseCode();
-
-        StringWriter writer = new StringWriter();
-        try (InputStream err = connection.getErrorStream()) {
-            if (err != null) {
-                IOUtils.copy(err, writer, "UTF-8");
-            }
-        }
-        LOG.info("Error: {}", writer.toString());
-
-        for (Map.Entry<String, List<String>> entry :
-                connection.getHeaderFields().entrySet()) {
-            LOG.info("Header: {}", entry.getKey());
-            for (String value : entry.getValue()) {
-                LOG.info("  {}", value);
-            }
-        }
-
         if (responseCode < 200 || responseCode > 299) {
-            IOException ex = new IOException(
-                    responseCode + " : " + connection.getResponseMessage());
-            LOG.error("Can't download file: {}", toDownload.getSourceUrl(), ex);
-            throw ex;
+            throw new IOException("" +
+                    "Response code: " + responseCode + " " +
+                    "Message: '" + connection.getResponseMessage() + "' " +
+                    "Error: " + errorContent);
         }
     }
 
@@ -258,7 +258,7 @@ class Downloader {
             return false;
         }
         for (String value : headers.get("content-encoding")) {
-            if ("gzip".equals(value.toLowerCase())) {
+            if ("gzip".equalsIgnoreCase(value)) {
                 return true;
             }
         }

@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @RdfToPojo.Type(iri = HttpGetFilesVocabulary.CONFIG)
-public class HttpGetFilesConfiguration implements TaskExecutionConfiguration {
+public class HttpGetFilesConfiguration {
 
     /**
      * Force custom redirect. The Java follow only redirect in scope of
@@ -50,8 +50,11 @@ public class HttpGetFilesConfiguration implements TaskExecutionConfiguration {
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_RETRY_COUNT)
     private int retryCount = 1;
 
+    @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_RETRY_TIME)
+    private int retryWaitTimeMs = 0;
+
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_WAIT_TIME)
-    private int waitTime = 0;
+    private int waitTimeMs = 0;
 
     public HttpGetFilesConfiguration() {
     }
@@ -72,7 +75,6 @@ public class HttpGetFilesConfiguration implements TaskExecutionConfiguration {
         this.utf8Redirect = utf8Redirect;
     }
 
-    @Override
     public boolean isSkipOnError() {
         return skipOnError;
     }
@@ -113,11 +115,6 @@ public class HttpGetFilesConfiguration implements TaskExecutionConfiguration {
         this.timeout = timeout;
     }
 
-    @Override
-    public int getThreadsNumber() {
-        return threads;
-    }
-
     public int getThreadsPerGroup() {
         return threadsPerGroup;
     }
@@ -134,11 +131,6 @@ public class HttpGetFilesConfiguration implements TaskExecutionConfiguration {
         this.encodeUrl = encodeUrl;
     }
 
-    public Downloader.Configuration asDownloaderConfiguration() {
-        return new Downloader.Configuration(
-                manualFollowRedirect, false, encodeUrl, utf8Redirect);
-    }
-
     public int getRetryCount() {
         return retryCount;
     }
@@ -147,12 +139,20 @@ public class HttpGetFilesConfiguration implements TaskExecutionConfiguration {
         this.retryCount = retryCount;
     }
 
-    public int getWaitTime() {
-        return waitTime;
+    public int getRetryWaitTimeMs() {
+        return retryWaitTimeMs;
     }
 
-    public void setWaitTime(int waitTime) {
-        this.waitTime = waitTime;
+    public void setRetryWaitTimeMs(int retryWaitTimeMs) {
+        this.retryWaitTimeMs = retryWaitTimeMs;
+    }
+
+    public int getWaitTimeMs() {
+        return waitTimeMs;
+    }
+
+    public void setWaitTimeMs(int waitTimeMs) {
+        this.waitTimeMs = waitTimeMs;
     }
 
 }

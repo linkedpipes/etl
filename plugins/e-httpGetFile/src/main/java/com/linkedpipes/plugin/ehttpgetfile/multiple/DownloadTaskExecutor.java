@@ -4,9 +4,6 @@ import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
-import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.HashMap;
@@ -14,71 +11,68 @@ import java.util.Map;
 
 class DownloadTaskExecutor implements TaskConsumer<DownloadTask> {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(DownloadTaskExecutor.class);
+    private final HttpGetFilesConfiguration configuration;
 
-    private HttpGetFilesConfiguration configuration;
-
-    private ProgressReport progressReport;
-
-    private WritableFilesDataUnit output;
+    private final WritableFilesDataUnit output;
 
     private final HttpRequestReport requestReport;
 
     public DownloadTaskExecutor(
             HttpGetFilesConfiguration configuration,
-            ProgressReport progressReport,
             WritableFilesDataUnit output,
             StatementsConsumer statementsConsumer,
             ReportWriter reportWriter) {
         this.configuration = configuration;
-        this.progressReport = progressReport;
         this.output = output;
-        this.requestReport =
-                new HttpRequestReport(statementsConsumer, reportWriter);
+        this.requestReport = new HttpRequestReport(
+                statementsConsumer, reportWriter);
     }
 
     @Override
     public void accept(DownloadTask task) throws LpException {
-        requestReport.setTask(task);
-        // Try 1 + retry count.
-        int tryCount = 1 + Math.max(configuration.getRetryCount(), 0);
-        for(int index = 0; index < tryCount; ++index) {
-            waitForNextDownload();
-            try {
-                tryDownloading(task);
-                progressReport.entryProcessed();
-                return;
-            } catch (Exception ex) {
-                LOG.error("Can't download file.", ex);
-            }
-        }
-        // Download failed.
-        throw new LpException("Can't download file.");
-    }
-
-    private void tryDownloading(DownloadTask task) throws Exception {
-        Downloader downloader = new Downloader(
-                createDownloaderTask(task),
-                configuration.asDownloaderConfiguration(),
-                requestReport);
-            downloader.download();
-    }
-
-    private void waitForNextDownload() {
         try {
-            Thread.sleep(configuration.getWaitTime());
-        } catch (InterruptedException ex) {
-            // Do nothing.
+            (new Downloader(
+                    createDownloaderTask(task),
+                    new Downloader.Configuration(
+                            configuration.isManualFollowRedirect(),
+                            configuration.isDetailLogging(),
+                            configuration.isEncodeUrl(),
+                            configuration.isUtf8Redirect()),
+                    requestReport)).download();
+        } catch (Exception ex) {
+            throw new LpException("Can't download file.", ex);
         }
+//
+//        requestReport.setTask(task);
+//        // Try 1 + retry count.
+//        int tryCount = 1 + Math.max(configuration.getRetryCount(), 0);
+//        for(int index = 0; index < tryCount; ++index) {
+//            waitForNextDownload();
+//            try {
+//                tryDownloading(task);
+//                return;
+//            } catch (Exception ex) {
+//                LOG.error("Can't download file.", ex);
+//            }
+//        }
+//        // Download failed.
+//        throw new LpException("Can't download file.");
     }
+
+//    private void waitForNextDownload() {
+//        try {
+//            Thread.sleep(configuration.getRetryWaitTimeMs());
+//        } catch (InterruptedException ex) {
+//            // Do nothing.
+//        }
+//    }
 
     private Downloader.Task createDownloaderTask(DownloadTask task)
             throws LpException {
         String uri = nullForEmpty(task.getUri());
         String fileName = nullForEmpty(task.getFileName());
         if (uri == null || fileName == null) {
-            throw new LpException("Invalid reference.");
+            throw new LpException("Invalid task definition.");
         }
         File targetFile = output.createFile(task.getFileName());
         return new Downloader.Task(uri,

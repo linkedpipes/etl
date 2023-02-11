@@ -1,13 +1,13 @@
 package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 
-import com.linkedpipes.etl.executor.api.v1.component.task.GroupTask;
+import com.linkedpipes.etl.executor.api.v1.component.task.Task;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RdfToPojo.Type(iri = SparqlEndpointListVocabulary.TASK)
-public class QueryTask implements GroupTask {
+public class QueryTask implements Task {
 
     @RdfToPojo.Resource
     private String iri;

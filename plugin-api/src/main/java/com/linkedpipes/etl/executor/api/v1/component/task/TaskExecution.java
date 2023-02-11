@@ -4,107 +4,120 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.service.WorkingDirectory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Base class to extend by task-based components.
+ */
 public abstract class TaskExecution<T extends Task>
         implements Component, SequentialExecution {
 
-    private static final int TERMINATION_CHECK = 5;
+    private static final int TERMINATION_TIMEOUT_S = 5;
 
     private static final String CHECKPOINT_FILE_NAME_PADDING = "000000";
 
-    private TaskExecutionConfiguration configuration;
+    private static final String CHECKPOINT_DIRECTORY_NAME = "checkpoints";
 
+    private static final Logger LOG =
+            LoggerFactory.getLogger(TaskExecution.class);
+
+    private File checkpointDirectory;
+
+    /**
+     * We need this directory to save progress.
+     */
     @Component.Inject
     public WorkingDirectory workingDirectory;
 
-    protected Component.Context context;
-
-    private File checkpointDir;
-
-    private final Set<String> taskFilter = new HashSet<>();
+    @Component.Inject
+    public ProgressReport progressReport;
 
     @Override
     public void execute(Component.Context context) throws LpException {
-        this.context = context;
-        initialization();
-        configuration = getExecutionConfiguration();
-        prepareCheckpointDir();
-        TaskSource<T> taskSource = createTaskSource();
-        taskSource.setSkipOnError(configuration.isSkipOnError());
-        List<TaskExecutor<T>> executors = createExecutors(taskSource);
-        beforeExecution();
-        ExecutorService executorService = createExecutorService();
-        start(executorService, executors);
+        onInitialize(context);
+        TaskExecutionConfiguration configuration = getExecutionConfiguration();
+        prepareCheckpointDirectory();
+        List<T> tasks = loadTasks();
+        TaskSource<T> taskSource = new TaskSource<>(
+                progressReport, createReportWriter(), configuration, tasks);
+        List<TaskConsumerWrap<T>> executors = createConsumersWraps(
+                taskSource, configuration.numberOfThreads);
+        onExecutionWillBegin(tasks);
+        ExecutorService executorService = createExecutorService(
+                configuration.numberOfThreads);
+        executeTasks(executorService, executors);
         waitForShutdown(executorService);
-        afterExecution();
-        checkForFailures(taskSource);
+        onExecutionDidFinished();
+        checkForFailures(configuration, taskSource);
     }
 
     /**
      * Called after only context is set in execute method.
      */
-    protected void initialization() throws LpException {
+    protected void onInitialize(Component.Context context) throws LpException {
         // No action here.
     }
 
     /**
-     * This function is called before any other method.
+     * Return a task execution configuration.
      */
-    private void prepareCheckpointDir() throws LpException {
-        if (checkpointDir == null) {
-            checkpointDir = getCheckpointDir(workingDirectory);
-            checkpointDir.mkdirs();
+    protected abstract TaskExecutionConfiguration getExecutionConfiguration();
+
+    private void prepareCheckpointDirectory() {
+        checkpointDirectory = new File(
+                workingDirectory, CHECKPOINT_DIRECTORY_NAME);
+        if (!checkpointDirectory.exists()) {
+            if (checkpointDirectory.mkdirs()) {
+                LOG.warn("Can't create checkpoint directory.");
+            }
         }
     }
 
-    private static File getCheckpointDir(File workingDirectory) {
-        return new File(workingDirectory, "checkpoints");
-    }
-
-    protected abstract TaskExecutionConfiguration getExecutionConfiguration();
-
-    private ExecutorService createExecutorService() {
-        return Executors.newFixedThreadPool(configuration.getThreadsNumber());
-    }
-
-    protected abstract TaskSource<T> createTaskSource() throws LpException;
-
     /**
-     * This function is called before the workers are created.
+     * Return all tasks to be executed.
      */
-    protected void beforeExecution() throws LpException {
-        // No operation here.
-    }
+    protected abstract List<T> loadTasks() throws LpException;
 
-    private List<TaskExecutor<T>> createExecutors(TaskSource<T> taskSource)
-            throws LpException {
-        List<TaskExecutor<T>> executors = new ArrayList<>();
-        for (int i = 0; i < configuration.getThreadsNumber(); ++i) {
-            executors.add(createTaskExecutor(taskSource, i));
+    protected abstract  ReportWriter createReportWriter() throws LpException;
+
+    private List<TaskConsumerWrap<T>> createConsumersWraps(
+            TaskSource<T> taskSource, int count) throws LpException {
+        List<TaskConsumerWrap<T>> executors = new ArrayList<>();
+        for (int index = 0; index < count; ++index) {
+            TaskConsumer<T> consumer = createConsumer();
+            File checkpointFile = getTaskCheckpointFile(index);
+            TaskConsumerWrap<T> consumerWrap  = new TaskConsumerWrap<>(
+                    consumer, taskSource, checkpointFile);
+            executors.add(consumerWrap);
         }
         return executors;
     }
 
-    private TaskExecutor<T> createTaskExecutor(
-            TaskSource<T> taskSource, int index) throws LpException {
-        return new TaskExecutor<>(
-                createConsumer(), taskSource, createReportWriter(),
-                context, getTaskCheckpointFile(index), taskFilter);
+    /**
+     * This function is called before the workers are created.
+     */
+    protected void onExecutionWillBegin(List<T> tasks) throws LpException {
+        progressReport.start(tasks);
     }
 
-    protected abstract TaskConsumer<T> createConsumer() throws LpException;
+    private ExecutorService createExecutorService(int numberOfThreads) {
+        return Executors.newFixedThreadPool(numberOfThreads);
+    }
 
-    protected abstract ReportWriter createReportWriter();
+    /**
+     * Return new instance of task consumer.
+     */
+    protected abstract TaskConsumer<T> createConsumer() throws LpException;
 
     private File getTaskCheckpointFile(int index) {
         String indexAsStr = Integer.toString(index);
@@ -113,37 +126,45 @@ public abstract class TaskExecution<T extends Task>
             indexAsStr = CHECKPOINT_FILE_NAME_PADDING.substring(
                     indexAsStr.length()) + indexAsStr;
         }
-        return new File(checkpointDir, indexAsStr);
+        return new File(checkpointDirectory, indexAsStr);
     }
 
-    protected void start(
-            ExecutorService executorService, List<TaskExecutor<T>> executors) {
-        for (TaskExecutor<T> executor : executors) {
+    private void executeTasks(
+            ExecutorService executorService,
+            List<TaskConsumerWrap<T>> executors) {
+        for (TaskConsumerWrap<T> executor : executors) {
             executorService.submit(executor);
         }
     }
 
     private void waitForShutdown(ExecutorService executor) {
+        // Disable submit of new tasks and wait for the end.
         executor.shutdown();
         while (true) {
             try {
                 if (executor.awaitTermination(
-                        TERMINATION_CHECK, TimeUnit.SECONDS)) {
+                        TERMINATION_TIMEOUT_S, TimeUnit.SECONDS)) {
                     break;
                 }
             } catch (InterruptedException ex) {
-                // Ignore.
+                // (Re-)Cancel if current thread also interrupted
+                executor.shutdownNow();
             }
         }
     }
 
-    protected void afterExecution() throws LpException {
-        // No operation here.
+    protected void onExecutionDidFinished() throws LpException {
+        progressReport.done();
     }
 
-    protected void checkForFailures(TaskSource<T> taskSource)
+    private void checkForFailures(
+            TaskExecutionConfiguration configuration, TaskSource<T> taskSource)
             throws LpException {
-        if (taskSource.doesTaskFailed() && !configuration.isSkipOnError()) {
+        if (configuration.skipFailedTasks) {
+            // Even if there are failures we do not care.
+            return;
+        }
+        if (taskSource.hasTaskExecutionFailed()) {
             throw new LpException("At least one task failed.");
         }
     }

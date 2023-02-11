@@ -3,7 +3,6 @@ package com.linkedpipes.plugin.exec.httprequest;
 import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
-import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,22 +32,19 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
 
     private final HeaderReporter headerReporter;
 
-    private final ProgressReport progressReport;
-
+    /**
+     * Collection of visited URLs to prevent redirect cycle.
+     */
     private final Set<URL> visited = new HashSet<>();
-
-    private HttpRequestTask task;
 
     public TaskExecutor(
             WritableFilesDataUnit outputFiles,
             Map<String, File> inputFilesMap,
             StatementsConsumer consumer,
-            ProgressReport progressReport,
             boolean encodeUrl) {
         this.outputFiles = outputFiles;
         this.taskContentWriter = new TaskContentWriter(inputFilesMap);
         this.headerReporter = new HeaderReporter(consumer);
-        this.progressReport = progressReport;
         this.encodeUrl = encodeUrl;
     }
 
@@ -56,14 +52,9 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
     public void accept(HttpRequestTask task) throws LpException {
         LOG.info("Executing '{}' on '{}' to '{}'", task.getMethod(),
                 task.getUrl(), task.getOutputFileName());
-        this.task = task;
         URL url = createUrl(task.getUrl());
-        try {
-            visited.clear();
-            performRequest(url);
-        } finally {
-            progressReport.entryProcessed();
-        }
+        visited.clear();
+        performRequest(task, url);
     }
 
     private URL createUrl(String urlAsString) throws LpException {
@@ -90,21 +81,21 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         return url;
     }
 
-    private void performRequest(URL url) throws LpException {
+    private void performRequest(HttpRequestTask task, URL url) throws LpException {
         LOG.debug("Creating connection {} ...", url);
         if (visited.contains(url)) {
             throw new LpException("Cycle detected.");
         }
         visited.add(url);
-        try (Connection connection = createConnection(url)) {
+        try (Connection connection = createConnection(task, url)) {
             LOG.debug("Requesting response {} ...", url);
             connection.finishRequest();
-            if (shouldFollowRedirect(connection)) {
+            if (shouldFollowRedirect(task, connection)) {
                 LOG.debug("Following redirect {} ...", url);
-                handleRedirect(connection);
+                handleRedirect(task, connection);
             } else {
                 LOG.debug("Handling response {} ...", url);
-                handleResponse(connection);
+                handleResponse(task, connection);
             }
             LOG.debug("Done {} ...", url);
         } catch (Exception ex) {
@@ -112,7 +103,8 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         }
     }
 
-    private boolean shouldFollowRedirect(Connection connection)
+    private boolean shouldFollowRedirect(
+            HttpRequestTask task, Connection connection)
             throws IOException {
         if (!connection.requestRedirect()) {
             return false;
@@ -120,10 +112,11 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         return task.isFollowRedirect() || task.isHasUtf8Redirect();
     }
 
-    private Connection createConnection(URL url)
+    private Connection createConnection(
+            HttpRequestTask task, URL url)
             throws IOException, LpException {
         // TODO Add support for single body request.
-        HttpURLConnection connection = createHttpConnection(url);
+        HttpURLConnection connection = createHttpConnection(task, url);
         if (task.getContent().isEmpty()) {
             return wrapConnection(connection);
         }
@@ -143,7 +136,8 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
 
     }
 
-    private HttpURLConnection createHttpConnection(URL url)
+    private HttpURLConnection createHttpConnection(
+            HttpRequestTask task, URL url)
             throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         if (task.isHasUtf8Redirect()) {
@@ -184,7 +178,7 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         return multipartConnection;
     }
 
-    private void handleRedirect(Connection connection)
+    private void handleRedirect(HttpRequestTask task, Connection connection)
             throws Exception {
         String location = connection.getResponseHeader("Location");
         if (task.isHasUtf8Redirect()) {
@@ -200,10 +194,10 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
             urlToFollow = new URL(location);
         }
         connection.close();
-        performRequest(urlToFollow);
+        performRequest(task, urlToFollow);
     }
 
-    private void handleResponse(Connection connection)
+    private void handleResponse(HttpRequestTask task, Connection connection)
             throws IOException, LpException {
         HttpURLConnection urlConnection = connection.getConnection();
         if (connection.requestFailed()) {

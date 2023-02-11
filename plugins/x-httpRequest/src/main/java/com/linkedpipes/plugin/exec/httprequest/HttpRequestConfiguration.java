@@ -4,7 +4,7 @@ import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfigura
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 @RdfToPojo.Type(iri = HttpRequestVocabulary.CONFIGURATION)
-public class HttpRequestConfiguration implements TaskExecutionConfiguration {
+public class HttpRequestConfiguration {
 
     @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_THREADS)
     private int threadsNumber = 1;
@@ -27,7 +27,6 @@ public class HttpRequestConfiguration implements TaskExecutionConfiguration {
     @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_UTF8_REDIRECT)
     private boolean hasUtf8Redirect = false;
 
-    @Override
     public int getThreadsNumber() {
         return threadsNumber;
     }
@@ -36,7 +35,6 @@ public class HttpRequestConfiguration implements TaskExecutionConfiguration {
         this.threadsNumber = threads;
     }
 
-    @Override
     public boolean isSkipOnError() {
         return skipOnError;
     }

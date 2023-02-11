@@ -4,8 +4,7 @@ import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfigura
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 @RdfToPojo.Type(iri = SparqlEndpointListVocabulary.CONFIG)
-public class SparqlEndpointListConfiguration implements
-        TaskExecutionConfiguration {
+public class SparqlEndpointListConfiguration {
 
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_USED_THREADS)
     private int threadsNumber = 1;
@@ -29,7 +28,6 @@ public class SparqlEndpointListConfiguration implements
     public SparqlEndpointListConfiguration() {
     }
 
-    @Override
     public int getThreadsNumber() {
         return threadsNumber;
     }
@@ -52,11 +50,6 @@ public class SparqlEndpointListConfiguration implements
 
     public void setFixIncomingRdf(boolean fixIncomingRdf) {
         this.fixIncomingRdf = fixIncomingRdf;
-    }
-
-    @Override
-    public boolean isSkipOnError() {
-        return true;
     }
 
     public int getTaskPerGroupLimit() {

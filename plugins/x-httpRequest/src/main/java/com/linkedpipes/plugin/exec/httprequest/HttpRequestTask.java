@@ -1,13 +1,13 @@
 package com.linkedpipes.plugin.exec.httprequest;
 
-import com.linkedpipes.etl.executor.api.v1.component.task.GroupTask;
+import com.linkedpipes.etl.executor.api.v1.component.task.Task;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.LinkedList;
 import java.util.List;
 
 @RdfToPojo.Type(iri = HttpRequestVocabulary.TASK)
-public class HttpRequestTask implements GroupTask {
+public class HttpRequestTask implements Task {
 
     @RdfToPojo.Type(iri = HttpRequestVocabulary.HEADER)
     public static class Header {

@@ -1,11 +1,9 @@
 package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 
-import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 @RdfToPojo.Type(iri = SparqlEndpointChunkedListVocabulary.CONFIG)
-public class SparqlEndpointChunkedListConfiguration implements
-        TaskExecutionConfiguration {
+public class SparqlEndpointChunkedListConfiguration {
 
     @RdfToPojo.Property(
             iri = SparqlEndpointChunkedListVocabulary.HAS_USED_THREADS)
@@ -60,16 +58,6 @@ public class SparqlEndpointChunkedListConfiguration implements
 
     public void setFixIncomingRdf(boolean fixIncomingRdf) {
         this.fixIncomingRdf = fixIncomingRdf;
-    }
-
-    @Override
-    public int getThreadsNumber() {
-        return usedThreads;
-    }
-
-    @Override
-    public boolean isSkipOnError() {
-        return true;
     }
 
     public boolean isUseTolerantRepository() {

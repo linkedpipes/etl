@@ -69,4 +69,9 @@
         <input type="number" ng-model="dialog.waitTime.value"
                ng-disabled="dialog.waitTime.disabled || dialog.waitTime.inherit">
     </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.waitAfterTask.hide">
+        <label>Wait time after download (in milliseconds)</label>
+        <input type="number" ng-model="dialog.waitAfterTask.value"
+               ng-disabled="dialog.waitAfterTask.disabled || dialog.waitAfterTask.inherit">
+    </md-input-container>
 </div>

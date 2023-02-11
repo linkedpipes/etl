@@ -7,12 +7,9 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecution;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
-import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
-import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import org.eclipse.rdf4j.repository.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,71 +33,44 @@ public final class SparqlEndpointList extends TaskExecution<QueryTask> {
     @Component.Configuration
     public SparqlEndpointListConfiguration configuration;
 
-    // TODO Add to report handler.
-    @Component.Inject
-    public ProgressReport progressReport;
-
     private StatementsConsumer consumer;
-
-    private List<QueryTask> tasks;
-
-    @Override
-    protected void initialization() throws LpException {
-        super.initialization();
-        this.consumer = new StatementsConsumer(outputRdf);
-    }
-
-    @Override
-    protected TaskSource<QueryTask> createTaskSource() throws LpException {
-        loadTasks();
-        if (configuration.getTaskPerGroupLimit() == 0) {
-            return TaskSource.defaultTaskSource(this.tasks);
-        } else {
-            return TaskSource.groupTaskSource(
-                    this.tasks,
-                    configuration.getTaskPerGroupLimit());
-        }
-    }
-
-    private void loadTasks() throws LpException {
-        RdfSource source = tasksRdf.asRdfSource();
-        List<String> resources = source.getByType(
-                SparqlEndpointListVocabulary.TASK);
-        tasks = new ArrayList<>(resources.size());
-        for (String resource : resources) {
-            QueryTask task = new QueryTask();
-            RdfToPojoLoader.loadByReflection(source, resource, task);
-            tasks.add(task);
-        }
-    }
 
     @Override
     protected TaskExecutionConfiguration getExecutionConfiguration() {
-        return this.configuration;
+        TaskExecutionConfiguration result = new TaskExecutionConfiguration();
+        result.numberOfThreads = configuration.getThreadsNumber();
+        result.skipFailedTasks = true;
+        return result;
     }
 
     @Override
-    protected TaskConsumer<QueryTask> createConsumer() {
-        return new QueryTaskExecutor(configuration, consumer, progressReport);
+    protected List<QueryTask> loadTasks() throws LpException {
+        RdfSource source = tasksRdf.asRdfSource();
+        List<String> resources = source.getByType(
+                SparqlEndpointListVocabulary.TASK);
+        List<QueryTask> result = new ArrayList<>(resources.size());
+        for (String resource : resources) {
+            QueryTask task = new QueryTask();
+            RdfToPojoLoader.loadByReflection(source, resource, task);
+            result.add(task);
+        }
+        return result;
     }
 
     @Override
     protected ReportWriter createReportWriter() {
-        String graph = reportRdf.getWriteGraph().stringValue();
-        Repository repository = reportRdf.getRepository();
         return ReportWriter.create(reportRdf.getWriter());
-
     }
 
     @Override
-    protected void beforeExecution() throws LpException {
-        super.beforeExecution();
-        this.progressReport.start(tasks);
+    protected TaskConsumer<QueryTask> createConsumer() {
+        return new QueryTaskExecutor(configuration, consumer);
     }
 
     @Override
-    protected void afterExecution() throws LpException {
-        super.afterExecution();
-        this.progressReport.done();
+    protected void onInitialize(Context context) throws LpException {
+        super.onInitialize(context);
+        this.consumer = new StatementsConsumer(outputRdf);
     }
+
 }

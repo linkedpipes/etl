@@ -63,7 +63,7 @@ public interface Component {
 
     /**
      * Mark data unit as a source for the runtime configuration. Data from
-     * the data unit are used to load configuration and have highest
+     * the data unit are used to load configuration and have the highest
      * priority.
      */
     @Retention(RetentionPolicy.RUNTIME)

@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.loader.wikibase;
 
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
@@ -49,15 +48,11 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
 
     private ApiConnection connection;
 
-    private WikibaseDataEditor wbde;
+    private WikibaseDataEditor wikibaseEditor;
 
-    private WikibaseDataFetcher wbdf;
+    private WikibaseDataFetcher wikibaseFetcher;
 
     private PropertyRegister register;
-
-    private Throwable lastException;
-
-    private Component.Context context;
 
     public WikibaseWorker(
             WikibaseLoaderConfiguration configuration,
@@ -68,19 +63,14 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
         this.source = source;
     }
 
-    @Override
-    public void setContext(Component.Context context) {
-        this.context = context;
-    }
-
     public void onBeforeExecution() throws LpException {
         initializeConnection();
         loadPropertyRegister();
         //
-        wbde = new WikibaseDataEditor(
+        wikibaseEditor = new WikibaseDataEditor(
                 connection, configuration.getSiteIri() + "entity/");
-        wbde.setEditAsBot(true);
-        wbdf = new WikibaseDataFetcher(
+        wikibaseEditor.setEditAsBot(true);
+        wikibaseFetcher = new WikibaseDataFetcher(
                 connection, configuration.getSiteIri() + "entity/");
     }
 
@@ -107,7 +97,6 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
     public void accept(WikibaseTask task) throws LpException {
         RdfToDocument rdfToDocument =
                 new RdfToDocument(register, configuration.getSiteIri());
-        LOG.debug("Processing: {}", task.getIri());
         try {
             ItemDocument local =
                     rdfToDocument.loadItemDocument(source, task.getIri());
@@ -140,15 +129,13 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
                         remote.getRevisionId());
             }
         } catch (Throwable ex) {
-            lastException = ex;
-            throw new LpException(
-                    "Error processing document: {}", task.getIri(), ex);
+            throw new LpException("Error processing document.", ex);
         }
     }
 
     private ItemDocument onNew(ItemDocument local)
             throws IOException, MediaWikiApiErrorException {
-        return execute(() -> wbde.createItemDocument(
+        return execute(() -> wikibaseEditor.createItemDocument(
                 local, configuration.getNewItemMessage(), null));
     }
 
@@ -178,10 +165,7 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
             try {
                 Thread.sleep(retryWait);
             } catch (InterruptedException ex) {
-                // Ignore.
-            }
-            if (context.isCancelled()) {
-                throw new IOException("Operation cancelled on user request.");
+                throw new IOException("Interrupter while waiting.", ex);
             }
         }
     }
@@ -192,7 +176,7 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
 
     private ItemDocument onReplace(ItemDocument local)
             throws IOException, MediaWikiApiErrorException {
-        return execute(() -> wbde.editItemDocument(
+        return execute(() -> wikibaseEditor.editItemDocument(
                 local, true, configuration.getUpdateItemMessage(), null));
     }
 
@@ -200,19 +184,19 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
             ItemDocument local, Map<Object, MergeStrategy> mergeStrategy)
             throws IOException, MediaWikiApiErrorException {
         ItemDocument remote =
-                (ItemDocument) wbdf.getEntityDocument(
+                (ItemDocument) wikibaseFetcher.getEntityDocument(
                         local.getEntityId().getId());
         DocumentMerger merger =
                 new DocumentMerger(
                         local, remote, mergeStrategy, createSnakEqual());
         if (merger.canUpdateExisting()) {
             ItemDocument newDocument = merger.assembleMergeDocument();
-            return execute(() -> wbde.editItemDocument(
+            return execute(() -> wikibaseEditor.editItemDocument(
                     newDocument,
                     false, configuration.getUpdateItemMessage(), null));
         } else {
             ItemDocument newDocument = merger.assembleReplaceDocument();
-            return execute(() -> wbde.editItemDocument(
+            return execute(() -> wikibaseEditor.editItemDocument(
                     newDocument,
                     true, configuration.getUpdateItemMessage(), null));
         }
@@ -249,10 +233,6 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
         } catch (IOException | MediaWikiApiErrorException ex) {
             throw new LpException("Can't close connection.", ex);
         }
-    }
-
-    public Throwable getLastException() {
-        return lastException;
     }
 
 }

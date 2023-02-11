@@ -37,29 +37,21 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
 
     private final SparqlEndpointChunkedListConfiguration configuration;
 
-    private final ProgressReport progressReport;
-
-    private QueryTask task;
-
-    private List<Statement> statements = new ArrayList<>();
+    private final List<Statement> statements = new ArrayList<>();
 
     private final StatementsConsumer consumer;
 
     private final RDFHandler rdfHandler;
 
-    private ValueFactory valueFactory = SimpleValueFactory.getInstance();
-
-    private SPARQLRepository repository;
+    private final  ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     private final Map<String, List<File>> inputFilesByName;
 
     public QueryTaskExecutor(
             SparqlEndpointChunkedListConfiguration configuration,
             StatementsConsumer consumer,
-            ProgressReport progressReport,
             Map<String, List<File>> inputFilesByName) {
         this.configuration = configuration;
-        this.progressReport = progressReport;
         this.consumer = consumer;
         this.rdfHandler = createRdfHandler(configuration);
         this.inputFilesByName = inputFilesByName;
@@ -100,16 +92,15 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
 
     @Override
     public void accept(QueryTask task) throws LpException {
+        SPARQLRepository repository = null;
         validateTask(task);
-        this.task = task;
         try {
-            LOG.debug("Executing: {} ...", task.getIri());
-            createRepository();
-            executeTask();
-            LOG.debug("Executing: {} ... done", task.getIri());
+            repository = createRepository(task);
+            executeTask(task, repository);
         } finally {
-            progressReport.entryProcessed();
-            repository.shutDown();
+            if (repository != null) {
+                repository.shutDown();
+            }
         }
     }
 
@@ -119,34 +110,38 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
         }
     }
 
-    private void createRepository() {
+    private SPARQLRepository createRepository(QueryTask task) {
+        SPARQLRepository result;
+        String endpoint = getEndpoint(task);
         if (configuration.isUseTolerantRepository()) {
-            this.repository = new TolerantSparqlRepository(getEndpoint());
+            result = new TolerantSparqlRepository(endpoint);
         } else {
-            this.repository = new SPARQLRepository(getEndpoint());
+            result = new SPARQLRepository(endpoint);
         }
-        setRepositoryHeaders(this.repository);
-        this.repository.init();
-        this.repository.setHttpClient(getHttpClient());
+        setRepositoryHeaders(task, result);
+        result.init();
+        result.setHttpClient(getHttpClient(task));
+        return result;
     }
 
-    private String getEndpoint() {
+    private String getEndpoint(QueryTask task) {
         String[] tokens = task.getEndpoint().split("://", 2);
         String[] url = tokens[1].split("/", 2);
         return tokens[0] + "://" + IDN.toASCII(url[0]) + "/" + url[1];
     }
 
-    private void setRepositoryHeaders(SPARQLRepository repository) {
-        final Map<String, String> headers = new HashMap<>();
-        headers.putAll(repository.getAdditionalHttpHeaders());
-        String mimeType = this.task.getTransferMimeType();
+    private void setRepositoryHeaders(
+            QueryTask task, SPARQLRepository repository) {
+        final Map<String, String> headers = new HashMap<>(
+                repository.getAdditionalHttpHeaders());
+        String mimeType = task.getTransferMimeType();
         if (mimeType != null) {
             headers.put("Accept", mimeType);
         }
         repository.setAdditionalHttpHeaders(headers);
     }
 
-    private CloseableHttpClient getHttpClient() {
+    private CloseableHttpClient getHttpClient(QueryTask task) {
         CredentialsProvider provider = new BasicCredentialsProvider();
         if (task.isUseAuthentication()) {
             provider.setCredentials(
@@ -159,19 +154,20 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
                 .setDefaultCredentialsProvider(provider).build();
     }
 
-    private void executeTask() throws LpException {
+    private void executeTask(QueryTask task, SPARQLRepository repository)
+            throws LpException {
         CsvValuesReader valuesReader = new CsvValuesReader(
                 task.getChunkSize(), task.getAsLiterals());
         valuesReader.setHandler((values) -> {
-            String query = prepareQuery(values);
-            executeQuery(query);
+            String query = prepareQuery(task, values);
+            executeQuery(task, repository, query);
         });
-        for (File file : getFilesForTask()) {
+        for (File file : getFilesForTask(task)) {
             valuesReader.readFile(file);
         }
     }
 
-    private List<File> getFilesForTask() throws LpException {
+    private List<File> getFilesForTask(QueryTask task) throws LpException {
         List<File> files = inputFilesByName.get(task.getFileName());
         if (files == null) {
             throw new LpException(
@@ -180,19 +176,21 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
         return files;
     }
 
-    private String prepareQuery(String value) {
+    private String prepareQuery(QueryTask task, String value) {
         return task.getQuery().replace("${VALUES}", value);
     }
 
-    private void executeQuery(String queryAsString) throws LpException {
+    private void executeQuery(
+            QueryTask task, SPARQLRepository repository, String queryAsString) {
         try (RepositoryConnection connection = repository.getConnection()) {
-            GraphQuery query = createQuery(connection, queryAsString);
+            GraphQuery query = createQuery(task, connection, queryAsString);
             query.evaluate(this.rdfHandler);
         }
     }
 
     private GraphQuery createQuery(
-            RepositoryConnection connection, String queryAsString) {
+            QueryTask task, RepositoryConnection connection,
+            String queryAsString) {
         GraphQuery query = connection.prepareGraphQuery(
                 QueryLanguage.SPARQL, queryAsString);
         setGraphsToQuery(task, query);

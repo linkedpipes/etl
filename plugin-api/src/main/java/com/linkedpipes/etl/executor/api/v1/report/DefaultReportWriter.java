@@ -3,6 +3,7 @@ package com.linkedpipes.etl.executor.api.v1.report;
 import com.linkedpipes.etl.executor.api.v1.component.task.Task;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.RDF;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.XSD;
@@ -24,7 +25,8 @@ class DefaultReportWriter implements ReportWriter {
 
     @Override
     public synchronized void onTaskFinished(Task task, Date start, Date end) {
-        LOG.info("Task ({}) finished.", task.getIri());
+        long downloadTime = end.getTime() - start.getTime();
+        LOG.info("Task '{}' finished in {} ms", task.getIri(), downloadTime);
         String reportIri = getIriForReport(task);
         writeReportBasic(reportIri, start, end);
         writeTaskReference(reportIri, task);
@@ -36,8 +38,8 @@ class DefaultReportWriter implements ReportWriter {
         writer.iri(reportIri, RDF.TYPE, LP.REPORT);
         writer.date(reportIri, LP.HAS_START, start);
         writer.date(reportIri, LP.HAS_END, end);
-        Long duration = end.getTime() - start.getTime();
-        writer.typed(reportIri, LP.HAS_DURATION, duration.toString(), XSD.LONG);
+        String durationAsStr = String.valueOf(end.getTime() - start.getTime());
+        writer.typed(reportIri, LP.HAS_DURATION, durationAsStr, XSD.LONG);
     }
 
     private void writeTaskReference(String reportIri, Task task) {
@@ -51,7 +53,9 @@ class DefaultReportWriter implements ReportWriter {
     @Override
     public synchronized void onTaskFailed(
             Task task, Date start, Date end, Throwable throwable) {
-        LOG.error("Task ({}) failed.", task.getIri(), throwable);
+        long downloadTime = end.getTime() - start.getTime();
+        LOG.error("Task '{}' failed in {} ms",
+                task.getIri(), downloadTime, throwable);
         String reportIri = getIriForReport(task);
         writeReportBasic(reportIri, start, end);
         writeTaskReference(reportIri, task);
@@ -94,7 +98,7 @@ class DefaultReportWriter implements ReportWriter {
 
     public void onTaskFinishedInPreviousRun(Task task) {
         // Ignore tasks executed in previous run.
-        LOG.info("Task ({}) finished in previous execution.", task.getIri());
+        LOG.info("Task '{}' finished in previous execution.", task.getIri());
     }
 
     @Override

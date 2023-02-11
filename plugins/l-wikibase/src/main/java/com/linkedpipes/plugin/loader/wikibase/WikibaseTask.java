@@ -15,4 +15,9 @@ public class WikibaseTask implements Task {
         return iri;
     }
 
+    @Override
+    public String getGroup() {
+        return "default";
+    }
+
 }

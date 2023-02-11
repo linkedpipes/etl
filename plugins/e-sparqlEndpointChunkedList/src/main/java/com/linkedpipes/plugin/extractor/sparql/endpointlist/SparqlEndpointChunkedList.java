@@ -9,7 +9,6 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecution;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
-import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
@@ -31,8 +30,6 @@ import java.util.Map;
  */
 public final class SparqlEndpointChunkedList extends TaskExecution<QueryTask> {
 
-    private static final int THREADS_PER_GROUP = 1;
-
     private static final int EXPECTED_FILES_WITH_SAME_NAME = 1;
 
     @Component.ContainsConfiguration
@@ -51,21 +48,49 @@ public final class SparqlEndpointChunkedList extends TaskExecution<QueryTask> {
     @Component.InputPort(iri = "Tasks")
     public SingleGraphDataUnit tasksRdf;
 
-    @Component.Inject
-    public ProgressReport progressReport;
-
     @Component.Configuration
     public SparqlEndpointChunkedListConfiguration configuration;
 
     private StatementsConsumer consumer;
 
-    private List<QueryTask> tasks;
-
     private Map<String, List<File>> inputFilesByName;
 
     @Override
-    protected void initialization() throws LpException {
-        super.initialization();
+    protected TaskExecutionConfiguration getExecutionConfiguration() {
+        TaskExecutionConfiguration result = new TaskExecutionConfiguration();
+        result.skipFailedTasks = true;
+        result.numberOfThreads = configuration.getUsedThreads();
+        return result;
+    }
+
+    @Override
+    protected List<QueryTask> loadTasks() throws LpException {
+        RdfSource source = tasksRdf.asRdfSource();
+        List<String> resources = source.getByType(
+                SparqlEndpointChunkedListVocabulary.TASK);
+        List<QueryTask> result = new ArrayList<>(resources.size());
+        for (String resource : resources) {
+            QueryTask task = new QueryTask();
+            RdfToPojoLoader.loadByReflection(source, resource, task);
+            result.add(task);
+        }
+        return result;
+    }
+
+    @Override
+    protected ReportWriter createReportWriter() {
+        return ReportWriter.create(reportRdf.getWriter());
+    }
+
+    @Override
+    protected TaskConsumer<QueryTask> createConsumer() {
+        return new QueryTaskExecutor(
+                this.configuration, this.consumer, this.inputFilesByName);
+    }
+
+    @Override
+    protected void onInitialize(Context context) throws LpException {
+        super.onInitialize(context);
         this.consumer = new StatementsConsumer(outputRdf);
         initializeInputFileMap();
     }
@@ -77,53 +102,6 @@ public final class SparqlEndpointChunkedList extends TaskExecution<QueryTask> {
                     (name) -> new ArrayList<>(EXPECTED_FILES_WITH_SAME_NAME))
                     .add(entry.toFile());
         }
-    }
-
-    @Override
-    protected TaskExecutionConfiguration getExecutionConfiguration() {
-        return this.configuration;
-    }
-
-    @Override
-    protected TaskSource<QueryTask> createTaskSource() throws LpException {
-        loadTasks();
-        return TaskSource.groupTaskSource(this.tasks, THREADS_PER_GROUP);
-    }
-
-    private void loadTasks() throws LpException {
-        RdfSource source = tasksRdf.asRdfSource();
-        List<String> resources = source.getByType(
-                SparqlEndpointChunkedListVocabulary.TASK);
-        tasks = new ArrayList<>(resources.size());
-        for (String resource : resources) {
-            QueryTask task = new QueryTask();
-            RdfToPojoLoader.loadByReflection(source, resource, task);
-            tasks.add(task);
-        }
-    }
-
-    @Override
-    protected TaskConsumer<QueryTask> createConsumer() {
-        return new QueryTaskExecutor(
-                this.configuration, this.consumer, this.progressReport,
-                this.inputFilesByName);
-    }
-
-    @Override
-    protected ReportWriter createReportWriter() {
-        return ReportWriter.create(reportRdf.getWriter());
-    }
-
-    @Override
-    protected void beforeExecution() throws LpException {
-        super.beforeExecution();
-        this.progressReport.start(tasks);
-    }
-
-    @Override
-    protected void afterExecution() throws LpException {
-        super.afterExecution();
-        this.progressReport.done();
     }
 
 }

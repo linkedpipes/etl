@@ -2,6 +2,7 @@ package com.linkedpipes.etl.executor.api.v1.report;
 
 import com.linkedpipes.etl.executor.api.v1.component.task.Task;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 
 import java.util.Date;
 
@@ -17,6 +18,33 @@ public interface ReportWriter {
 
     static ReportWriter create(TripleWriter writer) {
         return new DefaultReportWriter(writer);
+    }
+
+    static ReportWriter noAction() {
+        return new ReportWriter() {
+
+            @Override
+            public void onTaskFinished(Task task, Date start, Date end) {
+                // No action.
+            }
+
+            @Override
+            public void onTaskFailed(
+                    Task task, Date start, Date end, Throwable throwable) {
+                // No action.
+            }
+
+            @Override
+            public void onTaskFinishedInPreviousRun(Task task) {
+                // No action.
+            }
+
+            @Override
+            public String getIriForReport(Task task) {
+                return task.getIri();
+            }
+
+        };
     }
 
 }

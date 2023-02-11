@@ -7,11 +7,9 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecution;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
-import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
-import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.plugin.api.v2.ComponentV2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,69 +43,60 @@ public final class HttpGetFiles extends TaskExecution<DownloadTask> {
     @Configuration
     public HttpGetFilesConfiguration configuration;
 
-    @Inject
-    public ProgressReport progressReport;
-
-    private List<DownloadTask> tasks;
-
     private StatementsConsumer statementsConsumer;
 
     private ReportWriter reportWriter;
 
     @Override
-    protected TaskSource<DownloadTask> createTaskSource() throws LpException {
-        loadTasks();
-        TaskSource<DownloadTask> source = TaskSource.groupTaskSource(
-                this.tasks, configuration.getThreadsPerGroup());
-        source.setSkipOnError(configuration.isSkipOnError());
-        return source;
-    }
-
-    private void loadTasks() throws LpException {
-        RdfSource source = configurationRdf.asRdfSource();
-        List<String> resources =
-                source.getByType(HttpGetFilesVocabulary.REFERENCE);
-        tasks = new ArrayList<>(resources.size());
-        for (String resource : resources) {
-            DownloadTask task = new DownloadTask();
-            RdfToPojoLoader.loadByReflection(source, resource, task);
-            tasks.add(task);
-        }
+    protected void onInitialize(Context context) throws LpException {
+        super.onInitialize(context);
+        statementsConsumer = new StatementsConsumer(reportRdf);
+        reportWriter = ReportWriter.create(reportRdf.getWriter());
     }
 
     @Override
     protected TaskExecutionConfiguration getExecutionConfiguration() {
-        return this.configuration;
+        TaskExecutionConfiguration result = new TaskExecutionConfiguration();
+        result.numberOfThreads = configuration.getThreads();
+        result.numberOfThreadsPerGroup =
+                configuration.getThreadsPerGroup();
+        result.skipFailedTasks = configuration.isSkipOnError();
+        result.numberOfRetries = configuration.getRetryCount();
+        result.waitAfterFailedTaskMs = configuration.getRetryWaitTimeMs();
+        result.waitAfterTaskMs  =configuration.getWaitTimeMs();
+        return result;
+    }
+
+    @Override
+    protected List<DownloadTask> loadTasks() throws LpException {
+        RdfSource source = configurationRdf.asRdfSource();
+        List<String> resources =
+                source.getByType(HttpGetFilesVocabulary.REFERENCE);
+        List<DownloadTask> result = new ArrayList<>(resources.size());
+        for (String resource : resources) {
+            DownloadTask task = new DownloadTask();
+            RdfToPojoLoader.loadByReflection(source, resource, task);
+            result.add(task);
+        }
+        return result;
+    }
+
+    @Override
+    protected ReportWriter createReportWriter() {
+        return reportWriter;
     }
 
     @Override
     protected TaskConsumer<DownloadTask> createConsumer() {
         return new DownloadTaskExecutor(
-                configuration, progressReport, output,
-                statementsConsumer, reportWriter);
+                configuration, output, statementsConsumer, reportWriter);
     }
 
     @Override
-    protected ReportWriter createReportWriter() {
-        if (reportWriter != null) {
-            return reportWriter;
-        }
-        reportWriter = ReportWriter.create(reportRdf.getWriter());
-        return reportWriter;
-    }
-
-    @Override
-    protected void initialization() throws LpException {
-        super.initialization();
-        statementsConsumer = new StatementsConsumer(reportRdf);
-        reportWriter = createReportWriter();
-    }
-
-    @Override
-    protected void beforeExecution() throws LpException {
-        super.beforeExecution();
+    protected void onExecutionWillBegin(List<DownloadTask> tasks)
+            throws LpException {
+        super.onExecutionWillBegin(tasks);
         setTrustAllCerts();
-        progressReport.start(tasks);
     }
 
     private void setTrustAllCerts() throws LpException {
@@ -145,12 +134,6 @@ public final class HttpGetFiles extends TaskExecution<DownloadTask> {
             throw new LpException(
                     "Can't set trust all certificates.", ex);
         }
-    }
-
-    @Override
-    protected void afterExecution() throws LpException {
-        super.afterExecution();
-        this.progressReport.done();
     }
 
 }

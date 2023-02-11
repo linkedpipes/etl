@@ -9,11 +9,9 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecution;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
-import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
-import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,51 +40,33 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
     @Component.Configuration
     public HttpRequestConfiguration configuration;
 
-    @Component.Inject
-    public ProgressReport progressReport;
-
     private Map<String, File> inputFilesMap;
-
-    private List<HttpRequestTask> tasks;
 
     @Override
     protected TaskExecutionConfiguration getExecutionConfiguration() {
-        return this.configuration;
+        TaskExecutionConfiguration result = new TaskExecutionConfiguration();
+        result.numberOfThreads = configuration.getThreadsNumber();
+        result.numberOfThreadsPerGroup =  configuration.getThreadsPerGroup();
+        result.skipFailedTasks = configuration.isSkipOnError();
+        return result;
     }
 
     @Override
-    protected TaskSource<HttpRequestTask> createTaskSource()
-            throws LpException {
-        initializeInputFilesMap();
-        loadTasks();
-        propagateConfigurationToTask();
-        TaskSource<HttpRequestTask> source = TaskSource.groupTaskSource(
-                this.tasks, configuration.getThreadsPerGroup());
-        source.setSkipOnError(configuration.isSkipOnError());
-        return source;
-    }
-
-    private Map<String, File> initializeInputFilesMap() {
-        inputFilesMap = new HashMap<>();
-        for (FilesDataUnit.Entry entry : inputFiles) {
-            inputFilesMap.put(entry.getFileName(), entry.toFile());
-        }
-        return inputFilesMap;
-    }
-
-    private void loadTasks() throws LpException {
+    protected List<HttpRequestTask> loadTasks() throws LpException {
         RdfSource source = taskRdf.asRdfSource();
         List<String> resources = source.getByType(
                 HttpRequestVocabulary.TASK);
-        tasks = new ArrayList<>(resources.size());
+        List<HttpRequestTask>  result = new ArrayList<>(resources.size());
         for (String resource : resources) {
             HttpRequestTask task = new HttpRequestTask();
             RdfToPojoLoader.loadByReflection(source, resource, task);
-            tasks.add(task);
+            result.add(task);
         }
+        propagateConfigurationToTask(result);
+        return result;
     }
 
-    private void propagateConfigurationToTask() {
+    private void propagateConfigurationToTask(List<HttpRequestTask>  tasks) {
         for (HttpRequestTask task : tasks) {
             if (task.isFollowRedirect() == null) {
                 task.setFollowRedirect(configuration.isFollowRedirect());
@@ -101,28 +81,29 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
     }
 
     @Override
-    protected TaskConsumer<HttpRequestTask> createConsumer() {
-        return new TaskExecutor(
-                outputFiles, inputFilesMap,
-                new StatementsConsumer(reportRdf), progressReport,
-                configuration.isEncodeUrl());
-    }
-
-    @Override
     protected ReportWriter createReportWriter() {
         return ReportWriter.create(reportRdf.getWriter());
     }
 
     @Override
-    protected void beforeExecution() throws LpException {
-        super.beforeExecution();
-        this.progressReport.start(tasks);
+    protected TaskConsumer<HttpRequestTask> createConsumer() {
+        return new TaskExecutor(
+                outputFiles, inputFilesMap,
+                new StatementsConsumer(reportRdf),
+                configuration.isEncodeUrl());
     }
 
     @Override
-    protected void afterExecution() throws LpException {
-        super.afterExecution();
-        this.progressReport.done();
+    protected void onInitialize(Context context) throws LpException {
+        super.onInitialize(context);
+        initializeInputFilesMap();
+    }
+
+    private void initializeInputFilesMap() {
+        inputFilesMap = new HashMap<>();
+        for (FilesDataUnit.Entry entry : inputFiles) {
+            inputFilesMap.put(entry.getFileName(), entry.toFile());
+        }
     }
 
 }

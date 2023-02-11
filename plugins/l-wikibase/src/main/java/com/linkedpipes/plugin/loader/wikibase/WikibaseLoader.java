@@ -8,8 +8,6 @@ import com.linkedpipes.etl.executor.api.v1.component.task.Task;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecution;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
-import com.linkedpipes.etl.executor.api.v1.component.task.TaskSource;
-import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
@@ -42,75 +40,22 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
     @Component.Configuration
     public WikibaseLoaderConfiguration configuration;
 
-    private List<WikibaseWorker> workers = new ArrayList<>();
-
-    @Component.Inject
-    public ProgressReport progressReport;
-
-    public List<WikibaseTask> tasks = null;
+    private final List<WikibaseWorker> workers = new ArrayList<>();
 
     @Override
     protected TaskExecutionConfiguration getExecutionConfiguration() {
-        return new TaskExecutionConfiguration() {
-
-            @Override
-            public int getThreadsNumber() {
-                return 1;
-            }
-
-            @Override
-            public boolean isSkipOnError() {
-                return configuration.isSkipOnError();
-            }
-
-        };
-    }
-
-    @Override
-    protected TaskSource<WikibaseTask> createTaskSource() throws LpException {
-        tasks = loadDocumentReferences();
-        return TaskSource.defaultTaskSource(tasks);
-    }
-
-    private List<WikibaseTask> loadDocumentReferences() throws RdfException {
-        RdfSource source = inputRdf.asRdfSource();
-        return source.getByType(WIKIBASE_ITEM)
-                .stream()
-                .map((iri) -> new WikibaseTask(iri))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    protected TaskConsumer<WikibaseTask> createConsumer() throws LpException {
-        WikibaseWorker worker = new WikibaseWorker(
-                configuration, outputRdf, collectStatements());
-        workers.add(worker);
-        return worker;
-    }
-
-    private List<Statement> collectStatements() throws LpException {
-        List<Statement> result = new ArrayList<>();
-        inputRdf.execute((connection) -> {
-            connection.exportStatements(
-                    null, null, null, false, new AbstractRDFHandler() {
-                        @Override
-                        public void handleStatement(Statement st) {
-                            result.add(st);
-                        }
-                    }, inputRdf.getReadGraph());
-        });
+        TaskExecutionConfiguration result = new TaskExecutionConfiguration();
+        result.skipFailedTasks = configuration.isSkipOnError();
         return result;
     }
 
     @Override
-    protected void beforeExecution() throws LpException {
-        super.beforeExecution();
-        for (WikibaseWorker worker : workers) {
-            worker.onBeforeExecution();
-        }
-        if (tasks != null) {
-            progressReport.start(tasks.size());
-        }
+    protected List<WikibaseTask> loadTasks() throws LpException {
+        RdfSource source = inputRdf.asRdfSource();
+        return source.getByType(WIKIBASE_ITEM)
+                .stream()
+                .map(WikibaseTask::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -145,28 +90,47 @@ public class WikibaseLoader extends TaskExecution<WikibaseTask> {
     }
 
     @Override
-    protected void afterExecution() throws LpException {
-        super.afterExecution();
-        for (WikibaseWorker worker : workers) {
-            worker.onAfterExecution();
-        }
-        progressReport.done();
+    protected TaskConsumer<WikibaseTask> createConsumer() throws LpException {
+        WikibaseWorker worker = new WikibaseWorker(
+                configuration, outputRdf, collectStatements());
+        workers.add(worker);
+        return worker;
+    }
+
+    private List<Statement> collectStatements() throws LpException {
+        List<Statement> result = new ArrayList<>();
+        inputRdf.execute((connection) -> {
+            connection.exportStatements(
+                    null, null, null, false, new AbstractRDFHandler() {
+                        @Override
+                        public void handleStatement(Statement st) {
+                            result.add(st);
+                        }
+                    }, inputRdf.getReadGraph());
+        });
+        return result;
     }
 
     @Override
-    protected void checkForFailures(TaskSource<WikibaseTask> taskSource)
+    protected void onInitialize(Context context) throws LpException {
+        super.onInitialize(context);
+    }
+
+    @Override
+    protected void onExecutionWillBegin(List<WikibaseTask> tasks)
             throws LpException {
-        // Quick hack to put the last exception to the output.
-        if (taskSource.doesTaskFailed() && !configuration.isSkipOnError()) {
-            for (WikibaseWorker worker : workers) {
-                Throwable ex = worker.getLastException();
-                if (ex == null) {
-                    return;
-                }
-                throw new LpException("Operation failed.", ex);
-            }
+        super.onExecutionWillBegin(tasks);
+        for (WikibaseWorker worker : workers) {
+            worker.onBeforeExecution();
         }
-        super.checkForFailures(taskSource);
+    }
+
+    @Override
+    protected void onExecutionDidFinished() throws LpException {
+        super.onExecutionDidFinished();
+        for (WikibaseWorker worker : workers) {
+            worker.onAfterExecution();
+        }
     }
 
 }

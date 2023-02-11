@@ -1,13 +1,13 @@
 package com.linkedpipes.plugin.ehttpgetfile.multiple;
 
-import com.linkedpipes.etl.executor.api.v1.component.task.GroupTask;
+import com.linkedpipes.etl.executor.api.v1.component.task.Task;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 import java.util.LinkedList;
 import java.util.List;
 
 @RdfToPojo.Type(iri = HttpGetFilesVocabulary.REFERENCE)
-public class DownloadTask implements GroupTask {
+public class DownloadTask implements Task {
 
     @RdfToPojo.Resource
     private String iri;

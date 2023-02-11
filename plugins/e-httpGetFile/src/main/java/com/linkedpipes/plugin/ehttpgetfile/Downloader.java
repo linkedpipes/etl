@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.IDN;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -185,7 +186,7 @@ public class Downloader {
         if (errStream != null) {
             try {
                 LOG.debug("Error stream: {}",
-                        IOUtils.toString(errStream, "UTF-8"));
+                        IOUtils.toString(errStream, StandardCharsets.UTF_8));
             } catch (Throwable ex) {
                 // Ignore.
             }
@@ -208,7 +209,9 @@ public class Downloader {
         while (isResponseRedirect(responseCode)) {
             String location = connection.getHeaderField("Location");
             if (configuration.useUtf8ForRedirect) {
-                location = new String(location.getBytes("ISO-8859-1"), "UTF-8");
+                location = new String(
+                        location.getBytes(StandardCharsets.ISO_8859_1),
+                        StandardCharsets.UTF_8);
             }
             connection.disconnect();
             LOG.debug("Resolved redirect to: {}", location);
@@ -235,17 +238,19 @@ public class Downloader {
                 IOUtils.copy(err, writer, "UTF-8");
             }
         }
-        LOG.info("Error: {}", writer.toString());
 
-        for (Map.Entry<String, List<String>> entry :
-                connection.getHeaderFields().entrySet()) {
-            LOG.info("Header: {}", entry.getKey());
-            for (String value : entry.getValue()) {
-                LOG.info("  {}", value);
+        if (configuration.logDetail) {
+            for (Map.Entry<String, List<String>> entry :
+                    connection.getHeaderFields().entrySet()) {
+                LOG.info("Header: {}", entry.getKey());
+                for (String value : entry.getValue()) {
+                    LOG.info("  {}", value);
+                }
             }
         }
 
         if (responseCode < 200 || responseCode > 299) {
+            LOG.info("Error: {}", writer);
             IOException ex = new IOException(
                     responseCode + " : " + connection.getResponseMessage());
             LOG.error("Can't download file: {}", toDownload.getSourceUrl(), ex);
