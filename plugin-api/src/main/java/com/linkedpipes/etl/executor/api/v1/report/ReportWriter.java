@@ -20,31 +20,4 @@ public interface ReportWriter {
         return new DefaultReportWriter(writer);
     }
 
-    static ReportWriter noAction() {
-        return new ReportWriter() {
-
-            @Override
-            public void onTaskFinished(Task task, Date start, Date end) {
-                // No action.
-            }
-
-            @Override
-            public void onTaskFailed(
-                    Task task, Date start, Date end, Throwable throwable) {
-                // No action.
-            }
-
-            @Override
-            public void onTaskFinishedInPreviousRun(Task task) {
-                // No action.
-            }
-
-            @Override
-            public String getIriForReport(Task task) {
-                return task.getIri();
-            }
-
-        };
-    }
-
 }

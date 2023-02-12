@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class TaskExecutionTest extends TaskExecution<TaskMock> {
@@ -55,8 +56,31 @@ public class TaskExecutionTest extends TaskExecution<TaskMock> {
     }
 
     @Override
-    protected ReportWriter createReportWriter() throws LpException {
-        return ReportWriter.noAction();
+    protected ReportWriter createReportWriter() {
+        return new ReportWriter() {
+
+            @Override
+            public void onTaskFinished(Task task, Date start, Date end) {
+                // No action.
+            }
+
+            @Override
+            public void onTaskFailed(
+                    Task task, Date start, Date end, Throwable throwable) {
+                // No action.
+            }
+
+            @Override
+            public void onTaskFinishedInPreviousRun(Task task) {
+                // No action.
+            }
+
+            @Override
+            public String getIriForReport(Task task) {
+                return task.getIri();
+            }
+
+        };
     }
 
     @Override

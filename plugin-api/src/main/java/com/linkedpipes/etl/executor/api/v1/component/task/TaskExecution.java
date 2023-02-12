@@ -49,7 +49,8 @@ public abstract class TaskExecution<T extends Task>
         prepareCheckpointDirectory();
         List<T> tasks = loadTasks();
         TaskSource<T> taskSource = new TaskSource<>(
-                progressReport, createReportWriter(), configuration, tasks);
+                context, progressReport, createReportWriter(),
+                configuration, tasks);
         List<TaskConsumerWrap<T>> executors = createConsumersWraps(
                 taskSource, configuration.numberOfThreads);
         onExecutionWillBegin(tasks);

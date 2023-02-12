@@ -1,8 +1,10 @@
 package com.linkedpipes.etl.executor.api.v1.component.task;
 
+import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
@@ -31,8 +33,9 @@ class TaskSource<T extends Task> {
 
         /**
          * Next task from this group can not be executed before given time.
+         * We need one value for each thread.
          */
-        public LocalTime nextExecutionTime = null;
+        public Map<Thread, LocalTime> nextExecutionTimes = new HashMap<>();
 
         public int numberOfFailedTasks = 0;
 
@@ -51,18 +54,22 @@ class TaskSource<T extends Task> {
      */
     private final Object lock = new Object();
 
-    private final TaskExecutionConfiguration configuration;
+    private final Component.Context context;
 
     private final ProgressReport progressReport;
 
     private final ReportWriter reportWriter;
 
+    private final TaskExecutionConfiguration configuration;
+
     private final Map<String, TaskGroup<T>> groups;
 
-    TaskSource(ProgressReport progressReport,
+    TaskSource(Component.Context context,
+               ProgressReport progressReport,
                ReportWriter reportWriter,
                TaskExecutionConfiguration configuration,
                Collection<T> tasks) {
+        this.context = context;
         this.progressReport = progressReport;
         this.reportWriter = reportWriter;
         this.configuration = configuration;
@@ -83,10 +90,11 @@ class TaskSource<T extends Task> {
     /**
      * This is blocking call waiting for another task.
      * When null is returned the execution should finish.
+     * This call also return null if execution was cancelled.
      */
     public T getTaskOrWait() {
         while (true) {
-            if (shouldBeTerminated) {
+            if (context.isCancelled() || shouldBeTerminated) {
                 return null;
             }
             T result = getTaskWrap();
@@ -134,8 +142,9 @@ class TaskSource<T extends Task> {
             // There are waiting tasks.
             areThereRunningOrWaitingTasks = true;
             // Check next execution time for the group.
-            if (group.nextExecutionTime != null
-                    && group.nextExecutionTime.isAfter(now)) {
+            LocalTime nextExecutionTime =
+                    group.nextExecutionTimes.get(Thread.currentThread());
+            if (nextExecutionTime != null && nextExecutionTime.isAfter(now)) {
                 continue;
             }
             // Search for task to execute.
@@ -197,8 +206,9 @@ class TaskSource<T extends Task> {
         if (configuration.waitAfterTaskMs == 0) {
             return;
         }
-        group.nextExecutionTime = LocalTime.now()
+        LocalTime nextTime = LocalTime.now()
                 .plus(configuration.waitAfterTaskMs, ChronoUnit.MILLIS);
+        group.nextExecutionTimes.put(Thread.currentThread(), nextTime);
     }
 
     public void onTaskFailed(T task, Throwable exception) {

@@ -1,5 +1,7 @@
 package com.linkedpipes.etl.executor.api.v1.component.task;
 
+import com.linkedpipes.etl.executor.api.v1.component.Component;
+import com.linkedpipes.etl.executor.api.v1.event.Event;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.junit.jupiter.api.Assertions;
@@ -7,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public class TaskSourceTest {
@@ -20,8 +23,8 @@ public class TaskSourceTest {
         tasks.add(new TaskMock("2", "A"));
         tasks.add(new TaskMock("3", "A"));
         TaskSource<TaskMock> source = new TaskSource<>(
-                noActionProgressReport(),
-                ReportWriter.noAction(), configuration, tasks);
+                noActionContext(), noActionProgressReport(),
+                noActionReport(), configuration, tasks);
 
         TaskMock first = source.getTaskWrap();
         Assertions.assertNotNull(first);
@@ -42,7 +45,7 @@ public class TaskSourceTest {
         Assertions.assertFalse(source.hasTaskExecutionFailed());
     }
 
-    public ProgressReport noActionProgressReport() {
+    private ProgressReport noActionProgressReport() {
         return new ProgressReport() {
             @Override
             public void start(long entriesToProcess) {
@@ -66,6 +69,47 @@ public class TaskSourceTest {
         };
     }
 
+    private Component.Context noActionContext() {
+        return new Component.Context() {
+            @Override
+            public void sendMessage(Event message) {
+                // No action.
+            }
+
+            @Override
+            public boolean isCancelled() {
+                return false;
+            }
+        };
+    }
+
+    private ReportWriter noActionReport() {
+        return new ReportWriter() {
+
+            @Override
+            public void onTaskFinished(Task task, Date start, Date end) {
+                // No action.
+            }
+
+            @Override
+            public void onTaskFailed(
+                    Task task, Date start, Date end, Throwable throwable) {
+                // No action.
+            }
+
+            @Override
+            public void onTaskFinishedInPreviousRun(Task task) {
+                // No action.
+            }
+
+            @Override
+            public String getIriForReport(Task task) {
+                return task.getIri();
+            }
+
+        };
+    }
+
     @Test
     public void failTask() {
         TaskExecutionConfiguration configuration =
@@ -74,8 +118,8 @@ public class TaskSourceTest {
         tasks.add(new TaskMock("1", "A"));
         tasks.add(new TaskMock("2", "A"));
         TaskSource<TaskMock> source = new TaskSource<>(
-                noActionProgressReport(),
-                ReportWriter.noAction(), configuration, tasks);
+                noActionContext(), noActionProgressReport(),
+                noActionReport(), configuration, tasks);
 
         source.onTaskFinished(source.getTaskWrap());
         source.onTaskFailed(source.getTaskWrap(), null);
@@ -92,8 +136,8 @@ public class TaskSourceTest {
         List<TaskMock> tasks = new ArrayList<>();
         tasks.add(new TaskMock("1", "A"));
         TaskSource<TaskMock> source = new TaskSource<>(
-                noActionProgressReport(),
-                ReportWriter.noAction(), configuration, tasks);
+                noActionContext(), noActionProgressReport(),
+                noActionReport(), configuration, tasks);
 
         source.onTaskFailed(source.getTaskWrap(), null);
         source.onTaskFailed(source.getTaskWrap(), null);
@@ -111,8 +155,8 @@ public class TaskSourceTest {
         List<TaskMock> tasks = new ArrayList<>();
         tasks.add(new TaskMock("1", "A"));
         TaskSource<TaskMock> source = new TaskSource<>(
-                noActionProgressReport(),
-                ReportWriter.noAction(), configuration, tasks);
+                noActionContext(), noActionProgressReport(),
+                noActionReport(), configuration, tasks);
 
         source.onTaskFailed(source.getTaskWrap(), null);
         source.onTaskFailed(source.getTaskWrap(), null);
