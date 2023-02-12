@@ -47,7 +47,8 @@ public class HttpExecutionSource implements ExecutionSource {
     }
 
     private String getExecutionSourceUrl(String iri) {
-        return configuration.getExecutorMonitorUrl() + "executions/?iri="
+        return configuration.getExecutorMonitorUrl()
+                + "/api/v1/executions/?iri="
                 + URLEncoder.encode(iri, StandardCharsets.UTF_8);
     }
 
