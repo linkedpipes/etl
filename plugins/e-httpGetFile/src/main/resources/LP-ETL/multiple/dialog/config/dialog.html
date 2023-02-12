@@ -65,13 +65,14 @@
                ng-disabled="dialog.retryCount.disabled || dialog.retryCount.inherit">
     </md-input-container>
     <md-input-container class="md-block" ng-hide="dialog.waitTime.hide">
-        <label>Wait time between retry (in milliseconds)</label>
+        <label>Wait time after download (in milliseconds)</label>
         <input type="number" ng-model="dialog.waitTime.value"
                ng-disabled="dialog.waitTime.disabled || dialog.waitTime.inherit">
     </md-input-container>
-    <md-input-container class="md-block" ng-hide="dialog.waitAfterTask.hide">
-        <label>Wait time after download (in milliseconds)</label>
-        <input type="number" ng-model="dialog.waitAfterTask.value"
-               ng-disabled="dialog.waitAfterTask.disabled || dialog.waitAfterTask.inherit">
+    <md-input-container class="md-block" ng-hide="dialog.retryWaitTime.hide">
+        <label>Wait time between task retry (in milliseconds)</label>
+        <input type="number" ng-model="dialog.retryWaitTime.value"
+               ng-disabled="dialog.retryWaitTime.disabled || dialog.retryWaitTime.inherit">
     </md-input-container>
+
 </div>

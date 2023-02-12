@@ -13,6 +13,7 @@
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/encodeUrl> ,
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/utf8Redirect> ,
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/retryCount> ,
+        <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/retryWaitTime> ,
         <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/waitTime> .
 
 [] config:member <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/reference> .
@@ -66,6 +67,11 @@
     a config:ConfigurationMember ;
     config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#retryCount> ;
     config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#retryCountControl> .
+
+<http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/retryWaitTime>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#retryWaitTime> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-httpGetFiles#retryWaitTimeControl> .
 
 <http://linkedpipes.com/resources/components/e-httpGetFiles/0.0.0/configuration/desc/waitTime>
     a config:ConfigurationMember ;

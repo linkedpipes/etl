@@ -63,7 +63,7 @@ public final class HttpGetFiles extends TaskExecution<DownloadTask> {
         result.skipFailedTasks = configuration.isSkipOnError();
         result.numberOfRetries = configuration.getRetryCount();
         result.waitAfterFailedTaskMs = configuration.getRetryWaitTimeMs();
-        result.waitAfterTaskMs  =configuration.getWaitTimeMs();
+        result.waitAfterTaskMs = configuration.getWaitTimeMs();
         return result;
     }
 

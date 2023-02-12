@@ -63,8 +63,8 @@ public final class HttpGetFilesVocabulary {
 
     public static final String HAS_RETRY_COUNT = PREFIX + "retryCount";
 
-    public static final String HAS_RETRY_TIME = PREFIX + "waitTime";
+    public static final String HAS_RETRY_TIME = PREFIX + "retryWaitTime";
 
-    public static final String HAS_WAIT_TIME = PREFIX + "waitAfterTask";
+    public static final String HAS_WAIT_TIME = PREFIX + "waitTime";
 
 }

@@ -46,11 +46,11 @@ define([], function () {
         },
         "waitTime":{
             "$type" : "int",
-            "$label" : "Wait time between retry"
-        },
-        "waitAfterTask":{
-            "$type" : "int",
             "$label" : "Wait time between downloads"
+        },
+        "retryWaitTime":{
+            "$type" : "int",
+            "$label" : "Wait time between retry"
         }
     };
 
