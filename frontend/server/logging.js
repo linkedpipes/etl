@@ -12,7 +12,7 @@ const {logFile} = require("./configuration");
   });
   addConsoleLogger(logger);
 
-  if (logFile !== undefined && logFile !== null) {
+  if (logFile !== undefined && logFile !== null && logFile !== "") {
     addFileLogger(logger, logFile);
   }
 
