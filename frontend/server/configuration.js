@@ -19,6 +19,8 @@ const monitorUrl = process.env["LP_ETL_MONITOR_URL"]
 const label = process.env["LP_ETL_LABEL"]
   || properties.get("frontend.instance-label")
   || "LinkedPipes ETL";
+const logDirectory = process.env["LP_ETL_FRONTEND_LOG"]
+  || properties.get("frontend.log.directory");
 
 module.exports = {
   "port": properties.get("frontend.webserver.port"),
@@ -35,5 +37,5 @@ module.exports = {
     }
   },
   "instanceLabel": label,
-  "logFile": properties.get("frontend.log.directory"),
+  "logFile": logDirectory,
 };
