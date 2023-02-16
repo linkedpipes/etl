@@ -197,9 +197,8 @@ class TaskSource<T extends Task> {
             group.runningTasks.remove(task.getIri());
             // Report progress.
             progressReport.entryProcessed();
+            reportWriter.onTaskFinished(task, wrap.executionStart, new Date());
         }
-        reportWriter.onTaskFinished(
-                task, wrap.executionStart, new Date());
     }
 
     private void updateGroupNextTime(TaskGroup<T> group) {
@@ -225,6 +224,8 @@ class TaskSource<T extends Task> {
                 }
                 // Report progress.
                 progressReport.entryProcessed();
+                reportWriter.onTaskFailed(
+                        task, wrap.executionStart, new Date(), exception);
                 return;
             }
             // We should retry the task.
@@ -237,8 +238,6 @@ class TaskSource<T extends Task> {
             // Return it back for execution from running.
             group.tasksForExecution.add(wrap);
         }
-        reportWriter.onTaskFailed(
-                task, wrap.executionStart, new Date(), exception);
     }
 
     public boolean hasTaskExecutionFailed() {
