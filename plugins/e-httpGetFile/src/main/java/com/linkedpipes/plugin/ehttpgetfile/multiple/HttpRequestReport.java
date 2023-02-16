@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,9 +75,9 @@ public class HttpRequestReport {
         prepareForReporting(task);
         reportErrorLine(connection);
         reportResponseCode(connection);
-        connection.getHeaderFields().entrySet().forEach((entry) -> {
+        connection.getHeaderFields().forEach((key, value) -> {
             addConnectionToReport();
-            reportHeaders(entry.getKey(), entry.getValue());
+            reportHeaders(key, value);
         });
         consumer.consume(statements);
     }
@@ -93,7 +94,8 @@ public class HttpRequestReport {
         InputStream errStream = connection.getErrorStream();
         if (errStream != null) {
             try {
-                errorMessage = IOUtils.toString(errStream, "UTF-8");
+                errorMessage = IOUtils.toString
+                        (errStream, StandardCharsets.UTF_8);
             } catch (Throwable ex) {
                 return;
             }

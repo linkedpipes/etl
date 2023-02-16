@@ -2,20 +2,17 @@ package com.linkedpipes.plugin.ehttpgetfile.multiple;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.IDN;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,33 +84,26 @@ class Downloader {
 
     private static final Logger LOG = LoggerFactory.getLogger(Downloader.class);
 
-    private final Task toDownload;
-
     private final Configuration configuration;
 
-    private final HttpRequestReport requestReport;
-
-    public Downloader(
-            Task toDownload, Configuration configuration,
-            HttpRequestReport requestReport) {
-        this.toDownload = toDownload;
+    public Downloader(Configuration configuration) {
         this.configuration = configuration;
-        this.requestReport = requestReport;
     }
 
-    public void download() throws IOException, LpException {
-        LOG.info("Downloading: '{}' as '{}'", toDownload.getSourceUrl(),
-                toDownload.getTargetFile().toString());
+    public void download(Task task, HttpRequestReport requestReport)
+            throws IOException, LpException {
+        LOG.info("Downloading: '{}' as '{}'", task.getSourceUrl(),
+                task.getTargetFile().toString());
         //
-        URL url = createUrl(toDownload.getSourceUrl());
+        URL url = createUrl(task.getSourceUrl());
         HttpURLConnection connection = null;
         try {
-            connection = connect(url);
+            connection = connect(task, url);
             if (configuration.logDetail) {
                 requestReport.reportHeaderResponse(connection);
             }
             checkResponseCode(connection);
-            saveContentToFile(connection, toDownload.getTargetFile());
+            saveContentToFile(connection, task.getTargetFile());
         } catch (RuntimeException ex) {
             throw new IOException("Can't download file", ex);
         } finally {
@@ -147,27 +137,29 @@ class Downloader {
         return url;
     }
 
-    private HttpURLConnection connect(URL target) throws IOException {
-        HttpURLConnection connection = createConnection(target);
+    private HttpURLConnection connect(Task task, URL target)
+            throws IOException {
+        HttpURLConnection connection = createConnection(task, target);
         if (configuration.manualFollowRedirect) {
             connection.setInstanceFollowRedirects(false);
-            return resolveRedirects(connection);
+            return resolveRedirects(task, connection);
         } else {
             connection.setInstanceFollowRedirects(true);
             return connection;
         }
     }
 
-    private HttpURLConnection createConnection(URL target) throws IOException {
+    private HttpURLConnection createConnection(Task task, URL target)
+            throws IOException {
         HttpURLConnection connection =
                 (HttpURLConnection) target.openConnection();
-        setHeaders(connection);
-        setTimeOut(connection);
+        setHeaders(task, connection);
+        setTimeOut(task, connection);
         return connection;
     }
 
-    private void setHeaders(HttpURLConnection connection) {
-        Map<String, String> headers = toDownload.getHeader();
+    private void setHeaders(Task task, HttpURLConnection connection) {
+        Map<String, String> headers = task.getHeader();
         // Fixed headers, #697.
         connection.setRequestProperty("accept-encoding", "gzip");
         for (Map.Entry<String, String> entry : headers.entrySet()) {
@@ -175,8 +167,8 @@ class Downloader {
         }
     }
 
-    private void setTimeOut(HttpURLConnection connection) {
-        Integer timeOut = toDownload.getTimeOut();
+    private void setTimeOut(Task task, HttpURLConnection connection) {
+        Integer timeOut = task.getTimeOut();
         if (timeOut != null) {
             connection.setConnectTimeout(timeOut);
             connection.setReadTimeout(timeOut);
@@ -184,7 +176,7 @@ class Downloader {
     }
 
     private HttpURLConnection resolveRedirects(
-            HttpURLConnection connection) throws IOException {
+            Task task,  HttpURLConnection connection) throws IOException {
         int responseCode = connection.getResponseCode();
         while (isResponseRedirect(responseCode)) {
             String location = connection.getHeaderField("Location");
@@ -195,7 +187,7 @@ class Downloader {
             }
             connection.disconnect();
             LOG.debug("Resolved redirect to: {}", location);
-            connection = createConnection(createUrl(location));
+            connection = createConnection(task, createUrl(location));
             responseCode = connection.getResponseCode();
         }
         return connection;
