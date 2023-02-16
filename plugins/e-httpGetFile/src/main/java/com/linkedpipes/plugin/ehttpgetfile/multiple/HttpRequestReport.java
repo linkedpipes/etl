@@ -85,7 +85,7 @@ public class HttpRequestReport {
     private void prepareForReporting(DownloadTask task) {
         this.statements.clear();
         this.counter = 0;
-        this.objectIri = valueFactory.createIRI(task.getIri() + "/response");
+        this.objectIri = valueFactory.createIRI(task.deriveIri("response"));
         this.task = task;
     }
 

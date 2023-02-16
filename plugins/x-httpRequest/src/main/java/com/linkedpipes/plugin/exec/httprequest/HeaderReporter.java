@@ -62,14 +62,13 @@ class HeaderReporter {
     private void prepareForReporting(HttpRequestTask task) {
         this.statements.clear();
         this.counter = 0;
-        this.objectIri = valueFactory.createIRI(
-                task.getIri() + "/response");
+        this.objectIri = valueFactory.createIRI(task.deriveIri("response"));
         this.task = task;
     }
 
     private void addConnectionToReport() {
         statements.add(valueFactory.createStatement(
-                valueFactory.createIRI(task.getIri() + "/report"),
+                valueFactory.createIRI(task.deriveIri("report")),
                 responseReportPredicate,
                 objectIri));
     }
@@ -104,7 +103,7 @@ class HeaderReporter {
     }
 
     private IRI createHeaderIri() {
-        return valueFactory.createIRI(task.getIri() + "/header/" + ++counter);
+        return valueFactory.createIRI(task.deriveIri("header/") + ++counter);
     }
 
 }

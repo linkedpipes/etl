@@ -103,7 +103,7 @@ class DefaultReportWriter implements ReportWriter {
 
     @Override
     public String getIriForReport(Task task) {
-        return task.getIri() + "/report";
+        return task.deriveIri("report");
     }
 
 }
