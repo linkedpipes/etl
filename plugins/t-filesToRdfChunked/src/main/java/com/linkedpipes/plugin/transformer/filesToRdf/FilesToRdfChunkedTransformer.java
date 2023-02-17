@@ -55,7 +55,17 @@ public class FilesToRdfChunkedTransformer
         buffer.clear();
         for (FilesDataUnit.Entry entry : filesContainer.getFiles()) {
             LOG.debug("Loading: {}", entry.getFileName());
-            loadEntry(entry);
+            try {
+                loadEntry(entry);
+            } catch (Throwable ex) {
+                if (configuration.isSkipOnFailure()) {
+                    LOG.warn("Failed loading {}",
+                            entry.getFileName(), ex);
+                    continue;
+                }
+                throw new LpException("Failed loading file: {}",
+                        entry.getFileName(), ex);
+            }
         }
         return buffer;
     }
