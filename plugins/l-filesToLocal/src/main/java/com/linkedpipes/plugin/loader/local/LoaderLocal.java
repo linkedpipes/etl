@@ -49,6 +49,11 @@ public final class LoaderLocal implements Component, SequentialExecution {
         //
         progress.start(input.size());
         final File rootDirectory = new File(configuration.getPath());
+        if (!rootDirectory.exists()) {
+            if (!rootDirectory.mkdirs()) {
+                LOG.warn("Can't create directory '{}'.", rootDirectory);
+            }
+        }
         for (FilesDataUnit.Entry entry : input) {
             //
             final File inputFile = entry.toFile();
