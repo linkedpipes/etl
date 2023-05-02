@@ -42,6 +42,10 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
     private org.apache.ftpserver.FtpServer server = null;
 
     protected void start() {
+        if (configuration.getFtpCommandPort() == null) {
+            LOG.info("FTP server is not configured and thus is not started.");
+            return;
+        }
         LOG.info("Starting FTP server on ports: {}, {} - {}",
                 configuration.getFtpCommandPort(),
                 configuration.getFtpDataPortsStart(),
@@ -89,17 +93,14 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
                 connectionConfigFactory.createConnectionConfig());
         serverFactory.setUserManager(userManager);
 
-        serverFactory.setFileSystem((User user) -> {
-            return virtualFileSystem.getView();
-        });
+        serverFactory.setFileSystem((User user) -> virtualFileSystem.getView());
 
         server = serverFactory.createServer();
         try {
             server.start();
         } catch (FtpException ex) {
             LOG.error("Can't start FTP server.", ex);
-            appContext.stop();
-        }
+            appContext.stop();        }
     }
 
     protected String getPassivePorts() {

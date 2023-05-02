@@ -26,7 +26,7 @@ public class ConfigurationHolder {
                 configuration.dataDirectory + File.separator + "data");
     }
 
-    public int getWebServerPort() {
+    public Integer getWebServerPort() {
         return configuration.httpPort;
     }
 
@@ -34,7 +34,7 @@ public class ConfigurationHolder {
         return configuration.executorUrl;
     }
 
-    public int getFtpCommandPort() {
+    public Integer getFtpCommandPort() {
         return configuration.ftpCommandPort;
     }
 
@@ -42,11 +42,11 @@ public class ConfigurationHolder {
         return configuration.baseUrl + "/resources/executions/";
     }
 
-    public int getFtpDataPortsStart() {
+    public Integer getFtpDataPortsStart() {
         return configuration.ftpDataPortsStart;
     }
 
-    public int getFtpDataPortsEnd() {
+    public Integer getFtpDataPortsEnd() {
         return configuration.ftpDataPortsEnd;
     }
 
