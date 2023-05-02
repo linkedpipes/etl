@@ -294,6 +294,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <!-- Newer versions fail with the "bundle" build target. -->
                 <version>2.18.1</version>
+                <configuration>
+                    <excludedGroups>external-dependency</excludedGroups>
+                </configuration>
             </plugin>
         </plugins>
     </build>

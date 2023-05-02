@@ -1,7 +1,8 @@
-package com.linkedpipes.plugin.exec.httprequest;
+package com.linkedpipes.plugin.http.request.main;
 
 import com.linkedpipes.etl.executor.api.v1.component.task.Task;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
+import com.linkedpipes.plugin.http.request.main.HttpRequestVocabulary;
 
 import java.util.LinkedList;
 import java.util.List;

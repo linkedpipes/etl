@@ -1,4 +1,4 @@
-package com.linkedpipes.plugin.exec.httprequest;
+package com.linkedpipes.plugin.http.request.main;
 
 import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
 import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
@@ -88,8 +88,9 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
     @Override
     protected TaskConsumer<HttpRequestTask> createConsumer() {
         return new TaskExecutor(
-                outputFiles, inputFilesMap,
+                outputFiles,
                 new StatementsConsumer(reportRdf),
+                inputFilesMap,
                 configuration.isEncodeUrl());
     }
 

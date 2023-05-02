@@ -1,6 +1,5 @@
-package com.linkedpipes.plugin.exec.httprequest;
+package com.linkedpipes.plugin.http.request.main;
 
-import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 @RdfToPojo.Type(iri = HttpRequestVocabulary.CONFIGURATION)
@@ -24,6 +23,7 @@ public class HttpRequestConfiguration {
     @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_TIME_OUT)
     private Integer timeOut = null;
 
+    // Not used anymore.
     @RdfToPojo.Property(iri = HttpRequestVocabulary.HAS_UTF8_REDIRECT)
     private boolean hasUtf8Redirect = false;
 

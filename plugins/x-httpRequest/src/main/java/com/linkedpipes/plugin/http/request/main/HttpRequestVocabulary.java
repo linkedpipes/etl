@@ -1,4 +1,4 @@
-package com.linkedpipes.plugin.exec.httprequest;
+package com.linkedpipes.plugin.http.request.main;
 
 public final class HttpRequestVocabulary {
 
