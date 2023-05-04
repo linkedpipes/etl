@@ -32,7 +32,7 @@ The images are build from the main branch.
 Alternatively you can use one liner.
 For example to run LP-ETL from ```develop``` branch on ```http://localhost:9080``` use can use following command:
 ```
-curl https://raw.githubusercontent.com/linkedpipes/etl/develop/docker-compose-github.yml | LP_ETL_PORT=9080 LP_VERSION=develop docker-compose -f - up
+curl https://raw.githubusercontent.com/linkedpipes/etl/develop/docker-compose.yml | LP_ETL_PORT=9080 LP_VERSION=develop docker-compose -f - up
 ```
 
 You may need to run the ```docker-compose``` command as ```sudo``` or be in the ```docker``` group.
