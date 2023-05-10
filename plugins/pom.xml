@@ -8,102 +8,102 @@
     <name>LinkedPipes Plugins</name>
 
     <modules>
-        <module>l-wikibase</module>
-        <module>t-chunkedToGraph</module>
-        <module>t-excelToCsv</module>
-        <module>t-filesFilter</module>
-        <module>l-filesToScp</module>
+        <module>c-files</module>
+        <module>c-rdfChunkedTriples</module>
+        <module>c-rdfSingleGraph</module>
         <module>e-datasetMetadata</module>
         <module>e-dcatAp11Dataset</module>
-        <module>e-distributionMetadata</module>
         <module>e-dcatAp11Distribution</module>
+        <module>e-distributionMetadata</module>
+        <module>e-filesFromLocal</module>
+        <module>e-ftpFiles</module>
+        <module>e-httpGetFile</module>
+        <module>e-pipelineInput</module>
+        <module>e-sparqlEndpoint</module>
+        <module>e-sparqlEndpointChunked</module>
+        <module>e-sparqlEndpointChunkedList</module>
+        <module>e-sparqlEndpointConstructScrollableCursor</module>
+        <module>e-sparqlEndpointList</module>
+        <module>e-sparqlEndpointSelect</module>
+        <module>e-sparqlEndpointSelectScrollableCursor</module>
+        <module>e-textHolder</module>
         <module>e-voidDataset</module>
+        <module>l-couchDb</module>
         <module>l-dcatAp11ToCkan</module>
+        <module>l-dcatApToCkan</module>
+        <module>l-filesToLocal</module>
+        <module>l-filesToScp</module>
+        <module>l-ftpFiles</module>
+        <module>l-graphStoreProtocol</module>
         <module>l-lodCloud</module>
+        <module>l-solr</module>
+        <module>l-sparqlEndpoint</module>
+        <module>l-sparqlEndpointChunked</module>
+        <module>l-wikibase</module>
+        <module>q-sparqlAsk</module>
+        <module>t-bingTranslator</module>
+        <module>t-chunkSplitter</module>
+        <module>t-chunkedToFiles</module>
+        <module>t-chunkedToGraph</module>
+        <module>t-chunkedToTurtle</module>
+        <module>t-excelToCsv</module>
+        <module>t-fileHasher</module>
+        <module>t-filesBase64Decode</module>
+        <module>t-filesFilter</module>
+        <module>t-filesRenamer</module>
         <module>t-filesToRdf</module>
         <module>t-filesToRdfChunked</module>
         <module>t-filesToRdfGraph</module>
         <module>t-filesToStatements</module>
-        <module>t-graphMerger</module>
-        <module>t-packZip</module>
-        <module>t-rdfToFile</module>
-        <module>t-rdfToFileChunked</module>
-        <module>t-sparqlConstruct</module>
-        <module>t-sparqlConstructChunked</module>
-        <module>t-sparqlLinkerChunked</module>
-        <module>t-sparqlSelect</module>
-        <module>t-sparqlUpdate</module>
-        <module>t-sparqlPerGraphUpdate</module>
-        <module>t-sparqlUpdateChunked</module>
-        <module>t-tabular</module>
-        <module>t-tabularChunked</module>
-        <module>t-unpack</module>
-        <module>t-unpackZip</module>
-        <module>t-xslt</module>
-        <module>x-virtuoso</module>
-        <module>e-httpGetFile</module>
-        <module>e-sparqlEndpoint</module>
-        <module>e-sparqlEndpointChunked</module>
-        <module>e-sparqlEndpointSelect</module>
-        <module>e-sparqlEndpointSelectScrollableCursor</module>
-        <module>e-sparqlEndpointConstructScrollableCursor</module>
-        <module>e-textHolder</module>
-        <module>l-dcatApToCkan</module>
-        <module>l-graphStoreProtocol</module>
-        <module>l-sparqlEndpoint</module>
-        <module>t-filesBase64Decode</module>
-        <module>t-mustache</module>
-        <module>q-sparqlAsk</module>
-        <module>l-filesToLocal</module>
-        <module>e-ftpFiles</module>
-        <module>l-ftpFiles</module>
-        <module>e-filesFromLocal</module>
-        <module>t-tabularUv</module>
-        <module>t-singleGraphUnion</module>
-        <module>e-pipelineInput</module>
-        <module>t-sparqlSelectMulti</module>
-        <module>t-filesRenamer</module>
-        <module>t-templatedXlsToCsv</module>
-        <module>t-fileHasher</module>
-        <module>x-virtuosoExtractor</module>
-        <module>t-valueParser</module>
-        <module>x-deleteDirectory</module>
-        <module>x-graphStorePurger</module>
-        <module>t-htmlCssUv</module>
-        <module>t-modifyDate</module>
         <module>t-geoTools</module>
-        <module>l-sparqlEndpointChunked</module>
-        <module>t-bingTranslator</module>
-        <module>t-chunkedToTurtle</module>
-        <module>t-streamCompression</module>
-        <module>t-jsonToJsonLd</module>
+        <module>t-graphMerger</module>
+        <module>t-hdtToRdf</module>
+        <module>t-htmlCssUv</module>
+        <module>t-jenaTdbLoader</module>
         <module>t-jsonLdFormat</module>
-        <module>e-sparqlEndpointList</module>
-        <module>e-sparqlEndpointChunkedList</module>
-        <module>t-sparqlConstructToFileList</module>
-        <module>c-files</module>
-        <module>l-solr</module>
-        <module>t-chunkedToFiles</module>
-        <module>x-httpRequest</module>
-        <module>l-couchDb</module>
-        <module>t-mustacheChunked</module>
-        <module>t-chunkSplitter</module>
-        <module>t-rdfToWrappedJsonLdChunked</module>
-        <module>t-rdfDifference</module>
-        <module>t-xmlToChunks</module>
-        <module>c-rdfSingleGraph</module>
-        <module>c-rdfChunkedTriples</module>
-        <module>t-propertyLinkerChunked</module>
+        <module>t-jsonLdFormatTitanium</module>
         <module>t-jsonLdToRdf</module>
         <module>t-jsonLdToRdfChunked</module>
-        <module>t-hdtToRdf</module>
-        <module>t-rdfToHdt</module>
-        <module>t-shacl</module>
-        <module>t-shacl-jena</module>
-        <module>t-rdfToJsonTemplate</module>
-        <module>t-jsonLdFormatTitanium</module>
         <module>t-jsonLdToRdfTitanium</module>
-        <module>t-jenaTdbLoader</module>
+        <module>t-jsonToJsonLd</module>
+        <module>t-modifyDate</module>
+        <module>t-mustache</module>
+        <module>t-mustacheChunked</module>
+        <module>t-packZip</module>
+        <module>t-propertyLinkerChunked</module>
+        <module>t-rdfDifference</module>
+        <module>t-rdfToFile</module>
+        <module>t-rdfToFileChunked</module>
+        <module>t-rdfToHdt</module>
+        <module>t-rdfToJsonTemplate</module>
+        <module>t-rdfToWrappedJsonLdChunked</module>
+        <module>t-shacl-jena</module>
+        <module>t-shacl</module>
+        <module>t-singleGraphUnion</module>
+        <module>t-sparqlConstruct</module>
+        <module>t-sparqlConstructChunked</module>
+        <module>t-sparqlConstructToFileList</module>
+        <module>t-sparqlLinkerChunked</module>
+        <module>t-sparqlPerGraphUpdate</module>
+        <module>t-sparqlSelect</module>
+        <module>t-sparqlSelectMulti</module>
+        <module>t-sparqlUpdate</module>
+        <module>t-sparqlUpdateChunked</module>
+        <module>t-streamCompression</module>
+        <module>t-tabular</module>
+        <module>t-tabularChunked</module>
+        <module>t-tabularUv</module>
+        <module>t-templatedXlsToCsv</module>
+        <module>t-unpack</module>
+        <module>t-unpackZip</module>
+        <module>t-valueParser</module>
+        <module>t-xmlToChunks</module>
+        <module>t-xslt</module>
+        <module>x-deleteDirectory</module>
+        <module>x-graphStorePurger</module>
+        <module>x-httpRequest</module>
         <module>x-pipeline</module>
+        <module>x-virtuoso</module>
+        <module>x-virtuosoExtractor</module>
     </modules>
 </project>
