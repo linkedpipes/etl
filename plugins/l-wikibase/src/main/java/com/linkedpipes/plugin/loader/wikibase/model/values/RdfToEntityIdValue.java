@@ -6,21 +6,22 @@ import org.eclipse.rdf4j.model.Value;
 import org.wikidata.wdtk.datamodel.helpers.Datamodel;
 import org.wikidata.wdtk.datamodel.interfaces.DatatypeIdValue;
 import org.wikidata.wdtk.datamodel.interfaces.EntityIdValue;
+import org.wikidata.wdtk.rdf.Vocabulary;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class RdfToEntityIdValue implements ValueConverter<EntityIdValue> {
 
-    private static Set<String> SUPPORTED = new HashSet<>(Arrays.asList(
-            DatatypeIdValue.DT_ITEM,
-            DatatypeIdValue.DT_PROPERTY,
-            DatatypeIdValue.DT_LEXEME,
-            DatatypeIdValue.DT_FORM,
-            DatatypeIdValue.DT_SENSE
-            ));
+    private final static Set<String> SUPPORTED = new HashSet<>(List.of(
+            Vocabulary.DT_ITEM,
+            Vocabulary.DT_PROPERTY,
+            Vocabulary.DT_LEXEME,
+            Vocabulary.DT_FORM,
+            Vocabulary.DT_SENSE
+    ));
 
     @Override
     public Set<String> getSupportedTypes() {
@@ -33,15 +34,15 @@ public class RdfToEntityIdValue implements ValueConverter<EntityIdValue> {
         String iri = valueStr.substring(0, valueStr.lastIndexOf("/") + 1);
         String id = valueStr.substring(valueStr.lastIndexOf("/") + 1);
         switch (type) {
-            case DatatypeIdValue.DT_ITEM:
+            case Vocabulary.DT_ITEM:
                 return Datamodel.makeItemIdValue(id, iri);
-            case DatatypeIdValue.DT_PROPERTY:
+            case Vocabulary.DT_PROPERTY:
                 return Datamodel.makePropertyIdValue(id, iri);
-            case DatatypeIdValue.DT_LEXEME:
+            case Vocabulary.DT_LEXEME:
                 return Datamodel.makeLexemeIdValue(id, iri);
-            case DatatypeIdValue.DT_FORM:
+            case Vocabulary.DT_FORM:
                 return Datamodel.makeFormIdValue(id, iri);
-            case DatatypeIdValue.DT_SENSE:
+            case Vocabulary.DT_SENSE:
                 return Datamodel.makeSenseIdValue(id, iri);
             default:
                 return null;

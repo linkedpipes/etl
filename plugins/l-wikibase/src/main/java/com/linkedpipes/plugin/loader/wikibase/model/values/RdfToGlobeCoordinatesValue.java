@@ -6,20 +6,20 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.wikidata.wdtk.datamodel.helpers.Datamodel;
-import org.wikidata.wdtk.datamodel.interfaces.DatatypeIdValue;
 import org.wikidata.wdtk.datamodel.interfaces.GlobeCoordinatesValue;
 import org.wikidata.wdtk.rdf.RdfWriter;
+import org.wikidata.wdtk.rdf.Vocabulary;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class RdfToGlobeCoordinatesValue
         implements ValueConverter<GlobeCoordinatesValue> {
 
-    private static Set<String> SUPPORTED = new HashSet<>(Arrays.asList(
-            DatatypeIdValue.DT_GLOBE_COORDINATES
+    private final static Set<String> SUPPORTED = new HashSet<>(List.of(
+            Vocabulary.DT_GLOBE_COORDINATES
     ));
 
     @Override

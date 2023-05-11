@@ -229,7 +229,9 @@ public class RdfToDocumentTest {
                         BigDecimal.valueOf(362.0),
                         BigDecimal.valueOf(362.0),
                         BigDecimal.valueOf(362.0),
-                        "https://wikibase.opendata.cz/entity/Q2153"),
+                        Datamodel.makeItemIdValue(
+                                "Q2153",
+                                "https://wikibase.opendata.cz/entity/")),
                 statement.getValue());
 
         List<Snak> qualifiers = asList(statement.getAllQualifiers());
@@ -241,7 +243,9 @@ public class RdfToDocumentTest {
                         BigDecimal.valueOf(3.62),
                         BigDecimal.valueOf(3.62),
                         BigDecimal.valueOf(3.62),
-                        "https://wikibase.opendata.cz/entity/Q2106"),
+                        Datamodel.makeItemIdValue(
+                                "Q2106",
+                                "https://wikibase.opendata.cz/entity/")),
                 qualifier.getValue());
     }
 
@@ -303,7 +307,9 @@ public class RdfToDocumentTest {
                         BigDecimal.valueOf(362.0),
                         BigDecimal.valueOf(362.0),
                         BigDecimal.valueOf(362.0),
-                        "https://wikibase.opendata.cz/entity/Q2106"),
+                        Datamodel.makeItemIdValue(
+                                "Q2106",
+                                "https://wikibase.opendata.cz/entity/")),
                 statement.getValue());
 
         List<Reference> references = statement.getReferences();
@@ -317,7 +323,9 @@ public class RdfToDocumentTest {
                         BigDecimal.valueOf(3.62),
                         BigDecimal.valueOf(3.62),
                         BigDecimal.valueOf(3.62),
-                        "https://wikibase.opendata.cz/entity/Q2153"),
+                        Datamodel.makeItemIdValue(
+                                "Q2153",
+                                "https://wikibase.opendata.cz/entity/")),
                 ((ValueSnak) refs.get(0)).getValue());
     }
 

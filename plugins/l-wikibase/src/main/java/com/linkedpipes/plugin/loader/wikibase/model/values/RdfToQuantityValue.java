@@ -6,21 +6,21 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.wikidata.wdtk.datamodel.helpers.Datamodel;
-import org.wikidata.wdtk.datamodel.interfaces.DatatypeIdValue;
+import org.wikidata.wdtk.datamodel.interfaces.ItemIdValue;
 import org.wikidata.wdtk.datamodel.interfaces.QuantityValue;
 import org.wikidata.wdtk.rdf.RdfWriter;
 import org.wikidata.wdtk.rdf.Vocabulary;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class RdfToQuantityValue implements ValueConverter<QuantityValue> {
 
-    private static Set<String> SUPPORTED = new HashSet<>(Arrays.asList(
-            DatatypeIdValue.DT_QUANTITY
+    private final static Set<String> SUPPORTED = new HashSet<>(List.of(
+            Vocabulary.DT_QUANTITY
     ));
 
     @Override
@@ -48,7 +48,7 @@ public class RdfToQuantityValue implements ValueConverter<QuantityValue> {
         BigDecimal value = BigDecimal.ZERO;
         BigDecimal lowerBound = null;
         BigDecimal upperBound = null;
-        String unit = null;
+        ItemIdValue unit = null;
         for (Statement statement : statements) {
             if (!statement.getSubject().equals(resource)) {
                 continue;
@@ -63,9 +63,21 @@ public class RdfToQuantityValue implements ValueConverter<QuantityValue> {
                 upperBound = new BigDecimal(object.stringValue());
             } else if (RdfWriter.WB_QUANTITY_UNIT.equals(predicate)) {
                 if (Vocabulary.WB_NO_UNIT.equals(object.stringValue())) {
-                    unit = "1";
+                    // Thera was 1 before, now we employ null for no unit.
+                    unit = null;
                 } else {
-                    unit = object.stringValue();
+                    // We need to split the string using '/'.
+                    String unitAsString = object.stringValue();
+                    int separator = unitAsString.lastIndexOf('/') + 1;
+                    try {
+                        unit = Datamodel.makeItemIdValue(
+                                unitAsString.substring(separator),
+                                unitAsString.substring(0, separator));
+                    } catch (IllegalArgumentException ex) {
+                        throw new IllegalArgumentException(
+                                "Invalid Wikibase entity IRI: "
+                                        + unitAsString, ex);
+                    }
                 }
             }
         }

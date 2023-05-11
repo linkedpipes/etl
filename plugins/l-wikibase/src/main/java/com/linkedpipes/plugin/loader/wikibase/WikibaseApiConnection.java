@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wikidata.wdtk.wikibaseapi.ApiConnection;
+import org.wikidata.wdtk.wikibaseapi.BasicApiConnection;
 import org.wikidata.wdtk.wikibaseapi.apierrors.MediaWikiApiErrorException;
 
 /**
  * Implement custom exception handling.
  */
-class WikibaseApiConnection extends ApiConnection {
+class WikibaseApiConnection extends BasicApiConnection {
 
     private static final Logger LOG =
             LoggerFactory.getLogger(WikibaseApiConnection.class);

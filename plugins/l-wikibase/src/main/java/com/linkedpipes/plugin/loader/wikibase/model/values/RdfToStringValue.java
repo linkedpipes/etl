@@ -4,30 +4,30 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.wikidata.wdtk.datamodel.helpers.Datamodel;
-import org.wikidata.wdtk.datamodel.interfaces.DatatypeIdValue;
 import org.wikidata.wdtk.datamodel.interfaces.StringValue;
+import org.wikidata.wdtk.rdf.Vocabulary;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class RdfToStringValue implements ValueConverter<StringValue> {
 
-    private static String SPECIAL_FILE_PATH = "Special:FilePath/";
+    private final static String SPECIAL_FILE_PATH = "Special:FilePath/";
 
-    private static String FILE = "File:";
+    private final static String FILE = "File:";
 
-    private static Set<String> SUPPORTED = new HashSet<>(Arrays.asList(
-            DatatypeIdValue.DT_STRING,
-            DatatypeIdValue.DT_EXTERNAL_ID,
-            DatatypeIdValue.DT_MATH,
-            DatatypeIdValue.DT_COMMONS_MEDIA,
-            DatatypeIdValue.DT_URL,
-            DatatypeIdValue.DT_GEO_SHAPE,
-            DatatypeIdValue.DT_TABULAR_DATA
+    private final static Set<String> SUPPORTED = new HashSet<>(List.of(
+            Vocabulary.DT_STRING,
+            Vocabulary.DT_EXTERNAL_ID,
+            Vocabulary.DT_MATH,
+            Vocabulary.DT_COMMONS_MEDIA,
+            Vocabulary.DT_URL,
+            Vocabulary.DT_GEO_SHAPE,
+            Vocabulary.DT_TABULAR_DATA
     ));
 
     @Override
@@ -38,15 +38,15 @@ public class RdfToStringValue implements ValueConverter<StringValue> {
     @Override
     public StringValue getValue(Value value, String type) {
         switch (type) {
-            case DatatypeIdValue.DT_COMMONS_MEDIA:
+            case Vocabulary.DT_COMMONS_MEDIA:
                 return commonFileUrl(value);
-            case DatatypeIdValue.DT_GEO_SHAPE:
-            case DatatypeIdValue.DT_TABULAR_DATA:
+            case Vocabulary.DT_GEO_SHAPE:
+            case Vocabulary.DT_TABULAR_DATA:
                 return commonDataUrl(value);
-            case DatatypeIdValue.DT_STRING:
-            case DatatypeIdValue.DT_EXTERNAL_ID:
-            case DatatypeIdValue.DT_MATH:
-            case DatatypeIdValue.DT_URL:
+            case Vocabulary.DT_STRING:
+            case Vocabulary.DT_EXTERNAL_ID:
+            case Vocabulary.DT_MATH:
+            case Vocabulary.DT_URL:
                 return Datamodel.makeStringValue(value.stringValue());
             default:
                 return null;
@@ -58,7 +58,7 @@ public class RdfToStringValue implements ValueConverter<StringValue> {
             Collection<Statement> statements,
             Resource resource,
             String type) {
-        if (DatatypeIdValue.DT_URL.equals(type)) {
+        if (Vocabulary.DT_URL.equals(type)) {
             return Datamodel.makeStringValue(resource.stringValue());
         }
         throw new UnsupportedOperationException();

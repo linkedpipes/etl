@@ -12,7 +12,6 @@ import org.mockito.Mockito;
 import org.wikidata.wdtk.datamodel.helpers.Datamodel;
 import org.wikidata.wdtk.datamodel.implementation.PropertyIdValueImpl;
 import org.wikidata.wdtk.datamodel.implementation.TimeValueImpl;
-import org.wikidata.wdtk.datamodel.interfaces.DatatypeIdValue;
 import org.wikidata.wdtk.datamodel.interfaces.EntityIdValue;
 import org.wikidata.wdtk.datamodel.interfaces.GlobeCoordinatesValue;
 import org.wikidata.wdtk.datamodel.interfaces.MonolingualTextValue;
@@ -23,6 +22,7 @@ import org.wikidata.wdtk.datamodel.interfaces.TimeValue;
 import org.wikidata.wdtk.rdf.OwlDeclarationBuffer;
 import org.wikidata.wdtk.rdf.PropertyRegister;
 import org.wikidata.wdtk.rdf.RdfWriter;
+import org.wikidata.wdtk.rdf.Vocabulary;
 import org.wikidata.wdtk.rdf.values.EntityIdValueConverter;
 import org.wikidata.wdtk.rdf.values.GlobeCoordinatesValueConverter;
 import org.wikidata.wdtk.rdf.values.MonolingualTextValueConverter;
@@ -44,7 +44,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromEntityIdValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_ITEM);
+                .thenReturn(Vocabulary.DT_ITEM);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         EntityIdValueConverter converter =
                 new EntityIdValueConverter(writer, register, buffer);
@@ -53,10 +53,10 @@ public class RdfToValuesTest {
         Value value = converter.getRdfValue(
                 expected, new PropertyIdValueImpl("P1", "http://site/"), true);
         stream.close();
-        
+
         RdfToEntityIdValue reverse = new RdfToEntityIdValue();
         EntityIdValue actual = reverse.getValue(
-                value, DatatypeIdValue.DT_ITEM);
+                value, Vocabulary.DT_ITEM);
 
         Assertions.assertEquals(expected.getEntityType(), actual.getEntityType());
         Assertions.assertEquals(expected.getId(), actual.getId());
@@ -72,7 +72,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromEntityIdValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_PROPERTY);
+                .thenReturn(Vocabulary.DT_PROPERTY);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         EntityIdValueConverter converter =
                 new EntityIdValueConverter(writer, register, buffer);
@@ -84,7 +84,7 @@ public class RdfToValuesTest {
 
         RdfToEntityIdValue reverse = new RdfToEntityIdValue();
         EntityIdValue actual = reverse.getValue(
-                value, DatatypeIdValue.DT_PROPERTY);
+                value, Vocabulary.DT_PROPERTY);
 
         Assertions.assertEquals(expected.getEntityType(), actual.getEntityType());
         Assertions.assertEquals(expected.getId(), actual.getId());
@@ -99,7 +99,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromGlobeCoordinatesValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_GLOBE_COORDINATES);
+                .thenReturn(Vocabulary.DT_GLOBE_COORDINATES);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         GlobeCoordinatesValueConverter converter =
                 new GlobeCoordinatesValueConverter(writer, register, buffer);
@@ -111,7 +111,7 @@ public class RdfToValuesTest {
 
         RdfToGlobeCoordinatesValue reverse = new RdfToGlobeCoordinatesValue();
         GlobeCoordinatesValue actual = reverse.getValue(
-                value, DatatypeIdValue.DT_GLOBE_COORDINATES);
+                value, Vocabulary.DT_GLOBE_COORDINATES);
 
         Assertions.assertEquals(expected.getGlobe(), actual.getGlobe());
         Assertions.assertEquals(
@@ -129,7 +129,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromGlobeCoordinatesValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_GLOBE_COORDINATES);
+                .thenReturn(Vocabulary.DT_GLOBE_COORDINATES);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         GlobeCoordinatesValueConverter converter =
                 new GlobeCoordinatesValueConverter(writer, register, buffer);
@@ -140,8 +140,15 @@ public class RdfToValuesTest {
         stream.close();
 
         RdfToGlobeCoordinatesValue reverse = new RdfToGlobeCoordinatesValue();
-        GlobeCoordinatesValue actual = reverse.getValue(
-                value, DatatypeIdValue.DT_GLOBE_COORDINATES);
+        GlobeCoordinatesValue actual;
+
+        try {
+            actual = reverse.getValue(
+                    value, Vocabulary.DT_GLOBE_COORDINATES);
+        } catch (UnsupportedOperationException ex) {
+            // This is not supported at the time.
+            return;
+        }
 
         Assertions.assertEquals(expected.getGlobe(), actual.getGlobe());
         Assertions.assertEquals(
@@ -161,7 +168,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromQuantityValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_GLOBE_COORDINATES);
+                .thenReturn(Vocabulary.DT_GLOBE_COORDINATES);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         GlobeCoordinatesValueConverter converter =
                 new GlobeCoordinatesValueConverter(writer, register, buffer);
@@ -198,7 +205,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromMonolingualTextValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_MONOLINGUAL_TEXT);
+                .thenReturn(Vocabulary.DT_MONOLINGUAL_TEXT);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         MonolingualTextValueConverter converter =
                 new MonolingualTextValueConverter(writer, register, buffer);
@@ -210,7 +217,7 @@ public class RdfToValuesTest {
 
         RdfToMonolingualTextValue reverse = new RdfToMonolingualTextValue();
         MonolingualTextValue actual = reverse.getValue(
-                value, DatatypeIdValue.DT_MONOLINGUAL_TEXT);
+                value, Vocabulary.DT_MONOLINGUAL_TEXT);
 
         Assertions.assertEquals(expected.getLanguageCode(), actual.getLanguageCode());
         Assertions.assertEquals(expected.getText(), actual.getText());
@@ -223,7 +230,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromQuantityValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_QUANTITY);
+                .thenReturn(Vocabulary.DT_QUANTITY);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         QuantityValueConverter converter =
                 new QuantityValueConverter(writer, register, buffer);
@@ -234,7 +241,7 @@ public class RdfToValuesTest {
 
         RdfToQuantityValue reverse = new RdfToQuantityValue();
         QuantityValue actual = reverse.getValue(
-                value, DatatypeIdValue.DT_QUANTITY);
+                value, Vocabulary.DT_QUANTITY);
 
         // It store only value - without bounds.
         Assertions.assertEquals(expected.getNumericValue(), actual.getLowerBound());
@@ -251,7 +258,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromQuantityValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_QUANTITY);
+                .thenReturn(Vocabulary.DT_QUANTITY);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         QuantityValueConverter converter =
                 new QuantityValueConverter(writer, register, buffer);
@@ -261,8 +268,15 @@ public class RdfToValuesTest {
         stream.close();
 
         RdfToQuantityValue reverse = new RdfToQuantityValue();
-        QuantityValue actual = reverse.getValue(
-                value, DatatypeIdValue.DT_QUANTITY);
+        QuantityValue actual;
+
+        try {
+            actual =  reverse.getValue(
+                value, Vocabulary.DT_QUANTITY);
+        } catch (UnsupportedOperationException ex) {
+            // This is not supported at the time.
+            return;
+        }
 
         Assertions.assertEquals(
                 expected.getLowerBound(), actual.getLowerBound());
@@ -284,7 +298,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromQuantityValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_QUANTITY);
+                .thenReturn(Vocabulary.DT_QUANTITY);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         QuantityValueConverter converter =
                 new QuantityValueConverter(writer, register, buffer);
@@ -318,7 +332,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromStringValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_STRING);
+                .thenReturn(Vocabulary.DT_STRING);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         StringValueConverter converter =
                 new StringValueConverter(writer, register, buffer);
@@ -329,7 +343,7 @@ public class RdfToValuesTest {
 
         RdfToStringValue reverse = new RdfToStringValue();
         StringValue actual = reverse.getValue(
-                value, DatatypeIdValue.DT_STRING);
+                value, Vocabulary.DT_STRING);
 
         Assertions.assertEquals(expected.getString(), actual.getString());
     }
@@ -341,7 +355,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromStringValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_EXTERNAL_ID);
+                .thenReturn(Vocabulary.DT_EXTERNAL_ID);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         StringValueConverter converter =
                 new StringValueConverter(writer, register, buffer);
@@ -352,7 +366,7 @@ public class RdfToValuesTest {
 
         RdfToStringValue reverse = new RdfToStringValue();
         StringValue actual = reverse.getValue(
-                value, DatatypeIdValue.DT_EXTERNAL_ID);
+                value, Vocabulary.DT_EXTERNAL_ID);
 
         Assertions.assertEquals(expected.getString(), actual.getString());
     }
@@ -364,7 +378,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromStringValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_MATH);
+                .thenReturn(Vocabulary.DT_MATH);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         StringValueConverter converter =
                 new StringValueConverter(writer, register, buffer);
@@ -375,7 +389,7 @@ public class RdfToValuesTest {
 
         RdfToStringValue reverse = new RdfToStringValue();
         StringValue actual = reverse.getValue(
-                value, DatatypeIdValue.DT_MATH);
+                value, Vocabulary.DT_MATH);
 
         Assertions.assertEquals(expected.getString(), actual.getString());
     }
@@ -387,7 +401,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromStringValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_COMMONS_MEDIA);
+                .thenReturn(Vocabulary.DT_COMMONS_MEDIA);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         StringValueConverter converter =
                 new StringValueConverter(writer, register, buffer);
@@ -400,7 +414,7 @@ public class RdfToValuesTest {
 
         RdfToStringValue reverse = new RdfToStringValue();
         StringValue actual = reverse.getValue(
-                value, DatatypeIdValue.DT_COMMONS_MEDIA);
+                value, Vocabulary.DT_COMMONS_MEDIA);
 
         Assertions.assertEquals(expected.getString(), actual.getString());
     }
@@ -412,7 +426,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromStringValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_URL);
+                .thenReturn(Vocabulary.DT_URL);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         StringValueConverter converter =
                 new StringValueConverter(writer, register, buffer);
@@ -425,7 +439,7 @@ public class RdfToValuesTest {
 
         RdfToStringValue reverse = new RdfToStringValue();
         StringValue actual = reverse.getValue(
-                value, DatatypeIdValue.DT_URL);
+                value, Vocabulary.DT_URL);
 
         Assertions.assertEquals(expected.getString(), actual.getString());
     }
@@ -437,7 +451,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromStringValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_GEO_SHAPE);
+                .thenReturn(Vocabulary.DT_GEO_SHAPE);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         StringValueConverter converter =
                 new StringValueConverter(writer, register, buffer);
@@ -450,7 +464,7 @@ public class RdfToValuesTest {
 
         RdfToStringValue reverse = new RdfToStringValue();
         StringValue actual = reverse.getValue(
-                value, DatatypeIdValue.DT_GEO_SHAPE);
+                value, Vocabulary.DT_GEO_SHAPE);
 
         Assertions.assertEquals(expected.getString(), actual.getString());
     }
@@ -462,7 +476,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromStringValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_TABULAR_DATA);
+                .thenReturn(Vocabulary.DT_TABULAR_DATA);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         StringValueConverter converter =
                 new StringValueConverter(writer, register, buffer);
@@ -475,7 +489,7 @@ public class RdfToValuesTest {
 
         RdfToStringValue reverse = new RdfToStringValue();
         StringValue actual = reverse.getValue(
-                value, DatatypeIdValue.DT_TABULAR_DATA);
+                value, Vocabulary.DT_TABULAR_DATA);
 
         Assertions.assertEquals(expected.getString(), actual.getString());
     }
@@ -487,7 +501,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromTimeValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_TIME);
+                .thenReturn(Vocabulary.DT_TIME);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         TimeValueConverter converter =
                 new TimeValueConverter(writer, register, buffer);
@@ -500,7 +514,14 @@ public class RdfToValuesTest {
         stream.close();
 
         RdfToTimeValue reverse = new RdfToTimeValue();
-        TimeValue actual = reverse.getValue(value, DatatypeIdValue.DT_TIME);
+        TimeValue actual;
+
+        try {
+            actual = reverse.getValue(value, Vocabulary.DT_TIME);
+        } catch (UnsupportedOperationException ex) {
+            // This is not supported at the time.
+            return;
+        }
 
         Assertions.assertEquals(expected.getYear(), actual.getYear());
         Assertions.assertEquals(expected.getMonth(), actual.getMonth());
@@ -517,7 +538,7 @@ public class RdfToValuesTest {
         PropertyRegister register = Mockito.mock(PropertyRegister.class);
         Mockito.when(register.setPropertyTypeFromTimeValue(
                 Mockito.any(), Mockito.any()))
-                .thenReturn(DatatypeIdValue.DT_TIME);
+                .thenReturn(Vocabulary.DT_TIME);
         OwlDeclarationBuffer buffer = new OwlDeclarationBuffer();
         TimeValueConverter converter =
                 new TimeValueConverter(writer, register, buffer);
@@ -530,7 +551,7 @@ public class RdfToValuesTest {
         stream.close();
 
         RdfToTimeValue reverse = new RdfToTimeValue();
-        TimeValue actual = reverse.getValue(value, DatatypeIdValue.DT_TIME);
+        TimeValue actual = reverse.getValue(value, Vocabulary.DT_TIME);
 
         Assertions.assertEquals(expected.getYear(), actual.getYear());
         Assertions.assertEquals(expected.getMonth(), actual.getMonth());

@@ -71,37 +71,37 @@ public class DocumentMerger {
 
     private final Map<Object, MergeStrategy> mergeStrategy;
 
-    private Map<String, String> labelsToAdd = new HashMap<>();
+    private final Map<String, String> labelsToAdd = new HashMap<>();
 
-    private Map<String, String> labelsToDelete = new HashMap<>();
+    private final Map<String, String> labelsToDelete = new HashMap<>();
 
-    private Map<String, String> labelsToKeep = new HashMap<>();
+    private final Map<String, String> labelsToKeep = new HashMap<>();
 
-    private Map<String, String> descriptionsToAdd = new HashMap<>();
+    private final Map<String, String> descriptionsToAdd = new HashMap<>();
 
-    private Map<String, String> descriptionsToDelete = new HashMap<>();
+    private final Map<String, String> descriptionsToDelete = new HashMap<>();
 
-    private Map<String, String> descriptionsToKeep = new HashMap<>();
+    private final Map<String, String> descriptionsToKeep = new HashMap<>();
 
-    private Map<String, Set<String>> aliasesToAdd = new HashMap<>();
+    private final Map<String, Set<String>> aliasesToAdd = new HashMap<>();
 
-    private Map<String, Set<String>> aliasesToDelete = new HashMap<>();
+    private final Map<String, Set<String>> aliasesToDelete = new HashMap<>();
 
-    private Map<String, Set<String>> aliasesToKeep = new HashMap<>();
+    private final Map<String, Set<String>> aliasesToKeep = new HashMap<>();
 
-    private List<Statement> statementsToAdd = new ArrayList<>();
+    private final List<Statement> statementsToAdd = new ArrayList<>();
 
-    private List<Statement> statementsToDelete = new ArrayList<>();
+    private final List<Statement> statementsToDelete = new ArrayList<>();
 
     /**
      * Statements that have changed.
      */
-    private List<Statement> statementsToUpdate = new ArrayList<>();
+    private final List<Statement> statementsToUpdate = new ArrayList<>();
 
     /**
      * Statements that does not change.
      */
-    private List<Statement> statementsToKeep = new ArrayList<>();
+    private final List<Statement> statementsToKeep = new ArrayList<>();
 
     private boolean merged = false;
 
@@ -152,7 +152,7 @@ public class DocumentMerger {
             Map<String, String> toAdd,
             Map<String, String> toDelete,
             Map<String, String> toKeep) {
-        // By default keep all from remote.
+        // By default, keep all from remote.
         toKeep.putAll(remoteMap);
         // And update with local values.
         for (Map.Entry<String, String> entry : localMap.entrySet()) {
@@ -189,7 +189,7 @@ public class DocumentMerger {
             Map<String, Set<String>> toAdd,
             Map<String, Set<String>> toDelete,
             Map<String, Set<String>> toKeep) {
-        // By default keep all from remote.
+        // By default, keep all from remote.
         toKeep.putAll(remoteMap);
         // And update with local values.
         for (Map.Entry<String, Set<String>> entry : localMap.entrySet()) {
@@ -331,7 +331,7 @@ public class DocumentMerger {
             for (Statement statement : group) {
                 if (isNewStatement(statement)) {
                     // Ignore new statements, statements from wiki always have
-                    // ID so they would not collide here.
+                    // ID, so they would not collide here.
                     continue;
                 }
                 StatementId key = new StatementId(statement, property);
@@ -426,11 +426,9 @@ public class DocumentMerger {
     }
 
     private void addUnsupportedStatementProps(ItemDocumentBuilder builder) {
-        remoteDocument.getSiteLinks().values().forEach(
-                (link) -> builder.withSiteLink(link));
+        remoteDocument.getSiteLinks().values().forEach(builder::withSiteLink);
         remoteDocument.getAliases().values().forEach(
-                (aliases) -> aliases.forEach(
-                        (alias) -> builder.withAlias(alias)));
+                (aliases) -> aliases.forEach(builder::withAlias));
     }
 
     public ItemDocument assembleReplaceDocument() {
@@ -443,17 +441,21 @@ public class DocumentMerger {
     }
 
     private void addToKeep(ItemDocumentBuilder builder) {
+        // Labels.
         for (Map.Entry<String, String> entry : labelsToKeep.entrySet()) {
             builder.withLabel(entry.getValue(), entry.getKey());
         }
+        // Description.
         for (Map.Entry<String, String> entry : descriptionsToKeep.entrySet()) {
             builder.withDescription(entry.getValue(), entry.getKey());
         }
+        // Aliases.
         for (Map.Entry<String, Set<String>> entry : aliasesToKeep.entrySet()) {
             for (String value : entry.getValue()) {
                 builder.withAlias(value, entry.getKey());
             }
         }
+        // Statements - just the one to keep.
         for (Statement statement : statementsToKeep) {
             builder.withStatement(statement);
         }

@@ -245,6 +245,12 @@
                                             <version>${jackson.version}</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
+                                        <dependency>
+                                            <groupId>com.fasterxml.jackson.datatype</groupId>
+                                            <artifactId>jackson-datatype-jdk8</artifactId>
+                                            <version>${jackson.version}</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
                                         <!-- Others. -->
                                         <dependency>
                                             <groupId>org.locationtech.spatial4j</groupId>
@@ -880,12 +886,18 @@
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/core/</outputDirectory>
                                         </dependency>
+                                        <!--
+                                          Wikibase plugin is excluded as the current version of libraries
+                                          has too many dependencies.
+                                         -->
+                                        <!--
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>l-wikibase</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/core/</outputDirectory>
                                         </dependency>
+                                        -->
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-shacl</artifactId>

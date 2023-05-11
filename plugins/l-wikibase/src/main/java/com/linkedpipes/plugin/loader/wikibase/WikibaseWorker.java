@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.wikidata.wdtk.datamodel.interfaces.ItemDocument;
 import org.wikidata.wdtk.rdf.PropertyRegister;
 import org.wikidata.wdtk.wikibaseapi.ApiConnection;
+import org.wikidata.wdtk.wikibaseapi.BasicApiConnection;
 import org.wikidata.wdtk.wikibaseapi.LoginFailedException;
 import org.wikidata.wdtk.wikibaseapi.WikibaseDataEditor;
 import org.wikidata.wdtk.wikibaseapi.WikibaseDataFetcher;
@@ -46,7 +47,7 @@ class WikibaseWorker implements TaskConsumer<WikibaseTask> {
 
     private final WritableSingleGraphDataUnit outputRdf;
 
-    private ApiConnection connection;
+    private BasicApiConnection connection;
 
     private WikibaseDataEditor wikibaseEditor;
 
