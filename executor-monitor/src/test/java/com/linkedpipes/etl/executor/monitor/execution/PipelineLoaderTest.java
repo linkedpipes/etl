@@ -24,15 +24,17 @@ public class PipelineLoaderTest {
         //
         StatementsBuilder expected = Statements.arrayList().builder();
         expected.setDefaultGraph(execution.getListGraph());
-        expected.addIri("http://pipeline", RDF.TYPE, LP_PIPELINE.PIPELINE);
-        expected.add("http://pipeline", SKOS.PREF_LABEL, "Pipeline");
+        String pipeline = "http://pipeline";
+        expected.addIri(pipeline, RDF.TYPE, LP_PIPELINE.PIPELINE);
+        expected.add(pipeline, SKOS.PREF_LABEL, "Pipeline");
         String meta = "http://pipeline/metadata";
         expected.addIri(meta, RDF.TYPE, LP_PIPELINE.EXECUTION_METADATA);
         expected.addIri(meta, LP_EXEC.HAS_TARGET_COMPONENT, "http://component");
         expected.add("http://component", SKOS.PREF_LABEL, "Component");
+        expected.addIri(pipeline, LP_EXEC.HAS_METADATA ,meta);
         //
-        Statements actual = Statements.wrap(execution.getPipelineStatements());
-        Assertions.assertTrue(StatementsCompare.equal(expected, actual));
+        var actual = execution.getPipelineStatements();
+        Assertions.assertTrue(StatementsCompare.isIsomorphic(expected, actual));
     }
 
 }

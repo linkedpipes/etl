@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.executor.monitor.execution;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OVERVIEW;
 import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewFactory;
 import com.linkedpipes.etl.library.rdf.Statements;
@@ -26,15 +27,18 @@ public class StatusSetterTest {
         //
         Assertions.assertEquals(ExecutionStatus.RUNNING, execution.getStatus());
         // We can not use beforeDate.before or afterDate.after,
-        // the the values can be same as getLastChange.
+        // the values can be same as getLastChange.
         Assertions.assertFalse(beforeDate.after(execution.getLastChange()));
         Assertions.assertFalse(afterDate.before(execution.getLastChange()));
+
         StatementsBuilder expected = Statements.arrayList().builder();
         expected.setDefaultGraph(execution.getListGraph());
         expected.addIri(execution.getIri(), LP_OVERVIEW.HAS_STATUS,
                 ExecutionStatus.RUNNING.asStr());
+        expected.addType(execution.getIri(), LP_EXEC.EXECUTION);
+
         Statements actual = Statements.wrap(execution.getOverviewStatements());
-        Assertions.assertTrue(StatementsCompare.equal(expected, actual));
+        Assertions.assertTrue(StatementsCompare.isIsomorphic(expected, actual));
     }
 
 }

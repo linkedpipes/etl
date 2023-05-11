@@ -12,13 +12,13 @@ public class SubstituteEnvironmentTest {
     @Test
     public void simpleSubstitution() throws ExecutorException {
         Map<String, String> env = new HashMap<>();
-        env.put("LP_HOST", "lp");
-        env.put("LP_PORT", "8080");
+        env.put("LP_ETL_HOST", "lp");
+        env.put("LP_ETL_PORT", "8080");
         //
         Assertions.assertEquals("lp:8080", SubstituteEnvironment.substitute(
-                env, "{LP_HOST}:{LP_PORT}"));
+                env, "{LP_ETL_HOST}:{LP_ETL_PORT}"));
         Assertions.assertEquals("x-lp:8080", SubstituteEnvironment.substitute(
-                env, "x-{LP_HOST}:{LP_PORT}"));
+                env, "x-{LP_ETL_HOST}:{LP_ETL_PORT}"));
     }
 
 }

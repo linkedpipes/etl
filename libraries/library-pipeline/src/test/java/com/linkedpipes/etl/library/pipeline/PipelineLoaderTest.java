@@ -3,6 +3,7 @@ package com.linkedpipes.etl.library.pipeline;
 import com.linkedpipes.etl.library.pipeline.adapter.PipelineToRdf;
 import com.linkedpipes.etl.library.pipeline.adapter.RdfToRawPipeline;
 import com.linkedpipes.etl.library.pipeline.model.Pipeline;
+import com.linkedpipes.etl.library.pipeline.vocabulary.LP_V1;
 import com.linkedpipes.etl.library.rdf.Statements;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -49,6 +50,16 @@ public class PipelineLoaderTest {
         Statements expected = Statements.arrayList();
         expected.file().addAll(TestUtils.file("pipeline/v0-pipeline-v5.trig"));
 
+        // Add dynamic data.
+        var builder = expected.builder();
+        builder.setDefaultGraph(container.pipeline().resource());
+        builder.add(container.pipeline().resource(),
+                LP_V1.HAS_CREATED,
+                container.pipeline().created());
+        builder.add(container.pipeline().resource(),
+                LP_V1.HAS_LAST_UPDATE,
+                container.pipeline().lastUpdate());
+
         TestUtils.assertIsomorphic(
                 expected.asList(),
                 PipelineToRdf.asRdf(container.pipeline()).asList());
@@ -73,6 +84,16 @@ public class PipelineLoaderTest {
         Statements expected = Statements.arrayList();
         expected.file().addAll(TestUtils.file("pipeline/v1-pipeline-v5.trig"));
 
+        // Add dynamic data.
+        var builder = expected.builder();
+        builder.setDefaultGraph(container.pipeline().resource());
+        builder.add(container.pipeline().resource(),
+                LP_V1.HAS_CREATED,
+                container.pipeline().created());
+        builder.add(container.pipeline().resource(),
+                LP_V1.HAS_LAST_UPDATE,
+                container.pipeline().lastUpdate());
+
         TestUtils.assertIsomorphic(
                 expected.asList(),
                 PipelineToRdf.asRdf(container.pipeline()).asList());
@@ -88,6 +109,16 @@ public class PipelineLoaderTest {
 
         Statements expected = Statements.arrayList();
         expected.file().addAll(TestUtils.file("pipeline/v2-pipeline-v5.trig"));
+
+        // Add dynamic data.
+        var builder = expected.builder();
+        builder.setDefaultGraph(container.pipeline().resource());
+        builder.add(container.pipeline().resource(),
+                LP_V1.HAS_CREATED,
+                container.pipeline().created());
+        builder.add(container.pipeline().resource(),
+                LP_V1.HAS_LAST_UPDATE,
+                container.pipeline().lastUpdate());
 
         TestUtils.assertIsomorphic(
                 expected.asList(),
@@ -105,6 +136,16 @@ public class PipelineLoaderTest {
         Statements expected = Statements.arrayList();
         expected.file().addAll(TestUtils.file("pipeline/v3-pipeline-v5.trig"));
 
+        // Add dynamic data.
+        var builder = expected.builder();
+        builder.setDefaultGraph(container.pipeline().resource());
+        builder.add(container.pipeline().resource(),
+                LP_V1.HAS_CREATED,
+                container.pipeline().created());
+        builder.add(container.pipeline().resource(),
+                LP_V1.HAS_LAST_UPDATE,
+                container.pipeline().lastUpdate());
+
         TestUtils.assertIsomorphic(
                 expected.asList(),
                 PipelineToRdf.asRdf(container.pipeline()).asList());
@@ -120,6 +161,16 @@ public class PipelineLoaderTest {
 
         Statements expected = Statements.arrayList();
         expected.file().addAll(TestUtils.file("pipeline/v4-pipeline-v5.trig"));
+
+        // Add dynamic data.
+        var builder = expected.builder();
+        builder.setDefaultGraph(container.pipeline().resource());
+        builder.add(container.pipeline().resource(),
+                LP_V1.HAS_CREATED,
+                container.pipeline().created());
+        builder.add(container.pipeline().resource(),
+                LP_V1.HAS_LAST_UPDATE,
+                container.pipeline().lastUpdate());
 
         TestUtils.assertIsomorphic(
                 expected.asList(),

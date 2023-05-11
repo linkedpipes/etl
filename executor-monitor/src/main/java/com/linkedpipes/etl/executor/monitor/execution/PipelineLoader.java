@@ -132,7 +132,7 @@ class PipelineLoader {
                                     (Resource) st.getObject());
                             break;
                         default:
-                            statements.add(st);
+                            statements.addToDefaultGraph(st);
                             break;
                     }
                 });

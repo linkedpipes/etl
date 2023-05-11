@@ -45,7 +45,7 @@ public class OverviewToListStatementsTest {
         StatementsBuilder expected = Statements.arrayList().builder();
         expected.setDefaultGraph(graph);
         expected.addIri(iri, RDF.TYPE, LP_LIST.TOMBSTONE);
-        Assertions.assertTrue(StatementsCompare.equal(expected, actual));
+        Assertions.assertTrue(StatementsCompare.isIsomorphic(expected, actual));
     }
 
     @Test
@@ -88,7 +88,7 @@ public class OverviewToListStatementsTest {
         expected.addIri(
                 iri, LP_OVERVIEW.HAS_STATUS, ExecutionStatus.QUEUED.asStr());
         Statements actual = this.toStatements.asStatements(execution, root);
-        Assertions.assertTrue(StatementsCompare.equal(expected, actual));
+        Assertions.assertTrue(StatementsCompare.isIsomorphic(expected, actual));
     }
 
     @Test
@@ -137,7 +137,7 @@ public class OverviewToListStatementsTest {
         expected.addIri(
                 iri, LP_OVERVIEW.HAS_STATUS, ExecutionStatus.QUEUED.asStr());
         Statements actual = this.toStatements.asStatements(execution, root);
-        Assertions.assertTrue(StatementsCompare.equal(expected, actual));
+        Assertions.assertTrue(StatementsCompare.isIsomorphic(expected, actual));
     }
 
 }

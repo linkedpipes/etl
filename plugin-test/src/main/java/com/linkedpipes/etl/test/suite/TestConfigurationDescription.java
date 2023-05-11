@@ -17,6 +17,7 @@ import org.eclipse.rdf4j.rio.Rio;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -25,31 +26,34 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 /**
- * Test that configuration description describe all entities in
+ * Test that configuration description describes all entities in
  * given configuration class.
- *
- * TODO Check property alternatives IRIs?
  */
 public class TestConfigurationDescription {
 
-    private List<ConfigurationDescription> descriptions =
+    private final List<ConfigurationDescription> descriptions =
             new LinkedList<>();
 
     public void test(Class<?> configurationClass) throws Exception {
+        // For backwards compatibility, where there was only one directory.
+        test(configurationClass, "template");
+    }
+
+    public void test(Class<?> configurationClass, String directory)
+            throws Exception {
         try {
-            loadDescriptions();
+            loadDescriptions(directory);
         } catch (Exception ex) {
             throw new InvalidDescription(
                     "Can't load configuration description.", ex);
         }
         validateClass(configurationClass);
-        validateDescriptorsReference();
+        validateDescriptorsReference(directory);
     }
 
-    private void loadDescriptions() throws IOException, RdfException,
+    private void loadDescriptions(String directory) throws IOException, RdfException,
             InvalidDescription {
-        Rdf4jSource source = new Rdf4jSource();
-        source.loadFile(getDescriptorFile());
+        Rdf4jSource source = loadDescriptorFile(directory);
         for (String resource : getDescriptionResources(source)) {
             ConfigurationDescription instance =
                     new ConfigurationDescription(resource);
@@ -59,15 +63,32 @@ public class TestConfigurationDescription {
         }
     }
 
-    private File getDescriptorFile() {
-        return TestUtils.fileFromResource("LP-ETL/template/config-desc.ttl");
+    private Rdf4jSource loadDescriptorFile(String directory) throws IOException {
+        for (String name : getDescriptorFilesName(directory)) {
+            File file;
+            try {
+                file = TestUtils.fileFromResource(name);
+            } catch (RuntimeException ex) {
+                // This can fail when resource is missing.
+                continue;
+            }
+            Rdf4jSource result = new Rdf4jSource();
+            result.loadFile(file);
+            return result;
+        }
+        throw new FileNotFoundException("Missing descriptor file.");
+    }
+
+    private List<String> getDescriptorFilesName(String directory) {
+        return Arrays.asList(
+                "LP-ETL/" + directory + "/config-desc.ttl",
+                "LP-ETL/" + directory + "/configuration-description.ttl");
     }
 
     private RDFFormat getFormat(File file) {
-        return Rio.getParserFormatForFileName(
-                file.getName()).orElseThrow(() -> {
-            return new RuntimeException("Invalid file: " + file.getName());
-        });
+        return Rio.getParserFormatForFileName(file.getName())
+                .orElseThrow(() -> new RuntimeException(
+                        "Invalid file: " + file.getName()));
     }
 
     private List<String> getDescriptionResources(RdfSource source)
@@ -143,9 +164,10 @@ public class TestConfigurationDescription {
         return (Class<?>) params[0];
     }
 
-    private void validateDescriptorsReference() throws IOException,
+    private void validateDescriptorsReference(String directory)
+            throws IOException,
             InvalidDescription {
-        final String reference = readDescriptorReference();
+        final String reference = readDescriptorReference(directory);
         for (ConfigurationDescription description : descriptions) {
             if (description.getIri().equals(reference)) {
                 return;
@@ -156,23 +178,24 @@ public class TestConfigurationDescription {
                 reference);
     }
 
-    private String readDescriptorReference()
+    private String readDescriptorReference(String directory)
             throws InvalidDescription, IOException {
-        final Model definition = readDefinition();
+        final Model definition = readDefinition(directory);
         final Resource component = getComponentIri(definition);
         return getReferenceForComponent(definition, component);
     }
 
-    private Model readDefinition() throws IOException {
-        final File definitionFile = getDefinitionFile();
+    private Model readDefinition(String directory) throws IOException {
+        final File definitionFile = getDefinitionFile(directory);
         final RDFFormat format = getFormat(definitionFile);
         try (InputStream stream = new FileInputStream(definitionFile)) {
             return Rio.parse(stream, "http://localhost/default", format);
         }
     }
 
-    private File getDefinitionFile() {
-        return TestUtils.fileFromResource("LP-ETL/template/definition.jsonld");
+    private File getDefinitionFile(String directory) {
+        return TestUtils.fileFromResource(
+                "LP-ETL/" + directory + "/definition.jsonld");
     }
 
     private Resource getComponentIri(Model definition)

@@ -50,7 +50,7 @@ public class TestUtils {
     }
 
     public static void assertIsomorphic(
-            List<Statement> actual, List<Statement> expected) {
+            List<Statement> expected, List<Statement> actual) {
         boolean isomorphic = Models.isomorphic(actual, expected);
         if (!isomorphic) {
             Set<Statement> actualSet = new HashSet<>(actual);

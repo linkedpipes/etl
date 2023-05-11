@@ -4,6 +4,7 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.event.Event;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
+import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.service.WorkingDirectory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +42,29 @@ public class TaskExecutionTest extends TaskExecution<TaskMock> {
             @Override
             public boolean isCancelled() {
                 return false;
+            }
+        };
+
+        progressReport =  new ProgressReport() {
+
+            @Override
+            public void start(long entriesToProcess) {
+                // Ignore
+            }
+
+            @Override
+            public void start(Collection<?> collection) {
+                // Ignore
+            }
+
+            @Override
+            public void entryProcessed() {
+                // Ignore
+            }
+
+            @Override
+            public void done() {
+                // Ignore
             }
         };
 

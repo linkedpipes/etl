@@ -23,12 +23,11 @@ public class HttpDebugFilesTest {
 
     private static final String DATA_UNIT = "DU";
 
-    private HttpDebugFilesFacade debugFacade;
+    private final HttpDebugFilesFacade debugFacade;
 
-    private DebugDataSource dataSource;
+    private final DebugDataSource dataSource;
 
-    @BeforeAll
-    public void prepare() {
+    public HttpDebugFilesTest() {
         File root = TestUtils.resource("debug");
 
         DataUnit dataUnit = new DataUnit("", DATA_UNIT, "content", null, null);

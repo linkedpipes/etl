@@ -42,7 +42,7 @@ public class ReferenceTemplateAdapterTest {
                 actual.note(), actual.color(), actual.tags(),
                 actual.knownAs(), null, actual.configurationGraph());
 
-        Assertions.assertTrue(StatementsCompare.equal(
+        Assertions.assertTrue(StatementsCompare.isIsomorphic(
                 expected.configuration(),
                 actual.configuration()));
 
