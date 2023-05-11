@@ -36,7 +36,8 @@ public class RequestExecutor {
 
     private final ResponseConsumer consumer;
 
-    public RequestExecutor(RequestConfiguration configuration, ResponseConsumer consumer) {
+    public RequestExecutor(
+            RequestConfiguration configuration, ResponseConsumer consumer) {
         this.configuration = configuration;
         this.consumer = consumer;
     }
@@ -168,12 +169,19 @@ public class RequestExecutor {
                 builder.addBinaryBody(
                         content.name,
                         content.file,
-                        ContentType.create(content.contentType),
+                        createContentType(content.contentType),
                         content.fileName);
             }
         }
         HttpEntity entity = builder.build();
         request.setEntity(entity);
+    }
+
+    private ContentType createContentType(String contentType) {
+        if (contentType == null) {
+            return ContentType.DEFAULT_BINARY;
+        }
+        return ContentType.create(contentType);
     }
 
     private void setHeader(HttpRequestBase request) {

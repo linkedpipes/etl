@@ -53,7 +53,7 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         var reportResource = createReportResource(task);
         var executor = new RequestExecutor(
                 requestConfiguration,
-                response -> handleSuccess(task, reportResource, response));
+                response -> handleResponse(task, reportResource, response));
         try {
             executor.execute();
         } catch (IOException ex) {
@@ -86,10 +86,10 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         return valueFactory.createIRI(task.deriveIri("report"));
     }
 
-    public void handleSuccess(
+    public void handleResponse(
             HttpRequestTask task, Resource reportResource,
             HttpResponse response) throws LpException {
-        var handler = new SuccessResponseHandler(
+        var handler = new ResponseHandler(
                 outputFiles, statementsWriter, task, reportResource);
         handler.apply(response);
     }

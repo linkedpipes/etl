@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class SuccessResponseHandler {
+public class ResponseHandler {
 
     private final WritableFilesDataUnit fileWriter;
 
@@ -19,7 +19,7 @@ public class SuccessResponseHandler {
 
     private final HeaderWriter headerWriter;
 
-    public SuccessResponseHandler(
+    public ResponseHandler(
             WritableFilesDataUnit outputFile,
             StatementsConsumer statementsWriter,
             HttpRequestTask task,
@@ -34,15 +34,13 @@ public class SuccessResponseHandler {
         StatusLine statusLine = response.getStatusLine();
         if (hasRequestFailed(statusLine)) {
             headerWriter.write(response);
-            return;
+            throw new LpException("Request failed '{}' : '{}'",
+                    statusLine.getStatusCode(), statusLine.getReasonPhrase());
         }
         if (task.isOutputHeaders()) {
             headerWriter.write(response);
         }
         writeResponseToFile(response);
-
-        throw new LpException("Request failed '{}' : '{}'",
-                statusLine.getStatusCode(), statusLine.getReasonPhrase());
     }
 
     private boolean hasRequestFailed(StatusLine statusLine) {

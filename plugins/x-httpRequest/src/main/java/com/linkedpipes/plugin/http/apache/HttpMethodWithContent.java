@@ -15,7 +15,7 @@ class HttpMethodWithContent extends HttpEntityEnclosingRequestBase {
 
     @Override
     public String getMethod() {
-        return null;
+        return method;
     }
 
 }
