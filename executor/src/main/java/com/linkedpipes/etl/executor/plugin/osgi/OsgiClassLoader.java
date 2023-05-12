@@ -82,7 +82,7 @@ class OsgiClassLoader {
         Class<?> candidateClass;
         try {
             candidateClass = bundle.loadClass(className);
-        } catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException | NoClassDefFoundError ex) {
             LOG.warn("Can't load class: {}", className, ex);
             return;
         }
