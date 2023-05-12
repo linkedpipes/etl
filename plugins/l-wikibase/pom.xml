@@ -42,47 +42,37 @@
             <groupId>org.wikidata.wdtk</groupId>
             <artifactId>wdtk-datamodel</artifactId>
             <version>${wikidata-toolkit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.threeten</groupId>
-            <artifactId>threeten-extra</artifactId>
-            <version>1.7.2</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.wikidata.wdtk</groupId>
             <artifactId>wdtk-dumpfiles</artifactId>
             <version>${wikidata-toolkit.version}</version>
-            <scope>required</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.wikidata.wdtk</groupId>
             <artifactId>wdtk-rdf</artifactId>
             <version>${wikidata-toolkit.version}</version>
-            <scope>required</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.wikidata.wdtk</groupId>
             <artifactId>wdtk-storage</artifactId>
             <version>${wikidata-toolkit.version}</version>
-            <scope>required</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.wikidata.wdtk</groupId>
             <artifactId>wdtk-util</artifactId>
             <version>${wikidata-toolkit.version}</version>
-            <scope>required</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.wikidata.wdtk</groupId>
             <artifactId>wdtk-wikibaseapi</artifactId>
             <version>${wikidata-toolkit.version}</version>
-            <scope>required</scope>
-        </dependency>
-        <!-- -->
-        <dependency>
-            <groupId>com.github.jsonld-java</groupId>
-            <artifactId>jsonld-java</artifactId>
-            <version>0.13.4</version>
+            <scope>provided</scope>
         </dependency>
         <!-- -->
         <dependency>
@@ -110,6 +100,7 @@
                             org.wikidata.wdtk.*;resolution:=optional,
                             com.google.*;resolution:=optional,
                             org.checkerframework.*;resolution:=optional,
+                            com.github.jsonldjava.*;resolution:=optional,
                             *
                         </Import-Package>
                     </instructions>
