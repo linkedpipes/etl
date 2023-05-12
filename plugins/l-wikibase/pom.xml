@@ -52,26 +52,31 @@
             <groupId>org.wikidata.wdtk</groupId>
             <artifactId>wdtk-dumpfiles</artifactId>
             <version>${wikidata-toolkit.version}</version>
+            <scope>required</scope>
         </dependency>
         <dependency>
             <groupId>org.wikidata.wdtk</groupId>
             <artifactId>wdtk-rdf</artifactId>
             <version>${wikidata-toolkit.version}</version>
+            <scope>required</scope>
         </dependency>
         <dependency>
             <groupId>org.wikidata.wdtk</groupId>
             <artifactId>wdtk-storage</artifactId>
             <version>${wikidata-toolkit.version}</version>
+            <scope>required</scope>
         </dependency>
         <dependency>
             <groupId>org.wikidata.wdtk</groupId>
             <artifactId>wdtk-util</artifactId>
             <version>${wikidata-toolkit.version}</version>
+            <scope>required</scope>
         </dependency>
         <dependency>
             <groupId>org.wikidata.wdtk</groupId>
             <artifactId>wdtk-wikibaseapi</artifactId>
             <version>${wikidata-toolkit.version}</version>
+            <scope>required</scope>
         </dependency>
         <!-- -->
         <dependency>
@@ -99,6 +104,16 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Import-Package>
+                            org.wikidata.wdtk.*;resolution:=optional,
+                            com.google.*;resolution:=optional,
+                            org.checkerframework.*;resolution:=optional,
+                            *
+                        </Import-Package>
+                    </instructions>
+                </configuration>
             </plugin>
         </plugins>
     </build>
