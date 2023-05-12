@@ -112,8 +112,11 @@ public class FilePipelineRepository implements PipelineRepository {
         }
         pipelineFiles = nextPipelineFiles;
         LOG.debug("Loading repository ... done " +
-                        "(loaded: {}, migrated: {}, failed: {})",
-                files.size(), migratedCounter, result.size());
+                        "(files: {}, loaded: {}, migrated: {}, failed: {})",
+                files.size(),
+                pipelineFiles.size(),
+                migratedCounter,
+                result.size());
         return result;
     }
 
