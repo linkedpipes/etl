@@ -178,8 +178,15 @@ public class RequestExecutor {
                     configuration.content.size());
         }
         var content = configuration.content.get(0);
-        var entity = new FileEntity(content.file, ContentType.create(content.contentType));
+        var entity = new FileEntity(content.file, createContentType(content.contentType));
         request.setEntity(entity);
+    }
+
+    private ContentType createContentType(String contentType) {
+        if (contentType == null) {
+            return ContentType.DEFAULT_BINARY;
+        }
+        return ContentType.create(contentType);
     }
 
     /**
@@ -212,13 +219,6 @@ public class RequestExecutor {
         }
         HttpEntity entity = builder.build();
         request.setEntity(entity);
-    }
-
-    private ContentType createContentType(String contentType) {
-        if (contentType == null) {
-            return ContentType.DEFAULT_BINARY;
-        }
-        return ContentType.create(contentType);
     }
 
     private void setHeader(HttpRequestBase request) {
