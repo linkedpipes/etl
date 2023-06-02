@@ -10,8 +10,8 @@
         <relativePath>../../pom-backend/pom.xml</relativePath>
     </parent>
     <artifactId>library-io</artifactId>
-    <packaging>jar</packaging>
     <name>LinkedPipes Library IO</name>
+    <packaging>jar</packaging>
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

@@ -1,9 +1,9 @@
 FROM openjdk:17.0.1-jdk-slim-bullseye as lp-etl-build
-ARG LP_ETL_BUILD=-DskipTests
+ARG LP_ETL_BUILD=""
 
 WORKDIR /opt/lp-etl/
 COPY ./ ./
-RUN ./mvnw install  $LP_ETL_BUILD -P "install-executor-monitor"
+RUN ./mvnw install $LP_ETL_BUILD -P "install-executor-monitor"
 
 FROM openjdk:17.0.1-slim-bullseye
 ARG LP_ETL_USER=5987

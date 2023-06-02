@@ -18,19 +18,27 @@ class OsgiPackageList {
             + "javax.xml.bind.annotation.adapters;version=\"2.3.0\","
             + "javax.annotation;version=\"1.3.2\"";
 
+    //
+    /**
+     * Since some libraries have not been updated to employ slf4j version 2.00
+     * we need to export both versions. As stated in documentation
+     * the change should be additive:
+     * https://www.slf4j.org/faq.html#changesInVersion200
+     */
     private static final String SLF4J = ""
-            + "org.slf4j;version=\"1.7.21\","
-            + "org.slf4j.helpers;version=\"1.7.21\","
-            + "org.slf4j.spi;version=\"1.7.21\"";
+            + "org.slf4j;version=\"1.7\","
+            + "org.slf4j;version=\"2.0.7\","
+            + "org.slf4j.helpers;version=\"2.0.7\","
+            + "org.slf4j.spi;version=\"2.0.7\"";
 
     private static final String LOGBACK = ""
-            + "ch.qos.logback.classic;version=\"1.1.7\","
-            + "ch.qos.logback.classic.joran;version=\"1.1.7\","
-            + "ch.qos.logback.core;version=\"1.1.7\","
-            + "ch.qos.logback.core.joran.action;version=\"1.1.7\","
-            + "ch.qos.logback.core.joran.spi;version=\"1.1.7\","
-            + "ch.qos.logback.core.rolling;version=\"1.1.7\","
-            + "ch.qos.logback.core.util;version=\"1.1.7\"";
+            + "ch.qos.logback.classic;version=\"1.4.7\","
+            + "ch.qos.logback.classic.joran;version=\"1.4.7\","
+            + "ch.qos.logback.core;version=\"1.4.7\","
+            + "ch.qos.logback.core.joran.action;version=\"1.4.7\","
+            + "ch.qos.logback.core.joran.spi;version=\"1.4.7\","
+            + "ch.qos.logback.core.rolling;version=\"1.4.7\","
+            + "ch.qos.logback.core.util;version=\"1.4.7\"";
 
     private static final String LOG4J = ""
             + "org.apache.log4j;version=\"1.7.18\","

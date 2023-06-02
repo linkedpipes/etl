@@ -10,13 +10,12 @@
         <relativePath>../../pom-backend/pom.xml</relativePath>
     </parent>
     <artifactId>library-pipeline</artifactId>
-    <packaging>jar</packaging>
     <name>LinkedPipes Library Pipeline</name>
+    <packaging>jar</packaging>
     <dependencies>
         <dependency>
             <groupId>com.linkedpipes</groupId>
             <artifactId>library-rdf</artifactId>
-            <version>0.0.0</version>
         </dependency>
         <!-- Testing. -->
         <dependency>

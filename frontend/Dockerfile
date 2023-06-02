@@ -1,5 +1,5 @@
 FROM node:16.14.2-bullseye as lp-etl-build
-ARG LP_ETL_BUILD=-DskipTests
+ARG LP_ETL_BUILD=""
 RUN apt-get update && apt-get -y --no-install-recommends install openjdk-17-jdk
 WORKDIR /opt/lp-etl/
 COPY ./ ./
@@ -14,7 +14,6 @@ RUN mkdir -p /data/lp-etl/logs \
 
 COPY --from=lp-etl-build --chown=linkedpipes /opt/lp-etl/deploy/configuration.docker.properties /opt/lp-etl/configuration/configuration.properties
 COPY --from=lp-etl-build --chown=linkedpipes /opt/lp-etl/deploy/frontend /opt/lp-etl/frontend
-
 
 WORKDIR /opt/lp-etl/frontend
 USER $LP_ETL_USER

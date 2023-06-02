@@ -10,10 +10,8 @@
         <relativePath>../../pom-plugin/pom.xml</relativePath>
     </parent>
     <artifactId>t-xmlToChunks</artifactId>
-    <groupId>com.linkedpipes</groupId>
-    <version>0.0.0</version>
-    <packaging>bundle</packaging>
     <name>plugin t-xmlToChunks</name>
+    <packaging>bundle</packaging>
 
     <dependencies>
         <dependency>

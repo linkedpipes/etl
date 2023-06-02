@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Rdf4jSource implements RdfSource {
@@ -85,9 +86,12 @@ public class Rdf4jSource implements RdfSource {
     private Model model;
 
     public void loadFile(File file) throws IOException {
-        RDFFormat format = Rio.getParserFormatForFileName(file.getName()).get();
+        Optional<RDFFormat> format = Rio.getParserFormatForFileName(file.getName());
+        if (format.isEmpty()) {
+            throw new IOException("Can not determine format of '" + file + "'.");
+        }
         try (FileInputStream stream = new FileInputStream(file)) {
-            model = Rio.parse(stream, "http://localhost", format);
+            model = Rio.parse(stream, "http://localhost", format.get());
         }
     }
 

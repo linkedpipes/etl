@@ -1,8 +1,10 @@
 FROM openjdk:17.0.1-jdk-slim-bullseye as lp-etl-build
-ARG LP_ETL_BUILD=-DskipTests
+ARG LP_ETL_BUILD=""
 
 WORKDIR /opt/lp-etl/
 COPY ./ ./
+# Copy Docker specific configuration file as we need it for install-plugins.
+RUN cp ./deploy/configuration.docker.properties ./deploy/configuration.properties.sample
 RUN ./mvnw install  $LP_ETL_BUILD -P "install-executor,install-plugins"
 
 FROM openjdk:17.0.1-slim-bullseye

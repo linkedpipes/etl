@@ -9,11 +9,9 @@
 		<version>0.0.0</version>
 		<relativePath>../../pom-plugin/pom.xml</relativePath>
 	</parent>
-	<groupId>com.linkedpipes</groupId>
 	<artifactId>t-jsonLdToRdf</artifactId>
-	<version>0.0.0</version>
-	<packaging>bundle</packaging>
 	<name>plugin t-jsonLdToRdf</name>
+	<packaging>bundle</packaging>
 
 	<dependencies>
 		<dependency>

@@ -7,10 +7,7 @@ public class ValidationTest {
 
     @Test
     public void verifyConfigurationDescription() throws Exception {
-        final TestConfigurationDescription test =
-                new TestConfigurationDescription();
-        test.test(
-                com.linkedpipes.plugin.extractor.datasetMetadata.DatasetMetadataConfig.class);
+        (new TestConfigurationDescription()).test(DatasetMetadataConfig.class);
     }
 
 }

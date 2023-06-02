@@ -11,13 +11,13 @@
 	</parent>
 	<artifactId>plugin-test</artifactId>
 	<name>LinkedPipes Plugin Test Environment</name>
-	<version>0.0.0</version>
 	<packaging>jar</packaging>
 
 	<properties>
 		<logback.version>1.2.3</logback.version>
 	</properties>
 
+	<!-- Since default scope is provided, we need to se it to compile here. -->
 	<dependencies>
 		<dependency>
 			<groupId>com.linkedpipes</groupId>
@@ -27,7 +27,6 @@
 		<dependency>
 			<groupId>com.linkedpipes</groupId>
 			<artifactId>plugin-api</artifactId>
-			<version>${lp.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -73,6 +72,11 @@
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-rio-jsonld</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-rio-turtle</artifactId>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

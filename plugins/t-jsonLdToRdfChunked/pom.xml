@@ -9,11 +9,9 @@
 		<version>0.0.0</version>
 		<relativePath>../../pom-plugin/pom.xml</relativePath>
 	</parent>
-	<groupId>com.linkedpipes</groupId>
 	<artifactId>t-jsonLdToRdfChunked</artifactId>
-	<version>0.0.0</version>
-	<packaging>bundle</packaging>
 	<name>plugin t-jsonLdToRdfChunked</name>
+	<packaging>bundle</packaging>
 
 	<dependencies>
 		<dependency>

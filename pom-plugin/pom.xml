@@ -20,8 +20,8 @@
             checkstyle.xml
         </checkstyle.config.location>
         <!-- Libraries. -->
-        <slf4j.version>1.7.30</slf4j.version>
-        <logback.version>1.4.5</logback.version>
+        <slf4j.version>2.0.7</slf4j.version>
+        <logback.version>1.4.7</logback.version>
         <jackson.version>2.14.0</jackson.version>
         <rdf4j.version>4.2.1</rdf4j.version>
         <mockito.version>4.9.0</mockito.version>
@@ -52,12 +52,6 @@
             <dependency>
                 <groupId>com.linkedpipes</groupId>
                 <artifactId>plugin-api</artifactId>
-                <version>${lp.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.linkedpipes</groupId>
-                <artifactId>plugin-test</artifactId>
                 <version>${lp.version}</version>
                 <scope>provided</scope>
             </dependency>
@@ -145,6 +139,24 @@
                 <version>${rdf4j.version}</version>
                 <scope>provided</scope>
             </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-rio-n3</artifactId>
+                <version>${rdf4j.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-queryresultio-text</artifactId>
+                <version>${rdf4j.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-shacl</artifactId>
+                <version>${rdf4j.version}</version>
+                <scope>provided</scope>
+            </dependency>
             <!-- Libraries provided by the environment. -->
             <dependency>
                 <groupId>commons-io</groupId>
@@ -180,6 +192,7 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
                 <version>1.2.10</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.osgi</groupId>
@@ -277,7 +290,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>5.1.8</version>
+                    <version>5.1.9</version>
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>

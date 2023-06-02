@@ -7,11 +7,9 @@
         <version>0.0.0</version>
         <relativePath>../../pom-plugin/pom.xml</relativePath>
     </parent>
-    <groupId>com.linkedpipes</groupId>
     <artifactId>c-rdfSingleGraph</artifactId>
-    <version>0.0.0</version>
-    <packaging>bundle</packaging>
     <name>plugin c-rdfSingleGraph</name>
+    <packaging>bundle</packaging>
 
     <dependencies>
         <dependency>

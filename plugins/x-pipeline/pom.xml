@@ -7,12 +7,10 @@
         <version>0.0.0</version>
         <relativePath>../../pom-plugin/pom.xml</relativePath>
     </parent>
-    <groupId>com.linkedpipes</groupId>
     <artifactId>x-pipeline</artifactId>
-    <version>0.0.0</version>
-    <packaging>bundle</packaging>
     <name>plugin x-pipeline</name>
-    
+    <packaging>bundle</packaging>
+
     <dependencies>
         <dependency>
             <groupId>com.linkedpipes</groupId>

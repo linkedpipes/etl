@@ -10,8 +10,8 @@
         <relativePath>../pom-backend/pom.xml</relativePath>
     </parent>
     <artifactId>vocabulary</artifactId>
-    <packaging>jar</packaging>
     <name>LinkedPipes Vocabulary</name>
+    <packaging>jar</packaging>
     <description>
         Contains definition of RDF vocabulary used in the LinkedPipes ETL,
         every IRI used in the project (Java code) must be declared here

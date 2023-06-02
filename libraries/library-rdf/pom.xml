@@ -10,34 +10,29 @@
         <relativePath>../../pom-backend/pom.xml</relativePath>
     </parent>
     <artifactId>library-rdf</artifactId>
-    <packaging>jar</packaging>
     <name>LinkedPipes Library RDF</name>
+    <packaging>jar</packaging>
     <dependencies>
         <!-- RDF4j -->
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-model</artifactId>
-            <version>${rdf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-rio-api</artifactId>
-            <version>${rdf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-rio-jsonld</artifactId>
-            <version>${rdf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-rio-trig</artifactId>
-            <version>${rdf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-rio-nquads</artifactId>
-            <version>${rdf4j.version}</version>
         </dependency>
         <!-- Dependencies for RDF4j -->
         <dependency>
