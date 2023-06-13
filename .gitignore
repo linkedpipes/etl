@@ -45,3 +45,6 @@ dist/
 
 # Specific files.
 dependency-reduced-pom.xml
+
+# Python
+__pycache__/

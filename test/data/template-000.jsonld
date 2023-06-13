@@ -1,0 +1,8 @@
+{
+  "@context": {
+    "skos": "http://www.w3.org/2004/02/skos/core#"
+  },
+  "@id": "http://THIS-SHOULD-BE-IGNORED",
+  "@type" : "http://linkedpipes.com/ontology/Template",
+  "skos:prefLabel": "Turtle holder"
+}

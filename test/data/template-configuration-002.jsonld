@@ -1,0 +1,15 @@
+{
+  "@context": {
+    "plugin": "http://plugins.linkedpipes.com/ontology/e-textHolder#",
+    "config": "http://plugins.linkedpipes.com/resource/configuration/"
+  },
+  "@type" : "plugin:Configuration",
+  "plugin:fileName": "000-name-force",
+  "plugin:fileNameControl" : {
+    "@id" : "config:Force"
+  },
+  "plugin:content": "000-content",
+  "plugin:contentControl" : {
+    "@id" : "config:None"
+  }
+}

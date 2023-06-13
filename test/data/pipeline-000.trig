@@ -1,0 +1,47 @@
+
+<http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815> {
+	<http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/98f7f971-2a2b-4157-9ac9-0a896993421b> <http://linkedpipes.com/ontology/y> 60 ;
+		<http://linkedpipes.com/ontology/x> 240 ;
+		<http://www.w3.org/2004/02/skos/core#prefLabel> "Text to RDF" ;
+		<http://linkedpipes.com/ontology/configurationGraph> <http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/98f7f971-2a2b-4157-9ac9-0a896993421b/configuration> ;
+		<http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0> ;
+		a <http://linkedpipes.com/ontology/Component> .
+
+	<http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/connection/6936b01b-4dd6-40ea-8326-89e05eb7b33f> <http://linkedpipes.com/ontology/sourceBinding> "FilesOutput" ;
+		<http://linkedpipes.com/ontology/targetBinding> "InputFiles" ;
+		<http://linkedpipes.com/ontology/sourceComponent> <http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/98f7f971-2a2b-4157-9ac9-0a896993421b> ;
+		<http://linkedpipes.com/ontology/targetComponent> <http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/efc4db65-aca0-455d-b3d7-3b1fc70ccfa2> ;
+		a <http://linkedpipes.com/ontology/Connection> .
+
+	<http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815> <http://etl.linkedpipes.com/ontology/version> "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+		<http://www.w3.org/2004/02/skos/core#prefLabel> "Test CSV conversion" ;
+		a <http://linkedpipes.com/ontology/Pipeline> .
+
+	<http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/efc4db65-aca0-455d-b3d7-3b1fc70ccfa2> <http://linkedpipes.com/ontology/y> 0 ;
+		<http://linkedpipes.com/ontology/x> 480 ;
+		<http://www.w3.org/2004/02/skos/core#prefLabel> "Files to RDF" ;
+		<http://linkedpipes.com/ontology/configurationGraph> <http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/efc4db65-aca0-455d-b3d7-3b1fc70ccfa2/configuration> ;
+		<http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/t-filesToRdf/0.0.0> ;
+		a <http://linkedpipes.com/ontology/Component> .
+
+	<http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/efc4db65-aca0-455d-0000-3b1fc70ccfa2> <http://linkedpipes.com/ontology/y> 0 ;
+		<http://linkedpipes.com/ontology/x> 0 ;
+		<http://www.w3.org/2004/02/skos/core#prefLabel> "Pipeline Input" ;
+		<http://linkedpipes.com/ontology/configurationGraph> <http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/efc4db65-aca0-455d-b3d7-3b1fc70ccfa2/configuration> ;
+		<http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/e-pipelineInput/0.0.0> ;
+		a <http://linkedpipes.com/ontology/Component> .
+}
+
+<http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/98f7f971-2a2b-4157-9ac9-0a896993421b/configuration> {
+	<http://localhost/resources/configuration> a <http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration> ;
+		<http://plugins.linkedpipes.com/ontology/e-textHolder#fileName> "pipeline-name" ;
+		<http://plugins.linkedpipes.com/ontology/e-textHolder#content> "pipeline-content" .
+}
+
+<http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/efc4db65-aca0-455d-b3d7-3b1fc70ccfa2/configuration> {
+	<http://localhost/resources/configuration> a <http://plugins.linkedpipes.com/ontology/t-filesToRdf#Configuration> .
+}
+
+<http://demo.etl.linkedpipes.com/resources/pipelines/created-1472483376815/components/efc4db65-aca0-455d-0000-3b1fc70ccfa2/configuration> {
+	<http://localhost/resources/configuration> a <http://plugins.linkedpipes.com/ontology/e-pipelineInput#Configuration> .
+}
