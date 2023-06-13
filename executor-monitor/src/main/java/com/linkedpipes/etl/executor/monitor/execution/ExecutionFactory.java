@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.Collection;
@@ -46,10 +47,12 @@ class ExecutionFactory {
                 throw new MonitorException(
                         "Missing original name for: {}", input.getName());
             }
-            File inputFile = new File(inputDirectory, originalFileName);
-            inputFile.getParentFile().mkdirs();
-            try {
-                input.transferTo(inputFile);
+            File targetFile = new File(inputDirectory, originalFileName);
+            targetFile.getParentFile().mkdirs();
+            try (InputStream inputStream = input.getInputStream()) {
+                // Using transferTo throw NoSuchFileException, when
+                // the content is saved in memory.
+                Files.copy(inputStream, targetFile.toPath());
             } catch (IOException | IllegalStateException ex) {
                 throw new MonitorException("Can't prepare inputs.", ex);
             }

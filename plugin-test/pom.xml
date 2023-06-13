@@ -13,10 +13,6 @@
 	<name>LinkedPipes Plugin Test Environment</name>
 	<packaging>jar</packaging>
 
-	<properties>
-		<logback.version>1.2.3</logback.version>
-	</properties>
-
 	<!-- Since default scope is provided, we need to se it to compile here. -->
 	<dependencies>
 		<dependency>

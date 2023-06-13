@@ -11,25 +11,6 @@
     <!-- Configures the @Controller programming model. -->
     <mvc:annotation-driven />
 
-    <!-- Configure plugin JSON as request and response in method handler. -->
-    <beans:bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
-        <beans:property name="messageConverters">
-            <beans:list>
-                <beans:ref bean="jsonMessageConverter"/>
-            </beans:list>
-        </beans:property>
-    </beans:bean>
-
-    <!-- Configure bean to convert JSON to POJO and vice versa. -->
-    <beans:bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
-
     <context:component-scan base-package="com.linkedpipes.etl.storage.http.servlet" />
-
-    <!-- Support for multipart file upload - custom class for support in PUT requests.
-    We do not need to define a filter in web.xml as DispatcherServlet can handle it automatically. -->
-    <beans:bean id="multipartResolver" class="com.linkedpipes.etl.storage.http.MultipartResolver">
-        <!-- Files with size below this value are stored in memory, otherwise they will be stored in disk directly. -->
-        <beans:property name="maxInMemorySize" value="16777216" /> <!-- 16MB -->
-    </beans:bean>
 
 </beans:beans>

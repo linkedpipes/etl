@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping(value = "/pipelines")
@@ -97,7 +97,7 @@ public class PipelineServlet {
             @RequestParam(value = "pipeline") MultipartFile pipeline,
             HttpServletRequest request, HttpServletResponse response) {
         ServletUtilities.wrap(request, response, () -> {
-            service.handleUpdatePipeline(pipeline, request, response);
+            service.handleUpdatePipeline(pipeline, response);
         });
     }
 
@@ -112,7 +112,7 @@ public class PipelineServlet {
             HttpServletRequest request, HttpServletResponse response) {
         ServletUtilities.wrap(request, response, () -> {
             service.handleDeletePipeline(
-                    valueFactory.createIRI(iri), request, response);
+                    valueFactory.createIRI(iri), response);
         });
     }
 

@@ -22,12 +22,12 @@
         <!-- Libraries. -->
         <slf4j.version>2.0.7</slf4j.version>
         <logback.version>1.4.7</logback.version>
-        <jackson.version>2.14.0</jackson.version>
-        <rdf4j.version>4.2.1</rdf4j.version>
-        <mockito.version>4.9.0</mockito.version>
+        <jackson.version>2.15.2</jackson.version>
+        <rdf4j.version>4.3.1</rdf4j.version>
+        <mockito.version>5.3.1</mockito.version>
         <junit.version>5.9.3</junit.version>
         <lp.version>0.0.0</lp.version>
-        <commons-io.version>2.8.0</commons-io.version>
+        <commons-io.version>2.12.0</commons-io.version>
         <commons-net.version>3.8.0</commons-net.version>
         <httpclient-osgi.version>4.5.13</httpclient-osgi.version>
     </properties>
@@ -228,39 +228,6 @@
     </dependencyManagement>
 
     <profiles>
-        <profile>
-            <id>check-code-quality</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.github.spotbugs</groupId>
-                        <artifactId>spotbugs-maven-plugin</artifactId>
-                        <version>4.7.3.4</version>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-checkstyle-plugin</artifactId>
-                        <version>3.2.2</version>
-                        <configuration>
-                            <includeTestSourceDirectory>
-                                true
-                            </includeTestSourceDirectory>
-                            <consoleOutput>true</consoleOutput>
-                            <failOnViolation>true</failOnViolation>
-                            <violationSeverity>warning</violationSeverity>
-                            <linkXRef>false</linkXRef>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <!-- Java profiles. -->
         <profile>
             <id>java-17</id>
@@ -280,6 +247,16 @@
             <properties>
                 <maven.compiler.source>18</maven.compiler.source>
                 <maven.compiler.target>18</maven.compiler.target>
+            </properties>
+        </profile>
+        <profile>
+            <id>java-20</id>
+            <activation>
+                <jdk>20</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>20</maven.compiler.source>
+                <maven.compiler.target>20</maven.compiler.target>
             </properties>
         </profile>
     </profiles>

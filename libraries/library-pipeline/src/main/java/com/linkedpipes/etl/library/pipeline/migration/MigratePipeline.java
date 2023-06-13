@@ -36,4 +36,8 @@ public class MigratePipeline {
         return working.toPipeline();
     }
 
+    public static boolean shouldMigrate(RawPipeline pipeline) {
+        return pipeline.version < 5;
+    }
+
 }

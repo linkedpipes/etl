@@ -1,15 +1,14 @@
 package com.linkedpipes.etl.storage.http.servlet;
 
 import com.linkedpipes.etl.library.rdf.Statements;
-import com.linkedpipes.etl.storage.StorageException;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -101,7 +100,7 @@ class ServletUtilities {
     public static void wrap(
             HttpServletRequest request, HttpServletResponse response,
             Handler handler) {
-        measure(request.getRequestURI(), () -> {
+        measure(request.getMethod(), request.getRequestURI(), () -> {
             try {
                 handler.handle();
             } catch (InvalidRequest ex) {
@@ -118,10 +117,10 @@ class ServletUtilities {
         });
     }
 
-    public static void measure(String name, Runnable runnable) {
+    public static void measure(String method, String name, Runnable runnable) {
         LocalDateTime start = LocalDateTime.now();
         runnable.run();
-        LOG.debug("'{}' took {} ms", name,
+        LOG.debug("[{}] '{}' took {} ms", method, name,
                 Duration.between(start, LocalDateTime.now()).toMillis());
     }
 

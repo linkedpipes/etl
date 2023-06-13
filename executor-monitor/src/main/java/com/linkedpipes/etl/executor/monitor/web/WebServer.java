@@ -1,6 +1,7 @@
 package com.linkedpipes.etl.executor.monitor.web;
 
 import com.linkedpipes.etl.executor.monitor.ConfigurationHolder;
+import jakarta.servlet.MultipartConfigElement;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -21,6 +22,8 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Service
 class WebServer implements ApplicationListener<ApplicationEvent> {
@@ -29,13 +32,19 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
 
     private static final int MAX_THREADS = 4;
 
-    @Autowired
-    private ConfigurationHolder configuration;
+    private final ConfigurationHolder configuration;
 
-    @Autowired
-    private AbstractApplicationContext appContext;
+    private final AbstractApplicationContext appContext;
 
     private Server server = null;
+
+    @Autowired
+    public WebServer(
+            ConfigurationHolder configuration,
+            AbstractApplicationContext appContext) {
+        this.configuration = configuration;
+        this.appContext = appContext;
+    }
 
     private void start() {
         try {
@@ -75,26 +84,35 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
         LOG.info("Starting web server on port: {}",
                 configuration.getWebServerPort());
         //
-        ServletContextHandler handler;
-        handler = new ServletContextHandler();
+        ServletContextHandler handler = new ServletContextHandler();
         handler.setErrorHandler(null);
         handler.setContextPath("/");
-        // Servlet.
+        handler.setResourceBase(new ClassPathResource("/web/").getURI().toString());
+        // Context
         XmlWebApplicationContext webContext = new XmlWebApplicationContext();
         webContext.setParent(appContext);
         webContext.setConfigLocation("spring/context-web.xml");
+        handler.addEventListener(new ContextLoaderListener(webContext));
+        // Servlet
         DispatcherServlet dispatcher = new DispatcherServlet(webContext);
         ServletHolder servlet = new ServletHolder(dispatcher);
-        handler.addEventListener(new ContextLoaderListener(webContext));
         handler.addServlet(servlet, "/api/v1/*");
-        handler.setResourceBase(
-                new ClassPathResource("/web/").getURI().toString());
-
         //
         server = new Server(createThreadPool());
         // Connector.
         ServerConnector http = new ServerConnector(server, 1, 1);
         http.setPort(configuration.getWebServerPort());
+        // Multipart configuration.
+        Path uploadDirectory = Files.createTempDirectory("lp-storage-upload");
+        long maxFileSize = 16 * 1024 * 1024;
+        long maxRequestSize = 32 * 1024 * 1024;
+        int writeToDiskFileSizeThreshold = 2 * 1024 * 1024;
+        MultipartConfigElement multipartConfig = new MultipartConfigElement(
+                uploadDirectory.toString(),
+                maxFileSize,
+                maxRequestSize,
+                writeToDiskFileSizeThreshold);
+        servlet.getRegistration().setMultipartConfig(multipartConfig);
         //
         server.addConnector(http);
         server.setHandler(handler);

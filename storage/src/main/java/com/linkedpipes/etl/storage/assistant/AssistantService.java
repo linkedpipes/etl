@@ -27,6 +27,9 @@ import java.util.Stack;
 public class AssistantService implements
         PipelineEvents.Listener, TemplateEvents.Listener {
 
+    /**
+     * Cache for RDF representation of assistant data.
+     */
     private Statements cache = Statements.empty();
 
     private final Map<Resource, PipelineInfo> pipelineInfo = new HashMap<>();

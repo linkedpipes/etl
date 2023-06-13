@@ -29,7 +29,7 @@
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.1.54</version>
+            <version>0.1.55</version>
         </dependency>
         <dependency> <!-- Optional com.jcraft dependency. -->
             <groupId>com.jcraft</groupId>

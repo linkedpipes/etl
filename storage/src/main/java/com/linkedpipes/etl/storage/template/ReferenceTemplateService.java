@@ -65,7 +65,7 @@ public class ReferenceTemplateService {
         template = (new ChangeReferenceTemplateResource())
                 .localize(pluginTemplate, template, resource);
         repository.storeReferenceTemplate(template);
-        templateEvents.onReferenceTemplateDeleted(template);
+        templateEvents.onReferenceTemplateCreated(template);
     }
 
     public void storeReferenceTemplate(ReferenceTemplate template)

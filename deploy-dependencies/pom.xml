@@ -70,7 +70,7 @@
                                         <dependency>
                                             <groupId>org.apache.jena</groupId>
                                             <artifactId>jena-osgi</artifactId>
-                                            <version>3.16.0</version>
+                                            <version>4.1.0</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency> <!-- Used by jena-osgi -->
@@ -94,7 +94,7 @@
                                         <dependency>
                                             <groupId>org.apache.thrift</groupId>
                                             <artifactId>libthrift</artifactId>
-                                            <version>0.13.0</version>
+                                            <version>0.18.1</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>

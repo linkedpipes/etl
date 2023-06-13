@@ -26,8 +26,8 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -65,6 +65,10 @@ class TemplateServletService {
         this.pluginService = storageService.getJavaPluginService();
     }
 
+    /**
+     * Return list of templates. For each template return definition
+     * and configuration.
+     */
     public void handleGetTemplateList(
             HttpServletRequest request, HttpServletResponse response)
             throws ServerError {
@@ -90,6 +94,10 @@ class TemplateServletService {
         return result;
     }
 
+    /**
+     * Return definition of template with given resource. The definition
+     * can be of jar or reference template.
+     */
     public void handleGetTemplate(
             Resource resource,
             HttpServletRequest request, HttpServletResponse response)
@@ -135,6 +143,11 @@ class TemplateServletService {
                 ReferenceTemplateToRdf.definitionAsRdf(template));
     }
 
+    /**
+     * Return configuration of given template. For jar template this is
+     * configuration as specified by in the jar file. For reference template
+     * this is configuration as saved for the template.
+     */
     public void handleGetConfiguration(
             Resource resource,
             HttpServletRequest request, HttpServletResponse response)
@@ -182,6 +195,10 @@ class TemplateServletService {
                         .withGraph(template.configurationGraph()));
     }
 
+    /**
+     * Return effective configuration for a template. Effective configuration
+     * contain resolved control effects like inherit from template, or force.
+     */
     public void handleGetEffectiveConfiguration(
             Resource resource,
             HttpServletRequest request, HttpServletResponse response)
@@ -280,6 +297,10 @@ class TemplateServletService {
         return result;
     }
 
+    /**
+     * Return configuration for new instance of a component with
+     * template identified by the resource.
+     */
     public void handleGetTemplateConfiguration(
             Resource resource,
             HttpServletRequest request, HttpServletResponse response)
@@ -342,6 +363,9 @@ class TemplateServletService {
                 result.withGraph(template.configurationGraph()));
     }
 
+    /**
+     * Return configuration description for given template.
+     */
     public void handleGetConfigurationDescription(
             Resource resource,
             HttpServletRequest request, HttpServletResponse response)
@@ -362,6 +386,9 @@ class TemplateServletService {
         ServletUtilities.sendResponse(request, response, result);
     }
 
+    /**
+     * Return dialog resource.
+     */
     public void handleGetDialogResource(
             Resource resource,
             String dialogName, String filePath,
@@ -411,6 +438,9 @@ class TemplateServletService {
         response.setStatus(ServletUtilities.HTTP_OK);
     }
 
+    /**
+     * Return list of template usage.
+     */
     public void handleGetTemplateUsage(
             Resource resource,
             HttpServletRequest request, HttpServletResponse response) {
@@ -435,8 +465,10 @@ class TemplateServletService {
     }
 
     /**
-     * Update template by changing selected properties.
-     * TODO: This should be PATCH method.
+     * Update template by changing selected properties. As a result we do
+     * not need to provide full definition, only what is changing.
+     *
+     * TODO: Change this to PATCH method
      */
     public void handleUpdateReferenceDefinition(
             Resource resource, MultipartFile templateFile,
@@ -460,6 +492,7 @@ class TemplateServletService {
             throw new ServerError("Can't get template.", ex);
         }
         // User can change only some values.
+        // TODO We should specify what fields can be updated.
         ReferenceTemplate nextTemplate = new ReferenceTemplate(
                 storedTemplate.resource(),
                 storedTemplate.version(),
@@ -481,6 +514,9 @@ class TemplateServletService {
         response.setStatus(ServletUtilities.HTTP_OK);
     }
 
+    /**
+     * Update configuration of a reference template.
+     */
     public void handleUpdateReferenceConfiguration(
             Resource resource, MultipartFile configurationFile,
             HttpServletRequest request, HttpServletResponse response)
@@ -507,7 +543,7 @@ class TemplateServletService {
     }
 
     /**
-     * Create new template using only basic information.
+     * Create new reference template.
      */
     public void handleCreateReference(
             MultipartFile templateFile, MultipartFile configurationFile,
@@ -555,6 +591,9 @@ class TemplateServletService {
                 request, response, ReferenceTemplateToRdf.asRdf(nextTemplate));
     }
 
+    /**
+     * Delete reference template.
+     */
     public void handleDeleteReference(
             Resource resource,
             HttpServletRequest request, HttpServletResponse response)
