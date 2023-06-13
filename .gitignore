@@ -43,8 +43,5 @@ deploy/ansible/hosts
 data/
 dist/
 
-# Intellij IDEA
-*.iml
-
 # Specific files.
 dependency-reduced-pom.xml
