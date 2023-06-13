@@ -45,44 +45,71 @@
       <md-progress-linear md-mode="indeterminate"></md-progress-linear>
     </md-content>
     <md-content ng-show="view == 'done'">
-      <h2>Imported pipelines</h2>
-      <md-list>
-        <md-list-item
-          ng-repeat="item in uploadResult.pipelines track by $index"
-          class="md-1-line"
-          ng-href="{{item.onClickUrl}}">
-          <div class="md-list-item-text" layout="row" layout-wrap>
-            <div class="lp-font-list-label" style="margin-right: 1.5em;">
-              {{ item.label }}
+      <div ng-show="uploadResult.pipelines.length > 0">
+        <h2>Imported pipelines</h2>
+        <md-list>
+          <md-list-item
+            ng-repeat="item in uploadResult.pipelines track by $index"
+            class="md-1-line"
+            ng-href="{{item.onClickUrl}}">
+            <div class="md-list-item-text" layout="row" layout-wrap>
+              <div class="lp-font-list-label" style="margin-right: 1.5em;">
+                {{ item.label }}
+              </div>
+              <div class="lp-font-list-label"
+                   ng-repeat="tag in item.tags"
+                   style="margin-right: 0.5em;border-radius: 16px;background: rgb(224,224,224);padding: 0 10px 0 10px;margin-bottom: 2px;">
+                {{ tag }}
+              </div>
             </div>
-            <div class="lp-font-list-label"
-                 ng-repeat="tag in item.tags"
-                 style="margin-right: 0.5em;border-radius: 16px;background: rgb(224,224,224);padding: 0 10px 0 10px;margin-bottom: 2px;">
-              {{ tag }}
+            <md-divider></md-divider>
+          </md-list-item>
+        </md-list>
+      </div>
+      <div ng-show="uploadResult.referenceTemplates.length > 0">
+        <h2>Imported templates</h2>
+        <md-list>
+          <md-list-item
+            ng-repeat="item in uploadResult.referenceTemplates track by $index"
+            class="md-1-line"
+            ng-href="{{item.onClickUrl}}">
+            <div class="md-list-item-text" layout="row" layout-wrap>
+              <div class="lp-font-list-label" style="margin-right: 1.5em;">
+                {{ item.label }}
+              </div>
+              <div class="lp-font-list-label"
+                   ng-repeat="tag in item.tags"
+                   style="margin-right: 0.5em;border-radius: 16px;background: rgb(224,224,224);padding: 0 10px 0 10px;margin-bottom: 2px;">
+                {{ tag }}
+              </div>
             </div>
-          </div>
-          <md-divider></md-divider>
-        </md-list-item>
-      </md-list>
-      <h2>Imported templates</h2>
-      <md-list>
-        <md-list-item
-          ng-repeat="item in uploadResult.referenceTemplates track by $index"
-          class="md-1-line"
-          ng-href="{{item.onClickUrl}}">
-          <div class="md-list-item-text" layout="row" layout-wrap>
-            <div class="lp-font-list-label" style="margin-right: 1.5em;">
-              {{ item.label }}
+            <md-divider></md-divider>
+          </md-list-item>
+        </md-list>
+      </div>
+      <div ng-show="uploadResult.failed.length > 0">
+        <h2>Failed imports</h2>
+        <md-list>
+          <md-list-item
+            ng-repeat="item in uploadResult.failed track by $index"
+            class="md-1-line">
+            <div class="md-list-item-text" layout="row" layout-wrap>
+              <div class="lp-font-list-label" style="margin-right: 1.5em;">
+                {{ item.label }}
+              </div>
+              <div class="lp-font-list-label"
+                   ng-repeat="tag in item.tags"
+                   style="margin-right: 0.5em;border-radius: 16px;background: rgb(224,224,224);padding: 0 10px 0 10px;margin-bottom: 2px;">
+                {{ tag }}
+              </div>
+              <div>
+                {{ item.error }}
+              </div>
             </div>
-            <div class="lp-font-list-label"
-                 ng-repeat="tag in item.tags"
-                 style="margin-right: 0.5em;border-radius: 16px;background: rgb(224,224,224);padding: 0 10px 0 10px;margin-bottom: 2px;">
-              {{ tag }}
-            </div>
-          </div>
-          <md-divider></md-divider>
-        </md-list-item>
-      </md-list>
+            <md-divider></md-divider>
+          </md-list-item>
+        </md-list>
+      </div>
     </md-content>
   </div>
 </div>

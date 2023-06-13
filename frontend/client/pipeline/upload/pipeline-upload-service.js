@@ -104,31 +104,41 @@
     }
 
     function handleResponse(response) {
-
       const responseModel = importResponse.parseImportResponse(response.data);
       const pipelines = [];
+      const failed = [];
       responseModel.pipelines.forEach(item => {
-        if (!item.stored) {
-          return;
+        if (item.stored) {
+          pipelines.push({
+            "url": item.local,
+            "label": item.label,
+            "tags": item.tags,
+            "onClickUrl": PIPELINE_EDIT_URL + encodeURIComponent(item.local)
+          });
+        } else {
+          failed.push({
+            "label": "Pipeline: " + item.label,
+            "tags": item.tags,
+            "error": item.error,
+          });
         }
-        pipelines.push({
-          "url": item.local,
-          "label": item.label,
-          "tags": item.tags,
-          "onClickUrl": PIPELINE_EDIT_URL + encodeURIComponent(item.local)
-        });
       });
       const referenceTemplates = [];
       responseModel.referenceTemplates.forEach(item => {
         if (!item.stored) {
-          return;
+          referenceTemplates.push({
+            "url": item.local,
+            "label": item.label,
+            "tags": item.tags,
+            "onClickUrl": TEMPLATE_EDIT_URL + encodeURIComponent(item.local)
+          });
+        } else {
+          failed.push({
+            "label": "Template: " + item.label,
+            "tags": item.tags,
+            "error": item.error,
+          });
         }
-        referenceTemplates.push({
-          "url": item.local,
-          "label": item.label,
-          "tags": item.tags,
-          "onClickUrl": TEMPLATE_EDIT_URL + encodeURIComponent(item.local)
-        });
       });
       if (pipelines.length === 1) {
         // For backwards compatibility.
@@ -138,7 +148,8 @@
       }
       $scope.uploadResult = {
         "pipelines": pipelines,
-        "referenceTemplates": referenceTemplates
+        "referenceTemplates": referenceTemplates,
+        "failed": failed,
       };
       $scope.view = VIEW_RESULT;
     }
