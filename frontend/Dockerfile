@@ -1,14 +1,14 @@
-FROM node:16.14.2-bullseye as lp-etl-build
+FROM node:20.3.1-bullseye as lp-etl-build
 ARG LP_ETL_BUILD=""
-RUN apt-get update && apt-get -y --no-install-recommends install openjdk-17-jdk
+RUN apt-get update && apt-get -y --no-install-recommends install ca-certificates-java openjdk-17-jdk
 WORKDIR /opt/lp-etl/
 COPY ./ ./
 RUN ./mvnw install  $LP_ETL_BUILD -P "install-frontend"
 
-FROM node:16.14.2-bullseye
+FROM node:20.3.1-bullseye
 ARG LP_ETL_USER=5987
 RUN addgroup --gid $LP_ETL_USER "linkedpipes" \
-    && useradd --gid "linkedpipes" --uid $LP_ETL_USER "linkedpipes"
+    && useradd --gid "linkedpipes" --uid $LP_ETL_USER "linkedpipes" --create-home
 RUN mkdir -p /data/lp-etl/logs \
     && chown -R $LP_ETL_USER:$LP_ETL_USER /data/lp-etl
 
