@@ -76,9 +76,8 @@ class RepositoryManager {
 
     public RepositoryManager(
             String repositoryPolicy, String repositoryType, File directory) {
-        LOG.info("Repository policy: {}", repositoryPolicy);
-        LOG.info("Repository type: {}", repositoryType);
-        LOG.info("Directory: {}", directory);
+        LOG.info("Repository policy: '{}' type: '{}', directory: '{}'",
+                repositoryPolicy, repositoryType, directory);
         configuration = new ManagerConfiguration(
                 repositoryPolicy, repositoryType, directory);
     }
@@ -91,7 +90,7 @@ class RepositoryManager {
         }
         RepositoryContainer container = getOrCreateRepository(group);
         ++container.useCounter;
-        LOG.info("Using repository group: {} ({}) for: {}",
+        LOG.debug("Using repository group: '{}' used: '{}' for: '{}'",
                 group, container.useCounter, configuration.getResource());
         return container.repository;
     }
@@ -137,7 +136,7 @@ class RepositoryManager {
     }
 
     public void closeAll() {
-        LOG.info("Closing all remaining repositories.");
+        LOG.debug("Closing all remaining repositories.");
         for (RepositoryContainer container : repositories.values()) {
             closeRepositoryContainer(container);
         }
@@ -146,35 +145,40 @@ class RepositoryManager {
 
     private void closeRepositoryContainer(RepositoryContainer container) {
         try {
-            LOG.info("Closing repository group: {} ({}) ... ",
-                    container.group, container.useCounter);
+            LOG.debug("Closing repository group: '{}' ... ", container.group);
             container.repository.shutDown();
-            LOG.info("Closing repository ... done");
+            LOG.debug("Closing repository ... done");
         } catch (RepositoryException ex) {
             LOG.error("Can't closeAll repository.", ex);
         }
     }
 
     public void closeRepository(Repository repository) {
-        for (RepositoryContainer container : repositories.values()) {
-            if (container.repository != repository) {
+        RepositoryContainer container = null;
+        for (RepositoryContainer candidate : repositories.values()) {
+            if (candidate.repository != repository) {
                 continue;
             }
-            LOG.info("Request to close repository group: {} ({})",
-                    container.group, container.useCounter);
-            --container.useCounter;
-            if (container.useCounter == 0) {
-                closeRepositoryContainer(container);
-                repositories.remove(container.group);
-                return;
-            }
+            container = candidate;
+            break;
         }
-        LOG.error("Manager was asked to close unmanaged repository.");
+        // Check we have a container.
+        if (container == null) {
+            LOG.warn("Manager was asked to close unmanaged repository.");
+            return;
+        }
+        --container.useCounter;
+        LOG.debug("Request to close repository group: '{}' used: '{}'",
+                container.group, container.useCounter);
+        if (container.useCounter == 0) {
+            closeRepositoryContainer(container);
+            repositories.remove(container.group);
+        }
     }
 
     private void deleteDirectory() {
         File directory = this.configuration.workingDirectory;
-        LOG.info("Deleting content ...");
+        LOG.debug("Deleting content ...");
         FileUtils.deleteQuietly(directory);
         // It may take some time before the file is released.
         while (directory.exists()) {
@@ -186,7 +190,7 @@ class RepositoryManager {
             }
             FileUtils.deleteQuietly(directory);
         }
-        LOG.info("Deleting content ... done");
+        LOG.debug("Deleting content ... done");
     }
 
 }

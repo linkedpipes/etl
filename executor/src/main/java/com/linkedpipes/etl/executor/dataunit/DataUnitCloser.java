@@ -16,9 +16,6 @@ import java.util.Set;
 
 class DataUnitCloser {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(DataUnitCloser.class);
-
     private final Map<DataUnit, DataUnitContainer> dataUnits;
 
     private final PipelineQuery pipelineQuery;
@@ -44,18 +41,11 @@ class DataUnitCloser {
     }
 
     public void onComponentExecuted(ExecutionComponent component) {
-        LOG.info("onComponentExecuted", getComponentId(component.getIri()));
         this.executedComponents.add(component.getIri());
-    }
-
-    private String getComponentId(String iri) {
-        int startIndex = iri.indexOf("/component") + "component".length();
-        return iri.substring(startIndex);
     }
 
     public void closeUnusedDataUnits() throws ExecutorException {
         // Collect ports to close.
-        LOG.info("Close data units:");
         List<DataUnit> toClose = new ArrayList<>();
         for (Map.Entry<DataUnit, DataUnitContainer> entry :
                 this.dataUnits.entrySet()) {
@@ -63,17 +53,9 @@ class DataUnitCloser {
             if (!entry.getValue().openWithData()) {
                 continue;
             }
-            if (this.isNoLongerUsed(dataUnit)) {
+            boolean canBeClosed = this.isNoLongerUsed(dataUnit);
+            if (canBeClosed) {
                 toClose.add(dataUnit);
-                LOG.info("  CLOSE {} {} : {}",
-                        entry.getValue().getStatus(),
-                        getComponentId(dataUnit.getIri()),
-                        dataUnit.getPort().getBinding());
-            } else {
-                LOG.info("        {} {} : {}",
-                        entry.getValue().getStatus(),
-                        getComponentId(dataUnit.getIri()),
-                        dataUnit.getPort().getBinding());
             }
         }
         //
