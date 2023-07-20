@@ -18,13 +18,34 @@ public class SingleGraphUnion implements Component, SequentialExecution {
 
     @Override
     public void execute() throws LpException {
+        if (inputRdf.getRepository() == outputRdf.getRepository()) {
+            executeSingleRepository();
+        } else {
+            executeDefault();
+        }
+    }
+
+    private void executeSingleRepository() throws LpException {
+        inputRdf.execute((connection) -> {
+            copyData(connection, connection);
+        });
+    }
+
+    private void copyData(
+            RepositoryConnection input,
+            RepositoryConnection output) {
+        var statements = input.getStatements(
+                null, null, null, inputRdf.getReadGraph());
+        output.add(statements, outputRdf.getWriteGraph());
+    }
+
+    private void executeDefault() throws LpException {
         inputRdf.execute((inConnection) -> {
             outputRdf.execute((outConnection) -> {
                 addNamespaces(inConnection, outConnection);
-                addData(inConnection, outConnection);
+                copyData(inConnection, outConnection);
             });
         });
-
     }
 
     private void addNamespaces(
@@ -38,14 +59,5 @@ public class SingleGraphUnion implements Component, SequentialExecution {
                     namespace.getName());
         }
     }
-
-    private void addData(
-            RepositoryConnection input,
-            RepositoryConnection output) {
-        var statements = input.getStatements(
-                null, null, null, inputRdf.getReadGraph());
-        output.add(statements, outputRdf.getWriteGraph());
-    }
-
 
 }
