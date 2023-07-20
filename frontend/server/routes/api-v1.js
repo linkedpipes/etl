@@ -59,7 +59,7 @@ router.get("/components/:type", (req, res) => {
 });
 
 router.post("/components", (req, res) => {
-  httpPostForProxy(STORAGE_API_URL + "/components/", req, res);
+  httpPostForProxy(STORAGE_API_URL + "/components", req, res);
 });
 
 router.delete("/components", (req, res) => {
