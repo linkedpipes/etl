@@ -66,7 +66,7 @@ class ServletUtilities {
     public static void sendResponse(
             HttpServletRequest request, HttpServletResponse response,
             Statements statements) {
-        RDFFormat format = getFormat(request, RDFFormat.TRIG);
+        RDFFormat format = getFormat(request, RDFFormat.JSONLD);
         response.setHeader("content-type", format.getDefaultMIMEType());
         try (OutputStream stream = response.getOutputStream()) {
             statements.file().writeToStream(stream, format);
