@@ -193,7 +193,7 @@ public class ImportPipeline {
                 container.loadedPipeline, option);
         container.localPipeline = updatePipeline(
                 container.loadedPipeline, resource, option.targetLabel);
-        if (option.importPipeline) {
+        if (option.storePipeline) {
             pipelineFacade.storePipeline(container.localPipeline);
             container.stored = true;
         }

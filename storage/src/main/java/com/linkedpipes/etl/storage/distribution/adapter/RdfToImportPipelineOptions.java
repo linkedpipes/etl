@@ -71,7 +71,7 @@ public class RdfToImportPipelineOptions {
                     break;
                 case HAS_IMPORT:
                     if (value instanceof Literal literal) {
-                        result.importPipeline = literal.booleanValue();
+                        result.storePipeline = literal.booleanValue();
                     }
                     break;
                 case HAS_TARGET:

@@ -7,15 +7,19 @@ import com.linkedpipes.etl.library.pipeline.adapter.PipelineToRdf;
 import com.linkedpipes.etl.library.pipeline.model.Pipeline;
 import com.linkedpipes.etl.library.rdf.ResourceToString;
 import com.linkedpipes.etl.library.rdf.Statements;
+import com.linkedpipes.etl.library.template.reference.adapter.ReferenceTemplateToRdf;
 import com.linkedpipes.etl.library.template.reference.model.ReferenceTemplate;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.StorageService;
 import com.linkedpipes.etl.storage.assistant.AssistantService;
 import com.linkedpipes.etl.storage.distribution.ExportContent;
+import com.linkedpipes.etl.storage.distribution.ExportPipeline;
 import com.linkedpipes.etl.storage.distribution.ImportPipeline;
 import com.linkedpipes.etl.storage.distribution.ImportTemplate;
 import com.linkedpipes.etl.storage.distribution.adapter.RdfToImportPipelineOptions;
 import com.linkedpipes.etl.storage.distribution.adapter.RdfToImportTemplateOptions;
+import com.linkedpipes.etl.storage.distribution.model.ExportPipelineOptions;
+import com.linkedpipes.etl.storage.distribution.model.FullPipeline;
 import com.linkedpipes.etl.storage.distribution.model.ImportPipelineOptions;
 import com.linkedpipes.etl.storage.distribution.model.ImportTemplateOptions;
 import com.linkedpipes.etl.storage.http.adapter.ImportResponseToRdf;
@@ -324,6 +328,7 @@ class ManagementServletService {
 
     public void handleLocalize(
             MultipartFile contentFile, MultipartFile optionsFile,
+            boolean includeTemplates,
             HttpServletRequest request, HttpServletResponse response)
             throws InvalidRequest, ServerError {
         Statements statements = ServletUtilities.read(contentFile);
@@ -344,7 +349,20 @@ class ManagementServletService {
             throw new ServerError("Can't localize pipeline.", ex);
         }
         // Convert pipelines back to RDF.
+        ExportPipelineOptions options = new ExportPipelineOptions();
+        options.includeTemplate = includeTemplates;
+        FullPipeline fullPipeline;
+        try {
+            fullPipeline = (new ExportPipeline(templateFacade))
+                    .export(pipeline, options);
+        } catch (StorageException ex) {
+            throw new ServerError("Can't export pipeline.", ex);
+        }
         Statements result = PipelineToRdf.asRdf(pipeline);
+        for (ReferenceTemplate template : fullPipeline.templates()) {
+            result.addAll(ReferenceTemplateToRdf.definitionAsRdf(template));
+            result.addAll(ReferenceTemplateToRdf.configurationAsRdf(template));
+        }
         ServletUtilities.sendResponse(request, response, result);
     }
 
@@ -353,7 +371,7 @@ class ManagementServletService {
         List<ImportPipelineOptions> candidates =
                 loadImportPipelineOptions(optionsFile);
         ImportPipelineOptions result = new ImportPipelineOptions();
-        result.importPipeline = false;
+        result.storePipeline = false;
         if (candidates.isEmpty()) {
             // We just use the default values.
         } else if (candidates.size() == 1) {

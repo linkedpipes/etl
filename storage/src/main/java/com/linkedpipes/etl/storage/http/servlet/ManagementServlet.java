@@ -70,7 +70,11 @@ public class ManagementServlet {
 
     /**
      * Taking a single pipeline and templates localize the pipeline,
-     * by changing templates to local. This can also import the templates.
+     * by changing templates to local.
+     *
+     * This is capable of importing the templates.
+     *
+     * Returned pipeline may contain definitions of used templates.
      */
     @RequestMapping(
             value = "localize",
@@ -79,11 +83,14 @@ public class ManagementServlet {
     public void localizeContent(
             @RequestParam(value = "content")
                     MultipartFile content,
-            @RequestParam(value = "options", required = false)
+            @RequestParam(value = "options")
                     MultipartFile options,
+            @RequestParam(name = "templates", defaultValue = "false")
+                    boolean includeTemplates,
             HttpServletRequest request, HttpServletResponse response) {
         ServletUtilities.wrap(request, response, () -> {
-            service.handleLocalize(content, options, request, response);
+            service.handleLocalize(
+                    content, options, includeTemplates, request, response);
         });
     }
 

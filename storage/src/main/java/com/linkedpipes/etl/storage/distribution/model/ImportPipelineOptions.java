@@ -16,9 +16,9 @@ public class ImportPipelineOptions {
     public Resource targetResource = null;
 
     /**
-     * Import pipeline.
+     * Store pipeline in local instance.
      */
-    public boolean importPipeline = false;
+    public boolean storePipeline = false;
 
     /**
      * Keep whole pipeline URL.
@@ -42,7 +42,7 @@ public class ImportPipelineOptions {
         ImportPipelineOptions result = new ImportPipelineOptions();
         result.pipeline = pipeline;
         result.targetResource = null;
-        result.importPipeline = importPipeline;
+        result.storePipeline = storePipeline;
         result.keepPipelineUrl = keepPipelineUrl;
         result.keepPipelineSuffix = keepPipelineSuffix;
         result.targetLabel = null;
