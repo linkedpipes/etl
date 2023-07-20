@@ -64,7 +64,7 @@
     "html-loader": "^4.2.0",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^29.3.1",
-    "jointjs": "^3.6.3",
+    "jointjs": "^3.7.4",
     "jquery": "^3.6.1",
     "jsonld": "^8.1.0",
     "mini-css-extract-plugin": "^2.7.0",
