@@ -45,8 +45,7 @@ public class ComponentMessageWriter extends BaseMessageWriter {
         IRI iri = this.createEventIri(index);
         this.createBaseEvent(iri, index);
 
-        this.statements.addIri(iri, RDF.TYPE,
-                LP_PREFIX + "events/ComponentBegin");
+        this.statements.addType(iri, LP_PREFIX + "events/ComponentBegin");
         this.statements.addIri(iri,
                 "http://linkedpipes.com/ontology/component",
                 component.getIri());
@@ -57,8 +56,7 @@ public class ComponentMessageWriter extends BaseMessageWriter {
         IRI iri = this.createEventIri(index);
         this.createBaseEvent(iri, index);
 
-        this.statements.addIri(iri, RDF.TYPE,
-                LP_PREFIX + "events/ComponentEnd");
+        this.statements.addType(iri, LP_PREFIX + "events/ComponentEnd");
         this.statements.addIri(iri,
                 "http://linkedpipes.com/ontology/component",
                 component.getIri());
@@ -70,8 +68,7 @@ public class ComponentMessageWriter extends BaseMessageWriter {
         IRI iri = this.createEventIri(index);
         this.createBaseEvent(iri, index);
 
-        this.statements.addIri(iri, RDF.TYPE,
-                LP_PREFIX + "events/ComponentFailed");
+        this.statements.addType(iri,  LP_PREFIX + "events/ComponentFailed");
         this.statements.addIri(iri,
                 "http://linkedpipes.com/ontology/component",
                 component.getIri());

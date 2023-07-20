@@ -34,7 +34,7 @@ public class OverviewToListStatements {
         StatementsBuilder builder = Statements.arrayList().builder();
         builder.setDefaultGraph(execution.getListGraph());
 
-        builder.addIri(iri, RDF.TYPE, LP_EXEC.EXECUTION);
+        builder.addType(iri, LP_EXEC.EXECUTION);
         builder.addIri(iri, LP_OVERVIEW.HAS_STATUS, overview.getStatus());
 
         if (overview.getDirectorySize() != null) {
@@ -94,7 +94,7 @@ public class OverviewToListStatements {
         IRI iri = this.valueFactory.createIRI(execution.getIri());
         StatementsBuilder statements = Statements.arrayList().builder();
         statements.setDefaultGraph(execution.getListGraph());
-        statements.addIri(iri, RDF.TYPE, LP_LIST.TOMBSTONE);
+        statements.addType(iri, LP_LIST.TOMBSTONE);
         return statements;
     }
 

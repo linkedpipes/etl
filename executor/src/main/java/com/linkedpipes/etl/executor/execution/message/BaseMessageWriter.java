@@ -58,7 +58,7 @@ class BaseMessageWriter {
 
     protected void createBaseEvent(IRI iri, int order) {
         statements.add(this.executionIri, LP_EVENTS.HAS_EVENT, iri);
-        statements.addIri(iri, RDF.TYPE, LP_EVENTS.EVENT);
+        statements.addType(iri, LP_EVENTS.EVENT);
         statements.add(iri, LP_EVENTS.HAS_CREATED, getNowDate());
         statements.add(iri, LP_EVENTS.HAS_ORDER,
                 this.valueFactory.createLiteral(order));

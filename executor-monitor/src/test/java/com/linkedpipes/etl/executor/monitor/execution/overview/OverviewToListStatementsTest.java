@@ -44,7 +44,7 @@ public class OverviewToListStatementsTest {
         //
         StatementsBuilder expected = Statements.arrayList().builder();
         expected.setDefaultGraph(graph);
-        expected.addIri(iri, RDF.TYPE, LP_LIST.TOMBSTONE);
+        expected.addType(iri, LP_LIST.TOMBSTONE);
         Assertions.assertTrue(StatementsCompare.isIsomorphic(expected, actual));
     }
 
@@ -77,7 +77,7 @@ public class OverviewToListStatementsTest {
         //
         StatementsBuilder expected = Statements.arrayList().builder();
         expected.setDefaultGraph(graph);
-        expected.addIri(iri, RDF.TYPE, LP_EXEC.EXECUTION);
+        expected.addType(iri, LP_EXEC.EXECUTION);
         expected.add(iri, LP_EXEC.HAS_SIZE, 1204L);
         expected.addIri(iri, LP_OVERVIEW.HAS_PIPELINE, pipeline);
         expected.add(iri, LP_OVERVIEW.HAS_START, start);
@@ -123,7 +123,7 @@ public class OverviewToListStatementsTest {
         //
         StatementsBuilder expected = Statements.arrayList().builder();
         expected.setDefaultGraph(graph);
-        expected.addIri(iri, RDF.TYPE, LP_EXEC.EXECUTION);
+        expected.addType(iri, LP_EXEC.EXECUTION);
         expected.add(iri, LP_EXEC.HAS_SIZE, 1204L);
         expected.addIri(iri, LP_OVERVIEW.HAS_PIPELINE, pipeline);
         expected.add(iri, LP_OVERVIEW.HAS_START, start);

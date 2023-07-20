@@ -22,8 +22,7 @@ public class ExecutionMessageWriter extends BaseMessageWriter {
         IRI iri = this.createEventIri(index);
         this.createBaseEvent(iri, index);
 
-        this.statements.addIri(iri, RDF.TYPE,
-                LP_PREFIX + "events/ExecutionBegin");
+        this.statements.addType(iri, LP_PREFIX + "events/ExecutionBegin");
     }
 
     public void onExecutionEnd() {
@@ -31,8 +30,7 @@ public class ExecutionMessageWriter extends BaseMessageWriter {
         IRI iri = this.createEventIri(index);
         this.createBaseEvent(iri, index);
 
-        this.statements.addIri(iri, RDF.TYPE,
-                LP_PREFIX + "events/ExecutionEnd");
+        this.statements.addType(iri, LP_PREFIX + "events/ExecutionEnd");
     }
 
 }

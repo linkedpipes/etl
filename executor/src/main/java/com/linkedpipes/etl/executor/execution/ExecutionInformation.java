@@ -79,7 +79,7 @@ public class ExecutionInformation {
     private void bindToExecution() {
         iri = valueFactory.createIRI(execution.getIri());
         statements.setDefaultGraph(iri);
-        statements.addIri(iri, RDF.TYPE, ETL_PREFIX + "Execution");
+        statements.addType(iri, ETL_PREFIX + "Execution");
     }
 
     public void onPipelineLoaded(PipelineModel pipeline) {
