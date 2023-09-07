@@ -203,8 +203,10 @@ public class ImportTemplate {
         while (runNextRound) {
             runNextRound = false;
             for (Container container : containers) {
-                if (getLocalResource(knownMap, container) != null) {
-                    // This is a known template.
+                Resource localFromKnown = getLocalResource(knownMap, container);
+                if (localFromKnown != null) {
+                    // This is a known template, we add a mapping.
+                    knownMap.put(container.rawTemplate.resource, localFromKnown);
                     continue;
                 }
                 Resource local;
@@ -235,6 +237,7 @@ public class ImportTemplate {
         if (pluginFacade.isPluginTemplate(remote.template())) {
             localResource = remote.template();
         } else {
+            // This is not recognized.
             localResource = knownMap.get(remote.template());
         }
         if (localResource == null) {
