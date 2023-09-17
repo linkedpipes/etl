@@ -84,7 +84,7 @@ class PipelineServletService {
             } catch (StorageException ex) {
                 throw new ServerError("Can't export pipeline.", ex);
             }
-            statements = PipelineToRdf.asRdf(pipeline);
+            statements = PipelineToRdf.asRdf(fullPipeline.pipeline());
             for (ReferenceTemplate template : fullPipeline.templates()) {
                 statements.addAll(
                         ReferenceTemplateToRdf.definitionAsRdf(template));

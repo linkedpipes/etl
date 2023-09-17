@@ -4,10 +4,11 @@ import enum
 import json
 import urllib.parse
 import requests
+import os
 
-storage_url = "http://localhost:8083"
+storage_url = os.getenv("LP_STORAGE", "http://localhost:8083")
 
-executor_monitor_url = "http://localhost:8081"
+executor_monitor_url = os.getenv("LP_EXECUTOR_MONITOR","http://localhost:8081")
 
 JSON_LD = "application/ld+json"
 
@@ -19,8 +20,11 @@ class LP(enum.Enum):
     JAR_TEMPLATE = "http://linkedpipes.com/ontology/JarTemplate"
     REFERENCE_TEMPLATE = "http://linkedpipes.com/ontology/Template"
     PREF_LABEL = "http://www.w3.org/2004/02/skos/core#prefLabel"
-    TEMPLATE = "http://linkedpipes.com/ontology/template"
+    HAS_TEMPLATE = "http://linkedpipes.com/ontology/template"
     EXECUTION = "http://etl.linkedpipes.com/ontology/Execution"
+    TEMPLATE = "http://linkedpipes.com/ontology/Template"
+    HAS_LOCAL_URL = "http://etl.linkedpipes.com/ontology/localResource"
+    HAS_STORED = "http://etl.linkedpipes.com/ontology/stored"
 
 
 def list_pipelines():
@@ -144,6 +148,71 @@ def delete_pipeline(resource: str):
     response = requests.delete(url)
     assert response.status_code == 200, \
         f"Unexpected status code '{response.status_code}'."
+
+def import_pipeline(
+        path: str,
+        import_templates: bool = True,
+        update_templates: bool = True,
+        keep_url: bool = False,
+        keep_suffix: bool = False,
+        target_resource: str = None,
+        label: str = None
+):
+    files = {
+        "content": (
+            "content.trig",
+            open(path, "rb"),
+            "application/trig"
+        ),
+        "options": (
+            "options.jsonld",
+            json.dumps({
+                "@context": {
+                    "lp": "http://linkedpipes.com/ontology/",
+                    "etl": "http://etl.linkedpipes.com/ontology/",
+                    "skos": "http://www.w3.org/2004/02/skos/core#"
+                },
+                "@type": "lp:UpdateOptions",
+                "etl:importNewTemplates": import_templates,
+                "etl:updateExistingTemplates": update_templates,
+                "etl:keepPipelineUrl": keep_url,
+                "etl:keepPipelineSuffix": keep_suffix,
+                "etl:targetResource": target_resource,
+                "skos:prefLabel": label,
+                "etl:importPipeline": True,
+
+            }),
+            "application/ld+json",
+        )
+    }
+    url = _management_v1("/import")
+    headers = {
+        "Accept": JSON_LD
+    }
+    response = requests.post(url, files=files, headers=headers)
+    assert response.headers['content-type'] == JSON_LD, \
+        "Unexpected content type."
+    assert response.status_code == 200, \
+        f"Unexpected status code: '{response.status_code}"
+    pipelines = []
+    templates = []
+    for resource in  response.json():
+        types = resource["@type"]
+        if LP.TEMPLATE.value in types:
+            templates.append({
+                "remote": resource["@id"],
+                "local": resource[LP.HAS_LOCAL_URL.value][0]["@id"]
+            })
+        if LP.PIPELINE.value in types:
+            pipelines.append({
+                "remote": resource["@id"],
+                "local": resource[LP.HAS_LOCAL_URL.value][0]["@id"]
+            })
+    return pipelines, templates
+
+
+def _management_v1(suffix: str) -> str:
+    return storage_url + "/api/v1/management" + suffix
 
 
 def list_templates():
@@ -276,7 +345,7 @@ def create_template(
             json.dumps({
                 "@type": LP.REFERENCE_TEMPLATE.value,
                 LP.PREF_LABEL.value: label,
-                LP.TEMPLATE.value: {"@id": parent}
+                LP.HAS_TEMPLATE.value: {"@id": parent}
             }),
             "application/ld+json"
         ),

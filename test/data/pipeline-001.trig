@@ -1,0 +1,1306 @@
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001> a <http://linkedpipes.com/ontology/Pipeline>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Pipeline with private configuration";
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/events/created> "2023-09-15T16:31:54.2512474"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+    <http://linkedpipes.com/ontology/lastUpdate> "2023-09-15T18:37:00.2868016"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+    <http://linkedpipes.com/ontology/profile> <http://localhost:8080/resources/pipelines/1694788314238-0001/profile/default> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/profile/default> a <http://linkedpipes.com/ontology/ExecutionProfile>;
+    <http://linkedpipes.com/ontology/rdfRepositoryPolicy> <http://linkedpipes.com/ontology/repository/SingleRepository>;
+    <http://linkedpipes.com/ontology/rdfRepositoryType> <http://linkedpipes.com/ontologyrepository/NativeStore>;
+    <http://etl.linkedpipes.com/ontology/logRetentionPolicy> <http://linkedpipes.com/resources/Keep> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/1fea-a248>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "SPARQL endpoint loader";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/1fea-a248/configuration>;
+    <http://linkedpipes.com/ontology/x> "598"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "323"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790469496-0013> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/4147-91d2>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "SPARQL endpoint chunked";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/4147-91d2/configuration>;
+    <http://linkedpipes.com/ontology/x> "69"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "127"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790439442-0002> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/488f-a060>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Wikibase loader";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/488f-a060/configuration>;
+    <http://linkedpipes.com/ontology/x> "598"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "491"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790473625-0015> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/626f-b859>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "DCAT-AP to datahub.io";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/626f-b859/configuration>;
+    <http://linkedpipes.com/ontology/x> "597"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "222"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790467353-0012> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/7b00-945d>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Virtuoso extractor";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/7b00-945d/configuration>;
+    <http://linkedpipes.com/ontology/x> "998"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "190"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790483845-0019> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/8135-952c>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Virtuoso";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/8135-952c/configuration>;
+    <http://linkedpipes.com/ontology/x> "996"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "127"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790481639-0018> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/956f-b397>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "SPARQL endpoint select";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/956f-b397/configuration>;
+    <http://linkedpipes.com/ontology/x> "62"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "276"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790444159-0004> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/9d4f-a97e>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Graph store purger";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/9d4f-a97e/configuration>;
+    <http://linkedpipes.com/ontology/x> "994"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "41"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790478815-0017> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/9f33-a3d7>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Files to SCP";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/9f33-a3d7/configuration>;
+    <http://linkedpipes.com/ontology/x> "599"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "44"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790462818-0010> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/a982-bc63>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "SPARQL endpoint select scrollable cursor";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/a982-bc63/configuration>;
+    <http://linkedpipes.com/ontology/x> "59"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "338"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790446273-0005> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/bf17-bca2>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "(DEPRECATED) Metadata to CKAN";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/bf17-bca2/configuration>;
+    <http://linkedpipes.com/ontology/x> "56"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "598"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790456303-0008> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/c0a9-bfe4>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "SPARQL endpoint";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/c0a9-bfe4/configuration>;
+    <http://linkedpipes.com/ontology/x> "74"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "53"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790437184-0001> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/c3aa-906b>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "DCAT-AP to CKAN";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/c3aa-906b/configuration>;
+    <http://linkedpipes.com/ontology/x> "58"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "487"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790453543-0007> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/cdfe-9581>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Bing Translator";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/cdfe-9581/configuration>;
+    <http://linkedpipes.com/ontology/x> "592"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "570"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790475786-0016> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/d305-9a88>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "SPARQL endpoint loader chunked";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/d305-9a88/configuration>;
+    <http://linkedpipes.com/ontology/x> "597"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "404"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790471494-0014> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/da18-bcf2>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "SPARQL endpoint construct scrollable cursor";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/da18-bcf2/configuration>;
+    <http://linkedpipes.com/ontology/x> "63"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "214"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790442022-0003> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/ddb9-af52>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Graph store protocol";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/ddb9-af52/configuration>;
+    <http://linkedpipes.com/ontology/x> "598"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "115"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790465006-0011> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/f7df-b01a>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Load to Solr";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/f7df-b01a/configuration>;
+    <http://linkedpipes.com/ontology/x> "50"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "682"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790459189-0009> .
+  
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/fc83-9384>
+    a <http://linkedpipes.com/ontology/Component>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "CouchDB";
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/pipelines/1694788314238-0001/component/fc83-9384/configuration>;
+    <http://linkedpipes.com/ontology/x> "58"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/y> "400"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/template> <http://localhost:8080/resources/components/1694790450930-0006> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/1fea-a248/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/1fea-a248/configuration>
+    a <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#clearGraph> false;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#clearGraphControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#commitSizeControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#endpointControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#targetGraphURIControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#useAuthentication> true;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#useAuthenticationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#userNameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/4147-91d2/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/4147-91d2/configuration>
+    a <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#chunkSize> 10000;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#chunkSizeControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#defaultGraphControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#encodeRdf> false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#encodeRdfControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#endpoint> "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#endpointControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#handleInvalidData>
+      false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#handleInvalidDataControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#headerAcceptControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#literalsControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#passwordControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#query> "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#queryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#skipOnError> false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#skipOnErrorControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#useAuthentication>
+      true;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#useAuthenticationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#useTolerantRepository>
+      false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#useTolerantRepositoryControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#userNameControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/488f-a060/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/488f-a060/configuration>
+    a <http://plugins.linkedpipes.com/ontology/l-wikibase#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#averageTimePerEditControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#endpointControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#newItemMessage> "Create new entity.";
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#newItemMessageControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#referencePropertyControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#retryCount> 0;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#retryCountControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#retryPause> 30000;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#retryPauseControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#siteIriControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#skipOnError> false;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#skipOnErrorControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#sparqlUrlControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#strictMatching> false;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#strictMatchingControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#updateItemMessage> "Update entity.";
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#updateItemMessageControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#userNameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/626f-b859/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/626f-b859/configuration>
+    a <http://plugins.linkedpipes.com/ontology/l-lodCloud#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#additionalTagsControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#apiKey> "secret_api_key";
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#apiKeyControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#datasetIDControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#licenseId> "ccby";
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#licenseIdControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#licenseMetadataTag> "LicenseMetadata";
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#licenseMetadataTagControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#limitedSparql> false;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#limitedSparqlControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#linksControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodNeedsFixing> false;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodNeedsFixingControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodNeedsInfo> false;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodNeedsInfoControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodNoLinks> false;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodNoLinksControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodUnconnected> false;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodUnconnectedControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#mappingFilesControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#namespaceControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#organizationId> "";
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#organizationIdControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#provenanceMetadataTag> "NoProvenanceMetadata";
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#provenanceMetadataTagControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#publishedTag> "PublishedByThirdParty";
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#publishedTagControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#shortnameControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#sparqlEndpointDescriptionControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#sparqlEndpointNameControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#topicControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#versionControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#versionGenerated> true;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#versionGeneratedControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#vocabMappingTag> "NoVocabMappings";
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#vocabMappingTagControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#vocabTag> "DerefVocab";
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#vocabTagControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#vocabulariesControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/7b00-945d/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/7b00-945d/configuration>
+    a <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#graph> <http://target/graph>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#graphControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#hostControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#outputPath> "~/output";
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#outputPathControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#userNameControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#uri> "secret_uri";
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#uriControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/8135-952c/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/8135-952c/configuration>
+    a <http://plugins.linkedpipes.com/ontology/x-virtuoso#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#checkpoint> false;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#checkpointControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#clearGraph> false;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#clearGraphControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#directory> "";
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#directoryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#fileNameControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#graph> <http://target/graph>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#graphControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#loaderCountControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#updateInterval> 10;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#updateIntervalControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#uri> "secret_uri";
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#uriControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#username> "secret_user_name";
+
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/956f-b397/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/956f-b397/configuration>
+    a <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#defaultGraphControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#endpoint> "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#endpointControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#fileName> "table.csv";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#fileNameControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#query> "SELECT ?type WHERE { ?s a ?type} LIMIT 10";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#queryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#useAuthentication>
+      true;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#useAuthenticationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#userNameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/9d4f-a97e/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/9d4f-a97e/configuration>
+    a <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#endpoint> "http://sercret_endpoint";
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#endpointControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#repository> "VIRTUOSO";
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#repositoryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#useAuthentication> true;
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#useAuthenticationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#username> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#usernameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/9f33-a3d7/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/9f33-a3d7/configuration>
+    a <http://plugins.linkedpipes.com/ontology/l-filesToScp#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#clearDirectory> false;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#clearDirectoryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#connectionTimeOutControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#createDirectory> true;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#createDirectoryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#directory> "";
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#directoryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#host> "secret_host";
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#hostControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#port> 22;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#portControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#userNameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/a982-bc63/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/a982-bc63/configuration>
+    a <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#defaultGraphControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#endpointControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#fileName>
+      "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#fileNameControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#innerSelect>
+      "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#innerSelectControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#outerSelectControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#pageSize>
+      1000;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#pageSizeControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#password>
+      "secret_password";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#passwordControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#prefixes>
+      "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#prefixesControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#useAuthentication>
+      true;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#useAuthenticationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#userName>
+      "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#userNameControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/bf17-bca2/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/bf17-bca2/configuration>
+    a <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiKey> "secret_api_key";
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiKeyControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiUrl> "http://ckan_api";
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiUrlControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#datasetID> "";
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#datasetIDControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#filename> "";
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#filenameControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#generateExampleResource> false;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#generateExampleResourceControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#generateVirtuosoExample> true;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#generateVirtuosoExampleControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#loadLanguage> "cs";
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#loadLanguageControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#loadToCKAN> false;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#loadToCKANControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#orgID> "";
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#orgIDControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#overwrite> true;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#overwriteControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/c0a9-bfe4/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/c0a9-bfe4/configuration>
+    a <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#defaultGraphControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#encodeRdf> false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#encodeRdfControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#endpoint> "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#endpointControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#handleInvalidData> false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#handleInvalidDataControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#headerAcceptControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#query> "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o} LIMIT 1000";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#queryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useAuthentication> true;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useAuthenticationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useTolerantRepository> false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useTolerantRepositoryControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#userNameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/c3aa-906b/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/c3aa-906b/configuration>
+    a <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#apiKey> "secret_ckan_api";
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#apiKeyControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#apiUrl> "http://ckan_api";
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#apiUrlControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#ckanOrganization> "";
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#ckanOrganizationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#datasetID> "dataset_id";
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#datasetIDControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#loadLanguage> "en";
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#loadLanguageControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#overrideCkanOrganization>
+      false;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#overrideCkanOrganizationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#profile> "http://plugins.etl.linkedpipes.com/resource/l-dcatAp11ToCkan/profiles/CKAN";
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#profileControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#voidExampleResources> true;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#voidExampleResourcesControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#voidSparqlEndpoint> true;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#voidSparqlEndpointControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/cdfe-9581/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/cdfe-9581/configuration>
+    a <http://plugins.linkedpipes.com/ontology/t-bingTranslator#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/t-bingTranslator#defaultLanguage> "en";
+    <http://plugins.linkedpipes.com/ontology/t-bingTranslator#defaultLanguageControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/t-bingTranslator#subscriptionKey> "secret_subscription_key";
+    <http://plugins.linkedpipes.com/ontology/t-bingTranslator#subscriptionKeyControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/t-bingTranslator#targetLanguage> "";
+    <http://plugins.linkedpipes.com/ontology/t-bingTranslator#targetLanguageControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/t-bingTranslator#useBCP47> true;
+    <http://plugins.linkedpipes.com/ontology/t-bingTranslator#useBCP47Control> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/d305-9a88/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/d305-9a88/configuration>
+    a <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#clearGraph> false;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#clearGraphControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#commitSizeControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#endpointControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#passwordControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#targetGraphURIControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#useAuthentication>
+      true;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#useAuthenticationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#userNameControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/da18-bcf2/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/da18-bcf2/configuration>
+    a <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#defaultGraphControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#encodeRdf>
+      false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#encodeRdfControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#endpoint>
+      "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#endpointControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#innerSelect>
+      "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#innerSelectControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#outerConstruct>
+      "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#outerConstructControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#pageSize>
+      1000;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#pageSizeControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#password>
+      "secret_password";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#passwordControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#prefixes>
+      "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#prefixesControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#useAuthentication>
+      true;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#useAuthenticationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#useTolerantRepository>
+      false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#useTolerantRepositoryControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#userName>
+      "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#userNameControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/ddb9-af52/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/ddb9-af52/configuration>
+    a <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#authentification> true;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#authentificationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#checkSize> false;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#checkSizeControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#endpoint> "http://endpoint";
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#endpointControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#endpointSelectControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#graph> "";
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#graphControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#replace> false;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#replaceControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#repository> "VIRTUOSO";
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#repositoryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#user> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#userControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/f7df-b01a/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/f7df-b01a/configuration>
+    a <http://plugins.linkedpipes.com/ontology/l-solr#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-solr#core> "";
+    <http://plugins.linkedpipes.com/ontology/l-solr#coreControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-solr#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/l-solr#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-solr#replace> false;
+    <http://plugins.linkedpipes.com/ontology/l-solr#replaceControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-solr#server> "";
+    <http://plugins.linkedpipes.com/ontology/l-solr#serverControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-solr#useAuthentication> true;
+    <http://plugins.linkedpipes.com/ontology/l-solr#useAuthenticationControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-solr#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/l-solr#userNameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/pipelines/1694788314238-0001/component/fc83-9384/configuration> {
+  <http://localhost:8080/resources/pipelines/1694788314238-0001/component/fc83-9384/configuration>
+    a <http://plugins.linkedpipes.com/ontology/l-couchDb#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#batchSize> 8;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#batchSizeControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#clearBeforeLoading> true;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#clearBeforeLoadingControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#database> "";
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#databaseControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#url> "";
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#urlControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#useAuthentication> true;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#useAuthenticationControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#userNameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790456303-0008> {
+  <http://localhost:8080/resources/components/1694790456303-0008> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "(DEPRECATED) Metadata to CKAN";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/l-dcatApToCkan/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790456303-0008/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790456303-0008/configuration> {
+  <http://localhost:8080/resources/components/1694790456303-0008/1> a <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiKey> "secret_api_key";
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiKeyControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiUrl> "http://ckan_api";
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#apiUrlControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#datasetID> "";
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#datasetIDControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#filename> "";
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#filenameControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#generateExampleResource> false;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#generateExampleResourceControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#generateVirtuosoExample> true;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#generateVirtuosoExampleControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#loadLanguage> "cs";
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#loadLanguageControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#loadToCKAN> false;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#loadToCKANControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#orgID> "";
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#orgIDControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#overwrite> true;
+    <http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#overwriteControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790462818-0010> {
+  <http://localhost:8080/resources/components/1694790462818-0010> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/l-filesToScp/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Files to SCP";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/l-filesToScp/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790462818-0010/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790462818-0010/configuration> {
+  <http://localhost:8080/resources/components/1694790462818-0010/1> a <http://plugins.linkedpipes.com/ontology/l-filesToScp#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#clearDirectory> false;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#clearDirectoryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#connectionTimeOutControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#createDirectory> true;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#createDirectoryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#directory> "";
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#directoryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#host> "secret_host";
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#hostControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#port> 22;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#portControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/l-filesToScp#userNameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790483845-0019> {
+  <http://localhost:8080/resources/components/1694790483845-0019> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Virtuoso extractor";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/x-virtuosoExtractor/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790483845-0019/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790483845-0019/configuration> {
+  <http://localhost:8080/resources/components/1694790483845-0019/1> a <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#graph> <http://target/graph>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#graphControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#hostControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#outputPath> "~/output";
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#outputPathControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#userNameControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#uri> "secret_uri";
+    <http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#uriControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790481639-0018> {
+  <http://localhost:8080/resources/components/1694790481639-0018> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/x-virtuoso/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Virtuoso";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/x-virtuoso/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790481639-0018/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790481639-0018/configuration> {
+  <http://localhost:8080/resources/components/1694790481639-0018/1> a <http://plugins.linkedpipes.com/ontology/x-virtuoso#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#checkpoint> false;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#checkpointControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#clearGraph> false;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#clearGraphControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#directory> "";
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#directoryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#fileNameControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#graph> <http://target/graph>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#graphControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#loaderCountControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#updateInterval> 10;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#updateIntervalControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#uri> "secret_uri";
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#uriControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#username> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/x-virtuoso#usernameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790450930-0006> {
+  <http://localhost:8080/resources/components/1694790450930-0006> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/l-couchDb/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "CouchDB";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/l-couchDb/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790450930-0006/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790450930-0006/configuration> {
+  <http://localhost:8080/resources/components/1694790450930-0006/1> a <http://plugins.linkedpipes.com/ontology/l-couchDb#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#batchSize> 8;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#batchSizeControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#clearBeforeLoading> true;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#clearBeforeLoadingControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#database> "";
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#databaseControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#url> "";
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#urlControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#useAuthentication> true;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#useAuthenticationControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/l-couchDb#userNameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790465006-0011> {
+  <http://localhost:8080/resources/components/1694790465006-0011> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Graph store protocol";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/l-graphStoreProtocol/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790465006-0011/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790465006-0011/configuration> {
+  <http://localhost:8080/resources/components/1694790465006-0011/1> a <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#authentification> true;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#authentificationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#checkSize> false;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#checkSizeControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#endpoint> "http://endpoint";
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#endpointControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#endpointSelectControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#graph> "";
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#graphControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#replace> false;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#replaceControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#repository> "VIRTUOSO";
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#repositoryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#user> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#userControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790442022-0003> {
+  <http://localhost:8080/resources/components/1694790442022-0003> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "SPARQL endpoint construct scrollable cursor";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/e-sparqlEndpointConstructScrollableCursor/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790442022-0003/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790442022-0003/configuration> {
+  <http://localhost:8080/resources/components/1694790442022-0003/1> a <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#defaultGraphControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#encodeRdf>
+      false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#encodeRdfControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#endpoint>
+      "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#endpointControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#innerSelect>
+      "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#innerSelectControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#outerConstruct>
+      "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#outerConstructControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#pageSize>
+      1000;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#pageSizeControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#password>
+      "secret_password";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#passwordControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#prefixes>
+      "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#prefixesControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#useAuthentication>
+      true;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#useAuthenticationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#useTolerantRepository>
+      false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#useTolerantRepositoryControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#userName>
+      "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointConstructScrollableCursor#userNameControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790469496-0013> {
+  <http://localhost:8080/resources/components/1694790469496-0013> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/l-sparqlEndpoint/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "SPARQL endpoint loader";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/l-sparqlEndpoint/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790469496-0013/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790469496-0013/configuration> {
+  <http://localhost:8080/resources/components/1694790469496-0013/1> a <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#clearGraph> false;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#clearGraphControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#commitSizeControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#endpointControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#targetGraphURIControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#useAuthentication> true;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#useAuthenticationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#userNameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790473625-0015> {
+  <http://localhost:8080/resources/components/1694790473625-0015> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/l-wikibase/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Wikibase loader";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/l-wikibase/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790473625-0015/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790473625-0015/configuration> {
+  <http://localhost:8080/resources/components/1694790473625-0015/1> a <http://plugins.linkedpipes.com/ontology/l-wikibase#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#averageTimePerEditControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#endpointControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#newItemMessage> "Create new entity.";
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#newItemMessageControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#referencePropertyControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#retryCount> 0;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#retryCountControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#retryPause> 30000;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#retryPauseControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#siteIriControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#skipOnError> false;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#skipOnErrorControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#sparqlUrlControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#strictMatching> false;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#strictMatchingControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#updateItemMessage> "Update entity.";
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#updateItemMessageControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/l-wikibase#userNameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790459189-0009> {
+  <http://localhost:8080/resources/components/1694790459189-0009> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/l-solr/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Load to Solr";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/l-solr/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790459189-0009/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790459189-0009/configuration> {
+  <http://localhost:8080/resources/components/1694790459189-0009/1> a <http://plugins.linkedpipes.com/ontology/l-solr#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-solr#core> "";
+    <http://plugins.linkedpipes.com/ontology/l-solr#coreControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-solr#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/l-solr#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-solr#replace> false;
+    <http://plugins.linkedpipes.com/ontology/l-solr#replaceControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-solr#server> "";
+    <http://plugins.linkedpipes.com/ontology/l-solr#serverControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-solr#useAuthentication> true;
+    <http://plugins.linkedpipes.com/ontology/l-solr#useAuthenticationControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-solr#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/l-solr#userNameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790453543-0007> {
+  <http://localhost:8080/resources/components/1694790453543-0007> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "DCAT-AP to CKAN";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/l-dcatAp11ToCkan/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790453543-0007/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790453543-0007/configuration> {
+  <http://localhost:8080/resources/components/1694790453543-0007/1> a <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#apiKey> "secret_ckan_api";
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#apiKeyControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#apiUrl> "http://ckan_api";
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#apiUrlControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#ckanOrganization> "";
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#ckanOrganizationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#datasetID> "dataset_id";
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#datasetIDControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#loadLanguage> "en";
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#loadLanguageControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#overrideCkanOrganization>
+      false;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#overrideCkanOrganizationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#profile> "http://plugins.etl.linkedpipes.com/resource/l-dcatAp11ToCkan/profiles/CKAN";
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#profileControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#voidExampleResources> true;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#voidExampleResourcesControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#voidSparqlEndpoint> true;
+    <http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#voidSparqlEndpointControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790471494-0014> {
+  <http://localhost:8080/resources/components/1694790471494-0014> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "SPARQL endpoint loader chunked";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/l-sparqlEndpointChunked/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790471494-0014/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790471494-0014/configuration> {
+  <http://localhost:8080/resources/components/1694790471494-0014/1> a <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#clearGraph> false;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#clearGraphControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#commitSizeControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#endpointControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#passwordControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#targetGraphURIControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#useAuthentication>
+      true;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#useAuthenticationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/l-sparqlEndpointChunked#userNameControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790467353-0012> {
+  <http://localhost:8080/resources/components/1694790467353-0012> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/l-lodCloud/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "DCAT-AP to datahub.io";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/l-lodCloud/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790467353-0012/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790467353-0012/configuration> {
+  <http://localhost:8080/resources/components/1694790467353-0012/1> a <http://plugins.linkedpipes.com/ontology/l-lodCloud#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#additionalTagsControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#apiKey> "secret_api_key";
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#apiKeyControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#datasetIDControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#licenseId> "ccby";
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#licenseIdControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#licenseMetadataTag> "LicenseMetadata";
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#licenseMetadataTagControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#limitedSparql> false;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#limitedSparqlControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#linksControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodNeedsFixing> false;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodNeedsFixingControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodNeedsInfo> false;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodNeedsInfoControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodNoLinks> false;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodNoLinksControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodUnconnected> false;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#lodUnconnectedControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#mappingFilesControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#namespaceControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#organizationId> "";
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#organizationIdControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#provenanceMetadataTag> "NoProvenanceMetadata";
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#provenanceMetadataTagControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#publishedTag> "PublishedByThirdParty";
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#publishedTagControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#shortnameControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#sparqlEndpointDescriptionControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#sparqlEndpointNameControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#topicControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#versionControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#versionGenerated> true;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#versionGeneratedControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#vocabMappingTag> "NoVocabMappings";
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#vocabMappingTagControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#vocabTag> "DerefVocab";
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#vocabTagControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/l-lodCloud#vocabulariesControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790437184-0001> {
+  <http://localhost:8080/resources/components/1694790437184-0001> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "SPARQL endpoint";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/e-sparqlEndpoint/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790437184-0001/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790437184-0001/configuration> {
+  <http://localhost:8080/resources/components/1694790437184-0001/1> a <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#defaultGraphControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#encodeRdf> false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#encodeRdfControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#endpoint> "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#endpointControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#handleInvalidData> false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#handleInvalidDataControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#headerAcceptControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#query> "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o} LIMIT 1000";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#queryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useAuthentication> true;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useAuthenticationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useTolerantRepository> false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#useTolerantRepositoryControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpoint#userNameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790478815-0017> {
+  <http://localhost:8080/resources/components/1694790478815-0017> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/x-graphStorePurger/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Graph store purger";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/x-graphStorePurger/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790478815-0017/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790478815-0017/configuration> {
+  <http://localhost:8080/resources/components/1694790478815-0017/1> a <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#endpoint> "http://sercret_endpoint";
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#endpointControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#repository> "VIRTUOSO";
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#repositoryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#useAuthentication> true;
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#useAuthenticationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#username> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/x-graphStorePurger#usernameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790446273-0005> {
+  <http://localhost:8080/resources/components/1694790446273-0005> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/e-sparqlEndpointSelectScrollableCursor/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "SPARQL endpoint select scrollable cursor";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/e-sparqlEndpointSelectScrollableCursor/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790446273-0005/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790446273-0005/configuration> {
+  <http://localhost:8080/resources/components/1694790446273-0005/1> a <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#defaultGraphControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#endpointControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#fileName>
+      "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#fileNameControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#innerSelect>
+      "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#innerSelectControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#outerSelectControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#pageSize>
+      1000;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#pageSizeControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#password>
+      "secret_password";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#passwordControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#prefixes>
+      "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#prefixesControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#useAuthentication>
+      true;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#useAuthenticationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#userName>
+      "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#userNameControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790475786-0016> {
+  <http://localhost:8080/resources/components/1694790475786-0016> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/t-bingTranslator/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Bing Translator";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/t-bingTranslator/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790475786-0016/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790475786-0016/configuration> {
+  <http://localhost:8080/resources/components/1694790475786-0016/1> a <http://plugins.linkedpipes.com/ontology/t-bingTranslator#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/t-bingTranslator#defaultLanguage> "en";
+    <http://plugins.linkedpipes.com/ontology/t-bingTranslator#defaultLanguageControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/t-bingTranslator#subscriptionKey> "secret_subscription_key";
+    <http://plugins.linkedpipes.com/ontology/t-bingTranslator#subscriptionKeyControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/t-bingTranslator#targetLanguage> "";
+    <http://plugins.linkedpipes.com/ontology/t-bingTranslator#targetLanguageControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/t-bingTranslator#useBCP47> true;
+    <http://plugins.linkedpipes.com/ontology/t-bingTranslator#useBCP47Control> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790444159-0004> {
+  <http://localhost:8080/resources/components/1694790444159-0004> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "SPARQL endpoint select";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/e-sparqlEndpointSelect/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790444159-0004/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790444159-0004/configuration> {
+  <http://localhost:8080/resources/components/1694790444159-0004/1> a <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#defaultGraphControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#endpoint> "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#endpointControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#fileName> "table.csv";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#fileNameControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#passwordControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#query> "SELECT ?type WHERE { ?s a ?type} LIMIT 10";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#queryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#useAuthentication>
+      true;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#useAuthenticationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#userNameControl> <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
+
+<http://localhost:8080/resources/components/1694790439442-0002> {
+  <http://localhost:8080/resources/components/1694790439442-0002> a <http://linkedpipes.com/ontology/Template>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "SPARQL endpoint chunked";
+    <http://linkedpipes.com/ontology/pluginTemplate> <http://etl.linkedpipes.com/resources/components/e-sparqlEndpointChunked/0.0.0>;
+    <http://etl.linkedpipes.com/ontology/version> "5"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost:8080/resources/components/1694790439442-0002/configuration> .
+}
+
+<http://localhost:8080/resources/components/1694790439442-0002/configuration> {
+  <http://localhost:8080/resources/components/1694790439442-0002/1> a <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#chunkSize> 10000;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#chunkSizeControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#defaultGraphControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#encodeRdf> false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#encodeRdfControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#endpoint> "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#endpointControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#handleInvalidData>
+      false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#handleInvalidDataControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#headerAcceptControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#literalsControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#password> "secret_password";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#passwordControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#query> "";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#queryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#skipOnError> false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#skipOnErrorControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#useAuthentication>
+      true;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#useAuthenticationControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#useTolerantRepository>
+      false;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#useTolerantRepositoryControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#userName> "secret_user_name";
+    <http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#userNameControl>
+      <http://plugins.linkedpipes.com/resource/configuration/None> .
+}
