@@ -3,6 +3,8 @@ import time
 
 import linkedpipes
 
+COMPONENT = "http://linkedpipes.com/ontology/Component"
+HAS_TEMPLATE = "http://linkedpipes.com/ontology/template"
 
 def test_basic_workflow():
     """
@@ -185,9 +187,6 @@ def delete_resources(
 
 
 def update_pipeline(pipeline_iri: str, template_iri: str):
-    COMPONENT = "http://linkedpipes.com/ontology/Component"
-    HAS_TEMPLATE = "http://linkedpipes.com/ontology/template"
-
     pipeline = linkedpipes.get_pipeline(pipeline_iri)
     next_graph = []
     for resource in pipeline[0]["@graph"]:
