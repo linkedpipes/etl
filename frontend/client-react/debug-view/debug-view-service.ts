@@ -23,8 +23,8 @@ export function useDebugMetadata(
   offset: number, limit: number,
 ) {
   const fetchWrap = useCallback((fetchFunction: FetchFunction) => {
-    return fetchDebugMetadata(
-      fetchFunction, execution, path, source, offset, limit);
+    const url = getMetadataUrl(execution, path, source, offset, limit);
+    return fetchDebugMetadata(fetchFunction, execution, path, source, url);
   }, [execution, path, source, offset, limit]);
   return useFetch<DebugMetadataList>(fetchWrap);
 }
@@ -32,13 +32,29 @@ export function useDebugMetadata(
 /**
  * For given entry return URL of page with detail.
  */
-export function getMetadataUrl(entry: DebugEntry) {
-  const execution = encodeURIComponent(entry.execution);
-  const path = encodeURIComponent(entry.fullPath);
-  let result = `/debug?execution=${execution}&path=${path}`;
-  if (isDebugFileEntry(entry) && entry.source !== undefined) {
-    result += "&source=" + encodeURIComponent(entry.source);
+export function getMetadataUrl(
+  execution: string, path: string, source: string | undefined,
+  offset: number, limit: number,
+) {
+  let result = urlForExecutionAndPath(
+    "./api/v1/debug/metadata/", execution, path);
+  result += "?offset=" + offset + "&limit=" + limit;
+  if (source !== undefined) {
+    result += "&source=" + source;
   }
+  return result;
+}
+
+function urlForExecutionAndPath(prefix: string, execution: string, path: string) {
+  let result = prefix + encodeURI(execution);
+  if (path.length > 0 && path[0] !== "/") {
+    result += "/" + path
+  }
+  // As path can contain encoded sequence, we need to encode
+  // each fragment again as it gets decoded during the reqeust.
+  // https://github.com/linkedpipes/etl/issues/976
+  const encodedPath = path.split("/").map(encodeURI).join("/");
+  result += encodedPath;
   return result;
 }
 
@@ -98,7 +114,8 @@ export function getDownloadUrl(entry: DebugFileMetadata | DebugFileEntry) : {
       "name": name
     };
   }
-  let url = "./api/v1/debug/data/" + entry.execution + entry.fullPath;
+  let url = urlForExecutionAndPath(
+    "./api/v1/debug/data/", entry.execution, entry.fullPath);
   if (entry.source !== undefined) {
     url += "?source=" + entry.source;
   }
