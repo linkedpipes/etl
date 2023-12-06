@@ -7,7 +7,7 @@
 version: "3"
 services:
   storage:
-    image: linkedpipes/etl-storage:${LP_VERSION-main}
+    image: ghcr.io/linkedpipes/etl-storage:${LP_VERSION-main}
     volumes:
       - data-storage:/data/lp-etl/storage
       - configuration:/data/lp-etl/configuration
@@ -16,7 +16,7 @@ services:
       - LP_ETL_DOMAIN
     restart: always
   frontend:
-    image: linkedpipes/etl-frontend:${LP_VERSION-main}
+    image: ghcr.io/linkedpipes/etl-frontend:${LP_VERSION-main}
     volumes:
       - configuration:/data/lp-etl/configuration
       - data-logs:/data/lp-etl/logs
@@ -26,7 +26,7 @@ services:
       - LP_ETL_DOMAIN
     restart: always
   executor-monitor:
-    image: linkedpipes/etl-executor-monitor:${LP_VERSION-main}
+    image: ghcr.io/linkedpipes/etl-executor-monitor:${LP_VERSION-main}
     volumes:
       - data-execution:/data/lp-etl/executor
       - data-logs:/data/lp-etl/logs
@@ -35,7 +35,7 @@ services:
       - LP_ETL_DOMAIN
     restart: always
   executor:
-    image: linkedpipes/etl-executor:${LP_VERSION-main}
+    image: ghcr.io/linkedpipes/etl-executor:${LP_VERSION-main}
     volumes:
       - data-execution:/data/lp-etl/executor
       - data-logs:/data/lp-etl/logs

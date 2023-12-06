@@ -8,10 +8,11 @@ LinkedPipes ETL is an RDF based, lightweight ETL tool.
 
 ## Requirements
 - Linux, Windows, iOS
-- [Docker], [Docker Compose]
+- [Docker]
+- [Docker Compose] is optional as `docker compose` is supported by modern versions of [Docker] 
 
 ### For building locally
-- [Java] 17, 18
+- [Java] 17, 18, 20
 - [Git]
 - Optionally [Maven]
 - [Node.js] 18 & npm
@@ -24,9 +25,9 @@ To start LP-ETL you can use:
 ```
 git clone https://github.com/linkedpipes/etl.git
 cd etl
-docker-compose up
+docker compose up
 ```
-This would use pre-build images stored at [DockerHub].
+This would use pre-build images stored at [GitHub Packages].
 The images are build from the main branch.
 
 Alternatively you can use one liner.
@@ -35,7 +36,7 @@ For example to run LP-ETL from ```develop``` branch on ```http://localhost:9080`
 curl https://raw.githubusercontent.com/linkedpipes/etl/develop/docker-compose.yml | LP_ETL_PORT=9080 LP_VERSION=develop docker-compose -f - up
 ```
 
-You may need to run the ```docker-compose``` command as ```sudo``` or be in the ```docker``` group.
+You may need to run the ```docker``` command as ```sudo``` or be in the ```docker``` group.
 
 #### Building Docker images
 You can build LP-ETL images your self.
@@ -49,7 +50,7 @@ Environment variables:
 - ```LP_ETL_PORT``` - Specify port mapping for frontend, this is where you can connect to your instance.
   This does NOT have to be the same as port in ```LP_ETL_DOMAIN``` in case of reverse-proxying.
 
-```docker-compose``` utilizes several volumes that can be used to access/provide data.
+```docker compose``` utilizes several volumes that can be used to access/provide data.
 See ```docker-compose.yml``` comments for examples and configuration.
 You may want to create your own ```docker-compose.yml``` for custom configuration.
 
@@ -132,3 +133,4 @@ If you need to create your own component, you can copy an existing component and
 [Docker]: <https://www.docker.com/>
 [Docker Compose]: <https://docs.docker.com/compose/>
 [DockerHub]: <https://hub.docker.com/>
+[GitHub Packages]: <https://github.com/orgs/linkedpipes/packages>
