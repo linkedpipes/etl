@@ -20,16 +20,17 @@
             checkstyle.xml
         </checkstyle.config.location>
         <!-- Libraries. -->
-        <slf4j.version>2.0.7</slf4j.version>
-        <logback.version>1.4.7</logback.version>
-        <jackson.version>2.15.2</jackson.version>
-        <rdf4j.version>4.3.1</rdf4j.version>
-        <mockito.version>5.3.1</mockito.version>
-        <junit.version>5.9.3</junit.version>
+        <slf4j.version>2.0.13</slf4j.version>
+        <logback.version>1.5.6</logback.version>
+        <jackson.version>2.17.1</jackson.version>
+        <rdf4j.version>4.3.11</rdf4j.version>
+        <jena.version>4.1.0</jena.version>
+        <mockito.version>5.11.0</mockito.version>
+        <junit.version>5.10.2</junit.version>
         <lp.version>0.0.0</lp.version>
-        <commons-io.version>2.12.0</commons-io.version>
-        <commons-net.version>3.8.0</commons-net.version>
-        <httpclient-osgi.version>4.5.13</httpclient-osgi.version>
+        <commons-io.version>2.16.1</commons-io.version>
+        <commons-net.version>3.10.0</commons-net.version>
+        <httpclient-osgi.version>4.5.14</httpclient-osgi.version>
     </properties>
 
     <dependencies>

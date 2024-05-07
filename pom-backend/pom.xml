@@ -20,16 +20,16 @@
             ${project.basedir}/../checkstyle.xml
         </checkstyle.config.location>
         <!-- Libraries. -->
-        <slf4j.version>2.0.7</slf4j.version>
-        <logback.version>1.4.7</logback.version>
-        <jackson.version>2.15.2</jackson.version>
-        <rdf4j.version>4.3.1</rdf4j.version>
-        <mockito.version>5.3.1</mockito.version>
-        <junit.version>5.9.3</junit.version>
+        <slf4j.version>2.0.13</slf4j.version>
+        <logback.version>1.5.6</logback.version>
+        <jackson.version>2.17.1</jackson.version>
+        <rdf4j.version>4.3.11</rdf4j.version>
+        <mockito.version>5.11.0</mockito.version>
+        <junit.version>5.10.2</junit.version>
         <lp.version>0.0.0</lp.version>
-        <commons-io.version>2.12.0</commons-io.version>
-        <springframework.version>6.0.9</springframework.version>
-        <jetty.version>11.0.15</jetty.version>
+        <commons-io.version>2.16.1</commons-io.version>
+        <springframework.version>6.1.6</springframework.version>
+        <jetty.version>11.0.20</jetty.version>
         <!-- Project properties. -->
         <deploy.directory>../deploy/</deploy.directory>
     </properties>
