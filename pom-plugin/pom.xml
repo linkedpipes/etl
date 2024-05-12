@@ -241,23 +241,23 @@
             </properties>
         </profile>
         <profile>
-            <id>java-18</id>
+            <id>java-21</id>
             <activation>
-                <jdk>18</jdk>
+                <jdk>21</jdk>
             </activation>
             <properties>
-                <maven.compiler.source>18</maven.compiler.source>
-                <maven.compiler.target>18</maven.compiler.target>
+                <maven.compiler.source>21</maven.compiler.source>
+                <maven.compiler.target>21</maven.compiler.target>
             </properties>
         </profile>
         <profile>
-            <id>java-20</id>
+            <id>java-22</id>
             <activation>
-                <jdk>20</jdk>
+                <jdk>22</jdk>
             </activation>
             <properties>
-                <maven.compiler.source>20</maven.compiler.source>
-                <maven.compiler.target>20</maven.compiler.target>
+                <maven.compiler.source>22</maven.compiler.source>
+                <maven.compiler.target>22</maven.compiler.target>
             </properties>
         </profile>
     </profiles>
@@ -282,7 +282,7 @@
                         <dependency>
                             <groupId>biz.aQute.bnd</groupId>
                             <artifactId>biz.aQute.bndlib</artifactId>
-                            <version>6.4.0</version>
+                            <version>7.0.0</version>
                         </dependency>
                     </dependencies>
                 </plugin>

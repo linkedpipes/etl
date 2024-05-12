@@ -1,11 +1,11 @@
-FROM node:20.3.1-bullseye as lp-etl-build
+FROM node:22.1.0 as lp-etl-build
 ARG LP_ETL_BUILD=""
 RUN apt-get update && apt-get -y --no-install-recommends install ca-certificates-java openjdk-17-jdk
 WORKDIR /opt/lp-etl/
 COPY ./ ./
 RUN ./mvnw install  $LP_ETL_BUILD -P "install-frontend"
 
-FROM node:20.3.1-bullseye
+FROM node:22.1.0-bullseye
 ARG LP_ETL_USER=5987
 RUN addgroup --gid $LP_ETL_USER "linkedpipes" \
     && useradd --gid "linkedpipes" --uid $LP_ETL_USER "linkedpipes" --create-home
