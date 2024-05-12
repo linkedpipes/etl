@@ -77,7 +77,7 @@ public class ExecutionServlet {
             value = "/",
             method = RequestMethod.GET)
     public void getExecution(
-            @RequestParam String iri,
+            @RequestParam(name = "iri") String iri,
             HttpServletRequest request, HttpServletResponse response)
             throws MonitorException, IOException {
         Execution execution = getLivingExecution(iri);
@@ -106,7 +106,7 @@ public class ExecutionServlet {
             value = "/",
             method = RequestMethod.DELETE)
     public void deleteExecution(
-            @RequestParam String iri,
+            @RequestParam(name = "iri") String iri,
             HttpServletResponse response) throws MissingResource {
         Execution execution = getLivingExecution(iri);
         this.executions.deleteExecution(execution);
@@ -118,7 +118,7 @@ public class ExecutionServlet {
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public void cancelExecution(
-            @RequestParam String iri,
+            @RequestParam(name = "iri") String iri,
             @RequestBody String body,
             HttpServletResponse response)
             throws MonitorException {
@@ -132,7 +132,7 @@ public class ExecutionServlet {
             method = RequestMethod.GET,
             produces = MediaType.TEXT_PLAIN_VALUE)
     public FileSystemResource getExecutionLogs(
-            @RequestParam String iri,
+            @RequestParam(name = "iri") String iri,
             HttpServletResponse response) throws MissingResource {
         Execution execution = getLivingExecution(iri);
         File file = this.executions.getExecutionLogFile(execution);
@@ -149,7 +149,7 @@ public class ExecutionServlet {
             method = RequestMethod.GET,
             produces = MediaType.TEXT_PLAIN_VALUE)
     public void getExecutionLogsTail(
-            @RequestParam String iri,
+            @RequestParam(name = "iri") String iri,
             @RequestParam(value = "n", defaultValue = "32") int count,
             HttpServletResponse response) throws IOException, MissingResource {
         Execution execution = getLivingExecution(iri);
@@ -166,8 +166,8 @@ public class ExecutionServlet {
             value = "/messages",
             method = RequestMethod.GET)
     public void getComponentMessages(
-            @RequestParam String iri,
-            @RequestParam String component,
+            @RequestParam(name = "iri") String iri,
+            @RequestParam(name = "component") String component,
             HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, MissingResource {
@@ -195,7 +195,7 @@ public class ExecutionServlet {
             value = "",
             method = RequestMethod.POST)
     public PostCreateExecutionHandler.Response createExecution(
-            @RequestParam("pipeline")
+            @RequestParam(name = "pipeline")
                     MultipartFile pipeline,
             @RequestParam(value = "input", required = false)
                     List<MultipartFile> inputs)
@@ -210,7 +210,7 @@ public class ExecutionServlet {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public void getExecutionOverview(
-            @RequestParam String iri,
+            @RequestParam(name = "iri") String iri,
             HttpServletResponse response)
             throws IOException, MissingResource {
         Execution execution = getLivingExecution(iri);
