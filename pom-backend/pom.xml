@@ -7,7 +7,7 @@
     <artifactId>pom-backend</artifactId>
     <version>0.0.0</version>
     <packaging>pom</packaging>
-    <name>LinkedPipes Backend Pom</name>
+    <name>LinkedPipes Backend POM</name>
 
     <properties>
         <project.build.sourceEncoding>
@@ -314,16 +314,6 @@
     <profiles>
         <!-- Java profiles. -->
         <profile>
-            <id>java-17</id>
-            <activation>
-                <jdk>17</jdk>
-            </activation>
-            <properties>
-                <maven.compiler.source>17</maven.compiler.source>
-                <maven.compiler.target>17</maven.compiler.target>
-            </properties>
-        </profile>
-        <profile>
             <id>java-21</id>
             <activation>
                 <jdk>21</jdk>
@@ -375,7 +365,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.3.0</version>
             </plugin>
         </plugins>
     </build>

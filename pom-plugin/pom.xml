@@ -7,7 +7,7 @@
     <artifactId>pom-plugin</artifactId>
     <version>0.0.0</version>
     <packaging>pom</packaging>
-    <name>LinkedPipes Plugin Pom</name>
+    <name>LinkedPipes Plugin POM</name>
 
     <properties>
         <project.build.sourceEncoding>
@@ -26,7 +26,7 @@
         <rdf4j.version>4.3.11</rdf4j.version>
         <jena.version>4.1.0</jena.version>
         <mockito.version>5.11.0</mockito.version>
-        <junit.version>5.10.2</junit.version>
+        <junit.version>5.10.3</junit.version>
         <lp.version>0.0.0</lp.version>
         <commons-io.version>2.16.1</commons-io.version>
         <commons-net.version>3.10.0</commons-net.version>
@@ -231,16 +231,6 @@
     <profiles>
         <!-- Java profiles. -->
         <profile>
-            <id>java-17</id>
-            <activation>
-                <jdk>17</jdk>
-            </activation>
-            <properties>
-                <maven.compiler.source>17</maven.compiler.source>
-                <maven.compiler.target>17</maven.compiler.target>
-            </properties>
-        </profile>
-        <profile>
             <id>java-21</id>
             <activation>
                 <jdk>21</jdk>
@@ -293,7 +283,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.3.0</version>
                 <configuration>
                     <excludedGroups>external-dependency</excludedGroups>
                 </configuration>
