@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.linkedpipes</groupId>
 	<artifactId>rdf4j-storage-light</artifactId>
-	<version>4.3.11</version>
+	<version>5.0.1</version>
 	<packaging>bundle</packaging>
 	<name>LinkedPipes Rdf4j Storage Light</name>
 	<description>Lightweight packaged version of RDF4j storage.</description>
@@ -228,11 +228,6 @@
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-common-transaction</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.rdf4j</groupId>
-			<artifactId>rdf4j-common-util</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -514,6 +509,38 @@
 			</exclusions>
 		</dependency>
 		-->
+		<!-- Custom fork of json-ld titanium at https://github.com/HASMAC-AS/hasmac-json-ld -->
+		<dependency>
+			<groupId>no.hasmac</groupId>
+			<artifactId>hasmac-json-ld</artifactId>
+			<version>0.9.0</version>
+		</dependency>
+		<!-- The JTS Topology Suite is a Java library for creating and manipulating vector geometry. -->
+		<dependency>
+			<groupId>org.locationtech.jts</groupId>
+			<artifactId>jts-core</artifactId>
+			<version>1.19.0</version>
+		</dependency>
+		<!--
+			MapDB provides concurrent Maps, Sets and Queues backed by disk storage or off-heap memory.
+			It is a fast, scalable and easy to use embedded Java database.
+		-->
+		<dependency>
+			<groupId>org.mapdb</groupId>
+			<artifactId>mapdb</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mapdb</groupId>
+			<artifactId>elsa</artifactId>
+			<version>3.0.0-M7</version>
+		</dependency>
+		<!-- LZ4 compression for Java. -->
+		<dependency>
+			<groupId>org.lz4</groupId>
+			<artifactId>lz4-java</artifactId>
+			<version>1.8.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -531,11 +558,12 @@
 						</Export-Package>
 						<Import-Package>
 							org.apache.lucene.*;resolution:=optional,
+							kotlin.*;resolution:=optional,
 							*
 						</Import-Package>
 						<Embed-Dependency>
 							*;
-							groupId=org.eclipse.rdf4j;
+							groupId=org.eclipse.rdf4j|no.hasmac|org.locationtech.jts|org.mapdb|org.lz4;
 							artifactId=!rdf4j-client;
 							type=!pom;
 							inline=true;

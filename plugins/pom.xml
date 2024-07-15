@@ -39,7 +39,11 @@
         <module>l-solr</module>
         <module>l-sparqlEndpoint</module>
         <module>l-sparqlEndpointChunked</module>
-        <module>l-wikibase</module>
+        <!--
+            In 2024, we update to rdf4j version 5, which is not compatible
+            with current used version wdtk library.
+         -->
+        <!-- <module>l-wikibase</module>-->
         <module>q-sparqlAsk</module>
         <module>t-bingTranslator</module>
         <module>t-chunkSplitter</module>
