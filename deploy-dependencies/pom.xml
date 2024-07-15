@@ -908,12 +908,18 @@
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/core/</outputDirectory>
                                         </dependency>
+                                        <!--
+                                            In 2024, we update to rdf4j version 5, which is not compatible
+                                            with current used version wdtk library.
+                                         -->
+                                        <!--
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>l-wikibase</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/core/</outputDirectory>
                                         </dependency>
+                                        -->
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-shacl</artifactId>
