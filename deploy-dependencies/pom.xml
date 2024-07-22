@@ -231,12 +231,6 @@
                                         </dependency>
                                         <!-- Jackson, JSON -->
                                         <dependency>
-                                            <groupId>jakarta.json</groupId>
-                                            <artifactId>jakarta.json-api</artifactId>
-                                            <version>2.0.1</version>
-                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
-                                        </dependency>
-                                        <dependency>
                                             <groupId>org.glassfish</groupId>
                                             <artifactId>jakarta.json</artifactId>
                                             <version>2.0.1</version>
