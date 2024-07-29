@@ -286,6 +286,12 @@
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
+                                            <groupId>com.google.guava</groupId>
+                                            <artifactId>guava</artifactId>
+                                            <version>33.2.1-jre</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
                                             <!-- Required by com.google.guava:guava 30.1.1-jre-->
                                             <groupId>com.google.guava</groupId>
                                             <artifactId>failureaccess</artifactId>
