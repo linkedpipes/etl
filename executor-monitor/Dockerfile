@@ -1,13 +1,13 @@
-FROM eclipse-temurin:21 as lp-etl-build
+FROM eclipse-temurin:21-noble as lp-etl-build
 ARG LP_ETL_BUILD=""
 
 WORKDIR /opt/lp-etl/
 COPY ./ ./
 RUN ./mvnw install $LP_ETL_BUILD -P "install-executor-monitor"
 
-FROM eclipse-temurin:21
+FROM eclipse-temurin:21-noble
 ARG LP_ETL_USER=5987
-RUN addgroup --gid $LP_ETL_USER "linkedpipes" \
+RUN groupadd --gid $LP_ETL_USER "linkedpipes" \
     && useradd --gid "linkedpipes" --uid $LP_ETL_USER "linkedpipes"
 RUN mkdir -p /data/lp-etl/executor \
     && mkdir -p /data/lp-etl/logs \
