@@ -23,7 +23,7 @@
         <slf4j.version>2.0.13</slf4j.version>
         <logback.version>1.5.6</logback.version>
         <jackson.version>2.17.1</jackson.version>
-        <rdf4j.version>5.0.1</rdf4j.version>
+        <rdf4j.version>4.3.13</rdf4j.version>
         <mockito.version>5.11.0</mockito.version>
         <junit.version>5.10.2</junit.version>
         <lp.version>0.0.0</lp.version>
