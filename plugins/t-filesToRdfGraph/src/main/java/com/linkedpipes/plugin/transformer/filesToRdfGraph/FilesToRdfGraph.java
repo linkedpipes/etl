@@ -8,6 +8,8 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import org.eclipse.rdf4j.rio.*;
+import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
+import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,6 +80,11 @@ public final class FilesToRdfGraph implements Component, SequentialExecution {
     private void loadEntry(FilesDataUnit.Entry entry) throws LpException {
         RDFFormat format = getFormat(entry.getFileName());
         RDFParser parser = createParser(format);
+
+        if (parser instanceof JSONLDParser jsonLdParser) {
+            jsonLdParser.set(JSONLDSettings.SECURE_MODE, false);
+        }
+
         try (InputStream fileStream = new FileInputStream(entry.toFile())) {
             parser.parse(fileStream, "http://localhost/base/");
         } catch (Exception ex) {
