@@ -90,6 +90,9 @@ public final class FilesToRdfGraph implements Component, SequentialExecution {
         } catch (Exception ex) {
             handleLoadingException(entry.getFileName(), ex);
         }
+
+        // We need to call this manually.
+        inserter.endRDF();
     }
 
     private RDFFormat getFormat(String fileName) throws LpException {
