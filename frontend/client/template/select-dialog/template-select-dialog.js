@@ -49,7 +49,7 @@ define([
      */
     function transformWithFilter(component, source, sourcePort) {
       const componentCore = templateService.getCoreTemplate(component);
-      if (componentCore.inputs.length === 0) {
+      if (componentCore === undefined || componentCore.inputs.length === 0) {
         return [];
       }
       const result = [];
