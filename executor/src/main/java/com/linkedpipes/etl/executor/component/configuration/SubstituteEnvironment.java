@@ -11,27 +11,20 @@ import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 class SubstituteEnvironment {
 
-    static class StatementPair {
+    /**
+     * Represents a value for substitution.
+     * We can have more than one value or substitution value.
+     */
+    static class Substitution {
 
-        public Resource resource;
+        public List<Value> values = new ArrayList<>();
 
-        public IRI predicate;
-
-        public Value value;
-
-        public Value substitute;
-
-        public StatementPair(IRI predicate) {
-            this.predicate = predicate;
-        }
+        public List<Value> substitutions = new ArrayList<>();
 
     }
 
@@ -45,59 +38,72 @@ class SubstituteEnvironment {
         List<Statement> statements = collectStatements(
                 referenceSource, reference.getGraph());
 
-        // Create map of predicates.
-        Map<IRI, StatementPair> predicateMap =
-                collectPredicates(referenceSource, configurationType)
-                        .stream().collect(Collectors.toMap(
-                                iri -> iri,
-                                StatementPair::new));
+        // Create map of predicates and substitute predicates for given resource.
+        // We use convention that the substitution predicate
+        // is the predicate + "Substitution";
+        // The idea is to share the same internal, so we can
+        // access the same data using predicate as well as
+        // substitution predicate.
+        Map<IRI, Map<Resource, Substitution>> predicateMap = new HashMap<>();
+        Map<IRI, Map<Resource, Substitution>> substitutionMap = new HashMap<>();
+        for (var iri : collectPredicates(referenceSource, configurationType)) {
+            Map<Resource, Substitution> value = new HashMap<>();
+            predicateMap.put(iri, value);
+            var substitutionIri = valueFactory.createIRI(iri + "Substitution");
+            substitutionMap.put(substitutionIri, value);
+        }
 
-        // Create map for substitution.
-        Map<IRI, StatementPair> substitutionMap =
-                predicateMap.values().stream().collect(Collectors.toMap(
-                        item -> valueFactory.createIRI(
-                                item.predicate.stringValue() + "Substitution"),
-                        item -> item));
-
-        // Collect information.
+        // Next we iterate the statements searching for values or
+        // predicates and substitute predicates.
+        // We need to pair them together for substitution.
+        // Other statements we just pass along.
         List<Statement> nextStatements = new ArrayList<>();
         for (Statement statement : statements) {
+            Resource subject = statement.getSubject();
             IRI predicate = statement.getPredicate();
+
             if (predicateMap.containsKey(predicate)) {
-                StatementPair pair = predicateMap.get(predicate);
-                if (pair.resource != null
-                        && pair.resource != statement.getSubject()) {
-                    throw new RdfUtilsException("Not supported!");
-                }
-                pair.resource = statement.getSubject();
-                pair.value = statement.getObject();
+                Objects.requireNonNull(predicateMap.get(predicate))
+                                .computeIfAbsent(subject, key -> new Substitution())
+                                .values.add(statement.getObject());
             } else if (substitutionMap.containsKey(predicate)) {
-                StatementPair pair = substitutionMap.get(predicate);
-                if (pair.resource != null
-                        && pair.resource != statement.getSubject()) {
-                    throw new RdfUtilsException("Not supported!");
-                }
-                pair.resource = statement.getSubject();
-                pair.substitute = statement.getObject();
+                Objects.requireNonNull(substitutionMap.get(predicate))
+                        .computeIfAbsent(subject, key -> new Substitution())
+                        .values.add(statement.getObject());
             } else {
                 nextStatements.add(statement);
             }
         }
 
-        // Generate back statements.
-        for (StatementPair pair : predicateMap.values()) {
-            Value value = pair.value;
-            if (pair.substitute != null) {
-                value = valueFactory.createLiteral(
-                        substitute(env, pair.substitute.stringValue()));
+        // Next we need to assemble back statements in
+        // predicateMap or substitute them by the substitutions.
+        for (var predicateEntry : predicateMap.entrySet()) {
+            IRI predicate = predicateEntry.getKey();
+            for (var resourceEntry : predicateEntry.getValue().entrySet()) {
+                Resource subject = resourceEntry.getKey();
+                var value = resourceEntry.getValue();
+                if (value.substitutions.isEmpty()) {
+                    // We keep the original values.
+                    for (var object : value.values) {
+                        nextStatements.add(valueFactory.createStatement(
+                                subject, predicate, object));
+                    }
+                } else {
+                    // We use the values from substitution.
+                    for (var object : value.substitutions) {
+                        // We support substitution only for strings.
+                        var nextObject =  valueFactory.createLiteral(
+                                substitute(env, object.stringValue()));
+                        nextStatements.add(valueFactory.createStatement(
+                                subject, predicate, nextObject));
+                    }
+                }
+
             }
-            if (pair.resource == null || value == null) {
-                continue;
-            }
-            nextStatements.add(valueFactory.createStatement(
-                    pair.resource, pair.predicate, value));
         }
 
+        // At the last step we just store the statements in a new store
+        // using a new graph.
         IRI nextGraph = valueFactory.createIRI(
                 reference.getGraph() + "/substituted");
         Rdf4jSource nextSource = Rdf4jSource.createInMemory();
@@ -107,6 +113,9 @@ class SubstituteEnvironment {
                 reference.getResource(), nextGraph.stringValue(), nextSource);
     }
 
+    /**
+     * @return All controlled predicates for given configuration type.
+     */
     private static Set<IRI> collectPredicates(
             Rdf4jSource referenceSource, String configurationType)
             throws RdfUtilsException {
@@ -119,6 +128,9 @@ class SubstituteEnvironment {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * @return All statements in given graph.
+     */
     private static List<Statement> collectStatements
             (Rdf4jSource source, String graph) {
         List<Statement> result = new ArrayList<>();
