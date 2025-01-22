@@ -1,12 +1,20 @@
 #
+# WARNING:
+# This is development version of Docker compose file, it can build the images
+# from local files instead of using the published version.
+#
 # Environment variables:
 # * LP_ETL_DOMAIN - URL prefix, for example http://localhost:9080
 # * LP_ETL_PORT - port number to expose LP-ETL on
 # * LP_VERSION - 'main' by default or 'develop'
 #
+#
 services:
   storage:
     image: ghcr.io/linkedpipes/etl-storage:${LP_VERSION-main}
+    build:
+      context: .
+      dockerfile: storage/Dockerfile
     volumes:
       - data-storage:/data/lp-etl/storage
       - configuration:/data/lp-etl/configuration
@@ -16,6 +24,9 @@ services:
     restart: always
   frontend:
     image: ghcr.io/linkedpipes/etl-frontend:${LP_VERSION-main}
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
     volumes:
       - configuration:/data/lp-etl/configuration
       - data-logs:/data/lp-etl/logs
@@ -26,6 +37,9 @@ services:
     restart: always
   executor-monitor:
     image: ghcr.io/linkedpipes/etl-executor-monitor:${LP_VERSION-main}
+    build:
+      context: .
+      dockerfile: executor-monitor/Dockerfile
     volumes:
       - data-execution:/data/lp-etl/executor
       - data-logs:/data/lp-etl/logs
@@ -35,6 +49,9 @@ services:
     restart: always
   executor:
     image: ghcr.io/linkedpipes/etl-executor:${LP_VERSION-main}
+    build:
+      context: .
+      dockerfile: executor/Dockerfile
     volumes:
       - data-execution:/data/lp-etl/executor
       - data-logs:/data/lp-etl/logs

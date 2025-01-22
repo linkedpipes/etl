@@ -12,6 +12,8 @@ import org.eclipse.rdf4j.rio.RDFHandler;
 import org.eclipse.rdf4j.rio.RDFParser;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
+import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
+import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,8 +98,18 @@ public class FilesToRdfChunkedTransformer
     }
 
     protected void loadFile(File file, RDFFormat format) throws LpException {
+        RDFParser parser;
+        try {
+            parser = createParser(format);
+        } catch(RuntimeException ex) {
+            throw new LpException("Can't create parser for a file: {}", file, ex);
+        }
+
+        if (parser instanceof JSONLDParser jsonLdParser) {
+            jsonLdParser.set(JSONLDSettings.SECURE_MODE, false);
+        }
+
         try (InputStream stream = new FileInputStream(file)) {
-            RDFParser parser = createParser(format);
             parser.parse(stream, "http://localhost/base/");
         } catch (RuntimeException | IOException ex) {
             throw new LpException("Can't load file: {}", file, ex);

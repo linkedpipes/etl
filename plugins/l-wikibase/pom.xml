@@ -14,7 +14,7 @@
     <name>plugin l-wikibase</name>
 
     <properties>
-        <wikidata-toolkit.version>0.14.4</wikidata-toolkit.version>
+        <wikidata-toolkit.version>0.14.7</wikidata-toolkit.version>
     </properties>
 
     <dependencies>

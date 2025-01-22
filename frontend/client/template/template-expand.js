@@ -123,7 +123,8 @@
   function setComponentsSearch(templates) {
     templates.forEach((template) => {
       const label = template.label;
-      const keywords = template._coreReference.keyword;
+      // _coreReference may not be available
+      const keywords = template._coreReference?.keyword ?? [];
       template.search = (label + "," + keywords.join(",")).toLowerCase();
     });
   }

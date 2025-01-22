@@ -7,7 +7,7 @@
     <artifactId>pom-backend</artifactId>
     <version>0.0.0</version>
     <packaging>pom</packaging>
-    <name>LinkedPipes Backend Pom</name>
+    <name>LinkedPipes Backend POM</name>
 
     <properties>
         <project.build.sourceEncoding>
@@ -20,18 +20,20 @@
             ${project.basedir}/../checkstyle.xml
         </checkstyle.config.location>
         <!-- Libraries. -->
-        <slf4j.version>2.0.7</slf4j.version>
-        <logback.version>1.4.7</logback.version>
-        <jackson.version>2.15.2</jackson.version>
-        <rdf4j.version>4.3.1</rdf4j.version>
-        <mockito.version>5.3.1</mockito.version>
-        <junit.version>5.9.3</junit.version>
+        <slf4j.version>2.0.13</slf4j.version>
+        <logback.version>1.5.6</logback.version>
+        <jackson.version>2.17.1</jackson.version>
+        <rdf4j.version>4.3.13</rdf4j.version>
+        <mockito.version>5.11.0</mockito.version>
+        <junit.version>5.10.2</junit.version>
         <lp.version>0.0.0</lp.version>
-        <commons-io.version>2.12.0</commons-io.version>
-        <springframework.version>6.0.9</springframework.version>
-        <jetty.version>11.0.15</jetty.version>
+        <commons-io.version>2.16.1</commons-io.version>
+        <springframework.version>6.1.6</springframework.version>
+        <jetty.version>11.0.20</jetty.version>
         <!-- Project properties. -->
         <deploy.directory>../deploy/</deploy.directory>
+        <maven.compiler.source>22</maven.compiler.source>
+        <maven.compiler.target>22</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -312,33 +314,23 @@
     <profiles>
         <!-- Java profiles. -->
         <profile>
-            <id>java-17</id>
+            <id>java-21</id>
             <activation>
-                <jdk>17</jdk>
+                <jdk>21</jdk>
             </activation>
             <properties>
-                <maven.compiler.source>17</maven.compiler.source>
-                <maven.compiler.target>17</maven.compiler.target>
+                <maven.compiler.source>21</maven.compiler.source>
+                <maven.compiler.target>21</maven.compiler.target>
             </properties>
         </profile>
         <profile>
-            <id>java-18</id>
+            <id>java-22</id>
             <activation>
-                <jdk>18</jdk>
+                <jdk>22</jdk>
             </activation>
             <properties>
-                <maven.compiler.source>18</maven.compiler.source>
-                <maven.compiler.target>18</maven.compiler.target>
-            </properties>
-        </profile>
-        <profile>
-            <id>java-20</id>
-            <activation>
-                <jdk>20</jdk>
-            </activation>
-            <properties>
-                <maven.compiler.source>20</maven.compiler.source>
-                <maven.compiler.target>20</maven.compiler.target>
+                <maven.compiler.source>22</maven.compiler.source>
+                <maven.compiler.target>22</maven.compiler.target>
             </properties>
         </profile>
     </profiles>
@@ -363,7 +355,7 @@
                         <dependency>
                             <groupId>biz.aQute.bnd</groupId>
                             <artifactId>biz.aQute.bndlib</artifactId>
-                            <version>6.4.0</version>
+                            <version>7.0.0</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -373,7 +365,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.3.0</version>
             </plugin>
         </plugins>
     </build>

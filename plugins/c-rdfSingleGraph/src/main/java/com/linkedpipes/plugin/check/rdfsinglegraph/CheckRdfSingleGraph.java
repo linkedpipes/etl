@@ -4,13 +4,13 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import org.eclipse.rdf4j.common.iteration.Iterations;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.Models;
-import org.eclipse.rdf4j.repository.RepositoryResult;
 
 public class CheckRdfSingleGraph implements Component, SequentialExecution {
 
@@ -30,15 +30,23 @@ public class CheckRdfSingleGraph implements Component, SequentialExecution {
         }
     }
 
+    /**
+     * Extract all statements from given dataUnit into a model removing
+     * graph.
+     */
     private Model createModel(SingleGraphDataUnit dataUnit) throws LpException {
         Model model = new LinkedHashModel();
         IRI graph = dataUnit.getReadGraph();
+        ValueFactory valueFactory = SimpleValueFactory.getInstance();
         dataUnit.execute((connection) -> {
-            RepositoryResult<Statement> statements =
-                    connection.getStatements(null, null, null, graph);
-            RemoveGraphIterator graphLessStatements =
-                    new RemoveGraphIterator(statements);
-            Iterations.addAll(graphLessStatements, model);
+            var statements = connection.getStatements(null, null, null, graph);
+            for (Statement statement : statements) {
+                var statementWithoutGraph = valueFactory.createStatement(
+                        statement.getSubject(),
+                        statement.getPredicate(),
+                        statement.getObject());
+                model.add(statementWithoutGraph);
+            }
         });
         return model;
     }

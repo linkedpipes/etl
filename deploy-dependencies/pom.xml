@@ -70,7 +70,7 @@
                                         <dependency>
                                             <groupId>org.apache.jena</groupId>
                                             <artifactId>jena-osgi</artifactId>
-                                            <version>4.1.0</version>
+                                            <version>${jena.version}</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency> <!-- Used by jena-osgi -->
@@ -229,7 +229,13 @@
                                             <version>7.0.1</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
-                                        <!-- Jackson. -->
+                                        <!-- Jackson, JSON -->
+                                        <dependency>
+                                            <groupId>org.glassfish</groupId>
+                                            <artifactId>jakarta.json</artifactId>
+                                            <version>2.0.1</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
                                         <dependency>
                                             <groupId>com.fasterxml.jackson.core</groupId>
                                             <artifactId>jackson-annotations</artifactId>
@@ -276,7 +282,13 @@
                                         <dependency>
                                             <groupId>com.google.guava</groupId>
                                             <artifactId>guava</artifactId>
-                                            <version>30.1.1-jre</version>
+                                            <version>32.1.3-jre</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>com.google.guava</groupId>
+                                            <artifactId>guava</artifactId>
+                                            <version>33.2.1-jre</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <dependency>
@@ -321,6 +333,19 @@
                                             <groupId>org.apache.servicemix.bundles</groupId>
                                             <artifactId>org.apache.servicemix.bundles.spatial4j</artifactId>
                                             <version>0.4.1_1</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <!-- eclipse-collections required by rdf4j -->
+                                        <dependency>
+                                            <groupId>org.eclipse.collections</groupId>
+                                            <artifactId>eclipse-collections-api</artifactId>
+                                            <version>10.4.0</version>
+                                            <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
+                                        </dependency>
+                                        <dependency>
+                                            <groupId>org.eclipse.collections</groupId>
+                                            <artifactId>eclipse-collections</artifactId>
+                                            <version>10.4.0</version>
                                             <outputDirectory>${deploy.directory}/osgi/libs</outputDirectory>
                                         </dependency>
                                         <!-- Core libraries -->
@@ -889,12 +914,18 @@
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/core/</outputDirectory>
                                         </dependency>
+                                        <!--
+                                            In 2024, we update to rdf4j version 5, which is not compatible
+                                            with current used version wdtk library.
+                                         -->
+                                        <!--
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>l-wikibase</artifactId>
                                             <version>0.0.0</version>
                                             <outputDirectory>${deploy.directory}/jars/core/</outputDirectory>
                                         </dependency>
+                                        -->
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
                                             <artifactId>t-shacl</artifactId>
