@@ -4,6 +4,7 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.plugin.library.rdf.RdfAdapter;
 import com.linkedpipes.plugin.extractor.dcatAp11Dataset.DcatAp11DatasetConfig.LocalizedString;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -14,11 +15,9 @@ import org.eclipse.rdf4j.model.vocabulary.*;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.util.Repositories;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 public class DcatAp11Dataset implements Component, SequentialExecution {
 
@@ -39,8 +38,6 @@ public class DcatAp11Dataset implements Component, SequentialExecution {
     @Override
     public void execute() {
 
-    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    	sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
     	IRI dataset = valueFactory.createIRI(configuration.getDatasetIRI());
 
     	// Mandatory
@@ -85,13 +82,13 @@ public class DcatAp11Dataset implements Component, SequentialExecution {
     	}
 
     	if (configuration.getIssued() != null) {
-            addValue(dataset, DCTERMS.ISSUED, valueFactory.createLiteral(sdf.format(configuration.getIssued()), DcatAp11DatasetVocabulary.XSD_DATE));
+            addValue(dataset, DCTERMS.ISSUED, RdfAdapter.asYearMonthDay(configuration.getIssued()));
         }
 		if (configuration.getModifiedNow() != null && configuration.getModifiedNow()) {
-            addValue(dataset, DCTERMS.MODIFIED, valueFactory.createLiteral(sdf.format(new Date()), DcatAp11DatasetVocabulary.XSD_DATE));
+            addValue(dataset, DCTERMS.MODIFIED, RdfAdapter.asYearMonthDay(new Date()));
         } else {
             if (configuration.getModified() != null) {
-                addValue(dataset, DCTERMS.MODIFIED, valueFactory.createLiteral(sdf.format(configuration.getModified()), DcatAp11DatasetVocabulary.XSD_DATE));
+                addValue(dataset, DCTERMS.MODIFIED, RdfAdapter.asYearMonthDay(configuration.getModified()));
             }
         }
     	addIRIs(dataset, DCTERMS.SPATIAL, configuration.getSpatialIRIs());
@@ -104,10 +101,12 @@ public class DcatAp11Dataset implements Component, SequentialExecution {
     		addIRI(dataset, DCTERMS.TEMPORAL, temporal);
             addIRI(temporal, RDF.TYPE, DCTERMS.PERIOD_OF_TIME);
 			if (configuration.getTemporalStart() != null) {
-                addValue(temporal, DcatAp11DatasetVocabulary.SCHEMA_STARTDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalStart()), DcatAp11DatasetVocabulary.XSD_DATE));
+                addValue(temporal, DcatAp11DatasetVocabulary.SCHEMA_STARTDATE,
+                        RdfAdapter.asYearMonthDay(configuration.getTemporalStart()));
             }
 			if (configuration.getTemporalEnd() != null) {
-                addValue(temporal, DcatAp11DatasetVocabulary.SCHEMA_ENDDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalEnd()), DcatAp11DatasetVocabulary.XSD_DATE));
+                addValue(temporal, DcatAp11DatasetVocabulary.SCHEMA_ENDDATE,
+                        RdfAdapter.asYearMonthDay(configuration.getTemporalEnd()));
             }
     	}
     	addIRIs(dataset, FOAF.PAGE, configuration.getDocumentationIRIs());

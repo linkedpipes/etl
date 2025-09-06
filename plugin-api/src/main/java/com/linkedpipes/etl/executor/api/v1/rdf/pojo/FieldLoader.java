@@ -3,15 +3,14 @@ package com.linkedpipes.etl.executor.api.v1.rdf.pojo;
 import com.linkedpipes.etl.executor.api.v1.rdf.LanguageString;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
+import com.linkedpipes.etl.plugin.library.rdf.RdfAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -184,8 +183,7 @@ final class FieldLoader {
             } else if (type == long.class || type == Long.class) {
                 return value.asLong();
             } else if (type == Date.class) {
-                DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                return format.parse(value.asString());
+                return RdfAdapter.fromYearMonthDay(value.asString());
             } else {
                 throw new RdfException("Unknown type: {}", type.getName());
             }

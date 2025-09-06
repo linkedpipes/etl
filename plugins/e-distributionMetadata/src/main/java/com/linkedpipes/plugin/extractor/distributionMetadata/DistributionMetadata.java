@@ -5,6 +5,7 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.plugin.library.rdf.RdfAdapter;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
@@ -19,8 +20,6 @@ import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.util.Repositories;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,9 +44,7 @@ public class DistributionMetadata implements Component, SequentialExecution {
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     public void execute() throws LpException {
-        //
-        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        //
+
         final String datasetUri;
         if (configuration.isUseDatasetURIfromInput()) {
             datasetUri = querySingleResult("SELECT ?d WHERE "
@@ -102,27 +99,6 @@ public class DistributionMetadata implements Component, SequentialExecution {
             description_en = configuration.getDesc_en();
         }
 
-        final String temporalStart, temporalEnd;
-        if (configuration.isUseTemporal()) {
-            if (configuration.isTemporalFromDataset()) {
-                temporalStart = querySingleResult("SELECT ?temporalStart WHERE {<" + datasetUri + "> <" + DCTERMS.TEMPORAL + ">/<" + DistributionMetadataVocabulary.SCHEMA_STARTDATE + "> ?temporalStart }", "temporalStart");
-                temporalEnd = querySingleResult("SELECT ?temporalEnd WHERE {<" + datasetUri + "> <" + DCTERMS.TEMPORAL + ">/<" + DistributionMetadataVocabulary.SCHEMA_ENDDATE + "> ?temporalEnd }", "temporalEnd");
-            } else {
-                temporalStart = dateFormat.format(configuration.getTemporalStart());
-                temporalEnd = dateFormat.format(configuration.getTemporalEnd());
-            }
-        } else {
-            temporalStart = null;
-            temporalEnd = null;
-        }
-
-        final String issued;
-        if (configuration.isIssuedFromDataset()) {
-            issued = querySingleResult("SELECT ?issued WHERE {<" + datasetUri + "> <" + DCTERMS.ISSUED + "> ?issued }", "issued");
-        } else {
-            issued = dateFormat.format(configuration.getIssued());
-        }
-
         //
         final IRI dataset = valueFactory.createIRI(datasetUri);
 
@@ -140,27 +116,32 @@ public class DistributionMetadata implements Component, SequentialExecution {
         addStringIfNotBlank(distribution, DCTERMS.DESCRIPTION, description_en, "en");
 
         // Issued
-        addValue(distribution, DCTERMS.ISSUED, valueFactory.createLiteral(issued,
-                DistributionMetadataVocabulary.XSD_DATE));
+        if (configuration.isIssuedFromDataset()) {
+            var issued = querySingleResult("SELECT ?issued WHERE {<" + datasetUri + "> <" + DCTERMS.ISSUED + "> ?issued }", "issued");
+            addValue(distribution, DCTERMS.ISSUED, valueFactory.createLiteral(issued, DistributionMetadataVocabulary.XSD_DATE));
+        } else {
+            addValue(distribution, DCTERMS.ISSUED, RdfAdapter.asYearMonthDay(configuration.getIssued()));
+        }
 
         // Modified
         if (configuration.isUseNow()) {
-            addValue(distribution, DCTERMS.MODIFIED,
-                    valueFactory.createLiteral(dateFormat.format(new Date()),
-                            DistributionMetadataVocabulary.XSD_DATE));
+            addValue(distribution, DCTERMS.MODIFIED, RdfAdapter.asYearMonthDay(new Date()));
         } else {
-            addValue(distribution, DCTERMS.MODIFIED,
-                    valueFactory.createLiteral(dateFormat.format(configuration.getModified()),
-                            DistributionMetadataVocabulary.XSD_DATE));
+            addValue(distribution, DCTERMS.MODIFIED, RdfAdapter.asYearMonthDay(configuration.getModified()));
         }
 
         if (configuration.isUseTemporal()) {
-            if (temporalStart != null && temporalEnd != null) {
-                final IRI temporal = valueFactory.createIRI(distributionUri + "/temporal");
-                addValue(temporal, RDF.TYPE, DCTERMS.PERIOD_OF_TIME);
+            final IRI temporal = valueFactory.createIRI(distributionUri + "/temporal");
+            addValue(temporal, RDF.TYPE, DCTERMS.PERIOD_OF_TIME);
+            addValue(distribution, DCTERMS.TEMPORAL, temporal);
+            if (configuration.isTemporalFromDataset()) {
+                var temporalStart = querySingleResult("SELECT ?temporalStart WHERE {<" + datasetUri + "> <" + DCTERMS.TEMPORAL + ">/<" + DistributionMetadataVocabulary.SCHEMA_STARTDATE + "> ?temporalStart }", "temporalStart");
                 addValue(temporal, DistributionMetadataVocabulary.SCHEMA_STARTDATE, valueFactory.createLiteral(temporalStart, DistributionMetadataVocabulary.XSD_DATE));
+                var temporalEnd = querySingleResult("SELECT ?temporalEnd WHERE {<" + datasetUri + "> <" + DCTERMS.TEMPORAL + ">/<" + DistributionMetadataVocabulary.SCHEMA_ENDDATE + "> ?temporalEnd }", "temporalEnd");
                 addValue(temporal, DistributionMetadataVocabulary.SCHEMA_ENDDATE, valueFactory.createLiteral(temporalEnd, DistributionMetadataVocabulary.XSD_DATE));
-                addValue(distribution, DCTERMS.TEMPORAL, temporal);
+            } else {
+                addValue(temporal, DistributionMetadataVocabulary.SCHEMA_STARTDATE,RdfAdapter.asYearMonthDay(configuration.getTemporalStart()));
+                addValue(temporal, DistributionMetadataVocabulary.SCHEMA_ENDDATE,RdfAdapter.asYearMonthDay(configuration.getTemporalEnd()));
             }
         }
 

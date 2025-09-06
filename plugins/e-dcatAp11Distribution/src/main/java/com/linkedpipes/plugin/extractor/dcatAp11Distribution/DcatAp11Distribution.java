@@ -5,6 +5,7 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.plugin.library.rdf.RdfAdapter;
 import com.linkedpipes.plugin.extractor.dcatAp11Distribution.DcatAp11DistributionConfig.LocalizedString;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -23,7 +24,6 @@ import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.util.Repositories;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class DcatAp11Distribution implements Component, SequentialExecution {
@@ -47,9 +47,6 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
 
     @Override
     public void execute() throws LpException {
-
-    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    	sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         String datasetIRI;
 
@@ -139,16 +136,14 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
             addIRI(mediaType, RDF.TYPE, DCTERMS.MEDIA_TYPE_OR_EXTENT);
         }
 
-        String issued;
         if (configuration.getIssuedFromDataset() != null && configuration.getIssuedFromDataset()) {
-            issued = querySingleResult("SELECT ?issued WHERE {<" + datasetIRI + "> <" + DCTERMS.ISSUED + "> ?issued }", "issued");
+            var issued = querySingleResult("SELECT ?issued WHERE {<" + datasetIRI + "> <" + DCTERMS.ISSUED + "> ?issued }", "issued");
             if (isBlank(issued)) {
                 throw new LpException("Missing release date property in the input data.");
             }
             addValue(distribution, DCTERMS.ISSUED, valueFactory.createLiteral(issued, DcatAp11DistributionVocabulary.XSD_DATE));
         } else if (configuration.getIssued() != null) {
-            issued = sdf.format(configuration.getIssued());
-            addValue(distribution, DCTERMS.ISSUED, valueFactory.createLiteral(issued, DcatAp11DistributionVocabulary.XSD_DATE));
+            addValue(distribution, DCTERMS.ISSUED,RdfAdapter.asYearMonthDay(configuration.getIssued()));
         }
 
         if (!isBlank(configuration.getRightsIRI())) {
@@ -174,13 +169,9 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
         }
         else if (configuration.getModified() != null) {
             if (configuration.getModifiedNow() != null && configuration.getModifiedNow()) {
-                addValue(distribution, DCTERMS.MODIFIED,
-                        valueFactory.createLiteral(sdf.format(new Date()),
-                                DcatAp11DistributionVocabulary.XSD_DATE));
+                addValue(distribution, DCTERMS.MODIFIED, RdfAdapter.asYearMonthDay(new Date()));
             } else {
-                addValue(distribution, DCTERMS.MODIFIED,
-                        valueFactory.createLiteral(sdf.format(configuration.getModified()),
-                                DcatAp11DistributionVocabulary.XSD_DATE));
+                addValue(distribution, DCTERMS.MODIFIED, RdfAdapter.asYearMonthDay(configuration.getModified()));
             }
         }
 
@@ -196,10 +187,12 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
             addIRI(temporal, RDF.TYPE, DCTERMS.PERIOD_OF_TIME);
             addIRI(distribution, DCTERMS.TEMPORAL, temporal);
             if (configuration.getTemporalStart() != null) {
-                addValue(temporal, DcatAp11DistributionVocabulary.SCHEMA_STARTDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalStart()), DcatAp11DistributionVocabulary.XSD_DATE));
+                addValue(temporal, DcatAp11DistributionVocabulary.SCHEMA_STARTDATE,
+                        RdfAdapter.asYearMonthDay(configuration.getTemporalStart()));
             }
             if (configuration.getTemporalEnd() != null) {
-                addValue(temporal, DcatAp11DistributionVocabulary.SCHEMA_ENDDATE, valueFactory.createLiteral(sdf.format(configuration.getTemporalEnd()), DcatAp11DistributionVocabulary.XSD_DATE));
+                addValue(temporal, DcatAp11DistributionVocabulary.SCHEMA_ENDDATE,
+                        RdfAdapter.asYearMonthDay((configuration.getTemporalEnd())));
             }
         }
 
@@ -214,26 +207,6 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
             connection.add(statements, outputRdf.getWriteGraph());
         });
 
-    }
-
-    /**
-     * Add string value with given language tag if the given string is not empty.
-     *
-     * @param predicate
-     * @param value
-     * @param language Is not used if null.
-     */
-    private void addStringIfNotBlank(IRI subject, IRI predicate, String value, String language) {
-        if (isBlank(value)) {
-            return;
-        }
-        final Value object;
-        if (language == null)  {
-            object = valueFactory.createLiteral(value);
-        } else {
-            object = valueFactory.createLiteral(value, language);
-        }
-        statements.add(valueFactory.createStatement(subject, predicate, object));
     }
 
     private void addLocalizedString(IRI subject, IRI predicate, List<LocalizedString> strings) {
@@ -251,11 +224,6 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
     private void addValue(IRI subject, IRI predicate, Value value) {
     	if (value != null) {
             statements.add(valueFactory.createStatement(subject, predicate, value));
-        }
-    }
-    private void addValue(IRI subject, IRI predicate, String value) {
-    	if (!isBlank(value)) {
-            statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createLiteral(value)));
         }
     }
 

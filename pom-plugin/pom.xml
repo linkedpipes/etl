@@ -64,6 +64,12 @@
             </dependency>
             <dependency>
                 <groupId>com.linkedpipes</groupId>
+                <artifactId>rdf-plugin-library</artifactId>
+                <version>${lp.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.linkedpipes</groupId>
                 <artifactId>vocabulary</artifactId>
                 <version>${lp.version}</version>
             </dependency>
