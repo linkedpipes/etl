@@ -5,6 +5,7 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import com.linkedpipes.etl.plugin.library.rdf.RdfAdapter;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
@@ -15,8 +16,6 @@ import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.util.Repositories;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,8 +42,6 @@ public class DatasetMetadata implements Component, SequentialExecution {
     public void execute() throws LpException {
         dataset = valueFactory.createIRI(configuration.getDatasetURI());
         addValue(RDF.TYPE, DatasetMetadataVocabulary.DCAT_DATASET_CLASS);
-        //
-        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         // Title
         addStringIfNotBlank(DCTERMS.TITLE, configuration.getTitle_cs(), configuration.getLanguage_orig());
         addStringIfNotBlank(DCTERMS.TITLE, configuration.getTitle_en(), "en");
@@ -52,15 +49,12 @@ public class DatasetMetadata implements Component, SequentialExecution {
         addStringIfNotBlank(DCTERMS.DESCRIPTION, configuration.getDesc_cs(), configuration.getLanguage_orig());
         addStringIfNotBlank(DCTERMS.DESCRIPTION, configuration.getDesc_en(), "en");
         // Issued.
-        addValue(DCTERMS.ISSUED, valueFactory.createLiteral(
-                dateFormat.format(configuration.getIssued()), DatasetMetadataVocabulary.XSD_DATE));
+        addValue(DCTERMS.ISSUED, RdfAdapter.asYearMonthDay(configuration.getIssued()));
         // Modified.
         if (configuration.isUseNow()) {
-            addValue(DCTERMS.MODIFIED, valueFactory.createLiteral(dateFormat.format(new Date()),
-                    DatasetMetadataVocabulary.XSD_DATE));
+            addValue(DCTERMS.MODIFIED, RdfAdapter.asYearMonthDay(new Date()));
         } else {
-            addValue(DCTERMS.MODIFIED, valueFactory.createLiteral(dateFormat.format(configuration.getModified()),
-                    DatasetMetadataVocabulary.XSD_DATE));
+            addValue(DCTERMS.MODIFIED, RdfAdapter.asYearMonthDay(configuration.getModified()));
         }
         //
         addStringIfNotBlank(DCTERMS.IDENTIFIER, configuration.getIdentifier(), null);
@@ -108,16 +102,13 @@ public class DatasetMetadata implements Component, SequentialExecution {
             final IRI temporal = valueFactory.createIRI(configuration.getDatasetURI() + "/temporal");
             statements.add(valueFactory.createStatement(temporal, RDF.TYPE, DCTERMS.PERIOD_OF_TIME));
             statements.add(valueFactory.createStatement(temporal, DatasetMetadataVocabulary.SCHEMA_STARTDATE,
-                    valueFactory.createLiteral(dateFormat.format(configuration.getTemporalStart()),
-                    DatasetMetadataVocabulary.XSD_DATE)));
+                    RdfAdapter.asYearMonthDay(configuration.getTemporalStart())));
             if (configuration.isUseNowTemporalEnd()) {
                 statements.add(valueFactory.createStatement(temporal, DatasetMetadataVocabulary.SCHEMA_ENDDATE,
-                        valueFactory.createLiteral(dateFormat.format(new Date()),
-                        DatasetMetadataVocabulary.XSD_DATE)));
+                        RdfAdapter.asYearMonthDay(new Date())));
             } else {
                 statements.add(valueFactory.createStatement(temporal, DatasetMetadataVocabulary.SCHEMA_ENDDATE,
-                        valueFactory.createLiteral(dateFormat.format(configuration.getTemporalEnd()),
-                        DatasetMetadataVocabulary.XSD_DATE)));
+                        RdfAdapter.asYearMonthDay(configuration.getTemporalEnd())));
             }
             statements.add(valueFactory.createStatement(dataset, DCTERMS.TEMPORAL, temporal));
         }

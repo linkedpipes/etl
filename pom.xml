@@ -43,10 +43,10 @@
                 <module>pom-plugin</module>
                 <module>vocabulary</module>
                 <module>plugin-api</module>
+                <module>plugin-libraries</module>
                 <module>dataunit-core</module>
                 <module>plugin-test</module>
                 <module>plugins</module>
-                <module>plugin-libraries</module>
                 <module>deploy-dependencies</module>
             </modules>
         </profile>

@@ -354,6 +354,11 @@
                                             <artifactId>dataunit-core</artifactId>
                                             <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
                                         </dependency>
+                                        <dependency>
+                                            <groupId>com.linkedpipes</groupId>
+                                            <artifactId>rdf-plugin-library</artifactId>
+                                            <outputDirectory>${deploy.directory}/osgi/core</outputDirectory>
+                                        </dependency>
                                         <!-- LinkedPipes Libraries -->
                                         <dependency>
                                             <groupId>com.linkedpipes</groupId>
