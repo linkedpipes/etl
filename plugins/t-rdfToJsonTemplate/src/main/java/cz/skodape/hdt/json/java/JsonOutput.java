@@ -1,5 +1,6 @@
 package cz.skodape.hdt.json.java;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.skodape.hdt.core.OperationFailed;
 import cz.skodape.hdt.core.Output;
 import cz.skodape.hdt.model.OutputConfiguration;
@@ -26,6 +27,8 @@ public class JsonOutput implements Output {
     private String key = null;
 
     private StringBuilder prefix = new StringBuilder();
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public JsonOutput(Writer writer, boolean prettyPrint) {
         this.writer = writer;
@@ -161,14 +164,8 @@ public class JsonOutput implements Output {
     }
 
     private void writeString(String value) throws IOException {
-        String sanitizedValue = value
-                .replace("\t", "\\t")
-                .replace("\r", "\\r")
-                .replace("\n", "\\n")
-                .replace("\"", "\\\"");
-        writer.write("\"");
+        String sanitizedValue = objectMapper.writeValueAsString(value);
         writer.write(sanitizedValue);
-        writer.write("\"");
     }
 
     private void writeNumber(String value) throws IOException {
