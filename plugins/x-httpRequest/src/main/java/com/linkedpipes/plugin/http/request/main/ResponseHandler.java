@@ -45,13 +45,15 @@ public class ResponseHandler {
 
     private boolean hasRequestFailed(StatusLine statusLine) {
         int code = statusLine.getStatusCode();
-        boolean successful = 199 < code && code < 300;
-        return !successful;
+        // We consider only 400, 500 ... to be failures.
+        boolean clientError = 400 <= code  && code < 500;
+        boolean serverError = 500 <= code  && code < 600;
+        return clientError || serverError;
     }
 
     private void writeResponseToFile(HttpResponse response) throws LpException {
         String fileName = task.getOutputFileName();
-        if (fileName == null || fileName.isEmpty() || fileName.isBlank() ) {
+        if (fileName == null || fileName.isBlank()) {
             return;
         }
         File outputFile = fileWriter.createFile(fileName);
