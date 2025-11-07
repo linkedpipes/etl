@@ -3,7 +3,7 @@ package com.linkedpipes.plugin.http.request.main;
 import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
-import com.linkedpipes.plugin.http.apache.RequestConfiguration;
+import com.linkedpipes.plugin.http.apache.HttpRequest;
 import com.linkedpipes.plugin.http.apache.RequestExecutor;
 import org.apache.http.HttpResponse;
 import org.eclipse.rdf4j.model.IRI;
@@ -61,8 +61,8 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         }
     }
 
-    private RequestConfiguration createConfiguration(HttpRequestTask task) {
-        var result = new RequestConfiguration();
+    private HttpRequest createConfiguration(HttpRequestTask task) {
+        var result = new HttpRequest();
         result.url = task.getUrl();
         result.method = task.getMethod();
         task.getHeaders().forEach(item -> {
@@ -71,7 +71,7 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         result.timeout = task.getTimeOut();
         result.contentAsBody = task.isPostContentAsBody();
         result.content = task.getContent().stream().map(item -> {
-            var content = new RequestConfiguration.Content();
+            var content = new HttpRequest.Content();
             content.file = inputFilesMap.get(item.getFileReference());
             content.value = item.getValue();
             content.name = item.getName();
@@ -79,6 +79,9 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
             return content;
         }).toList();
         result.encodeUrl = encodeUrl;
+        if (task.isFollowRedirect()) {
+            result.followRedirect = true;
+        }
         return result;
     }
 
