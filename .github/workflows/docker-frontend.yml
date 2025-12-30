@@ -30,6 +30,6 @@ jobs:
           context: ./
           file: ./frontend/Dockerfile
           push: true
-          tags: ghcr.io/linkedpipes/etl-frontend:${{ github.ref_name }}
+          tags: ghcr.io/${{ github.repository_owner }}/etl-frontend:${{ github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
