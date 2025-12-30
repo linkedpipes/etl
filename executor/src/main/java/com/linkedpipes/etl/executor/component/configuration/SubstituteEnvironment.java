@@ -38,67 +38,50 @@ class SubstituteEnvironment {
         List<Statement> statements = collectStatements(
                 referenceSource, reference.getGraph());
 
-        // Create map of predicates and substitute predicates for given resource.
-        // We use convention that the substitution predicate
-        // is the predicate + "Substitution";
-        // The idea is to share the same internal, so we can
-        // access the same data using predicate as well as
-        // substitution predicate.
-        Map<IRI, Map<Resource, Substitution>> predicateMap = new HashMap<>();
-        Map<IRI, Map<Resource, Substitution>> substitutionMap = new HashMap<>();
+        // We start by collecting predicates for substitution.
+        // We use convention that the substitution predicate is the predicate + "Substitution";
+        // For each predicate we remember also the original.
+        Map<IRI, IRI> substitutable = new HashMap<>();
         for (var iri : collectPredicates(referenceSource, configurationType)) {
-            Map<Resource, Substitution> value = new HashMap<>();
-            predicateMap.put(iri, value);
             var substitutionIri = valueFactory.createIRI(iri + "Substitution");
-            substitutionMap.put(substitutionIri, value);
+            substitutable.put(substitutionIri, iri);
         }
 
-        // Next we iterate the statements searching for values or
-        // predicates and substitute predicates.
-        // We need to pair them together for substitution.
-        // Other statements we just pass along.
+        // Next we iterate the statements.
+        // If there is a predicate from the `substitutable`, we substitute.
         List<Statement> nextStatements = new ArrayList<>();
+        // We also store information about the substitution (subject, predicate) as
+        // we will drop all non-substituted value later.
+        Map<Resource, Set<IRI>> substituted = new HashMap<>();
         for (Statement statement : statements) {
-            Resource subject = statement.getSubject();
             IRI predicate = statement.getPredicate();
-
-            if (predicateMap.containsKey(predicate)) {
-                Objects.requireNonNull(predicateMap.get(predicate))
-                                .computeIfAbsent(subject, key -> new Substitution())
-                                .values.add(statement.getObject());
-            } else if (substitutionMap.containsKey(predicate)) {
-                Objects.requireNonNull(substitutionMap.get(predicate))
-                        .computeIfAbsent(subject, key -> new Substitution())
-                        .values.add(statement.getObject());
-            } else {
-                nextStatements.add(statement);
+            IRI originalPredicate = substitutable.get(predicate);
+            if (originalPredicate == null) {
+                // This is not a predicate we can substitute.
+                continue;
             }
+            // Substitution time.
+            var subject = statement.getSubject();
+            var nextObject = substitute(env, statement.getObject().stringValue());
+            nextStatements.add(valueFactory.createStatement(
+                    subject, originalPredicate,
+                    valueFactory.createLiteral(nextObject)));
+            // We store the original the substitution to be ignored.
+            var predicateBlackList = substituted.computeIfAbsent(subject, _ -> new HashSet<>(4));
+            predicateBlackList.add(predicate);
+            predicateBlackList.add(originalPredicate);
         }
 
-        // Next we need to assemble back statements in
-        // predicateMap or substitute them by the substitutions.
-        for (var predicateEntry : predicateMap.entrySet()) {
-            IRI predicate = predicateEntry.getKey();
-            for (var resourceEntry : predicateEntry.getValue().entrySet()) {
-                Resource subject = resourceEntry.getKey();
-                var value = resourceEntry.getValue();
-                if (value.substitutions.isEmpty()) {
-                    // We keep the original values.
-                    for (var object : value.values) {
-                        nextStatements.add(valueFactory.createStatement(
-                                subject, predicate, object));
-                    }
-                } else {
-                    // We use the values from substitution.
-                    for (var object : value.substitutions) {
-                        // We support substitution only for strings.
-                        var nextObject =  valueFactory.createLiteral(
-                                substitute(env, object.stringValue()));
-                        nextStatements.add(valueFactory.createStatement(
-                                subject, predicate, nextObject));
-                    }
-                }
-
+        // Now we add all other statements.
+        // We need to do this in two steps as we need to have complete
+        // list of `substituted`.
+        for (Statement statement : statements) {
+            IRI predicate = statement.getPredicate();
+            var subject = statement.getSubject();
+            var predicateBlackList = substituted.get(subject);
+            if (predicateBlackList == null || !predicateBlackList.contains(predicate)) {
+                // Ok, it is safe to add this.
+                nextStatements.add(statement);
             }
         }
 

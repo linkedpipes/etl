@@ -13,10 +13,7 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SubstituteEnvironmentTest {
 
@@ -32,11 +29,13 @@ public class SubstituteEnvironmentTest {
                 env, "x-{LP_ETL_HOST}:{LP_ETL_PORT}"));
     }
 
+    /**
+     * When a single subject and predicate pair have multiple values,
+     * all but the last one were lost.
+     */
     @Test
     public void preserveStatements() throws ExecutorException, RdfUtilsException {
         Map<String, String> env = new HashMap<>();
-        env.put("LP_ETL_HOST", "lp");
-        env.put("LP_ETL_PORT", "8080");
 
         final var configurationClass = "http://localhost/Configuration";
         final var property = "http://localhost/1";
@@ -65,7 +64,7 @@ public class SubstituteEnvironmentTest {
         var actual = SubstituteEnvironment.substitute(
                 env,
                 source,
-                new EntityReference("http://localhost/entity",graph,null),
+                new EntityReference("http://localhost/entity", graph, null),
                 configurationClass);
 
         List<Statement> sourceList = new ArrayList<>();
@@ -76,6 +75,72 @@ public class SubstituteEnvironmentTest {
 
         // We should get the same number of triples.
         Assertions.assertEquals(sourceList.size(), targetList.size());
+    }
+
+    /**
+     * See https://github.com/linkedpipes/etl/issues/999
+     */
+    @Test
+    public void issue999() throws ExecutorException, RdfUtilsException {
+        Map<String, String> env = new HashMap<>();
+        env.put("LP_ETL_PORT", "8080");
+
+        final var configurationClass = "http://localhost/Configuration";
+        final var property = "http://localhost/1";
+        final var graph = "http://localhost/graph";
+
+        var source = Rdf4jSource.createInMemory();
+        var builder = RdfBuilder.create(source, "http://localhost/graph");
+
+        // Configuration entity.
+        builder.entity("http://localhost/entity")
+                .iri(RDF.TYPE, LP_OBJECTS.DESCRIPTION)
+                .iri(LP_OBJECTS.HAS_DESCRIBE, configurationClass)
+                .iri(LP_OBJECTS.HAS_MEMBER, property);
+        builder.entity(property)
+                .iri(LP_OBJECTS.HAS_PROPERTY, "http://localhost/predicate")
+                .iri(LP_OBJECTS.HAS_CONTROL, "http://localhost/predicateControl");
+
+        // Data entity.
+        builder.entity("http://localhost/entity")
+                .iri(RDF.TYPE, configurationClass)
+                .iri("http://localhost/predicate", "http://localhost/1")
+                .string("http://localhost/predicateSubstitution", "{LP_ETL_PORT}");
+
+        builder.commit();
+
+        var actual = SubstituteEnvironment.substitute(
+                env,
+                source,
+                new EntityReference("http://localhost/entity", graph, null),
+                configurationClass);
+
+        List<RdfTriple> targetList = new ArrayList<>();
+        actual.getSource().triples(null, targetList::add);
+
+        // Search for the substitution.
+        boolean substitutionFound = false;
+        int predicateCount = 0;
+        for (RdfTriple triple : targetList) {
+            var subjectMatch = Objects.equals(triple.getSubject(), "http://localhost/entity");
+            if (!subjectMatch) {
+                continue;
+            }
+            var predicateMatch = Objects.equals(triple.getPredicate(), "http://localhost/predicate");
+            if (!predicateMatch) {
+                continue;
+            }
+            // We found the triple we are looking for.
+            predicateCount++;
+            if (Objects.equals(triple.getObject().asString(), "8080")) {
+                substitutionFound = true;
+            }
+        }
+        // There should be only one value, the substituted one.
+        Assertions.assertEquals(1, predicateCount);
+        Assertions.assertTrue(substitutionFound);
+        // Input is 8 triples, we lose one by substitution.
+        Assertions.assertEquals(7, targetList.size());
     }
 
 }
