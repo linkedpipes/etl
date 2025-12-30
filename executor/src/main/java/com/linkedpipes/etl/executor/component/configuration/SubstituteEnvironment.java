@@ -67,7 +67,7 @@ class SubstituteEnvironment {
                     subject, originalPredicate,
                     valueFactory.createLiteral(nextObject)));
             // We store the original the substitution to be ignored.
-            var predicateBlackList = substituted.computeIfAbsent(subject, _ -> new HashSet<>(4));
+            var predicateBlackList = substituted.computeIfAbsent(subject, key -> new HashSet<>(4));
             predicateBlackList.add(predicate);
             predicateBlackList.add(originalPredicate);
         }
