@@ -9,6 +9,7 @@ on:
       - 'develop'
     tags:
       - '*'
+  workflow_dispatch:
 jobs:
   publish-docker:
     runs-on: ubuntu-latest
