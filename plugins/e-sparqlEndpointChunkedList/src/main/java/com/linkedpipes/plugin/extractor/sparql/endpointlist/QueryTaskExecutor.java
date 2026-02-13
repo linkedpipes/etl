@@ -160,7 +160,12 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
                 task.getChunkSize(), task.getAsLiterals());
         valuesReader.setHandler((values) -> {
             String query = prepareQuery(task, values);
-            executeQuery(task, repository, query);
+            try {
+                executeQuery(task, repository, query);
+            } catch (Exception exception) {
+                LOG.error("Failed chunk execution, we continue with next one. Task: '{}' Values: '{}'. ",
+                        task.iri, values, exception);
+            }
         });
         for (File file : getFilesForTask(task)) {
             valuesReader.readFile(file);
