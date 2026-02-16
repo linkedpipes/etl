@@ -19,6 +19,10 @@ public class EnvironmentToConfiguration {
                 "LP_ETL_EXECUTION_HISTORY_COUNT_LIMIT");
         next.historyHourLimit =  getEnvInteger(
                 "LP_ETL_EXECUTION_HISTORY_HOUR_LIMIT");
+        next.slackFinishedWebhook= getEnv(
+                "LP_ETL_SLACK_FINISHED_WEBHOOK");
+        next.slackErrorWebhook= getEnv(
+                "LP_ETL_SLACK_ERROR_WEBHOOK");
         return defaults.merge(next);
     }
 
