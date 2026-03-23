@@ -76,6 +76,7 @@
         <module>t-packZip</module>
         <module>t-propertyLinkerChunked</module>
         <module>t-rdfDifference</module>
+        <module>t-rdfDiffToEvents</module>
         <module>t-rdfToFile</module>
         <module>t-rdfToFileChunked</module>
         <module>t-rdfToHdt</module>

@@ -1,0 +1,3 @@
+@prefix ex: <http://example.com/> .
+
+ex:leftSubject ex:predicate ex:object .
