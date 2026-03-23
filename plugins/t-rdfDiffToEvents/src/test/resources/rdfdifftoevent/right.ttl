@@ -1,3 +1,11 @@
 @prefix ex: <http://example.com/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
-ex:rightSubject ex:predicate ex:object .
+# Present in both, same CBD  →  NOOP (no output expected)
+ex:bothSame  a skos:Concept .
+
+# Present in both, different CBD  →  UPDATE event expected (new type)
+ex:changed   a skos:ConceptScheme .
+
+# Present only in right  →  CREATE event expected
+ex:rightOnly ex:predicate ex:newValue .
