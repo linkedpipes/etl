@@ -83,9 +83,4 @@ public class HttpGetFileConfiguration {
         this.encodeUrl = encodeUrl;
     }
 
-    public Downloader.Configuration asDownloaderConfiguration() {
-        return new Downloader.Configuration(
-                manualFollowRedirect, false, encodeUrl, utf8Redirect);
-    }
-
 }

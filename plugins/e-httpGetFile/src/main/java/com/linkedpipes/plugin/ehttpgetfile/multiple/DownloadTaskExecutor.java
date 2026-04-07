@@ -4,6 +4,8 @@ import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
+import com.linkedpipes.plugin.ehttpgetfile.Downloader;
+import com.linkedpipes.plugin.ehttpgetfile.DownloaderRequest;
 
 import java.io.File;
 import java.util.HashMap;
@@ -30,30 +32,32 @@ class DownloadTaskExecutor implements TaskConsumer<DownloadTask> {
 
     @Override
     public void accept(DownloadTask task) throws LpException {
-        requestReport.setTask(task);
-        try {
-            (new Downloader(
-                    new Downloader.Configuration(
-                            configuration.isManualFollowRedirect(),
-                            configuration.isDetailLogging(),
-                            configuration.isEncodeUrl(),
-                            configuration.isUtf8Redirect())))
-                    .download(createDownloaderTask(task), requestReport);
-        } catch (Exception ex) {
-            throw new LpException("Can't download file.", ex);
-        }
-    }
-
-    private Downloader.Task createDownloaderTask(DownloadTask task)
-            throws LpException {
+        // Validate task.
         String uri = nullForEmpty(task.getUri());
         String fileName = nullForEmpty(task.getFileName());
         if (uri == null || fileName == null) {
             throw new LpException("Invalid task definition.");
         }
+        //
         File targetFile = output.createFile(task.getFileName());
-        return new Downloader.Task(uri,
-                targetFile, getHeader(task), getTimeOut(task));
+        try {
+            (new Downloader()).download(
+                    new DownloaderRequest(
+                            getHeader(task),
+                            getTimeOut(task),
+                            configuration.isManualFollowRedirect(),
+                            configuration.isDetailLogging(),
+                            configuration.isEncodeUrl(),
+                            configuration.isUtf8Redirect()
+                    ),
+                    task.getUri(), targetFile,
+                    connection -> {
+                        requestReport.setTask(task);
+                        this.requestReport.reportHeaderResponse(connection);
+                    });
+        } catch (Exception ex) {
+            throw new LpException("Can't download file.", ex);
+        }
     }
 
     private String nullForEmpty(String string) {

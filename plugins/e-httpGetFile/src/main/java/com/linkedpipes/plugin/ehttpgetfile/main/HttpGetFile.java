@@ -8,6 +8,7 @@ import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.plugin.api.v2.ComponentV2;
 import com.linkedpipes.plugin.ehttpgetfile.Downloader;
+import com.linkedpipes.plugin.ehttpgetfile.DownloaderRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,13 +43,18 @@ public final class HttpGetFile implements Component, SequentialExecution {
         setTrustAllCerts();
         progressReport.start(1);
         File outputFile = output.createFile(configuration.getFileName());
-        Map<String, String> header = createHeader();
-        Downloader.Task fileToDownload = new Downloader.Task(
-                configuration.getUri(), outputFile, header, null);
-        Downloader downloader = new Downloader(
-                fileToDownload, configuration.asDownloaderConfiguration());
+        DownloaderRequest request = new DownloaderRequest(
+                createHeader(),
+                null,
+                configuration.isManualFollowRedirect(),
+                false,
+                configuration.isEncodeUrl(),
+                configuration.isUtf8Redirect());
+        Downloader downloader = new Downloader();
         try {
-            downloader.download();
+            downloader.download(
+                    request, configuration.getUri(), outputFile,
+                    _ -> { /* Do nothing. */ });
         } catch (Exception ex) {
             throw new LpException("Can't download file.", ex);
         }
