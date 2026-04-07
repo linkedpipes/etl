@@ -54,7 +54,7 @@ public final class HttpGetFile implements Component, SequentialExecution {
         try {
             downloader.download(
                     request, configuration.getUri(), outputFile,
-                    _ -> { /* Do nothing. */ });
+                    connection -> { /* Do nothing. */ });
         } catch (Exception ex) {
             throw new LpException("Can't download file.", ex);
         }
