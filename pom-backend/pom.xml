@@ -28,7 +28,7 @@
         <junit.version>5.10.2</junit.version>
         <lp.version>0.0.0</lp.version>
         <commons-io.version>2.16.1</commons-io.version>
-        <springframework.version>6.1.6</springframework.version>
+        <springframework.version>6.2.18</springframework.version>
         <jetty.version>11.0.20</jetty.version>
         <!-- Project properties. -->
         <deploy.directory>../deploy/</deploy.directory>
@@ -343,6 +343,16 @@
                 <maven.compiler.target>23</maven.compiler.target>
             </properties>
         </profile>
+        <profile>
+            <id>java-26</id>
+            <activation>
+                <jdk>26</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>26</maven.compiler.source>
+                <maven.compiler.target>26</maven.compiler.target>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
@@ -365,7 +375,7 @@
                         <dependency>
                             <groupId>biz.aQute.bnd</groupId>
                             <artifactId>biz.aQute.bndlib</artifactId>
-                            <version>7.0.0</version>
+                            <version>7.2.3</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -375,7 +385,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.5.4</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.1</version>
             </plugin>
         </plugins>
     </build>

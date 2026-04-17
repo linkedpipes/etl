@@ -163,7 +163,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>5.1.1</version>
+                <version>5.1.9</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
@@ -175,6 +175,7 @@
                             javax.measure.*
                         </Export-Package>
                         <Import-Package>
+                            java.applet;resolution:=optional,
                             javax.swing;resolution:=optional,
                             javax.swing.*;resolution:=optional,
                             javax.media.*;resolution:=optional,
@@ -195,7 +196,7 @@
                     <dependency>
                         <groupId>biz.aQute.bnd</groupId>
                         <artifactId>biz.aQute.bndlib</artifactId>
-                        <version>5.2.0</version>
+                        <version>7.2.3</version>
                     </dependency>
                 </dependencies>
             </plugin>
