@@ -31,6 +31,8 @@
         <commons-io.version>2.16.1</commons-io.version>
         <commons-net.version>3.10.0</commons-net.version>
         <httpclient-osgi.version>4.5.14</httpclient-osgi.version>
+        <maven.compiler.source>22</maven.compiler.source>
+        <maven.compiler.target>22</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -266,6 +268,16 @@
                 <maven.compiler.target>23</maven.compiler.target>
             </properties>
         </profile>
+        <profile>
+            <id>java-26</id>
+            <activation>
+                <jdk>26</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>26</maven.compiler.source>
+                <maven.compiler.target>26</maven.compiler.target>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
@@ -288,7 +300,7 @@
                         <dependency>
                             <groupId>biz.aQute.bnd</groupId>
                             <artifactId>biz.aQute.bndlib</artifactId>
-                            <version>7.0.0</version>
+                            <version>7.2.3</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -299,10 +311,15 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.5.4</version>
                 <configuration>
                     <excludedGroups>external-dependency</excludedGroups>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.1</version>
             </plugin>
         </plugins>
     </build>
