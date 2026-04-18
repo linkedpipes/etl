@@ -10,18 +10,12 @@
     <name>LinkedPipes Plugin POM</name>
 
     <properties>
-        <project.build.sourceEncoding>
-            UTF-8
-        </project.build.sourceEncoding>
-        <project.reporting.outputEncoding>
-            UTF-8
-        </project.reporting.outputEncoding>
-        <checkstyle.config.location>
-            checkstyle.xml
-        </checkstyle.config.location>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <checkstyle.config.location>checkstyle.xml</checkstyle.config.location>
         <!-- Libraries. -->
         <slf4j.version>2.0.13</slf4j.version>
-        <logback.version>1.5.6</logback.version>
+        <logback.version>1.5.32</logback.version>
         <jackson.version>2.17.1</jackson.version>
         <rdf4j.version>5.0.1</rdf4j.version>
         <jena.version>4.1.0</jena.version>
@@ -31,11 +25,15 @@
         <commons-io.version>2.16.1</commons-io.version>
         <commons-net.version>3.10.0</commons-net.version>
         <httpclient-osgi.version>4.5.14</httpclient-osgi.version>
-        <maven.compiler.source>22</maven.compiler.source>
-        <maven.compiler.target>22</maven.compiler.target>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.linkedpipes</groupId>
+            <artifactId>test-support</artifactId>
+            <version>${lp.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -244,8 +242,7 @@
                 <jdk>21</jdk>
             </activation>
             <properties>
-                <maven.compiler.source>21</maven.compiler.source>
-                <maven.compiler.target>21</maven.compiler.target>
+                <maven.compiler.release>21</maven.compiler.release>
             </properties>
         </profile>
         <profile>
@@ -254,8 +251,7 @@
                 <jdk>22</jdk>
             </activation>
             <properties>
-                <maven.compiler.source>22</maven.compiler.source>
-                <maven.compiler.target>22</maven.compiler.target>
+                <maven.compiler.release>22</maven.compiler.release>
             </properties>
         </profile>
         <profile>
@@ -264,8 +260,16 @@
                 <jdk>23</jdk>
             </activation>
             <properties>
-                <maven.compiler.source>23</maven.compiler.source>
-                <maven.compiler.target>23</maven.compiler.target>
+                <maven.compiler.release>23</maven.compiler.release>
+            </properties>
+        </profile>
+        <profile>
+            <id>java-25</id>
+            <activation>
+                <jdk>25</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.release>25</maven.compiler.release>
             </properties>
         </profile>
         <profile>
@@ -274,8 +278,7 @@
                 <jdk>26</jdk>
             </activation>
             <properties>
-                <maven.compiler.source>26</maven.compiler.source>
-                <maven.compiler.target>26</maven.compiler.target>
+                <maven.compiler.release>26</maven.compiler.release>
             </properties>
         </profile>
     </profiles>
@@ -286,7 +289,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>5.1.9</version>
+                    <version>6.0.2</version>
                     <extensions>true</extensions>
                     <configuration>
                         <instructions>
@@ -307,11 +310,15 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.21.0</version>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.4</version>
+                <version>3.5.5</version>
                 <configuration>
                     <excludedGroups>external-dependency</excludedGroups>
                 </configuration>
@@ -319,7 +326,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.14.1</version>
+                <version>3.15.0</version>
             </plugin>
         </plugins>
     </build>

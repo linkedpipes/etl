@@ -12,6 +12,7 @@
         <profile>
             <id>install-executor</id>
             <modules>
+                <module>test-support</module>
                 <module>pom-backend</module>
                 <module>vocabulary</module>
                 <module>plugin-api</module>
@@ -22,6 +23,7 @@
         <profile>
             <id>install-executor-monitor</id>
             <modules>
+                <module>test-support</module>
                 <module>pom-backend</module>
                 <module>vocabulary</module>
                 <module>libraries</module>
@@ -31,6 +33,7 @@
         <profile>
             <id>install-storage</id>
             <modules>
+                <module>test-support</module>
                 <module>pom-backend</module>
                 <module>vocabulary</module>
                 <module>libraries</module>
@@ -40,6 +43,7 @@
         <profile>
             <id>install-plugins</id>
             <modules>
+                <module>test-support</module>
                 <module>pom-plugin</module>
                 <module>vocabulary</module>
                 <module>plugin-api</module>
@@ -62,6 +66,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
+                <module>test-support</module>
                 <module>frontend</module>
                 <module>pom-backend</module>
                 <module>pom-plugin</module>

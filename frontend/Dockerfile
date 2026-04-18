@@ -12,8 +12,8 @@ RUN addgroup --gid $LP_ETL_USER "linkedpipes" \
 RUN mkdir -p /data/lp-etl/logs \
     && chown -R $LP_ETL_USER:$LP_ETL_USER /data/lp-etl
 
-COPY --from=lp-etl-build --chown=linkedpipes /opt/lp-etl/deploy/configuration.docker.properties /opt/lp-etl/configuration/configuration.properties
-COPY --from=lp-etl-build --chown=linkedpipes /opt/lp-etl/deploy/frontend /opt/lp-etl/frontend
+COPY --from=build --chown=linkedpipes /opt/lp-etl/deploy/configuration.docker.properties /opt/lp-etl/configuration/configuration.properties
+COPY --from=build --chown=linkedpipes /opt/lp-etl/deploy/frontend /opt/lp-etl/frontend
 
 WORKDIR /opt/lp-etl/frontend
 USER $LP_ETL_USER
