@@ -1,4 +1,4 @@
-FROM node:22.1.0 as lp-etl-build
+FROM node:22.1.0 as build
 ARG LP_ETL_BUILD=""
 RUN apt-get update && apt-get -y --no-install-recommends install ca-certificates-java openjdk-17-jdk
 WORKDIR /opt/lp-etl/
