@@ -32,7 +32,7 @@ public class EnvironmentToConfiguration {
 
     private static Integer getEnvInteger(String name) throws MonitorException {
         String value = getEnv(name);
-        if (value == null) {
+        if (value == null || value.isBlank()) {
             return null;
         }
         try {
