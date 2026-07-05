@@ -5,13 +5,11 @@ import com.linkedpipes.etl.unpacker.model.executor.ExecutorComponent;
 import com.linkedpipes.etl.unpacker.model.executor.ExecutorConnection;
 import com.linkedpipes.etl.unpacker.model.executor.ExecutorPipeline;
 import com.linkedpipes.etl.unpacker.model.executor.ExecutorPort;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 /**
  * Compute data unit connectionGroups.
@@ -39,8 +37,7 @@ class DataUnitGroup {
         for (ExecutorComponent component : pipeline.getComponents()) {
             // TODO Replace with component property shouldBeExecuted
             String type = component.getExecutionType();
-            if (!type.equals(LP_EXEC.TYPE_EXECUTE)
-                    && !type.equals(LP_EXEC.TYPE_MAPPED)) {
+            if (!type.equals(LP_EXEC.TYPE_EXECUTE) && !type.equals(LP_EXEC.TYPE_MAPPED)) {
                 continue;
             }
             for (ExecutorPort port : component.getPorts()) {
@@ -58,10 +55,8 @@ class DataUnitGroup {
         int counter = 0;
         connectionGroups = new HashMap<>();
         for (ExecutorConnection connection : pipeline.getConnections()) {
-            ExecutorPort source =
-                    portsByComponentAndBinding.get(getSourceKey(connection));
-            ExecutorPort target =
-                    portsByComponentAndBinding.get(getTargetKey(connection));
+            ExecutorPort source = portsByComponentAndBinding.get(getSourceKey(connection));
+            ExecutorPort target = portsByComponentAndBinding.get(getTargetKey(connection));
             if (hasGroupSet(source)) {
                 if (hasGroupSet(target)) {
                     renamePortGroup(target, connectionGroups.get(source));
@@ -83,8 +78,7 @@ class DataUnitGroup {
 
     private void renamePortGroup(ExecutorPort port, int target) {
         int source = connectionGroups.get(port);
-        for (Map.Entry<ExecutorPort, Integer> entry
-                : connectionGroups.entrySet()) {
+        for (Map.Entry<ExecutorPort, Integer> entry : connectionGroups.entrySet()) {
             if (entry.getValue() == source) {
                 entry.setValue(target);
             }
@@ -92,13 +86,11 @@ class DataUnitGroup {
     }
 
     private String getSourceKey(ExecutorConnection connection) {
-        return connection.getSourceComponent() + "|"
-                + connection.getSourceBinding();
+        return connection.getSourceComponent() + "|" + connection.getSourceBinding();
     }
 
     private String getTargetKey(ExecutorConnection connection) {
-        return connection.getTargetComponent() + "|"
-                + connection.getTargetBinding();
+        return connection.getTargetComponent() + "|" + connection.getTargetBinding();
     }
 
     private void setGroups() {
@@ -126,5 +118,4 @@ class DataUnitGroup {
         Collections.sort(keys);
         return keys;
     }
-
 }

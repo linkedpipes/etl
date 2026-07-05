@@ -9,5 +9,4 @@ public class ExecutionProfile implements Loadable {
     public Loadable load(String predicate, BackendRdfValue value) {
         return null;
     }
-
 }

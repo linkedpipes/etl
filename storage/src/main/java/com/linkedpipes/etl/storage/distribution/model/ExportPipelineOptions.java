@@ -11,5 +11,4 @@ public class ExportPipelineOptions {
      * If true private configuration is removed.
      */
     public boolean removePrivateConfiguration = false;
-
 }

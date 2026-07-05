@@ -29,5 +29,4 @@ class IdentitySelector implements Selector {
     public Reference next() throws OperationFailed {
         return this.input.next();
     }
-
 }

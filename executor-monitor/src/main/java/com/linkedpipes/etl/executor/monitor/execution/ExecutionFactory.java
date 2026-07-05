@@ -1,12 +1,6 @@
 package com.linkedpipes.etl.executor.monitor.execution;
 
 import com.linkedpipes.etl.executor.monitor.MonitorException;
-import org.apache.commons.io.FileUtils;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.Rio;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,16 +10,18 @@ import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.Rio;
+import org.springframework.web.multipart.MultipartFile;
 
 class ExecutionFactory {
 
-    private static final String DEFINITION_FILE =
-            "definition" + File.separator + "definition.trig";
+    private static final String DEFINITION_FILE = "definition" + File.separator + "definition.trig";
 
     public static void prepareExecutionInDirectory(
-            File directory,
-            Collection<Statement> pipeline,
-            List<MultipartFile> inputs) throws MonitorException {
+            File directory, Collection<Statement> pipeline, List<MultipartFile> inputs) throws MonitorException {
 
         // Save pipeline definition.
         File definitionFile = getDefinitionFile(directory);
@@ -44,8 +40,7 @@ class ExecutionFactory {
         for (MultipartFile input : inputs) {
             String originalFileName = input.getOriginalFilename();
             if (originalFileName == null) {
-                throw new MonitorException(
-                        "Missing original name for: {}", input.getName());
+                throw new MonitorException("Missing original name for: {}", input.getName());
             }
             File targetFile = new File(inputDirectory, originalFileName);
             targetFile.getParentFile().mkdirs();
@@ -57,7 +52,6 @@ class ExecutionFactory {
                 throw new MonitorException("Can't prepare inputs.", ex);
             }
         }
-
     }
 
     private static File getDefinitionFile(File directory) {
@@ -68,8 +62,7 @@ class ExecutionFactory {
         return new File(directory, "input");
     }
 
-    public static void cloneExecution(File source, File target)
-            throws MonitorException {
+    public static void cloneExecution(File source, File target) throws MonitorException {
         File sourceDefinition = getDefinitionFile(source);
         File targetDefinition = getDefinitionFile(target);
         targetDefinition.getParentFile().mkdirs();
@@ -89,5 +82,4 @@ class ExecutionFactory {
             throw new MonitorException("Can't copy inputs.", ex);
         }
     }
-
 }

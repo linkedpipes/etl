@@ -6,10 +6,6 @@ import com.linkedpipes.etl.executor.api.v1.event.Event;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.service.WorkingDirectory;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,6 +15,9 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class TaskExecutionTest extends TaskExecution<TaskMock> {
 
@@ -45,7 +44,7 @@ public class TaskExecutionTest extends TaskExecution<TaskMock> {
             }
         };
 
-        progressReport =  new ProgressReport() {
+        progressReport = new ProgressReport() {
 
             @Override
             public void start(long entriesToProcess) {
@@ -67,7 +66,6 @@ public class TaskExecutionTest extends TaskExecution<TaskMock> {
                 // Ignore
             }
         };
-
     }
 
     @Override
@@ -90,8 +88,7 @@ public class TaskExecutionTest extends TaskExecution<TaskMock> {
             }
 
             @Override
-            public void onTaskFailed(
-                    Task task, Date start, Date end, Throwable throwable) {
+            public void onTaskFailed(Task task, Date start, Date end, Throwable throwable) {
                 // No action.
             }
 
@@ -104,7 +101,6 @@ public class TaskExecutionTest extends TaskExecution<TaskMock> {
             public String getIriForReport(Task task) {
                 return task.getIri();
             }
-
         };
     }
 
@@ -124,7 +120,7 @@ public class TaskExecutionTest extends TaskExecution<TaskMock> {
     }
 
     @AfterAll
-    public static  void cleanup() throws IOException {
+    public static void cleanup() throws IOException {
         Files.walk(tempDirectory)
                 .sorted(Comparator.reverseOrder())
                 .map(Path::toFile)
@@ -134,9 +130,7 @@ public class TaskExecutionTest extends TaskExecution<TaskMock> {
     @Test
     public void execute() throws LpException {
         this.workingDirectory = new WorkingDirectory(tempDirectory.toFile());
-        tasks = Arrays.asList(
-                new TaskMock("1", "A"),
-                new TaskMock("2", "B"));
+        tasks = Arrays.asList(new TaskMock("1", "A"), new TaskMock("2", "B"));
         configuration = new TaskExecutionConfiguration();
         this.execute(context);
     }
@@ -144,12 +138,9 @@ public class TaskExecutionTest extends TaskExecution<TaskMock> {
     @Test
     public void executeWithFailures() throws LpException {
         this.workingDirectory = new WorkingDirectory(tempDirectory.toFile());
-        tasks = Arrays.asList(
-                new TaskMock("1", "A", 1),
-                new TaskMock("2", "B", 1));
+        tasks = Arrays.asList(new TaskMock("1", "A", 1), new TaskMock("2", "B", 1));
         configuration = new TaskExecutionConfiguration();
         configuration.numberOfRetries = 2;
         this.execute(context);
     }
-
 }

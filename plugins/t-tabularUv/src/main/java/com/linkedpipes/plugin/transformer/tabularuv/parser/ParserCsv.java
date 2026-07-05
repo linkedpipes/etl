@@ -3,6 +3,9 @@ package com.linkedpipes.plugin.transformer.tabularuv.parser;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdf;
 import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdfConfigurator;
+import java.io.*;
+import java.util.Arrays;
+import java.util.List;
 import org.apache.commons.io.input.BOMInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,10 +13,6 @@ import org.supercsv.io.CsvListReader;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.quote.QuoteMode;
 import org.supercsv.util.CsvContext;
-
-import java.io.*;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Parse csv file.
@@ -39,30 +38,23 @@ public class ParserCsv implements Parser {
         // We will use quates only if they are provided
         if (config.quoteChar == null || config.quoteChar.isEmpty()) {
             // We do not use quates.
-            final QuoteMode customQuoteMode = (String csvColumn,
-                    CsvContext ctx, CsvPreference preference) -> {
+            final QuoteMode customQuoteMode = (String csvColumn, CsvContext ctx, CsvPreference preference) -> {
                 return false;
             };
             // Quate char is never used.
-            csvPreference = new CsvPreference.Builder(' ',
-                    config.delimiterChar,
-                    "\\n").useQuoteMode(customQuoteMode).build();
+            csvPreference = new CsvPreference.Builder(' ', config.delimiterChar, "\\n")
+                    .useQuoteMode(customQuoteMode)
+                    .build();
         } else {
-            csvPreference = new CsvPreference.Builder(
-                    config.quoteChar.charAt(0),
-                    config.delimiterChar,
-                    "\\n").build();
+            csvPreference = new CsvPreference.Builder(config.quoteChar.charAt(0), config.delimiterChar, "\\n").build();
         }
         if (!config.checkStaticRowCounter || rowNumber == 0) {
             rowNumber = config.hasHeader ? 2 : 1;
         }
         try (FileInputStream fileInputStream = new FileInputStream(inFile);
-             InputStreamReader inputStreamReader = getInputStream(
-                     fileInputStream);
-             BufferedReader bufferedReader = new BufferedReader(
-                     inputStreamReader);
-             CsvListReader csvListReader = new CsvListReader(bufferedReader,
-                     csvPreference)) {
+                InputStreamReader inputStreamReader = getInputStream(fileInputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                CsvListReader csvListReader = new CsvListReader(bufferedReader, csvPreference)) {
             // ignore initial ? lines
             for (int i = 0; i < config.numberOfStartLinesToIgnore; ++i) {
                 bufferedReader.readLine();
@@ -90,8 +82,7 @@ public class ParserCsv implements Parser {
             } else {
                 LOG.debug("Row limit: {}", config.rowLimit);
             }
-            while (row != null && (config.rowLimit == null
-                    || rowNumPerFile < config.rowLimit)) {
+            while (row != null && (config.rowLimit == null || rowNumPerFile < config.rowLimit)) {
                 // cast string to objects
                 tableToRdf.paserRow((List) row, rowNumber);
                 // read next row
@@ -104,8 +95,7 @@ public class ParserCsv implements Parser {
                 }
             }
         } catch (IOException ex) {
-            throw new ParseFailed("Parse of '" + inFile.toString()
-                    + "' failure", ex);
+            throw new ParseFailed("Parse of '" + inFile.toString() + "' failure", ex);
         }
     }
 
@@ -118,15 +108,11 @@ public class ParserCsv implements Parser {
      * @param fileInputStream
      * @return
      */
-    private InputStreamReader getInputStream(FileInputStream fileInputStream)
-            throws UnsupportedEncodingException {
+    private InputStreamReader getInputStream(FileInputStream fileInputStream) throws UnsupportedEncodingException {
         if (config.encoding.compareToIgnoreCase("UTF-8") == 0) {
-            return new InputStreamReader(
-                    new BOMInputStream(fileInputStream, false),
-                    config.encoding);
+            return new InputStreamReader(new BOMInputStream(fileInputStream, false), config.encoding);
         } else {
             return new InputStreamReader(fileInputStream, config.encoding);
         }
     }
-
 }

@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.sparql.linker;
 
 final class SparqlConstructVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -17,7 +16,5 @@ final class SparqlConstructVocabulary {
 
     public static final String HAS_SKIP_ON_FAILURE = PREFIX + "softFail";
 
-    private SparqlConstructVocabulary() {
-    }
-
+    private SparqlConstructVocabulary() {}
 }

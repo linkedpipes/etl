@@ -8,6 +8,15 @@ import com.linkedpipes.etl.executor.plugin.PluginService;
 import com.linkedpipes.etl.library.template.plugin.PluginException;
 import com.linkedpipes.etl.library.template.plugin.PluginTemplateFacade;
 import com.linkedpipes.etl.library.template.plugin.model.JavaPlugin;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
+import java.util.stream.Collectors;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
@@ -18,20 +27,9 @@ import org.osgi.framework.launch.FrameworkFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.stream.Collectors;
-
 public class OsgiPluginService implements PluginService {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(OsgiPluginService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OsgiPluginService.class);
 
     private Framework framework;
 
@@ -46,14 +44,11 @@ public class OsgiPluginService implements PluginService {
     public void startService(File storageDirectory) throws ExecutorException {
         createOsgiDirectory(storageDirectory);
         Map<String, String> config = new HashMap<>();
-        config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA,
-                OsgiPackageList.EXPORT_PACKAGE_LIST);
-        config.put(Constants.FRAMEWORK_STORAGE,
-                storageDirectory.getAbsolutePath());
-        config.put(Constants.FRAMEWORK_STORAGE_CLEAN,
-                Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
-        FrameworkFactory frameworkFactory
-                = ServiceLoader.load(FrameworkFactory.class).iterator().next();
+        config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, OsgiPackageList.EXPORT_PACKAGE_LIST);
+        config.put(Constants.FRAMEWORK_STORAGE, storageDirectory.getAbsolutePath());
+        config.put(Constants.FRAMEWORK_STORAGE_CLEAN, Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
+        FrameworkFactory frameworkFactory =
+                ServiceLoader.load(FrameworkFactory.class).iterator().next();
         framework = frameworkFactory.newFramework(config);
         try {
             framework.start();
@@ -128,10 +123,8 @@ public class OsgiPluginService implements PluginService {
         try {
             bundle.start();
         } catch (BundleException ex) {
-            LOG.error("Can't start bundle '{}'.\n{}",
-                    bundle.getLocation(), ex.getMessage());
-            throw new ExecutorException(
-                    "Can't start bundle, see logs for more details.");
+            LOG.error("Can't start bundle '{}'.\n{}", bundle.getLocation(), ex.getMessage());
+            throw new ExecutorException("Can't start bundle, see logs for more details.");
         }
     }
 
@@ -153,12 +146,11 @@ public class OsgiPluginService implements PluginService {
         }
         if (failedLoadings > 0) {
             throw new ExecutorException(
-                    "Failed to load '{}' bundles out of '{}'. " +
-                            "see logs for more details.",
-                    failedLoadings, files.size());
+                    "Failed to load '{}' bundles out of '{}'. " + "see logs for more details.",
+                    failedLoadings,
+                    files.size());
         }
-        LOG.info("Loaded '{}' component bundles from '{}' files.",
-                components.size(), files.size());
+        LOG.info("Loaded '{}' component bundles from '{}' files.", components.size(), files.size());
     }
 
     private void loadPlugin(File file) throws ExecutorException {
@@ -171,8 +163,7 @@ public class OsgiPluginService implements PluginService {
         }
         Bundle bundle = installComponent(file.toURI().toString());
         startBundle(bundle);
-        components.putAll(OsgiClassLoader.load(
-                plugin, bundle.getBundleContext()));
+        components.putAll(OsgiClassLoader.load(plugin, bundle.getBundleContext()));
     }
 
     private Bundle installComponent(String path) throws ExecutorException {
@@ -180,24 +171,20 @@ public class OsgiPluginService implements PluginService {
         try {
             bundle = framework.getBundleContext().installBundle(path);
         } catch (BundleException ex) {
-            throw new ExecutorException(
-                    "Can't load bundle from '{}'.", path, ex);
+            throw new ExecutorException("Can't load bundle from '{}'.", path, ex);
         }
         return bundle;
     }
 
     @Override
-    public List<PipelineExecutionObserver> getPipelineListeners()
-            throws ExecutorException {
+    public List<PipelineExecutionObserver> getPipelineListeners() throws ExecutorException {
         return getServices(PipelineExecutionObserver.class);
     }
 
-    private <T> List<T> getServices(Class<T> serviceClass)
-            throws ExecutorException {
+    private <T> List<T> getServices(Class<T> serviceClass) throws ExecutorException {
         BundleContext context = framework.getBundleContext();
         try {
-            return context.getServiceReferences(serviceClass, null)
-                    .stream()
+            return context.getServiceReferences(serviceClass, null).stream()
                     .map(context::getService)
                     .collect(Collectors.toList());
         } catch (InvalidSyntaxException ex) {
@@ -206,18 +193,15 @@ public class OsgiPluginService implements PluginService {
     }
 
     @Override
-    public List<DataUnitFactory> getDataUnitFactories()
-            throws ExecutorException {
+    public List<DataUnitFactory> getDataUnitFactories() throws ExecutorException {
         return getServices(DataUnitFactory.class);
     }
 
     @Override
-    public PluginHolder getPlugin(String iri)
-            throws ExecutorException {
+    public PluginHolder getPlugin(String iri) throws ExecutorException {
         if (!components.containsKey(iri)) {
             throw new ExecutorException("Missing template '{}'.", iri);
         }
         return components.get(iri);
     }
-
 }

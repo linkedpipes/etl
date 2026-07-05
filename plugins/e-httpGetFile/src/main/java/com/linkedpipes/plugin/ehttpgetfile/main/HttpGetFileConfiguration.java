@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.ehttpgetfile.main;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-import com.linkedpipes.plugin.ehttpgetfile.Downloader;
 
 @RdfToPojo.Type(iri = HttpGetFileVocabulary.CONFIG)
 public class HttpGetFileConfiguration {
@@ -32,8 +31,7 @@ public class HttpGetFileConfiguration {
     @RdfToPojo.Property(iri = HttpGetFileVocabulary.ENCODE_URL)
     private boolean encodeUrl = false;
 
-    public HttpGetFileConfiguration() {
-    }
+    public HttpGetFileConfiguration() {}
 
     public String getUri() {
         return uri;
@@ -82,5 +80,4 @@ public class HttpGetFileConfiguration {
     public void setEncodeUrl(boolean encodeUrl) {
         this.encodeUrl = encodeUrl;
     }
-
 }

@@ -12,5 +12,4 @@ public interface Reference {
     boolean isArrayReference();
 
     boolean isPrimitiveReference();
-
 }

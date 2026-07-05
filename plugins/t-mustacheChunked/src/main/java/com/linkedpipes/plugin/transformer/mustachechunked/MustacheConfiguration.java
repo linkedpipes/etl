@@ -17,8 +17,7 @@ public class MustacheConfiguration {
     @RdfToPojo.Property(iri = MustacheVocabulary.HAS_ESCAPE_FOR_JSON)
     private boolean escapeForJson = false;
 
-    public MustacheConfiguration() {
-    }
+    public MustacheConfiguration() {}
 
     public String getResourceClass() {
         return resourceClass;
@@ -51,5 +50,4 @@ public class MustacheConfiguration {
     public void setEscapeForJson(boolean escapeForJson) {
         this.escapeForJson = escapeForJson;
     }
-
 }

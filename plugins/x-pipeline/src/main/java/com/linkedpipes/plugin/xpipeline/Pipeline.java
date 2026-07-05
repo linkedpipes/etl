@@ -4,14 +4,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.Rio;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.IDN;
@@ -20,6 +12,13 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.Rio;
 
 public final class Pipeline implements Component, SequentialExecution {
 
@@ -43,8 +42,7 @@ public final class Pipeline implements Component, SequentialExecution {
     }
 
     private void validateConfiguration() throws LpException {
-        if (configuration.getPipeline() == null ||
-                configuration.getPipeline().isBlank()) {
+        if (configuration.getPipeline() == null || configuration.getPipeline().isBlank()) {
             throw new LpException("Pipeline to execute is not set.");
         }
     }
@@ -54,38 +52,22 @@ public final class Pipeline implements Component, SequentialExecution {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
         Resource resource = valueFactory.createBNode();
         result.add(valueFactory.createStatement(
-                resource,
-                RDF.TYPE,
-                valueFactory.createIRI(
-                        "http://etl.linkedpipes.com/ontology/ExecutionOptions"
-                )));
+                resource, RDF.TYPE, valueFactory.createIRI("http://etl.linkedpipes.com/ontology/ExecutionOptions")));
         result.add(valueFactory.createStatement(
                 resource,
-                valueFactory.createIRI(
-                        "http://linkedpipes.com/ontology/saveDebugData"
-                ),
-                valueFactory.createLiteral(
-                        configuration.isSaveDebugData()
-                )));
+                valueFactory.createIRI("http://linkedpipes.com/ontology/saveDebugData"),
+                valueFactory.createLiteral(configuration.isSaveDebugData())));
         result.add(valueFactory.createStatement(
                 resource,
-                valueFactory.createIRI(
-                        "http://linkedpipes.com/ontology/deleteWorkingData"
-                ),
-                valueFactory.createLiteral(
-                        configuration.isDeleteWorkingDirectory()
-                )));
+                valueFactory.createIRI("http://linkedpipes.com/ontology/deleteWorkingData"),
+                valueFactory.createLiteral(configuration.isDeleteWorkingDirectory())));
         result.add(valueFactory.createStatement(
                 resource,
-                valueFactory.createIRI(
-                        "http://linkedpipes.com/ontology/logPolicy"
-                ),
+                valueFactory.createIRI("http://linkedpipes.com/ontology/logPolicy"),
                 valueFactory.createIRI(getLogPolicy())));
         result.add(valueFactory.createStatement(
                 resource,
-                valueFactory.createIRI(
-                        "http://linkedpipes.com/ontology/logLevel"
-                ),
+                valueFactory.createIRI("http://linkedpipes.com/ontology/logLevel"),
                 valueFactory.createLiteral(configuration.getLogLevel())));
         return result;
     }
@@ -104,8 +86,7 @@ public final class Pipeline implements Component, SequentialExecution {
     private URL prepareUrl() throws LpException {
         String base = encodeUrlForIdn(configuration.getInstance()).toString();
         String pipeline = configuration.getPipeline();
-        String url = base + "/api/v1/executions?pipeline=" +
-                URLEncoder.encode(pipeline, StandardCharsets.UTF_8);
+        String url = base + "/api/v1/executions?pipeline=" + URLEncoder.encode(pipeline, StandardCharsets.UTF_8);
         try {
             return new URL(url);
         } catch (IOException ex) {
@@ -119,27 +100,20 @@ public final class Pipeline implements Component, SequentialExecution {
             // Parse so we have access to parts.
             url = new URL(urlAsString);
             // Encode the host to support IDN.
-            return new URL(
-                    url.getProtocol(),
-                    IDN.toASCII(url.getHost()),
-                    url.getPort(),
-                    url.getFile());
+            return new URL(url.getProtocol(), IDN.toASCII(url.getHost()), url.getPort(), url.getFile());
         } catch (IOException ex) {
-            throw new LpException("Can't create URL: {}",
-                    urlAsString, ex);
+            throw new LpException("Can't create URL: {}", urlAsString, ex);
         }
     }
 
-    private void executePost(URL url, List<Statement> body)
-            throws IOException, LpException {
+    private void executePost(URL url, List<Statement> body) throws IOException, LpException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         try {
             connection.setRequestMethod("POST");
             MultipartConnection multipart = new MultipartConnection(connection);
-            multipart.addStream(
-                    "configuration", "configuration.jsonld", (stream) -> {
-                        Rio.write(body, stream, RDFFormat.JSONLD);
-                    });
+            multipart.addStream("configuration", "configuration.jsonld", (stream) -> {
+                Rio.write(body, stream, RDFFormat.JSONLD);
+            });
             multipart.finishRequest();
             handleResponse(multipart);
         } finally {
@@ -147,13 +121,12 @@ public final class Pipeline implements Component, SequentialExecution {
         }
     }
 
-    private void handleResponse(MultipartConnection connection)
-            throws IOException, LpException {
+    private void handleResponse(MultipartConnection connection) throws IOException, LpException {
         if (connection.requestFailed()) {
-            throw new LpException("Request failed code:{}\nmessage: {}",
+            throw new LpException(
+                    "Request failed code:{}\nmessage: {}",
                     connection.getResponseCode(),
                     connection.getResponseMessage());
         }
     }
-
 }

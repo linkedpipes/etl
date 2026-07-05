@@ -2,14 +2,13 @@ package cz.skodape.hdt.json.jackson.model;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import cz.skodape.hdt.core.ObjectReference;
-
 import java.util.List;
 
 /**
  * Represent a JSON object.
  */
 public class JacksonObject extends JacksonReference implements ObjectReference {
-    
+
     private final ObjectNode node;
 
     public JacksonObject(List<JacksonReference> parents, ObjectNode node) {
@@ -40,5 +39,4 @@ public class JacksonObject extends JacksonReference implements ObjectReference {
     public boolean isPrimitiveReference() {
         return false;
     }
-
 }

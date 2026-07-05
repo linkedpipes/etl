@@ -23,8 +23,7 @@ public class PipelineConfiguration {
     @RdfToPojo.Property(iri = PipelineVocabulary.LOG_LEVEL)
     private String logLevel = "INFO";
 
-    public PipelineConfiguration() {
-    }
+    public PipelineConfiguration() {}
 
     public String getInstance() {
         return instance;
@@ -73,5 +72,4 @@ public class PipelineConfiguration {
     public void setLogLevel(String logLevel) {
         this.logLevel = logLevel;
     }
-
 }

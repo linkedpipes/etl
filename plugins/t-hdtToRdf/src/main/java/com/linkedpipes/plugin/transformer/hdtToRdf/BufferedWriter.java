@@ -2,12 +2,11 @@ package com.linkedpipes.plugin.transformer.hdtToRdf;
 
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import java.util.ArrayList;
+import java.util.List;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.rio.RDFHandler;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 class BufferedWriter implements RDFHandler {
 
@@ -17,8 +16,7 @@ class BufferedWriter implements RDFHandler {
 
     private final List<Statement> statements;
 
-    public BufferedWriter(
-            int commitSize, WritableSingleGraphDataUnit dataUnit) {
+    public BufferedWriter(int commitSize, WritableSingleGraphDataUnit dataUnit) {
         this.commitSize = commitSize;
         this.dataUnit = dataUnit;
         this.statements = new ArrayList<>(commitSize);
@@ -35,8 +33,7 @@ class BufferedWriter implements RDFHandler {
     }
 
     @Override
-    public void handleNamespace(String prefix, String uri)
-            throws RDFHandlerException {
+    public void handleNamespace(String prefix, String uri) throws RDFHandlerException {
         try {
             dataUnit.execute((connection) -> {
                 if (connection.getNamespace(prefix) == null) {
@@ -73,5 +70,4 @@ class BufferedWriter implements RDFHandler {
             throw new RDFHandlerException(ex);
         }
     }
-
 }

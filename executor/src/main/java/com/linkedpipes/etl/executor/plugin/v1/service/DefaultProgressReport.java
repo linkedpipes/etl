@@ -6,15 +6,13 @@ import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.XSD;
+import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-
 class DefaultProgressReport implements ProgressReport {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(DefaultProgressReport.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultProgressReport.class);
 
     private static final int EXPECTED_LABEL_LEN = 24;
 
@@ -52,7 +50,6 @@ class DefaultProgressReport implements ProgressReport {
             writer.typed(iri, LP.HAS_CURRENT, Long.toString(current), XSD.LONG);
             writer.iri(iri, LP.HAS_COMPONENT, component);
         }
-
     }
 
     private int current = 0;
@@ -116,5 +113,4 @@ class DefaultProgressReport implements ProgressReport {
         LOG.info("Progress report ALL/{}", current);
         context.sendMessage(new ReportProgress(total, total, component));
     }
-
 }

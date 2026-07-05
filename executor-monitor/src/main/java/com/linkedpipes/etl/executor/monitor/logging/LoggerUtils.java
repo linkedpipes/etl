@@ -11,7 +11,6 @@ import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 import ch.qos.logback.core.util.FileSize;
-
 import java.io.File;
 
 public class LoggerUtils {
@@ -19,24 +18,19 @@ public class LoggerUtils {
     private static final int HISTORY = 7;
 
     public static Appender<ILoggingEvent> createRollingFileAppender(
-            File logDirectory, String logFileName, LoggerContext loggerContext,
-            String levelFilter) {
+            File logDirectory, String logFileName, LoggerContext loggerContext, String levelFilter) {
         logDirectory.mkdirs();
         RollingFileAppender appender = new RollingFileAppender();
         appender.setContext(loggerContext);
-        appender.setFile(logDirectory.getPath() + File.separator
-                + logFileName + ".log");
+        appender.setFile(logDirectory.getPath() + File.separator + logFileName + ".log");
         addRollingPolicy(appender, loggerContext, logDirectory, logFileName);
-        addEncoder(appender, loggerContext,
-                "%d [%thread] %-5level %logger{50} - %msg%n");
+        addEncoder(appender, loggerContext, "%d [%thread] %-5level %logger{50} - %msg%n");
         addThresholdFilter(appender, levelFilter);
         appender.start();
         return appender;
     }
 
-    public static void addEncoder(
-            OutputStreamAppender appender, LoggerContext loggerContext,
-            String patter) {
+    public static void addEncoder(OutputStreamAppender appender, LoggerContext loggerContext, String patter) {
         PatternLayoutEncoder encoder = new PatternLayoutEncoder();
         encoder.setContext(loggerContext);
         encoder.setPattern(patter);
@@ -44,9 +38,7 @@ public class LoggerUtils {
         encoder.start();
     }
 
-
-    public static void addThresholdFilter(
-            UnsynchronizedAppenderBase appender, String level) {
+    public static void addThresholdFilter(UnsynchronizedAppenderBase appender, String level) {
         ThresholdFilter thresholdFilter = new ThresholdFilter();
         thresholdFilter.setLevel(level);
         appender.addFilter(thresholdFilter);
@@ -54,13 +46,11 @@ public class LoggerUtils {
     }
 
     public static void addRollingPolicy(
-            RollingFileAppender appender, LoggerContext loggerContext,
-            File logDirectory, String fileName) {
+            RollingFileAppender appender, LoggerContext loggerContext, File logDirectory, String fileName) {
         TimeBasedRollingPolicy rollingPolicy = new TimeBasedRollingPolicy();
         rollingPolicy.setContext(loggerContext);
         rollingPolicy.setParent(appender);
-        rollingPolicy.setFileNamePattern(logDirectory.getPath()
-                + File.separator + fileName + ".%d{yyyy-MM-dd}.%i.log");
+        rollingPolicy.setFileNamePattern(logDirectory.getPath() + File.separator + fileName + ".%d{yyyy-MM-dd}.%i.log");
         rollingPolicy.setMaxHistory(HISTORY);
         appender.setRollingPolicy(rollingPolicy);
         // File split policy.
@@ -69,13 +59,11 @@ public class LoggerUtils {
         triggeringPolicy.setMaxFileSize(FileSize.valueOf("1024MB"));
         triggeringPolicy.setTimeBasedRollingPolicy(rollingPolicy);
         appender.setTriggeringPolicy(triggeringPolicy);
-        rollingPolicy.setTimeBasedFileNamingAndTriggeringPolicy(
-                triggeringPolicy);
+        rollingPolicy.setTimeBasedFileNamingAndTriggeringPolicy(triggeringPolicy);
         //
         rollingPolicy.start();
         // We need TimeBasedRollingPolicy to have the FileNamePattern
         // pattern initialized which is done in rollingPolicy.start();
         triggeringPolicy.start();
     }
-
 }

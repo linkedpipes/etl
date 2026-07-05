@@ -2,11 +2,10 @@ package com.linkedpipes.plugin.transformer.valueParser;
 
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 abstract class ValueProducer {
 
@@ -40,5 +39,4 @@ abstract class ValueProducer {
             buffer.clear();
         });
     }
-
 }

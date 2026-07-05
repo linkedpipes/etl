@@ -6,12 +6,11 @@ import ch.qos.logback.core.Appender;
 import com.linkedpipes.etl.executor.cli.Configuration;
 import com.linkedpipes.etl.executor.cli.ConfigurationLoader;
 import com.linkedpipes.etl.executor.logging.LoggerUtils;
+import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import java.io.File;
 
 public class Executor {
 
@@ -30,8 +29,7 @@ public class Executor {
             return;
         }
         initializeLogging();
-        LOG.debug("Banned components: {}",
-                configuration.bannedPluginIriPatterns);
+        LOG.debug("Banned components: {}", configuration.bannedPluginIriPatterns);
         startSpring();
     }
 
@@ -75,26 +73,19 @@ public class Executor {
         if (configuration.logDirectory == null) {
             return;
         }
-        LoggerContext loggerContext =
-                (LoggerContext) LoggerFactory.getILoggerFactory();
-        ch.qos.logback.classic.Logger logbackLogger =
-                loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
-        String logLevel = configuration.logLevel == null ?
-                "INFO" : configuration.logLevel;
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        ch.qos.logback.classic.Logger logbackLogger = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
+        String logLevel = configuration.logLevel == null ? "INFO" : configuration.logLevel;
         File logDirectory = new File(configuration.logDirectory);
         //
         Appender<ILoggingEvent> appender =
-                LoggerUtils.createRollingFileAppender(
-                        logDirectory, "executor", loggerContext, logLevel);
+                LoggerUtils.createRollingFileAppender(logDirectory, "executor", loggerContext, logLevel);
         logbackLogger.addAppender(appender);
     }
 
     private void startSpring() {
-        ConfigurableApplicationContext context
-                = new ClassPathXmlApplicationContext(
-                "spring/context-service.xml");
+        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("spring/context-service.xml");
         context.registerShutdownHook();
         context.start();
     }
-
 }

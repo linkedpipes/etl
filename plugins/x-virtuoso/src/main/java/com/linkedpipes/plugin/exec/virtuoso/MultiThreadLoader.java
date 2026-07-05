@@ -2,19 +2,17 @@ package com.linkedpipes.plugin.exec.virtuoso;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class MultiThreadLoader {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(MultiThreadLoader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MultiThreadLoader.class);
 
     private final SqlExecutor sqlExecutor;
 
@@ -31,17 +29,14 @@ class MultiThreadLoader {
     private int loadedBeforeStart;
 
     public MultiThreadLoader(
-            SqlExecutor sqlExecutor,
-            VirtuosoConfiguration configuration,
-            ProgressReport progressReport) {
+            SqlExecutor sqlExecutor, VirtuosoConfiguration configuration, ProgressReport progressReport) {
         this.sqlExecutor = sqlExecutor;
         this.configuration = configuration;
         this.progressReport = progressReport;
     }
 
     public void loadData(int filesToLoad) throws LpException {
-        loadedBeforeStart = sqlExecutor.getFilesLoaded(
-                configuration.getLoadDirectoryPath());
+        loadedBeforeStart = sqlExecutor.getFilesLoaded(configuration.getLoadDirectoryPath());
 
         startLoading(filesToLoad);
         while (true) {
@@ -67,10 +62,8 @@ class MultiThreadLoader {
         }
     }
 
-    private boolean checkLoadingFinished(SqlExecutor executor, int taskCount)
-            throws LpException {
-        final int filesLoaded = executor.getFilesLoaded(
-                configuration.getLoadDirectoryPath());
+    private boolean checkLoadingFinished(SqlExecutor executor, int taskCount) throws LpException {
+        final int filesLoaded = executor.getFilesLoaded(configuration.getLoadDirectoryPath());
         int loadedFromStart = filesLoaded - loadedBeforeStart;
         LOG.debug("Processing {}/{} files", loadedFromStart, taskCount);
         while (loadedFromStart > lastReportedProgress) {
@@ -88,8 +81,7 @@ class MultiThreadLoader {
         int loaders = configuration.getLoaderCount();
         if (configuration.getLoaderCount() > filesToLoad) {
             loaders = filesToLoad;
-            LOG.info("Decreasing number of threads to files to load: {}",
-                    filesToLoad);
+            LOG.info("Decreasing number of threads to files to load: {}", filesToLoad);
         }
         initializeWorkers(loaders);
     }
@@ -125,5 +117,4 @@ class MultiThreadLoader {
             }
         }
     }
-
 }

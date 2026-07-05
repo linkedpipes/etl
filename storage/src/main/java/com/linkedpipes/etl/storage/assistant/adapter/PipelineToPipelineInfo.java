@@ -4,23 +4,19 @@ import com.linkedpipes.etl.library.pipeline.model.Pipeline;
 import com.linkedpipes.etl.library.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.library.pipeline.model.PipelineDataFlow;
 import com.linkedpipes.etl.storage.assistant.model.PipelineInfo;
-import org.eclipse.rdf4j.model.Resource;
-
 import java.util.HashMap;
 import java.util.Map;
+import org.eclipse.rdf4j.model.Resource;
 
 public class PipelineToPipelineInfo {
 
     public static PipelineInfo asPipelineInfo(Pipeline pipeline) {
-        PipelineInfo result = new PipelineInfo(
-                pipeline.resource(), pipeline.label());
+        PipelineInfo result = new PipelineInfo(pipeline.resource(), pipeline.label());
         result.tags.addAll(pipeline.tags());
-        Map<Resource, Resource> componentToTemplate =
-                buildTemplateMap(pipeline);
+        Map<Resource, Resource> componentToTemplate = buildTemplateMap(pipeline);
         //
         for (PipelineComponent component : pipeline.components()) {
-            result.templates.computeIfAbsent(
-                    component.template(), PipelineInfo.Template::new);
+            result.templates.computeIfAbsent(component.template(), PipelineInfo.Template::new);
         }
 
         // Compute followups.
@@ -31,8 +27,7 @@ public class PipelineToPipelineInfo {
                 continue;
             }
             PipelineInfo.Template template = result.templates.get(source);
-            template.followup.put(
-                    target, template.followup.getOrDefault(target, 0) + 1);
+            template.followup.put(target, template.followup.getOrDefault(target, 0) + 1);
         }
         return result;
     }
@@ -44,5 +39,4 @@ public class PipelineToPipelineInfo {
         }
         return result;
     }
-
 }

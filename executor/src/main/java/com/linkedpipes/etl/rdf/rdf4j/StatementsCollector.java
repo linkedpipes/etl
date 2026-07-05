@@ -5,14 +5,13 @@ import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 import com.linkedpipes.etl.rdf.utils.model.RdfTriple;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
+import java.util.LinkedList;
+import java.util.List;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class StatementsCollector implements BackendTripleWriter {
 
@@ -29,14 +28,10 @@ public class StatementsCollector implements BackendTripleWriter {
     private void add(String subject, String predicate, Value object) {
         if (graph == null) {
             statements.add(valueFactory.createStatement(
-                    valueFactory.createIRI(subject),
-                    valueFactory.createIRI(predicate),
-                    object));
+                    valueFactory.createIRI(subject), valueFactory.createIRI(predicate), object));
         } else {
             statements.add(valueFactory.createStatement(
-                    valueFactory.createIRI(subject),
-                    valueFactory.createIRI(predicate),
-                    object, graph));
+                    valueFactory.createIRI(subject), valueFactory.createIRI(predicate), object, graph));
         }
     }
 
@@ -71,8 +66,7 @@ public class StatementsCollector implements BackendTripleWriter {
     }
 
     @Override
-    public void string(
-            String subject, String predicate, String object, String language) {
+    public void string(String subject, String predicate, String object, String language) {
         Value objectValue;
         if (language == null) {
             objectValue = valueFactory.createLiteral(object);
@@ -83,10 +77,8 @@ public class StatementsCollector implements BackendTripleWriter {
     }
 
     @Override
-    public void typed(
-            String subject, String predicate, String object, String type) {
-        Value value = valueFactory.createLiteral(
-                object, valueFactory.createIRI(type));
+    public void typed(String subject, String predicate, String object, String type) {
+        Value value = valueFactory.createLiteral(object, valueFactory.createIRI(type));
         add(subject, predicate, value);
     }
 
@@ -98,5 +90,4 @@ public class StatementsCollector implements BackendTripleWriter {
     public List<Statement> getStatements() {
         return statements;
     }
-
 }

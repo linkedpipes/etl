@@ -20,10 +20,8 @@ class UpdateExecutionStatus {
         return true;
     }
 
-    private ExecutionStatus selectExecutionStatus(
-            Execution execution,OverviewObject overview) {
-        ExecutionStatus status =
-                ExecutionStatus.fromIri(overview.getStatus());
+    private ExecutionStatus selectExecutionStatus(Execution execution, OverviewObject overview) {
+        ExecutionStatus status = ExecutionStatus.fromIri(overview.getStatus());
         // Postpone failed and finished until the execution is finished.
         switch (status) {
             case FAILED:
@@ -56,8 +54,7 @@ class UpdateExecutionStatus {
         return overview.getFinish() != null;
     }
 
-    private ExecutionStatus statusForRunningExecution(
-            Execution execution, ExecutionStatus status) {
+    private ExecutionStatus statusForRunningExecution(Execution execution, ExecutionStatus status) {
         // No executor.
         if (!execution.isExecutor()) {
             return ExecutionStatus.DANGLING;
@@ -68,5 +65,4 @@ class UpdateExecutionStatus {
         }
         return status;
     }
-
 }

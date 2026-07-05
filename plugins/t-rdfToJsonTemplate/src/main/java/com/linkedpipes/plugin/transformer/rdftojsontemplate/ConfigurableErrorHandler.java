@@ -9,26 +9,22 @@ import org.slf4j.LoggerFactory;
 
 public class ConfigurableErrorHandler extends TransformErrorHandler {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ConfigurableErrorHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigurableErrorHandler.class);
 
     private boolean ignoreMultiplePrimitives = false;
 
     @Override
-    public void onMultiplePrimitiveValues(
-            Reference head, Reference next,
-            ReferenceSource source) throws OperationFailed {
+    public void onMultiplePrimitiveValues(Reference head, Reference next, ReferenceSource source)
+            throws OperationFailed {
         String message = multiplePrimitiveValuesMessage(head, next, source);
         if (ignoreMultiplePrimitives) {
             LOG.warn("Ignoring multiple values for primitive: {}", message);
         } else {
-            throw new OperationFailed(
-                    "Multiple values detected for primitive: {}", message);
+            throw new OperationFailed("Multiple values detected for primitive: {}", message);
         }
     }
 
     public void setIgnoreMultiplePrimitives(boolean ignoreMultiplePrimitives) {
         this.ignoreMultiplePrimitives = ignoreMultiplePrimitives;
     }
-
 }

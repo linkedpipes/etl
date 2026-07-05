@@ -3,7 +3,6 @@ package com.linkedpipes.etl.executor.monitor.debug.http;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,24 +23,19 @@ class AmbiguousEntry extends DebugEntry {
 
     final CreatePublicPath createPublicPath;
 
-    public AmbiguousEntry(
-            List<DebugEntry> entries, CreatePublicPath createPublicPath) {
+    public AmbiguousEntry(List<DebugEntry> entries, CreatePublicPath createPublicPath) {
         this.entries = entries;
         this.createPublicPath = createPublicPath;
     }
 
     @Override
-    public DebugEntry prepareData(
-            String nameFilter, String sourceFilter, long offset, long limit)
-            throws IOException {
+    public DebugEntry prepareData(String nameFilter, String sourceFilter, long offset, long limit) throws IOException {
         List<DebugEntry> newEntries = filterEntries(sourceFilter);
         if (newEntries.size() == 1) {
-            return newEntries.get(0).prepareData(
-                    nameFilter, sourceFilter, offset, limit);
+            return newEntries.get(0).prepareData(nameFilter, sourceFilter, offset, limit);
         }
         //
-        ResponseContent content = prepareResponseContent(
-                nameFilter, sourceFilter, offset, limit);
+        ResponseContent content = prepareResponseContent(nameFilter, sourceFilter, offset, limit);
         contentAsJsonString = content.asJsonString();
         return this;
     }
@@ -65,10 +59,8 @@ class AmbiguousEntry extends DebugEntry {
         }
     }
 
-    ResponseContent prepareResponseContent(
-            String nameFilter, String sourceFilter, long offset, long limit) {
-        List<ResponseContent.Entry> data = collectEntries(
-                nameFilter, sourceFilter, offset, limit);
+    ResponseContent prepareResponseContent(String nameFilter, String sourceFilter, long offset, long limit) {
+        List<ResponseContent.Entry> data = collectEntries(nameFilter, sourceFilter, offset, limit);
         ResponseContent content = new ResponseContent(data);
         content.metadata.count = totalEntryCount;
         content.metadata.type = ResponseContent.TYPE_AMBIGUOUS;
@@ -82,13 +74,9 @@ class AmbiguousEntry extends DebugEntry {
         collectedEntries = 0;
         for (DebugEntry entry : entries) {
             if (entry instanceof DirectoryEntry) {
-                data.addAll(collectFromDirectory(
-                        (DirectoryEntry) entry,
-                        nameFilter, sourceFilter, offset, limit));
+                data.addAll(collectFromDirectory((DirectoryEntry) entry, nameFilter, sourceFilter, offset, limit));
             } else if (entry instanceof FileContentEntry) {
-                data.addAll(collectFromFile(
-                        (FileContentEntry) entry,
-                        nameFilter, sourceFilter, offset, limit));
+                data.addAll(collectFromFile((FileContentEntry) entry, nameFilter, sourceFilter, offset, limit));
             } else {
                 // Ignore entry.
             }
@@ -97,13 +85,17 @@ class AmbiguousEntry extends DebugEntry {
     }
 
     private List<ResponseContent.Entry> collectFromDirectory(
-            DirectoryEntry entry,
-            String nameFilter, String sourceFilter, long offset, long limit) {
+            DirectoryEntry entry, String nameFilter, String sourceFilter, long offset, long limit) {
         long remainingOffset = Math.max(0, offset - totalEntryCount);
         long remainingLimit = limit - collectedEntries;
         ResponseContent content = DirectoryEntry.prepareResponse(
-                entry.directory, entry.source, nameFilter, sourceFilter,
-                remainingOffset, remainingLimit, createPublicPath);
+                entry.directory,
+                entry.source,
+                nameFilter,
+                sourceFilter,
+                remainingOffset,
+                remainingLimit,
+                createPublicPath);
         totalEntryCount += content.metadata.count;
         collectedEntries += content.data.size();
         return content.data;
@@ -114,8 +106,7 @@ class AmbiguousEntry extends DebugEntry {
     }
 
     private List<ResponseContent.Entry> collectFromFile(
-            FileContentEntry entry,
-            String nameFilter, String sourceFilter, long offset, long limit) {
+            FileContentEntry entry, String nameFilter, String sourceFilter, long offset, long limit) {
         totalEntryCount++;
         if (collectedEntries >= limit) {
             // Continue to count number of entries.
@@ -141,7 +132,5 @@ class AmbiguousEntry extends DebugEntry {
                 entry.getFileSize(),
                 entry.getFileMimeType(),
                 createPublicPath.apply(entry.file)));
-
     }
-
 }

@@ -2,7 +2,6 @@ package cz.skodape.hdt.json.jackson.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cz.skodape.hdt.core.ArrayReference;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -11,13 +10,11 @@ import java.util.List;
  * JsonNodes in general. To allow re-use of this class we thus store an array
  * instead of {@link com.fasterxml.jackson.databind.node.ArrayNode}.
  */
-public class JacksonNodeArray
-        extends JacksonReference implements ArrayReference {
+public class JacksonNodeArray extends JacksonReference implements ArrayReference {
 
     private final List<JsonNode> nodes;
 
-    public JacksonNodeArray(
-            List<JacksonReference> parents, List<JsonNode> nodes) {
+    public JacksonNodeArray(List<JacksonReference> parents, List<JsonNode> nodes) {
         super(parents);
         this.nodes = nodes;
     }
@@ -45,5 +42,4 @@ public class JacksonNodeArray
     public boolean isPrimitiveReference() {
         return false;
     }
-
 }

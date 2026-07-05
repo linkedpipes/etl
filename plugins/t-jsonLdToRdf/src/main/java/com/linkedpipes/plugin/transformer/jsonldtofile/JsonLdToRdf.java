@@ -14,8 +14,7 @@ import org.slf4j.LoggerFactory;
 
 public final class JsonLdToRdf implements Component, SequentialExecution {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(JsonLdToRdf.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JsonLdToRdf.class);
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
@@ -55,7 +54,7 @@ public final class JsonLdToRdf implements Component, SequentialExecution {
                 if (configuration.isSkipOnFailure()) {
                     LOG.error("Can't load file: {}", entry.getFileName());
                 } else {
-                    throw  ex;
+                    throw ex;
                 }
             }
             progressReport.entryProcessed();
@@ -64,19 +63,15 @@ public final class JsonLdToRdf implements Component, SequentialExecution {
     }
 
     private void loadEntry(FilesDataUnit.Entry entry) throws LpException {
-        StreamProcessor streamProcessor = new StreamProcessor(
-                JsonLdParser.connect(FileAwareRdf4jSink.connect(writer)));
-        try  {
+        StreamProcessor streamProcessor = new StreamProcessor(JsonLdParser.connect(FileAwareRdf4jSink.connect(writer)));
+        try {
             streamProcessor.process(entry.toFile());
         } catch (Exception ex) {
             handleLoadingException(entry.getFileName(), ex);
         }
     }
 
-    private void handleLoadingException(String fileName, Exception ex)
-            throws LpException {
-        throw new LpException(
-                "Can't parse file: {}", fileName, ex);
+    private void handleLoadingException(String fileName, Exception ex) throws LpException {
+        throw new LpException("Can't parse file: {}", fileName, ex);
     }
-
 }

@@ -62,5 +62,4 @@ public class DesignerConnection implements Loadable {
     public String getTargetBinding() {
         return targetBinding;
     }
-
 }

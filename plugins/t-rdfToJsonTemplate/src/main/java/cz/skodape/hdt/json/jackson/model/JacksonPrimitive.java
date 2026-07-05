@@ -1,14 +1,12 @@
 package cz.skodape.hdt.json.jackson.model;
 
 import cz.skodape.hdt.core.PrimitiveReference;
-
 import java.util.List;
 
 /**
  * Holds the primitive value, i.e. string value.
  */
-public class JacksonPrimitive
-        extends JacksonReference implements PrimitiveReference {
+public class JacksonPrimitive extends JacksonReference implements PrimitiveReference {
 
     private final String value;
 
@@ -41,5 +39,4 @@ public class JacksonPrimitive
     public boolean isPrimitiveReference() {
         return true;
     }
-
 }

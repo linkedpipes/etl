@@ -15,11 +15,6 @@
  */
 package org.semarglproject.source;
 
-import org.semarglproject.rdf.ParseException;
-import org.semarglproject.sink.CharSink;
-import org.semarglproject.sink.DataSink;
-import org.semarglproject.sink.XmlSink;
-
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +27,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import org.semarglproject.rdf.ParseException;
+import org.semarglproject.sink.CharSink;
+import org.semarglproject.sink.DataSink;
+import org.semarglproject.sink.XmlSink;
 
 /**
  * Pipeline managing class to subclass from.
@@ -44,8 +43,8 @@ public abstract class BaseStreamProcessor {
 
     protected abstract void processInternal(Reader reader, String mimeType, String baseUri) throws ParseException;
 
-    protected abstract void processInternal(InputStream inputStream, String mimeType,
-                                            String baseUri) throws ParseException;
+    protected abstract void processInternal(InputStream inputStream, String mimeType, String baseUri)
+            throws ParseException;
 
     /**
      * Key-value based settings. Property settings are passed to child sinks.
@@ -195,5 +194,4 @@ public abstract class BaseStreamProcessor {
             // ignore
         }
     }
-
 }

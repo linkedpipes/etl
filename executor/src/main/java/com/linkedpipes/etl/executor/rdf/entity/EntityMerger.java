@@ -6,23 +6,20 @@ import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 import com.linkedpipes.etl.rdf.utils.model.RdfTriple;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Can be used to merge RDF entities based on the configuration.
  */
 public class EntityMerger {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(EntityMerger.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EntityMerger.class);
 
     private final MergeControlFactory descriptorFactory;
 
@@ -40,9 +37,7 @@ public class EntityMerger {
         this.descriptorFactory = descriptorFactory;
     }
 
-    public void merge(
-            List<EntityReference> references, String outputIri,
-            BackendTripleWriter writer)
+    public void merge(List<EntityReference> references, String outputIri, BackendTripleWriter writer)
             throws RdfUtilsException {
         if (references.isEmpty()) {
             throw new RdfUtilsException("Nothing to merge!");
@@ -61,8 +56,7 @@ public class EntityMerger {
         writeResult(outputIri, writer);
     }
 
-    private MergeControl getDescriptor(EntityReference reference)
-            throws RdfUtilsException {
+    private MergeControl getDescriptor(EntityReference reference) throws RdfUtilsException {
         List<String> types = getTypes(reference);
         for (String item : types) {
             final MergeControl descriptor = descriptorFactory.create(item);
@@ -70,21 +64,17 @@ public class EntityMerger {
                 return descriptor;
             }
         }
-        throw new RdfUtilsException("Can't get descriptor for: {} in {}",
-                reference.getResource(), reference.getGraph());
+        throw new RdfUtilsException(
+                "Can't get descriptor for: {} in {}", reference.getResource(), reference.getGraph());
     }
 
-    private List<String> getTypes(EntityReference reference)
-            throws RdfUtilsException {
+    private List<String> getTypes(EntityReference reference) throws RdfUtilsException {
         List<String> types = new LinkedList<>();
-        reference.getSource().triples(
-                reference.getResource(),
-                reference.getGraph(),
-                triple -> {
-                    if (RDF.TYPE.equals(triple.getPredicate())) {
-                        types.add(triple.getObject().asString());
-                    }
-                });
+        reference.getSource().triples(reference.getResource(), reference.getGraph(), triple -> {
+            if (RDF.TYPE.equals(triple.getPredicate())) {
+                types.add(triple.getObject().asString());
+            }
+        });
         return types;
     }
 
@@ -94,17 +84,12 @@ public class EntityMerger {
         entitiesToMerge = new HashMap<>();
     }
 
-    private void loadEntity(EntityReference reference)
-            throws RdfUtilsException {
+    private void loadEntity(EntityReference reference) throws RdfUtilsException {
         this.reference = reference;
-        reference.getSource().triples(
-                reference.getResource(),
-                reference.getGraph(),
-                this::handleStatement);
+        reference.getSource().triples(reference.getResource(), reference.getGraph(), this::handleStatement);
     }
 
-    private void handleStatement(RdfTriple triple)
-            throws RdfUtilsException {
+    private void handleStatement(RdfTriple triple) throws RdfUtilsException {
         switch (descriptor.onProperty(triple.getPredicate())) {
             case LOAD:
                 loadStatement(triple);
@@ -134,17 +119,17 @@ public class EntityMerger {
         if (!entitiesToCopy.containsKey(predicate)) {
             entitiesToCopy.put(predicate, new ArrayList<>());
         }
-        entitiesToCopy.get(predicate).add(new EntityReference(
-                triple.getObject().asString(),
-                reference.getGraph(),
-                reference.getSource()));
+        entitiesToCopy
+                .get(predicate)
+                .add(new EntityReference(triple.getObject().asString(), reference.getGraph(), reference.getSource()));
     }
 
     private void mergeStatement(RdfTriple triple) {
         if (triple.getObject().isIri()) {
             addEntityToMerge(triple);
         } else {
-            LOG.error("Invalid reference ignored {} {} {} : {}",
+            LOG.error(
+                    "Invalid reference ignored {} {} {} : {}",
                     triple.getSubject(),
                     triple.getPredicate(),
                     triple.getObject().asString(),
@@ -157,29 +142,24 @@ public class EntityMerger {
         if (!entitiesToMerge.containsKey(predicate)) {
             entitiesToMerge.put(predicate, new ArrayList<>());
         }
-        entitiesToMerge.get(predicate).add(new EntityReference(
-                triple.getObject().asString(),
-                reference.getGraph(),
-                reference.getSource()));
+        entitiesToMerge
+                .get(predicate)
+                .add(new EntityReference(triple.getObject().asString(), reference.getGraph(), reference.getSource()));
     }
 
-    private void writeResult(String outputIri, BackendTripleWriter writer)
-            throws RdfUtilsException {
-        for (Map.Entry<String, List<BackendRdfValue>> entry :
-                values.entrySet()) {
+    private void writeResult(String outputIri, BackendTripleWriter writer) throws RdfUtilsException {
+        for (Map.Entry<String, List<BackendRdfValue>> entry : values.entrySet()) {
             for (BackendRdfValue value : entry.getValue()) {
                 writer.add(outputIri, entry.getKey(), value);
             }
         }
         for (List<EntityReference> references : entitiesToCopy.values()) {
             for (EntityReference value : references) {
-                copyEntityRecursive(value.getSource(),
-                        value.getResource(), value.getGraph(), writer);
+                copyEntityRecursive(value.getSource(), value.getResource(), value.getGraph(), writer);
             }
         }
         int counter = 0;
-        for (Map.Entry<String, List<EntityReference>> entry
-                : entitiesToMerge.entrySet()) {
+        for (Map.Entry<String, List<EntityReference>> entry : entitiesToMerge.entrySet()) {
             String iri = outputIri + "/" + ++counter;
             writer.iri(outputIri, entry.getKey(), iri);
             merge(entry.getValue(), iri, writer);
@@ -188,16 +168,13 @@ public class EntityMerger {
     }
 
     private static void copyEntityRecursive(
-            BackendRdfSource source, String resource,
-            String graph, BackendTripleWriter writer)
+            BackendRdfSource source, String resource, String graph, BackendTripleWriter writer)
             throws RdfUtilsException {
         source.triples(resource, graph, (triple) -> {
             writer.add(triple);
             if (triple.getObject().isIri()) {
-                copyEntityRecursive(source, triple.getObject().asString(),
-                        graph, writer);
+                copyEntityRecursive(source, triple.getObject().asString(), graph, writer);
             }
         });
     }
-
 }

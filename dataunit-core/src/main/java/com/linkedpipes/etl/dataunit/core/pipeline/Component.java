@@ -2,7 +2,6 @@ package com.linkedpipes.etl.dataunit.core.pipeline;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.Loadable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,5 +36,4 @@ class Component implements Loadable {
     public List<DataUnit> getDataUnits() {
         return dataUnits;
     }
-
 }

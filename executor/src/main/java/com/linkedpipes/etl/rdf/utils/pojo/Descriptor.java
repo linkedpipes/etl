@@ -15,5 +15,4 @@ public interface Descriptor {
      * Return field to set value of given property to or null to ignore.
      */
     Field getFieldForPredicate(String predicate);
-
 }

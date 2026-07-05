@@ -24,7 +24,6 @@ public interface FilesDataUnit extends Iterable<FilesDataUnit.Entry> {
          * of data unit.
          */
         String getFileName();
-
     }
 
     /**
@@ -38,5 +37,4 @@ public interface FilesDataUnit extends Iterable<FilesDataUnit.Entry> {
      * Number of files in FilesDataUnit.
      */
     long size();
-
 }

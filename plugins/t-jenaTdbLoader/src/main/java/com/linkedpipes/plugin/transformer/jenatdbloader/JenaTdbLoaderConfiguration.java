@@ -11,8 +11,7 @@ public class JenaTdbLoaderConfiguration {
     @RdfToPojo.Property(iri = JenaTdbLoaderVocabulary.HAS_LOADER)
     private String loader;
 
-    public JenaTdbLoaderConfiguration() {
-    }
+    public JenaTdbLoaderConfiguration() {}
 
     public String getLocation() {
         return location;
@@ -29,5 +28,4 @@ public class JenaTdbLoaderConfiguration {
     public void setLoader(String loader) {
         this.loader = loader;
     }
-
 }

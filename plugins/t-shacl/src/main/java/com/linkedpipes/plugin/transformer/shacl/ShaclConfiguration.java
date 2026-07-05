@@ -11,8 +11,7 @@ public class ShaclConfiguration {
     @RdfToPojo.Property(iri = ShaclVocabulary.HAS_FAIL_ON_ERROR)
     private boolean failOnError = true;
 
-    public ShaclConfiguration() {
-    }
+    public ShaclConfiguration() {}
 
     public String getShapes() {
         return shapes;
@@ -29,5 +28,4 @@ public class ShaclConfiguration {
     public void setFailOnError(boolean failOnError) {
         this.failOnError = failOnError;
     }
-
 }

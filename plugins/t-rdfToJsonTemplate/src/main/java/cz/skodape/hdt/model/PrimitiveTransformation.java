@@ -14,5 +14,4 @@ public class PrimitiveTransformation extends BaseTransformation {
      * definition of the data type.
      */
     public OutputConfiguration outputConfiguration = null;
-
 }

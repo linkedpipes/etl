@@ -6,7 +6,6 @@ import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 import com.linkedpipes.etl.rdf.utils.vocabulary.SKOS;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -97,14 +96,13 @@ public class PipelineComponent implements Loadable {
     }
 
     @Override
-    public Loadable load(String predicate, BackendRdfValue object)
-            throws RdfUtilsException {
+    public Loadable load(String predicate, BackendRdfValue object) throws RdfUtilsException {
         switch (predicate) {
             case SKOS.PREF_LABEL:
                 label = object.asString();
                 return null;
             case LP_EXEC.HAS_ORDER_EXEC:
-                executionOrder = (int)object.asLong();
+                executionOrder = (int) object.asLong();
                 return null;
             case LP_PIPELINE.HAS_DATA_UNIT:
                 final Port newDataUnit = new Port(object.asString(), this);
@@ -122,8 +120,7 @@ public class PipelineComponent implements Loadable {
                         executionType = ExecutionType.SKIP;
                         break;
                     default:
-                        throw new RdfUtilsException(
-                                "Invalid exec. type : {} {}", iri, object);
+                        throw new RdfUtilsException("Invalid exec. type : {} {}", iri, object);
                 }
                 return null;
             case LP_PIPELINE.HAS_CONFIGURATION_GRAPH:
@@ -136,8 +133,7 @@ public class PipelineComponent implements Loadable {
                 template = object.asString();
                 return null;
             case LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION:
-                configurationDescription =
-                        new ConfigurationDescription(object.asString());
+                configurationDescription = new ConfigurationDescription(object.asString());
                 return configurationDescription;
             case LP_EXEC.HAS_EXECUTION:
                 execution = object.asString();
@@ -153,8 +149,7 @@ public class PipelineComponent implements Loadable {
 
     private void check() throws InvalidPipelineException {
         if (executionType == null) {
-            throw new InvalidPipelineException(
-                    "Missing execution type: {}", iri);
+            throw new InvalidPipelineException("Missing execution type: {}", iri);
         }
         if (executionType == ExecutionType.SKIP) {
             // As the component is not executed we do not need
@@ -162,20 +157,16 @@ public class PipelineComponent implements Loadable {
             return;
         }
         if (executionOrder == null) {
-            throw new InvalidPipelineException(
-                    "Missing execution executionOrder: {}", iri);
+            throw new InvalidPipelineException("Missing execution executionOrder: {}", iri);
         }
         if (executionType == ExecutionType.MAP) {
             return;
         }
         if (configurationDescription == null) {
-            throw new InvalidPipelineException(
-                    "Missing configurationGraph description: {} jar: {}",
-                    iri, jarPath);
+            throw new InvalidPipelineException("Missing configurationGraph description: {} jar: {}", iri, jarPath);
         }
         if (configurationGraph == null) {
-            throw new InvalidPipelineException(
-                    "Missing configurationGraph for: {}", iri);
+            throw new InvalidPipelineException("Missing configurationGraph for: {}", iri);
         }
         configurationDescription.check();
     }
@@ -191,5 +182,4 @@ public class PipelineComponent implements Loadable {
     public void setLastWorkingDirectory(File lastWorkingDirectory) {
         this.lastWorkingDirectory = lastWorkingDirectory;
     }
-
 }

@@ -7,6 +7,7 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.io.IOException;
 import org.eclipse.rdf4j.rio.RDFParser;
 import org.eclipse.rdf4j.rio.n3.N3ParserFactory;
 import org.rdfhdt.hdt.exceptions.NotFoundException;
@@ -14,8 +15,6 @@ import org.rdfhdt.hdt.hdt.HDT;
 import org.rdfhdt.hdt.hdt.HDTManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 public final class HdtToRdf implements Component, SequentialExecution {
 
@@ -70,11 +69,9 @@ public final class HdtToRdf implements Component, SequentialExecution {
             parser.parse(reader, "http://localhost/base/");
             LOG.info("Converting {} triples ... done", hdt.size());
         } catch (IOException ex) {
-            throw new LpException(
-                    "Can't read file: {}", entry.getFileName(), ex);
+            throw new LpException("Can't read file: {}", entry.getFileName(), ex);
         } catch (NotFoundException ex) {
             // This is ok, as if no triples were found there is just no output.
         }
     }
-
 }

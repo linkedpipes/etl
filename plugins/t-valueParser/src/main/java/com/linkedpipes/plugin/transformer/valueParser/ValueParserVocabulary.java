@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.valueParser;
 
 final class ValueParserVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-valueParser#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-valueParser#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -25,7 +24,5 @@ final class ValueParserVocabulary {
 
     public static final String HAS_ORDER = PREFIX + "order";
 
-    private ValueParserVocabulary() {
-    }
-
+    private ValueParserVocabulary() {}
 }

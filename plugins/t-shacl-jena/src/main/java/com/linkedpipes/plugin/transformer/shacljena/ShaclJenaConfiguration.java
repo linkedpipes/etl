@@ -11,9 +11,7 @@ public class ShaclJenaConfiguration {
     @RdfToPojo.Property(iri = ShaclJenaVocabulary.HAS_OUTPUT_SHAPES)
     private boolean outputShapes = true;
 
-
-    public ShaclJenaConfiguration() {
-    }
+    public ShaclJenaConfiguration() {}
 
     public boolean isFailOnError() {
         return failOnError;
@@ -30,5 +28,4 @@ public class ShaclJenaConfiguration {
     public void setOutputShapes(boolean outputShapes) {
         this.outputShapes = outputShapes;
     }
-
 }

@@ -5,29 +5,26 @@ import com.linkedpipes.etl.library.template.plugin.adapter.JavaFileToJavaPlugin;
 import com.linkedpipes.etl.library.template.plugin.model.JavaPlugin;
 import com.linkedpipes.etl.library.template.plugin.model.PluginTemplate;
 import com.linkedpipes.etl.storage.ConfigurationHolder;
-import org.apache.commons.io.FileUtils;
-import org.eclipse.rdf4j.model.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.io.FileUtils;
+import org.eclipse.rdf4j.model.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JavaPluginService {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(JavaPluginService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JavaPluginService.class);
 
     private final ConfigurationHolder configuration;
 
     private final Map<String, JavaPlugin> plugins = new HashMap<>();
 
-    private final Map<Resource, JavaPlugin> pluginTemplateToPlugin =
-            new HashMap<>();
+    private final Map<Resource, JavaPlugin> pluginTemplateToPlugin = new HashMap<>();
 
     public JavaPluginService(ConfigurationHolder configuration) {
         this.configuration = configuration;
@@ -57,7 +54,7 @@ public class JavaPluginService {
         if (!result.exists()) {
             return Collections.emptyList();
         }
-        String[] extensions = new String[]{"jar"};
+        String[] extensions = new String[] {"jar"};
         return FileUtils.listFiles(root, extensions, true).stream()
                 .filter(file -> !file.isDirectory())
                 .filter(file -> file.getName().endsWith(".jar"))
@@ -74,5 +71,4 @@ public class JavaPluginService {
     public JavaPlugin getPluginForPluginTemplate(Resource resource) {
         return pluginTemplateToPlugin.get(resource);
     }
-
 }

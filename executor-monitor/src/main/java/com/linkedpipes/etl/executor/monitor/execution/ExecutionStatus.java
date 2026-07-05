@@ -69,6 +69,4 @@ public enum ExecutionStatus {
         // we can view it as finished.
         return status == FINISHED || status == FAILED || status == DANGLING;
     }
-
 }
-

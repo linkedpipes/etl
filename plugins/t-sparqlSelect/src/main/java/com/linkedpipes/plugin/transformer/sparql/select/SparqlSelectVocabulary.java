@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.sparql.select;
 
 final class SparqlSelectVocabulary {
 
-    private static final String PREFIX =
-            "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-sparqlSelect#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -11,7 +10,5 @@ final class SparqlSelectVocabulary {
 
     public static final String HAS_FILE_NAME = PREFIX + "fileName";
 
-    private SparqlSelectVocabulary() {
-    }
-
+    private SparqlSelectVocabulary() {}
 }

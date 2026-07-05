@@ -7,5 +7,4 @@ public class InvalidDescription extends LpException {
     public InvalidDescription(String messages, Object... args) {
         super(messages, args);
     }
-
 }

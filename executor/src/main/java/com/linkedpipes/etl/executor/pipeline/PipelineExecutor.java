@@ -3,7 +3,6 @@ package com.linkedpipes.etl.executor.pipeline;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.PipelineExecutionObserver;
-import com.linkedpipes.etl.executor.plugin.v1.PluginV1Instance;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
 import com.linkedpipes.etl.executor.component.ComponentExecutor;
 import com.linkedpipes.etl.executor.dataunit.DataUnitInstanceSource;
@@ -12,11 +11,19 @@ import com.linkedpipes.etl.executor.execution.ExecutionObserver;
 import com.linkedpipes.etl.executor.execution.ResourceManager;
 import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
 import com.linkedpipes.etl.executor.logging.ExecutionLogger;
-import com.linkedpipes.etl.executor.plugin.BannedComponent;
 import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
+import com.linkedpipes.etl.executor.plugin.BannedComponent;
 import com.linkedpipes.etl.executor.plugin.PluginServiceHolder;
+import com.linkedpipes.etl.executor.plugin.v1.PluginV1Instance;
 import com.linkedpipes.etl.executor.rdf.RdfSourceWrap;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -27,18 +34,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-
 public class PipelineExecutor {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(PipelineExecutor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PipelineExecutor.class);
 
     private final ResourceManager resources;
 
@@ -60,8 +58,7 @@ public class PipelineExecutor {
      */
     private ComponentExecutor executor = null;
 
-    private final Map<String, PluginV1Instance>
-            componentsInstances = new HashMap<>();
+    private final Map<String, PluginV1Instance> componentsInstances = new HashMap<>();
 
     /**
      * Create the pipeline executor.
@@ -70,16 +67,12 @@ public class PipelineExecutor {
      * @param iri       ExecutionObserver IRI.
      * @param modules   Module service.
      */
-    public PipelineExecutor(
-            File directory, String iri, PluginServiceHolder modules) {
+    public PipelineExecutor(File directory, String iri, PluginServiceHolder modules) {
         // We assume that the directory we are executing is in the
         // directory with other executions.
         MDC.put(ExecutionLogger.EXECUTION_MDC, null);
-        this.resources = new ResourceManager(
-                directory.getParentFile(), directory);
-        this.loggerFacade.prepareAppendersForExecution(
-                resources.getExecutionLogFile(),
-                "INFO");
+        this.resources = new ResourceManager(directory.getParentFile(), directory);
+        this.loggerFacade.prepareAppendersForExecution(resources.getExecutionLogFile(), "INFO");
         this.moduleFacade = modules;
         this.execution = new ExecutionObserver(resources, iri);
         this.execution.onExecutionBegin();
@@ -163,8 +156,7 @@ public class PipelineExecutor {
             execution.onComponentsLoadingFailed(ex);
             return false;
         } catch (Throwable ex) {
-            execution.onComponentsLoadingFailed(
-                    new LpException("Initialization failed on throwable.", ex));
+            execution.onComponentsLoadingFailed(new LpException("Initialization failed on throwable.", ex));
             return false;
         }
         return true;
@@ -173,8 +165,7 @@ public class PipelineExecutor {
     private void loadPipeline() throws ExecutorException {
         File definitionFile = locatePipelineDefinitionFile();
         pipeline = new Pipeline();
-        File workingDirectory =
-                resources.getWorkingDirectory("pipeline_repository");
+        File workingDirectory = resources.getWorkingDirectory("pipeline_repository");
         pipeline.load(definitionFile, workingDirectory);
         execution.onPipelineLoaded(pipeline.getModel());
     }
@@ -186,8 +177,7 @@ public class PipelineExecutor {
         String level = pipeline.getModel().getLogLevel();
         LOG.info("Changing log level to: {}", level);
         loggerFacade.destroyExecutionAppenders();
-        loggerFacade.prepareAppendersForExecution(
-                resources.getExecutionLogFile(), level);
+        loggerFacade.prepareAppendersForExecution(resources.getExecutionLogFile(), level);
     }
 
     private File locatePipelineDefinitionFile() throws ExecutorException {
@@ -204,14 +194,12 @@ public class PipelineExecutor {
      */
     private void preparePipelineDefinition() throws ExecutorException {
         try {
-            RequirementProcessor.handle(pipeline.getSource(),
-                    pipeline.getPipelineGraph(), resources);
+            RequirementProcessor.handle(pipeline.getSource(), pipeline.getPipelineGraph(), resources);
         } catch (LpException ex) {
             throw new ExecutorException("Can't update pipeline.", ex);
         }
         // Load data from previous executions.
-        for (PipelineComponent component :
-                pipeline.getModel().getComponents()) {
+        for (PipelineComponent component : pipeline.getModel().getComponents()) {
             if (!component.isPlannedForExecution()) {
                 continue;
             }
@@ -226,24 +214,19 @@ public class PipelineExecutor {
      * Load component's original execution and set last working directory,
      * reading its value from the original execution.
      */
-    private void resolveWorkingDirectory(
-            PipelineComponent component)
-            throws ExecutorException {
+    private void resolveWorkingDirectory(PipelineComponent component) throws ExecutorException {
         String execution = component.getExecution();
-        File pipelineFile = resources.resolveExecutionPath(
-                execution, "pipeline.trig");
+        File pipelineFile = resources.resolveExecutionPath(execution, "pipeline.trig");
         try (InputStream stream = new FileInputStream(pipelineFile)) {
             RDFParser parser = Rio.createParser(RDFFormat.TRIG);
             parser.setRDFHandler(new AbstractRDFHandler() {
 
                 @Override
                 public void handleStatement(Statement st) {
-                    if (!st.getSubject().stringValue().equals(
-                            component.getIri())) {
+                    if (!st.getSubject().stringValue().equals(component.getIri())) {
                         return;
                     }
-                    if (!st.getPredicate().stringValue().equals(
-                            LP.HAS_WORKING_DIRECTORY)) {
+                    if (!st.getPredicate().stringValue().equals(LP.HAS_WORKING_DIRECTORY)) {
                         return;
                     }
                     component.setLastWorkingDirectory(
@@ -252,19 +235,16 @@ public class PipelineExecutor {
             });
             parser.parse(stream, "http://localhost/default");
         } catch (Exception ex) {
-            throw new ExecutorException(
-                    "Can't resolve working directory for: %s from %s",
-                    component, execution, ex);
+            throw new ExecutorException("Can't resolve working directory for: %s from %s", component, execution, ex);
         }
     }
 
     private void notifyObserversOnBeginning() throws ExecutorException {
         try {
-            for (PipelineExecutionObserver observer :
-                    moduleFacade.getPipelineListeners()) {
-                observer.onPipelineBegin(pipeline.getPipelineIri(),
-                        new RdfSourceWrap(pipeline.getSource(),
-                                pipeline.getPipelineGraph()));
+            for (PipelineExecutionObserver observer : moduleFacade.getPipelineListeners()) {
+                observer.onPipelineBegin(
+                        pipeline.getPipelineIri(),
+                        new RdfSourceWrap(pipeline.getSource(), pipeline.getPipelineGraph()));
             }
         } catch (LpException ex) {
             throw new ExecutorException("Observer error.", ex);
@@ -273,16 +253,13 @@ public class PipelineExecutor {
 
     private void initializeDataUnits() throws ExecutorException {
         dataUnitManager = new DataUnitManager(pipeline.getModel());
-        DataUnitInstanceSource dataUnitInstanceSource =
-                (iri) -> moduleFacade.getDataUnit(pipeline, iri);
-        dataUnitManager.initialize(dataUnitInstanceSource,
-                execution.getModel().getDataUnitsForInitialization());
+        DataUnitInstanceSource dataUnitInstanceSource = (iri) -> moduleFacade.getDataUnit(pipeline, iri);
+        dataUnitManager.initialize(dataUnitInstanceSource, execution.getModel().getDataUnitsForInitialization());
     }
 
     private void loadComponents() throws ExecutorException {
         boolean loadingFailed = false;
-        for (PipelineComponent component :
-                pipeline.getModel().getComponents()) {
+        for (PipelineComponent component : pipeline.getModel().getComponents()) {
             if (!shouldLoadInstanceForComponent(component)) {
                 continue;
             }
@@ -293,8 +270,7 @@ public class PipelineExecutor {
                 componentsInstances.put(component.getIri(), instance);
             } catch (BannedComponent ex) {
                 execution.onCantLoadComponentJar(
-                        component, new LpException(
-                                "This component is banned on this instance."));
+                        component, new LpException("This component is banned on this instance."));
                 LOG.error("Banned component.", ex);
                 loadingFailed = true;
             } catch (ExecutorException ex) {
@@ -308,14 +284,12 @@ public class PipelineExecutor {
         }
     }
 
-    private boolean shouldLoadInstanceForComponent(
-            PipelineComponent component) {
+    private boolean shouldLoadInstanceForComponent(PipelineComponent component) {
         return component.getExecutionType() == ExecutionType.EXECUTE;
     }
 
     private void executeComponents() {
-        for (PipelineComponent pplComponent
-                : pipeline.getModel().getComponents()) {
+        for (PipelineComponent pplComponent : pipeline.getModel().getComponents()) {
             if (!executeComponent(pplComponent)) {
                 break;
             }
@@ -331,8 +305,7 @@ public class PipelineExecutor {
      * Return false if execution failed.
      */
     private boolean executeComponent(PipelineComponent pplComponent) {
-        ExecutionComponent execComponent =
-                this.execution.getModel().getComponent(pplComponent);
+        ExecutionComponent execComponent = this.execution.getModel().getComponent(pplComponent);
 
         this.execution.onBeforeComponentExecution(execComponent);
 
@@ -359,11 +332,9 @@ public class PipelineExecutor {
         }
     }
 
-    private ComponentExecutor getExecutor(PipelineComponent component)
-            throws ExecutorException {
+    private ComponentExecutor getExecutor(PipelineComponent component) throws ExecutorException {
         PluginV1Instance instance = componentsInstances.get(component.getIri());
-        return ComponentExecutor.create(
-                pipeline, execution, component, instance);
+        return ComponentExecutor.create(pipeline, execution, component, instance);
     }
 
     private void terminate() {
@@ -385,8 +356,7 @@ public class PipelineExecutor {
 
     private void notifyObserversOnEnding() {
         try {
-            for (PipelineExecutionObserver observer :
-                    moduleFacade.getPipelineListeners()) {
+            for (PipelineExecutionObserver observer : moduleFacade.getPipelineListeners()) {
                 observer.onPipelineEnd();
             }
         } catch (ExecutorException ex) {
@@ -405,8 +375,7 @@ public class PipelineExecutor {
     }
 
     private void deleteLogFiles() {
-        if (pipeline.getModel().isDeleteLogDataOnSuccess()
-                && execution.isExecutionSuccessful()) {
+        if (pipeline.getModel().isDeleteLogDataOnSuccess() && execution.isExecutionSuccessful()) {
             try {
                 FileUtils.deleteDirectory(resources.getExecutionLogDirectory());
             } catch (IOException ex) {
@@ -414,6 +383,4 @@ public class PipelineExecutor {
             }
         }
     }
-
 }
-

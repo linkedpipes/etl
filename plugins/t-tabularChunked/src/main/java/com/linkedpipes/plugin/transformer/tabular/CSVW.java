@@ -42,7 +42,5 @@ public class CSVW {
         HAS_DESCRIBES = valueFactory.createIRI(prefix + "describes");
     }
 
-    private CSVW() {
-    }
-
+    private CSVW() {}
 }

@@ -11,11 +11,8 @@ public interface SequentialExecution {
         execute();
     }
 
-
     /**
      * Preserved for backward compatibility.
      */
-    default void execute() throws LpException {
-
-    }
+    default void execute() throws LpException {}
 }

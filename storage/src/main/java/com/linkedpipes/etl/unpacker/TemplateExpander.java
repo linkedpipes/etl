@@ -9,9 +9,8 @@ import com.linkedpipes.etl.unpacker.model.executor.ExecutorComponent;
 import com.linkedpipes.etl.unpacker.model.template.JarTemplate;
 import com.linkedpipes.etl.unpacker.model.template.ReferenceTemplate;
 import com.linkedpipes.etl.unpacker.model.template.Template;
-import org.eclipse.rdf4j.model.Statement;
-
 import java.util.Collection;
+import org.eclipse.rdf4j.model.Statement;
 
 class TemplateExpander {
 
@@ -32,58 +31,45 @@ class TemplateExpander {
         referenceExpander.setGraphs(graphs);
     }
 
-    public ExecutorComponent expand(DesignerComponent srcComponent)
-            throws StorageException {
+    public ExecutorComponent expand(DesignerComponent srcComponent) throws StorageException {
 
         Template template = getTemplate(srcComponent);
         if (template instanceof JarTemplate) {
             return expandJarTemplate(srcComponent, (JarTemplate) template);
         } else if (template instanceof ReferenceTemplate) {
-            return expandReferenceTemplate(srcComponent,
-                    (ReferenceTemplate) template);
+            return expandReferenceTemplate(srcComponent, (ReferenceTemplate) template);
         } else {
-            throw new StorageException("Invalid template type: {}",
-                    template.getClass().getName());
+            throw new StorageException(
+                    "Invalid template type: {}", template.getClass().getName());
         }
     }
 
-    private Template getTemplate(DesignerComponent component)
-            throws StorageException {
+    private Template getTemplate(DesignerComponent component) throws StorageException {
         String templateIri = component.getTemplate();
-        Collection<Statement> definition =
-                templateSource.getDefinition(templateIri);
+        Collection<Statement> definition = templateSource.getDefinition(templateIri);
         return loadTemplate(definition);
     }
 
-    private Template loadTemplate(Collection<Statement> templateAsRdf)
-            throws StorageException {
-       return ModelLoader.loadTemplate(Statements.wrap(templateAsRdf));
+    private Template loadTemplate(Collection<Statement> templateAsRdf) throws StorageException {
+        return ModelLoader.loadTemplate(Statements.wrap(templateAsRdf));
     }
 
-    private ExecutorComponent expandJarTemplate(
-            DesignerComponent srcComponent, JarTemplate template)
+    private ExecutorComponent expandJarTemplate(DesignerComponent srcComponent, JarTemplate template)
             throws StorageException {
-        ExecutorComponent component = jarExpander.expand(
-                srcComponent.getIri(),
-                srcComponent.getConfigurationGraphs(),
-                template);
+        ExecutorComponent component =
+                jarExpander.expand(srcComponent.getIri(), srcComponent.getConfigurationGraphs(), template);
         copyBasicInformation(srcComponent, component);
         return component;
     }
 
-    private void copyBasicInformation(
-            DesignerComponent sourceComponent,
-            ExecutorComponent targetComponent) {
+    private void copyBasicInformation(DesignerComponent sourceComponent, ExecutorComponent targetComponent) {
         targetComponent.setLabel(sourceComponent.getLabel());
     }
 
-    private ExecutorComponent expandReferenceTemplate(
-            DesignerComponent srcComponent, ReferenceTemplate template)
+    private ExecutorComponent expandReferenceTemplate(DesignerComponent srcComponent, ReferenceTemplate template)
             throws StorageException {
-        ExecutorComponent component = referenceExpander.expand(
-                srcComponent, template);
+        ExecutorComponent component = referenceExpander.expand(srcComponent, template);
         copyBasicInformation(srcComponent, component);
         return component;
     }
-
 }

@@ -2,6 +2,12 @@ package com.linkedpipes.plugin.transformer.tabular;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.plugin.transformer.tabular.TabularConfiguration.Column;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -9,23 +15,14 @@ import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
  *
  */
 class ColumnFactory {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(ColumnFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ColumnFactory.class);
 
-    private ColumnFactory() {
-    }
+    private ColumnFactory() {}
 
     /**
      * Based on given configuration create a list of columns.
@@ -33,28 +30,24 @@ class ColumnFactory {
      * @param configuration
      * @return
      */
-    public static List<ColumnAbstract> createColumnList(
-            TabularConfiguration configuration) throws LpException {
+    public static List<ColumnAbstract> createColumnList(TabularConfiguration configuration) throws LpException {
         // The configuration can contain user mapping, but if the full
         // mapping is used all user options are ignored.
         if (configuration.isFullMapping()) {
             return Collections.EMPTY_LIST;
         }
 
-        final List<ColumnAbstract> result = new ArrayList<>(
-                configuration.getTableSchema().getColumns().size());
-        final TabularConfiguration.Schema schema
-                = configuration.getTableSchema();
+        final List<ColumnAbstract> result =
+                new ArrayList<>(configuration.getTableSchema().getColumns().size());
+        final TabularConfiguration.Schema schema = configuration.getTableSchema();
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        final ResourceTemplate defaultAboutUrl
-                = new ResourceTemplate(schema.getAboutUrl());
+        final ResourceTemplate defaultAboutUrl = new ResourceTemplate(schema.getAboutUrl());
 
         for (Column column : schema.getColumns()) {
             // Determine column type - there is no spacial identification
             // so we decide based on parametrs.
             final ResourceTemplate aboutUrl;
-            if (column.getAboutUrl() == null
-                    || column.getAboutUrl().isEmpty()) {
+            if (column.getAboutUrl() == null || column.getAboutUrl().isEmpty()) {
                 aboutUrl = defaultAboutUrl;
             } else {
                 aboutUrl = new ResourceTemplate(column.getAboutUrl());
@@ -62,19 +55,16 @@ class ColumnFactory {
 
             final UrlTemplate predicate;
             if (column.getPropertyUrl() == null) {
-                throw new LpException(
-                        "Missing predicate for column: '{}'", column.getName());
+                throw new LpException("Missing predicate for column: '{}'", column.getName());
             } else {
                 // We need to test if we got absolute IRI or not.
                 String predicateAsString = column.getPropertyUrl();
                 try {
                     if (!URI.create(predicateAsString).isAbsolute()) {
-                        predicateAsString = configuration.getBaseUri()
-                                + predicateAsString;
+                        predicateAsString = configuration.getBaseUri() + predicateAsString;
                     }
                 } catch (IllegalArgumentException ex) {
-                    throw new LpException("Invalid IRI: '{}'",
-                            ex);
+                    throw new LpException("Invalid IRI: '{}'", ex);
                 }
                 predicate = new UrlTemplate(predicateAsString);
             }
@@ -82,33 +72,30 @@ class ColumnFactory {
             if (column.isSuppressOutput()) {
                 continue;
             }
-            if (column.getValueUrl() != null
-                    && !column.getValueUrl().isEmpty()) {
+            if (column.getValueUrl() != null && !column.getValueUrl().isEmpty()) {
                 // Column to URL value.
-                result.add(new ColumnUrl(new UrlTemplate(column.getValueUrl()),
-                        column.getName(), column.isRequired(),
-                        aboutUrl, predicate));
+                result.add(new ColumnUrl(
+                        new UrlTemplate(column.getValueUrl()),
+                        column.getName(),
+                        column.isRequired(),
+                        aboutUrl,
+                        predicate));
             } else if (column.getSeparator() != null) {
                 // Column to list.
-                throw new UnsupportedOperationException(
-                        "List is not supported yet!");
+                throw new UnsupportedOperationException("List is not supported yet!");
             } else if (column.getDatatype() != null) {
                 final IRI type;
                 try {
                     type = valueFactory.createIRI(column.getDatatype());
                 } catch (RuntimeException ex) {
                     throw new LpException(
-                            "Invalid column type '{}' for colum: '{}'",
-                            column.getDatatype(), column.getName(), ex);
+                            "Invalid column type '{}' for colum: '{}'", column.getDatatype(), column.getName(), ex);
                 }
                 // Column with typed value.
-                result.add(new ColumnTyped(type, column.getLang(),
-                        column.getName(), column.isRequired(),
-                        aboutUrl, predicate));
+                result.add(new ColumnTyped(
+                        type, column.getLang(), column.getName(), column.isRequired(), aboutUrl, predicate));
             } else {
-                throw new LpException(
-                        "Invalid configuration for column {}",
-                        column.getName());
+                throw new LpException("Invalid configuration for column {}", column.getName());
             }
         }
         return result;
@@ -121,14 +108,11 @@ class ColumnFactory {
      * @param header Data header.
      * @return
      */
-    public static List<ColumnAbstract> createColumList(
-            TabularConfiguration configuration, List<String> header
-    ) throws LpException {
+    public static List<ColumnAbstract> createColumList(TabularConfiguration configuration, List<String> header)
+            throws LpException {
         final List<ColumnAbstract> result = new ArrayList<>(header.size());
-        final TabularConfiguration.Schema schema
-                = configuration.getTableSchema();
-        final ResourceTemplate aboutUrl
-                = new ResourceTemplate(schema.getAboutUrl());
+        final TabularConfiguration.Schema schema = configuration.getTableSchema();
+        final ResourceTemplate aboutUrl = new ResourceTemplate(schema.getAboutUrl());
         // MissingNameInHeader
         int counter = 0;
         for (String name : header) {
@@ -147,15 +131,12 @@ class ColumnFactory {
                     header.set(counter - 1, name);
                 } else {
                     LOG.info("Header: {}", header);
-                    throw new LpException(
-                            "Header must not contains null values.");
+                    throw new LpException("Header must not contains null values.");
                 }
             }
-            final UrlTemplate predicate
-                    = new UrlTemplate(baseUri + encodeString(name));
+            final UrlTemplate predicate = new UrlTemplate(baseUri + encodeString(name));
             // Column with typed value.
-            result.add(new ColumnTyped(XMLSchema.STRING, null, name, false,
-                    aboutUrl, predicate));
+            result.add(new ColumnTyped(XMLSchema.STRING, null, name, false, aboutUrl, predicate));
         }
         return result;
     }
@@ -167,5 +148,4 @@ class ColumnFactory {
             throw new RuntimeException("Unsupported encoding", ex);
         }
     }
-
 }

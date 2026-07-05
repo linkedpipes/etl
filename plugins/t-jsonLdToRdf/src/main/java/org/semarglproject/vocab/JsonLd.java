@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.semarglproject.vocab;
 
 /**
@@ -58,5 +57,4 @@ public final class JsonLd {
     public static final String NULL = "@@null";
 
     public static final String DOC_IRI = "@@dociri";
-
 }

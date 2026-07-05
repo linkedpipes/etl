@@ -8,8 +8,7 @@ public class XlsToCsvConfiguration {
     @RdfToPojo.Property(iri = XlsToCsvVocabulary.HAS_PREFIX)
     private String template_prefix = "SABLONA_";
 
-    public XlsToCsvConfiguration() {
-    }
+    public XlsToCsvConfiguration() {}
 
     public String getTemplate_prefix() {
         return template_prefix;
@@ -18,5 +17,4 @@ public class XlsToCsvConfiguration {
     public void setTemplate_prefix(String template_prefix) {
         this.template_prefix = template_prefix;
     }
-
 }

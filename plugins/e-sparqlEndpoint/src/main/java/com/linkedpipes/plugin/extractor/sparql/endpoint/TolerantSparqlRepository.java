@@ -32,11 +32,9 @@ class TolerantSparqlRepository extends SPARQLRepository {
                 return valueFactory.createLiteral(value, datatype);
             }
         }
-
     }
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(TolerantSparqlRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TolerantSparqlRepository.class);
 
     private ValueFactory valueFactory;
 
@@ -68,5 +66,4 @@ class TolerantSparqlRepository extends SPARQLRepository {
         config.addNonFatalError(BasicParserSettings.VERIFY_URI_SYNTAX);
         config.addNonFatalError(BasicParserSettings.VERIFY_RELATIVE_URIS);
     }
-
 }

@@ -5,18 +5,16 @@ import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 import com.linkedpipes.etl.rdf.rdf4j.Rdf4jUtils;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 class BaseMessageWriter {
 
@@ -28,18 +26,15 @@ class BaseMessageWriter {
 
     protected final IRI executionIri;
 
-    protected final ValueFactory valueFactory =
-            SimpleValueFactory.getInstance();
+    protected final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
-    protected final StatementsBuilder statements =
-            Statements.arrayList().builder();
+    protected final StatementsBuilder statements = Statements.arrayList().builder();
 
     protected final AtomicInteger messageCounter;
 
     private final File file;
 
-    public BaseMessageWriter(
-            String executionIri, AtomicInteger eventCounter, File file) {
+    public BaseMessageWriter(String executionIri, AtomicInteger eventCounter, File file) {
         this.executionIri = valueFactory.createIRI(executionIri);
         this.messageCounter = eventCounter;
         this.file = file;
@@ -51,8 +46,7 @@ class BaseMessageWriter {
     }
 
     protected IRI createEventIri(int index) {
-        String iriAsString = executionIri.stringValue() + "/messages/"
-                + Integer.toString(index);
+        String iriAsString = executionIri.stringValue() + "/messages/" + Integer.toString(index);
         return this.valueFactory.createIRI(iriAsString);
     }
 
@@ -60,8 +54,7 @@ class BaseMessageWriter {
         statements.add(this.executionIri, LP_EVENTS.HAS_EVENT, iri);
         statements.addType(iri, LP_EVENTS.EVENT);
         statements.add(iri, LP_EVENTS.HAS_CREATED, getNowDate());
-        statements.add(iri, LP_EVENTS.HAS_ORDER,
-                this.valueFactory.createLiteral(order));
+        statements.add(iri, LP_EVENTS.HAS_ORDER, this.valueFactory.createLiteral(order));
     }
 
     private Value getNowDate() {
@@ -70,13 +63,10 @@ class BaseMessageWriter {
         createdAsString.append(dateFormat.format(now));
         createdAsString.append("T");
         createdAsString.append(timeFormat.format(now));
-        return this.valueFactory.createLiteral(
-                createdAsString.toString(),
-                this.valueFactory.createIRI(XSD.DATETIME));
+        return this.valueFactory.createLiteral(createdAsString.toString(), this.valueFactory.createIRI(XSD.DATETIME));
     }
 
     public void save() throws IOException {
         Rdf4jUtils.save(this.statements, this.file);
     }
-
 }

@@ -3,6 +3,9 @@ package com.linkedpipes.etl.dataunit.core.rdf;
 import com.linkedpipes.etl.dataunit.core.DataUnitConfiguration;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryException;
@@ -11,10 +14,6 @@ import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * For data units in the same group provide the same repository and make sure
@@ -34,7 +33,6 @@ class RepositoryManager {
             this.group = group;
             this.repository = repository;
         }
-
     }
 
     private static class ManagerConfiguration {
@@ -45,10 +43,7 @@ class RepositoryManager {
 
         private final File workingDirectory;
 
-        public ManagerConfiguration(
-                String repositoryPolicy,
-                String repositoryType,
-                File workingDirectory) {
+        public ManagerConfiguration(String repositoryPolicy, String repositoryType, File workingDirectory) {
             this.repositoryPolicy = repositoryPolicy;
             this.repositoryType = repositoryType;
             this.workingDirectory = workingDirectory;
@@ -61,48 +56,42 @@ class RepositoryManager {
         private boolean isInMemory() {
             return LP_PIPELINE.MEMORY_STORE.equals(this.repositoryType);
         }
-
     }
 
     private static final int DELETE_WAIT_TIME = 1000;
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(RepositoryManager.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RepositoryManager.class);
 
     private final ManagerConfiguration configuration;
 
-    private final Map<String, RepositoryContainer> repositories =
-            new HashMap<>();
+    private final Map<String, RepositoryContainer> repositories = new HashMap<>();
 
-    public RepositoryManager(
-            String repositoryPolicy, String repositoryType, File directory) {
-        LOG.info("Repository policy: '{}' type: '{}', directory: '{}'",
-                repositoryPolicy, repositoryType, directory);
-        configuration = new ManagerConfiguration(
-                repositoryPolicy, repositoryType, directory);
+    public RepositoryManager(String repositoryPolicy, String repositoryType, File directory) {
+        LOG.info("Repository policy: '{}' type: '{}', directory: '{}'", repositoryPolicy, repositoryType, directory);
+        configuration = new ManagerConfiguration(repositoryPolicy, repositoryType, directory);
     }
 
-    public Repository getRepository(DataUnitConfiguration configuration)
-            throws LpException {
+    public Repository getRepository(DataUnitConfiguration configuration) throws LpException {
         String group = configuration.getGroup();
         if (this.configuration.isSingleRepository()) {
             group = "single";
         }
         RepositoryContainer container = getOrCreateRepository(group);
         ++container.useCounter;
-        LOG.debug("Using repository group: '{}' used: '{}' for: '{}'",
-                group, container.useCounter, configuration.getResource());
+        LOG.debug(
+                "Using repository group: '{}' used: '{}' for: '{}'",
+                group,
+                container.useCounter,
+                configuration.getResource());
         return container.repository;
     }
 
-    private RepositoryContainer getOrCreateRepository(String group)
-            throws LpException {
+    private RepositoryContainer getOrCreateRepository(String group) throws LpException {
         if (repositories.containsKey(group)) {
             return repositories.get(group);
         } else {
             Repository newRepository = getGroupRepository(group);
-            RepositoryContainer container =
-                    new RepositoryContainer(group, newRepository);
+            RepositoryContainer container = new RepositoryContainer(group, newRepository);
             repositories.put(group, container);
             return container;
         }
@@ -124,15 +113,12 @@ class RepositoryManager {
     }
 
     private Repository createNativeRepository(String group) {
-        File directory = new File(
-                configuration.workingDirectory,
-                "dataunit-sesame-" + group);
+        File directory = new File(configuration.workingDirectory, "dataunit-sesame-" + group);
         return new SailRepository(new NativeStore(directory));
     }
 
     private Repository createInMemory() {
         return new SailRepository(new MemoryStore());
-
     }
 
     public void closeAll() {
@@ -168,8 +154,7 @@ class RepositoryManager {
             return;
         }
         --container.useCounter;
-        LOG.debug("Request to close repository group: '{}' used: '{}'",
-                container.group, container.useCounter);
+        LOG.debug("Request to close repository group: '{}' used: '{}'", container.group, container.useCounter);
         if (container.useCounter == 0) {
             closeRepositoryContainer(container);
             repositories.remove(container.group);
@@ -185,12 +170,10 @@ class RepositoryManager {
             try {
                 Thread.sleep(DELETE_WAIT_TIME);
             } catch (InterruptedException ex) {
-                LOG.debug("Interrupt ignored while "
-                        + "waiting for directory to be deleted.");
+                LOG.debug("Interrupt ignored while " + "waiting for directory to be deleted.");
             }
             FileUtils.deleteQuietly(directory);
         }
         LOG.debug("Deleting content ... done");
     }
-
 }

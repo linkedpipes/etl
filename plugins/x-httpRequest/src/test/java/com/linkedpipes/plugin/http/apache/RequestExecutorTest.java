@@ -21,8 +21,7 @@ public class RequestExecutorTest {
         request.headers.put("Access-Control-Request-Method", "GEt");
         var executor = new RequestExecutor(request, response -> {
             var statusLine = response.getStatusLine();
-            Assertions.assertEquals(200, statusLine.getStatusCode(),
-                    statusLine::getReasonPhrase);
+            Assertions.assertEquals(200, statusLine.getStatusCode(), statusLine::getReasonPhrase);
         });
         executor.execute();
     }
@@ -39,8 +38,7 @@ public class RequestExecutorTest {
         request.method = "GET";
         var executor = new RequestExecutor(request, response -> {
             var statusLine = response.getStatusLine();
-            Assertions.assertEquals(200, statusLine.getStatusCode(),
-                    statusLine::getReasonPhrase);
+            Assertions.assertEquals(200, statusLine.getStatusCode(), statusLine::getReasonPhrase);
         });
         executor.execute();
     }
@@ -57,10 +55,8 @@ public class RequestExecutorTest {
         request.method = "HEAD";
         var executor = new RequestExecutor(request, response -> {
             var statusLine = response.getStatusLine();
-            Assertions.assertEquals(200, statusLine.getStatusCode(),
-                    statusLine::getReasonPhrase);
+            Assertions.assertEquals(200, statusLine.getStatusCode(), statusLine::getReasonPhrase);
         });
         executor.execute();
     }
-
 }

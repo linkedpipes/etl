@@ -6,23 +6,21 @@ import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.template.TemplateRepository;
 import com.linkedpipes.etl.storage.template.repository.file.FileTemplateRepository;
 import com.linkedpipes.etl.storage.template.repository.legacy.LegacyTemplateRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *  Create and return initialized repository. Perform migration if needed.
  */
 public class TemplateRepositoryFactory {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(TemplateRepositoryFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TemplateRepositoryFactory.class);
 
     private final List<PluginTemplate> pluginTemplates;
 
@@ -38,14 +36,11 @@ public class TemplateRepositoryFactory {
         List<ReferenceTemplate> migratedFromLegacy = new ArrayList<>();
         if (isLegacy(info)) {
             migratedFromLegacy = loadFromLegacy(info, directory);
-            info = new RepositoryInfo(
-                    info.version(),
-                    FileTemplateRepository.NAME);
+            info = new RepositoryInfo(info.version(), FileTemplateRepository.NAME);
         }
         File templateDirectory = getTemplatesDirectory(directory);
         if (!templateDirectory.exists() && !templateDirectory.mkdirs()) {
-            LOG.error("Can't create template directory '{}'.",
-                    templateDirectory);
+            LOG.error("Can't create template directory '{}'.", templateDirectory);
         }
         TemplateRepository result;
         switch (info.templateRepository()) {
@@ -53,9 +48,7 @@ public class TemplateRepositoryFactory {
                 result = new FileTemplateRepository(templateDirectory);
                 break;
             default:
-                throw new StorageException(
-                        "Unsupported repository type '{}'.",
-                        info.templateRepository());
+                throw new StorageException("Unsupported repository type '{}'.", info.templateRepository());
         }
         // Initialize.
         List<StorageException> exceptions = result.initializeAndMigrate();
@@ -79,8 +72,7 @@ public class TemplateRepositoryFactory {
      * We may need to create new repository info as a result of old
      * repository or new repository.
      */
-    private RepositoryInfo loadRepositoryInfo(File directory)
-            throws StorageException {
+    private RepositoryInfo loadRepositoryInfo(File directory) throws StorageException {
         File file = getRepositoryInfoFile(directory);
         if (file.exists()) {
             return RepositoryInfo.load(file);
@@ -97,8 +89,7 @@ public class TemplateRepositoryFactory {
         File legacyBackup = getLegacyBackupDirectory(directory);
         if (legacyBackup.exists()) {
             // We have interrupted loading from legacy store.
-            return RepositoryInfo.load(getRepositoryInfoFile(
-                    getTemplatesDirectory(legacyBackup)));
+            return RepositoryInfo.load(getRepositoryInfoFile(getTemplatesDirectory(legacyBackup)));
         } else {
             // Initializing new repository.
             return RepositoryInfo.createNew();
@@ -122,27 +113,20 @@ public class TemplateRepositoryFactory {
      * or null template repository value.
      */
     private boolean isLegacy(RepositoryInfo info) {
-        return Objects.equals(info.templateRepository(),
-                LegacyTemplateRepository.NAME);
+        return Objects.equals(info.templateRepository(), LegacyTemplateRepository.NAME);
     }
 
-    private List<ReferenceTemplate> loadFromLegacy(
-            RepositoryInfo info, File directory) throws StorageException {
+    private List<ReferenceTemplate> loadFromLegacy(RepositoryInfo info, File directory) throws StorageException {
         File backupFile;
         try {
             backupFile = backupContent(directory);
         } catch (IOException ex) {
             throw new StorageException("Can't create backup.", ex);
         }
-        LOG.info("Created backup of legacy template store in '{}'.",
-                backupFile);
-        LegacyTemplateRepository legacy = new LegacyTemplateRepository(
-                pluginTemplates, info.version());
-        return legacy.loadReferenceTemplates(
-                getTemplatesDirectory(backupFile),
-                getKnowledgeDirectory(backupFile));
+        LOG.info("Created backup of legacy template store in '{}'.", backupFile);
+        LegacyTemplateRepository legacy = new LegacyTemplateRepository(pluginTemplates, info.version());
+        return legacy.loadReferenceTemplates(getTemplatesDirectory(backupFile), getKnowledgeDirectory(backupFile));
     }
-
 
     /**
      * Move content to directory and return it.
@@ -167,19 +151,16 @@ public class TemplateRepositoryFactory {
         return new File(directory, "knowledge");
     }
 
-    private void storePluginTemplates(TemplateRepository repository)
-            throws StorageException {
+    private void storePluginTemplates(TemplateRepository repository) throws StorageException {
         for (PluginTemplate pluginTemplate : pluginTemplates) {
             repository.storePluginTemplate(pluginTemplate);
         }
     }
 
-    private void storeReferenceTemplates(
-            List<ReferenceTemplate> templates,
-            TemplateRepository repository) throws StorageException {
+    private void storeReferenceTemplates(List<ReferenceTemplate> templates, TemplateRepository repository)
+            throws StorageException {
         for (ReferenceTemplate template : templates) {
             repository.storeReferenceTemplate(template);
         }
     }
-
 }

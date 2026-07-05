@@ -9,15 +9,14 @@ import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.plugin.api.v2.ComponentV2;
 import com.linkedpipes.plugin.ehttpgetfile.Downloader;
 import com.linkedpipes.plugin.ehttpgetfile.DownloaderRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.net.ssl.*;
 import java.io.File;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.net.ssl.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ComponentV2.IRI(HttpGetFileVocabulary.IRI)
 public final class HttpGetFile implements Component, SequentialExecution {
@@ -52,9 +51,9 @@ public final class HttpGetFile implements Component, SequentialExecution {
                 configuration.isUtf8Redirect());
         Downloader downloader = new Downloader();
         try {
-            downloader.download(
-                    request, configuration.getUri(), outputFile,
-                    connection -> { /* Do nothing. */ });
+            downloader.download(request, configuration.getUri(), outputFile, connection -> {
+                /* Do nothing. */
+            });
         } catch (Exception ex) {
             throw new LpException("Can't download file.", ex);
         }
@@ -64,46 +63,35 @@ public final class HttpGetFile implements Component, SequentialExecution {
 
     private void checkConfiguration() throws LpException {
         if (isNullOrEmpty(configuration.getUri())) {
-            throw new LpException("Missing property: {}",
-                    HttpGetFileVocabulary.HAS_URI);
+            throw new LpException("Missing property: {}", HttpGetFileVocabulary.HAS_URI);
         }
         if (isNullOrEmpty(configuration.getFileName())) {
-            throw new LpException("Missing property: {}",
-                    HttpGetFileVocabulary.HAS_NAME);
+            throw new LpException("Missing property: {}", HttpGetFileVocabulary.HAS_NAME);
         }
     }
 
     private void setTrustAllCerts() throws LpException {
         LOG.warn("'Trust all certs' policy used -> security risk!");
-        TrustManager[] trustAllCerts = new TrustManager[]{
-                new X509TrustManager() {
-                    @Override
-                    public java.security.cert.X509Certificate[]
-                    getAcceptedIssuers() {
-                        return null;
-                    }
-
-                    @Override
-                    public void checkClientTrusted(
-                            java.security.cert.X509Certificate[] certs,
-                            String authType) {
-                    }
-
-                    @Override
-                    public void checkServerTrusted(
-                            java.security.cert.X509Certificate[] certs,
-                            String authType) {
-                    }
+        TrustManager[] trustAllCerts = new TrustManager[] {
+            new X509TrustManager() {
+                @Override
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
                 }
+
+                @Override
+                public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {}
+
+                @Override
+                public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {}
+            }
         };
         // Install the all-trusting trust manager.
         try {
             SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(
-                    sc.getSocketFactory());
-            HttpsURLConnection.setDefaultHostnameVerifier(
-                    (String urlHostName, SSLSession session) -> true);
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            HttpsURLConnection.setDefaultHostnameVerifier((String urlHostName, SSLSession session) -> true);
         } catch (KeyManagementException | NoSuchAlgorithmException ex) {
             throw new LpException("Can't set trust all certificates.", ex);
         }
@@ -120,5 +108,4 @@ public final class HttpGetFile implements Component, SequentialExecution {
     private boolean isNullOrEmpty(String string) {
         return string == null || string.isEmpty();
     }
-
 }

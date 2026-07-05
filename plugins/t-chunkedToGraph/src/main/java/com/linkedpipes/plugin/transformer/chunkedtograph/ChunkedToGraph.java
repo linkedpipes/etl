@@ -34,5 +34,4 @@ public final class ChunkedToGraph implements Component, SequentialExecution {
         }
         progressReport.done();
     }
-
 }

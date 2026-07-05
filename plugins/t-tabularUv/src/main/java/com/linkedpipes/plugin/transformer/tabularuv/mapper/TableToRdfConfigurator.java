@@ -8,23 +8,20 @@ import com.linkedpipes.plugin.transformer.tabularuv.Utils;
 import com.linkedpipes.plugin.transformer.tabularuv.column.ValueGenerator;
 import com.linkedpipes.plugin.transformer.tabularuv.column.ValueGeneratorReplace;
 import com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed;
+import java.util.*;
 import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 /**
  * Configure {@link TableToRdf} class.
  */
 public class TableToRdfConfigurator {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(TableToRdfConfigurator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TableToRdfConfigurator.class);
 
-    private TableToRdfConfigurator() {
-    }
+    private TableToRdfConfigurator() {}
 
     /**
      * Configure given {@link TableToRdf} convertor.
@@ -34,16 +31,16 @@ public class TableToRdfConfigurator {
      * @param data Contains first data row, or ColumnType if type is already known.
      * @param numberOfLeadingEmpty Number of leading empty columns, this is useful for xsl-like.
      */
-    public static void configure(TableToRdf tableToRdf, List<String> header,
-            List<Object> data, int numberOfLeadingEmpty)
+    public static void configure(
+            TableToRdf tableToRdf, List<String> header, List<Object> data, int numberOfLeadingEmpty)
             throws ParseFailed, LpException {
         // initial checks
         if (data == null) {
             throw new ParseFailed("First data row is null!");
         }
         if (header != null && header.size() != data.size()) {
-            throw new ParseFailed("Diff number of cells in header ("
-                    + header.size() + ") and data (" + data.size() + ")");
+            throw new ParseFailed(
+                    "Diff number of cells in header (" + header.size() + ") and data (" + data.size() + ")");
         }
         //
         final TableToRdfConfig config = tableToRdf.config;
@@ -65,8 +62,7 @@ public class TableToRdfConfigurator {
                 if (header.get(index) != null) {
                     columnName = header.get(index);
                 } else {
-                    LOG.info(
-                            "Generated value used for column with 'null' name.");
+                    LOG.info("Generated value used for column with 'null' name.");
                     // use generated one - first is col1, col2 ...
                     columnName = "col" + Integer.toString(index + 1);
                 }
@@ -83,12 +79,12 @@ public class TableToRdfConfigurator {
             // add column name
             tableToRdf.nameToIndex.put(columnName, index);
             // test for key
-            if (config.keyColumn != null && !config.keyColumn.isEmpty()
+            if (config.keyColumn != null
+                    && !config.keyColumn.isEmpty()
                     && !config.advancedKeyColumn
                     && config.keyColumn.compareTo(columnName) == 0) {
                 // we construct tempalte and use it
-                keyTemplateStr = "<" + prepareAsUri("{", config)
-                        + columnName + "}>";
+                keyTemplateStr = "<" + prepareAsUri("{", config) + columnName + "}>";
             }
             // check for user template
             final ColumnInfo_V1 columnInfo;
@@ -105,8 +101,7 @@ public class TableToRdfConfigurator {
             }
             // fill other values if needed
             if (columnInfo.getURI() == null) {
-                columnInfo.setURI(config.baseURI
-                        + Utils.convertStringToIRIPart(columnName));
+                columnInfo.setURI(config.baseURI + Utils.convertStringToIRIPart(columnName));
             } else {
                 columnInfo.setURI(prepareAsUri(columnInfo.getURI(), config));
             }
@@ -118,17 +113,15 @@ public class TableToRdfConfigurator {
                 } else if (config.autoAsStrings) {
                     columnInfo.setType(ColumnType.String);
                 } else {
-                    columnInfo.setType(guessType(columnName, data.get(index),
-                            columnInfo.isUseTypeFromDfb()));
+                    columnInfo.setType(guessType(columnName, data.get(index), columnInfo.isUseTypeFromDfb()));
                 }
             }
             // generate tableToRdf configuration from 'columnInfo'
             final String template = generateTemplate(columnInfo, columnName);
             LOG.debug("Template for column '{}' is '{}'", columnName, template);
             // add to configuration
-            valueGenerators.add(ValueGeneratorReplace.create(
-                    tableToRdf.valueFactory.createIRI(columnInfo.getURI()),
-                    template));
+            valueGenerators.add(
+                    ValueGeneratorReplace.create(tableToRdf.valueFactory.createIRI(columnInfo.getURI()), template));
             // generate metadata about column - for now only labels
             if (config.generateLabels) {
                 tableToRdf.outRdf.add(
@@ -140,18 +133,14 @@ public class TableToRdfConfigurator {
         // key template
         if (config.advancedKeyColumn) {
             // we use keyColumn directly
-            tableToRdf.keyColumn = ValueGeneratorReplace.create(null,
-                    config.keyColumn);
-            tableToRdf.keyColumn.compile(tableToRdf.nameToIndex,
-                    tableToRdf.valueFactory);
+            tableToRdf.keyColumn = ValueGeneratorReplace.create(null, config.keyColumn);
+            tableToRdf.keyColumn.compile(tableToRdf.nameToIndex, tableToRdf.valueFactory);
         } else if (keyTemplateStr != null) {
             // we have consructed tempalte
             LOG.info("Key column template: {}", keyTemplateStr);
 
-            tableToRdf.keyColumn = ValueGeneratorReplace.create(null,
-                    keyTemplateStr);
-            tableToRdf.keyColumn.compile(tableToRdf.nameToIndex,
-                    tableToRdf.valueFactory);
+            tableToRdf.keyColumn = ValueGeneratorReplace.create(null, keyTemplateStr);
+            tableToRdf.keyColumn.compile(tableToRdf.nameToIndex, tableToRdf.valueFactory);
         } else {
             // we use null, and then row number is used
         }
@@ -164,11 +153,15 @@ public class TableToRdfConfigurator {
                 continue;
             }
             if (config.ignoreMissingColumn) {
-                LOG.info("Column '{}' (uri:{}) ignored as does not match "
-                        + "original columns.", key, unused.get(key).getURI());
+                LOG.info(
+                        "Column '{}' (uri:{}) ignored as does not match " + "original columns.",
+                        key,
+                        unused.get(key).getURI());
             } else {
-                LOG.error("Column '{}' (uri:{}) ignored as does not match "
-                        + "original columns.", key, unused.get(key).getURI());
+                LOG.error(
+                        "Column '{}' (uri:{}) ignored as does not match " + "original columns.",
+                        key,
+                        unused.get(key).getURI());
             }
         }
         // add advanced
@@ -176,9 +169,8 @@ public class TableToRdfConfigurator {
             // prepare URI
             String uri = prepareAsUri(item.getUri(), config);
             // add tempalte
-            valueGenerators.add(ValueGeneratorReplace.create(
-                    tableToRdf.valueFactory.createIRI(uri),
-                    item.getTemplate()));
+            valueGenerators.add(
+                    ValueGeneratorReplace.create(tableToRdf.valueFactory.createIRI(uri), item.getTemplate()));
         }
         // Compile valueGenerators
         for (ValueGenerator generator : valueGenerators) {
@@ -188,11 +180,9 @@ public class TableToRdfConfigurator {
         tableToRdf.infoMap = valueGenerators.toArray(new ValueGenerator[0]);
         if (config.rowsClass != null && !config.rowsClass.isEmpty()) {
             try {
-                tableToRdf.rowClass
-                        = tableToRdf.valueFactory.createIRI(config.rowsClass);
+                tableToRdf.rowClass = tableToRdf.valueFactory.createIRI(config.rowsClass);
             } catch (IllegalArgumentException ex) {
-                throw new ParseFailed("Failed to create row's class URI from:"
-                        + config.rowsClass, ex);
+                throw new ParseFailed("Failed to create row's class URI from:" + config.rowsClass, ex);
             }
         }
     }
@@ -205,8 +195,7 @@ public class TableToRdfConfigurator {
      * @param useDataType Null is considered to be false.
      * @return
      */
-    private static ColumnType guessType(String columnName, Object value,
-            Boolean useDataType) {
+    private static ColumnType guessType(String columnName, Object value, Boolean useDataType) {
 
         if (value instanceof ColumnType) {
             ColumnType type = (ColumnType) value;
@@ -233,8 +222,9 @@ public class TableToRdfConfigurator {
         // Try to parse value
         if (value == null) {
             // we can gues ..
-            LOG.warn("Can't determine type for: {} as value in first row is "
-                    + "empty, string used as default.", columnName);
+            LOG.warn(
+                    "Can't determine type for: {} as value in first row is " + "empty, string used as default.",
+                    columnName);
             return ColumnType.String;
         }
 
@@ -264,11 +254,9 @@ public class TableToRdfConfigurator {
      * @param columnName
      * @return
      */
-    private static String generateTemplate(ColumnInfo_V1 columnInfo,
-            String columnName) {
+    private static String generateTemplate(ColumnInfo_V1 columnInfo, String columnName) {
         // update columnName
-        columnName = columnName.replaceAll("\\{", "\\\\{").
-                replaceAll("\\}", "\\\\}");
+        columnName = columnName.replaceAll("\\{", "\\\\{").replaceAll("\\}", "\\\\}");
 
         final String placeHolder = "\"{" + columnName + "}\"";
         switch (columnInfo.getType()) {
@@ -285,8 +273,7 @@ public class TableToRdfConfigurator {
             case Long:
                 return placeHolder + "^^" + XMLSchema.LONG;
             case String:
-                if (columnInfo.getLanguage() == null
-                        || columnInfo.getLanguage().isEmpty()) {
+                if (columnInfo.getLanguage() == null || columnInfo.getLanguage().isEmpty()) {
                     return placeHolder;
                 } else {
                     return placeHolder + "@" + columnInfo.getLanguage();
@@ -298,7 +285,6 @@ public class TableToRdfConfigurator {
             default:
                 LOG.error("No type used for: {}", columnName);
                 return placeHolder;
-
         }
     }
 
@@ -337,5 +323,4 @@ public class TableToRdfConfigurator {
             return newUri;
         }
     }
-
 }

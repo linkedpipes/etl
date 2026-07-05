@@ -2,18 +2,16 @@ package com.linkedpipes.plugin.transformer.tabularuv;
 
 import com.linkedpipes.etl.dataunit.core.rdf.WritableGraphListDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import java.util.ArrayList;
+import java.util.List;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class RdfWriter {
 
-    private final static int BUFFER_SIZE = 50000;
+    private static final int BUFFER_SIZE = 50000;
 
-    private final static ValueFactory VALUE_FACTORY
-            = SimpleValueFactory.getInstance();
+    private static final ValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
 
     private final WritableGraphListDataUnit dataUnit;
 
@@ -30,10 +28,8 @@ public class RdfWriter {
         this.graph = graph;
     }
 
-    public void add(Resource subject, IRI predicate, Value object)
-            throws LpException {
-        buffer.add(VALUE_FACTORY.createStatement(subject, predicate, object,
-                graph));
+    public void add(Resource subject, IRI predicate, Value object) throws LpException {
+        buffer.add(VALUE_FACTORY.createStatement(subject, predicate, object, graph));
         if (buffer.size() > BUFFER_SIZE * 0.9) {
             flushBuffer();
         }
@@ -49,5 +45,4 @@ public class RdfWriter {
         });
         buffer.clear();
     }
-
 }

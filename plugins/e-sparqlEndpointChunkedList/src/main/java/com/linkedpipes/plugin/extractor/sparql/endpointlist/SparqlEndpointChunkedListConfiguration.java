@@ -5,28 +5,22 @@ import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 @RdfToPojo.Type(iri = SparqlEndpointChunkedListVocabulary.CONFIG)
 public class SparqlEndpointChunkedListConfiguration {
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointChunkedListVocabulary.HAS_USED_THREADS)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedListVocabulary.HAS_USED_THREADS)
     private int usedThreads = 1;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointChunkedListVocabulary.HAS_TIME_LIMIT)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedListVocabulary.HAS_TIME_LIMIT)
     private int executionTimeLimit = -1;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointChunkedListVocabulary.HAS_CHUNK_SIZE)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedListVocabulary.HAS_CHUNK_SIZE)
     private Integer chunkSize;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointChunkedListVocabulary.HAS_ENCODE_RDF)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedListVocabulary.HAS_ENCODE_RDF)
     private boolean fixIncomingRdf = false;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointChunkedListVocabulary.HAS_USE_TOLERANT_REPOSITORY)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedListVocabulary.HAS_USE_TOLERANT_REPOSITORY)
     private boolean useTolerantRepository = false;
 
-    public SparqlEndpointChunkedListConfiguration() {
-    }
+    public SparqlEndpointChunkedListConfiguration() {}
 
     public int getUsedThreads() {
         return usedThreads;
@@ -67,5 +61,4 @@ public class SparqlEndpointChunkedListConfiguration {
     public void setUseTolerantRepository(boolean useTolerantRepository) {
         this.useTolerantRepository = useTolerantRepository;
     }
-
 }

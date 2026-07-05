@@ -60,10 +60,11 @@ class CsvDataFormatter {
      * Allowed colours are: Black, Blue, Cyan, Green,
      * Magenta, Red, White, Yellow, "Color n" (1<=n<=56)
      */
-    private static final Pattern colorPattern
-            = Pattern.compile("(\\[BLACK\\])|(\\[BLUE\\])|(\\[CYAN\\])|(\\[GREEN\\])|"
+    private static final Pattern colorPattern = Pattern.compile(
+            "(\\[BLACK\\])|(\\[BLUE\\])|(\\[CYAN\\])|(\\[GREEN\\])|"
                     + "(\\[MAGENTA\\])|(\\[RED\\])|(\\[WHITE\\])|(\\[YELLOW\\])|"
-                    + "(\\[COLOR\\s*\\d\\])|(\\[COLOR\\s*[0-5]\\d\\])", Pattern.CASE_INSENSITIVE);
+                    + "(\\[COLOR\\s*\\d\\])|(\\[COLOR\\s*[0-5]\\d\\])",
+            Pattern.CASE_INSENSITIVE);
 
     /**
      * A regex to identify a fraction pattern.
@@ -202,11 +203,11 @@ class CsvDataFormatter {
     }
 
     private Format getFormat(double cellValue, int formatIndex, String formatStrIn) {
-//      // Might be better to separate out the n p and z formats, falling back to p when n and z are not set.
-//      // That however would require other code to be re factored.
-//      String[] formatBits = formatStrIn.split(";");
-//      int i = cellValue > 0.0 ? 0 : cellValue < 0.0 ? 1 : 2;
-//      String formatStr = (i < formatBits.length) ? formatBits[i] : formatBits[0];
+        //      // Might be better to separate out the n p and z formats, falling back to p when n and z are not set.
+        //      // That however would require other code to be re factored.
+        //      String[] formatBits = formatStrIn.split(";");
+        //      int i = cellValue > 0.0 ? 0 : cellValue < 0.0 ? 1 : 2;
+        //      String formatStr = (i < formatBits.length) ? formatBits[i] : formatBits[0];
 
         String formatStr = formatStrIn;
         // Excel supports positive/negative/zero, but java
@@ -281,8 +282,7 @@ class CsvDataFormatter {
             if (at == -1) {
                 break;
             }
-            String nFormatStr = formatStr.substring(0, at)
-                    + formatStr.substring(at + colour.length());
+            String nFormatStr = formatStr.substring(0, at) + formatStr.substring(at + colour.length());
             if (nFormatStr.equals(formatStr)) {
                 break;
             }
@@ -320,8 +320,7 @@ class CsvDataFormatter {
             return generalDecimalNumFormat;
         }
 
-        if (DateUtil.isADateFormat(formatIndex, formatStr)
-                && DateUtil.isValidExcelDate(cellValue)) {
+        if (DateUtil.isADateFormat(formatIndex, formatStr) && DateUtil.isValidExcelDate(cellValue)) {
             return createDateFormat(formatStr, cellValue);
         }
         // Excel supports fractions in format strings, which Java doesn't
@@ -333,16 +332,18 @@ class CsvDataFormatter {
                 chunk = matcher.replaceAll(" ");
                 chunk = chunk.replaceAll(" +", " ");
                 Matcher fractionMatcher = fractionPattern.matcher(chunk);
-                //take the first match
+                // take the first match
                 if (fractionMatcher.find()) {
                     String wholePart = (fractionMatcher.group(1) == null) ? "" : defaultFractionWholePartFormat;
                     return new FractionFormat(wholePart, fractionMatcher.group(3));
                 }
             }
 
-            // Strip custom text in quotes and escaped characters for now as it can cause performance problems in fractions.
-            //String strippedFormatStr = formatStr.replaceAll("\\\\ ", " ").replaceAll("\\\\.", "").replaceAll("\"[^\"]*\"", " ").replaceAll("\\?", "#");
-            //System.out.println("formatStr: "+strippedFormatStr);
+            // Strip custom text in quotes and escaped characters for now as it can cause performance problems in
+            // fractions.
+            // String strippedFormatStr = formatStr.replaceAll("\\\\ ", " ").replaceAll("\\\\.",
+            // "").replaceAll("\"[^\"]*\"", " ").replaceAll("\\?", "#");
+            // System.out.println("formatStr: "+strippedFormatStr);
             return new FractionFormat(defaultFractionWholePartFormat, defaultFractionFractionPartFormat);
         }
 
@@ -366,7 +367,7 @@ class CsvDataFormatter {
         formatStr = formatStr.replaceAll("\\\\/", "/"); // weird: m\\/d\\/yyyy
         formatStr = formatStr.replaceAll(";@", "");
         formatStr = formatStr.replaceAll("\"/\"", "/"); // "/" is escaped for no reason in: mm"/"dd"/"yyyy
-        formatStr = formatStr.replace("\"\"", "'");	// replace Excel quoting with Java style quoting
+        formatStr = formatStr.replace("\"\"", "'"); // replace Excel quoting with Java style quoting
         formatStr = formatStr.replaceAll("\\\\T", "'T'"); // Quote the T is iso8601 style dates
 
         boolean hasAmPm = false;
@@ -439,9 +440,7 @@ class CsvDataFormatter {
             } else if (c == 'm' || c == 'M') {
                 if (mIsMonth) {
                     sb.append('M');
-                    ms.add(
-                            Integer.valueOf(sb.length() - 1)
-                    );
+                    ms.add(Integer.valueOf(sb.length() - 1));
                 } else {
                     sb.append('m');
                 }
@@ -480,7 +479,6 @@ class CsvDataFormatter {
             // so fall back to the default number format
             return getDefaultFormat(cellValue);
         }
-
     }
 
     private String cleanFormatForNumber(String formatStr) {
@@ -631,9 +629,7 @@ class CsvDataFormatter {
         Format dateFormat = getFormat(cell);
         if (dateFormat instanceof ExcelStyleDateFormatter) {
             // Hint about the raw excel value
-            ((ExcelStyleDateFormatter) dateFormat).setDateToBeFormatted(
-                    cell.getNumericCellValue()
-            );
+            ((ExcelStyleDateFormatter) dateFormat).setDateToBeFormatted(cell.getNumericCellValue());
         }
         Date d = cell.getDateCellValue();
         return performDateFormatting(d, dateFormat);
@@ -755,7 +751,6 @@ class CsvDataFormatter {
         }
         switch (cellType) {
             case Cell.CELL_TYPE_NUMERIC:
-
                 if (DateUtil.isCellDateFormatted(cell)) {
                     return getFormattedDateString(cell);
                 }
@@ -795,8 +790,7 @@ class CsvDataFormatter {
         Iterator<Map.Entry<String, Format>> itr = formats.entrySet().iterator();
         while (itr.hasNext()) {
             Map.Entry<String, Format> entry = itr.next();
-            if (entry.getValue() == generalDecimalNumFormat
-                    || entry.getValue() == generalWholeNumFormat) {
+            if (entry.getValue() == generalDecimalNumFormat || entry.getValue() == generalWholeNumFormat) {
                 entry.setValue(format);
             }
         }
@@ -818,7 +812,6 @@ class CsvDataFormatter {
     public void addFormat(String excelFormatStr, Format format) {
         formats.put(excelFormatStr, format);
     }
-
 
     // Some custom formats
     /**
@@ -1005,5 +998,4 @@ class CsvDataFormatter {
             return df.parseObject(source, pos);
         }
     }
-
 }

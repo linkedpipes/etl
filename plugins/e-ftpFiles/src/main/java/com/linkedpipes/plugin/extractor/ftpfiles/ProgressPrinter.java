@@ -7,26 +7,20 @@ import org.slf4j.LoggerFactory;
 
 class ProgressPrinter implements CopyStreamListener {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(ProgressPrinter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProgressPrinter.class);
 
     long lastDownloaded = 0;
 
     @Override
     public void bytesTransferred(CopyStreamEvent event) {
-        bytesTransferred(event.getTotalBytesTransferred(),
-                event.getBytesTransferred(), event.getStreamSize());
+        bytesTransferred(event.getTotalBytesTransferred(), event.getBytesTransferred(), event.getStreamSize());
     }
 
     @Override
-    public void bytesTransferred(long totalBytesTransferred,
-            int bytesTransferred, long streamSize) {
+    public void bytesTransferred(long totalBytesTransferred, int bytesTransferred, long streamSize) {
         if (totalBytesTransferred > lastDownloaded) {
             lastDownloaded += (1024 * 1024);
-            LOG.debug("Transferred: {} MB, {} B",
-                    totalBytesTransferred / (1024 * 1024),
-                    totalBytesTransferred);
+            LOG.debug("Transferred: {} MB, {} B", totalBytesTransferred / (1024 * 1024), totalBytesTransferred);
         }
     }
-
 }

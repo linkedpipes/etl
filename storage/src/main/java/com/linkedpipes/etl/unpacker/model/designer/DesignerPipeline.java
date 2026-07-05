@@ -3,11 +3,10 @@ package com.linkedpipes.etl.unpacker.model.designer;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.model.vocabulary.SKOS;
 import com.linkedpipes.etl.unpacker.rdf.Loadable;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Value;
-
 import java.util.LinkedList;
 import java.util.List;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
 
 public class DesignerPipeline implements Loadable {
 
@@ -27,8 +26,7 @@ public class DesignerPipeline implements Loadable {
 
     private final List<DesignerRunAfter> runAfter = new LinkedList<>();
 
-    public DesignerPipeline() {
-    }
+    public DesignerPipeline() {}
 
     @Override
     public void resource(String resource) {
@@ -89,5 +87,4 @@ public class DesignerPipeline implements Loadable {
     public ExecutionProfile getExecutionProfile() {
         return executionProfile;
     }
-
 }

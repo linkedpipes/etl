@@ -35,26 +35,22 @@ public class RdfBuilder {
             return this;
         }
 
-        public EntityBuilder string(
-                String predicate, String value, String language) {
+        public EntityBuilder string(String predicate, String value, String language) {
             writer.string(resource, predicate, value, language);
             return this;
         }
 
         public EntityBuilder integer(String predicate, int value) {
-            writer.typed(resource, predicate,
-                    Integer.toString(value), XSD.INTEGER);
+            writer.typed(resource, predicate, Integer.toString(value), XSD.INTEGER);
             return this;
         }
 
         public EntityBuilder bool(String predicate, boolean value) {
-            writer.typed(resource, predicate,
-                    Boolean.toString(value), XSD.BOOLEAN);
+            writer.typed(resource, predicate, Boolean.toString(value), XSD.BOOLEAN);
             return this;
         }
 
-        public EntityBuilder typed(String predicate, String value, String type)
-                throws RdfUtilsException {
+        public EntityBuilder typed(String predicate, String value, String type) throws RdfUtilsException {
             writer.typed(resource, predicate, value, type);
             return this;
         }
@@ -62,7 +58,6 @@ public class RdfBuilder {
         public EntityBuilder close() {
             return parent;
         }
-
     }
 
     private final BackendTripleWriter writer;
@@ -86,5 +81,4 @@ public class RdfBuilder {
         BackendTripleWriter writer = source.getTripleWriter(graph);
         return new RdfBuilder(writer);
     }
-
 }

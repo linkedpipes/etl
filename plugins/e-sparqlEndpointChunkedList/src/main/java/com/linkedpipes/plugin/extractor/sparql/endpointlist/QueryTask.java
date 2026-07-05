@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 
 import com.linkedpipes.etl.executor.api.v1.component.task.Task;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,36 +17,28 @@ public class QueryTask implements Task {
     @RdfToPojo.Property(iri = SparqlEndpointChunkedListVocabulary.HAS_ENDPOINT)
     private String endpoint;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointChunkedListVocabulary.HAS_DEFAULT_GRAPH)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedListVocabulary.HAS_DEFAULT_GRAPH)
     private List<String> defaultGraphs = new ArrayList<>();
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointChunkedListVocabulary.HAS_HEADER_ACCEPT)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedListVocabulary.HAS_HEADER_ACCEPT)
     private String transferMimeType = null;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointChunkedListVocabulary.HAS_FILE_NAME)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedListVocabulary.HAS_FILE_NAME)
     private String fileName = null;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointChunkedListVocabulary.HAS_CHUNK_SIZE)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedListVocabulary.HAS_CHUNK_SIZE)
     private int chunkSize;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointChunkedListVocabulary.HAS_AUTH)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedListVocabulary.HAS_AUTH)
     private boolean useAuthentication = false;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointChunkedListVocabulary.HAS_USERNAME)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedListVocabulary.HAS_USERNAME)
     private String username;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointChunkedListVocabulary.HAS_PASSWORD)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedListVocabulary.HAS_PASSWORD)
     private String password;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointChunkedListVocabulary.HAS_AS_LITERALS)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedListVocabulary.HAS_AS_LITERALS)
     private List<String> asLiterals = new ArrayList<>();
 
     @Override
@@ -143,5 +134,4 @@ public class QueryTask implements Task {
     public void setAsLiterals(List<String> asLiterals) {
         this.asLiterals = asLiterals;
     }
-
 }

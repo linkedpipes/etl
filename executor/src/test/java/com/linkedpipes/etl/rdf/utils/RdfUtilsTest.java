@@ -8,12 +8,11 @@ import com.linkedpipes.etl.rdf.utils.pojo.DescriptorFactory;
 import com.linkedpipes.etl.rdf.utils.pojo.LangString;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class RdfUtilsTest {
 
@@ -23,8 +22,7 @@ public class RdfUtilsTest {
 
         private String lang;
 
-        public Label() {
-        }
+        public Label() {}
 
         public Label(String value) {
             this.value = value;
@@ -90,7 +88,6 @@ public class RdfUtilsTest {
             }
             return null;
         }
-
     }
 
     private static class TestDescriptor implements Descriptor {
@@ -120,7 +117,6 @@ public class RdfUtilsTest {
                 return null;
             }
         }
-
     }
 
     @Test
@@ -153,8 +149,7 @@ public class RdfUtilsTest {
         ClosableRdfSource source = Rdf4jSource.createInMemory();
         RdfBuilder builder = RdfBuilder.create(source, "http://graph");
         TestEntity entity = new TestEntity();
-        DescriptorFactory descriptorFactory =
-                (clazz) -> new TestDescriptor(clazz);
+        DescriptorFactory descriptorFactory = (clazz) -> new TestDescriptor(clazz);
         builder.entity("http://e")
                 .string("http://value", "1")
                 .iri(RDF.TYPE, "http://T")
@@ -164,8 +159,7 @@ public class RdfUtilsTest {
                 .string("http://value", "3");
         builder.commit();
 
-        RdfUtils.loadByType(source, "http://graph",
-                entity, descriptorFactory);
+        RdfUtils.loadByType(source, "http://graph", entity, descriptorFactory);
 
         Assertions.assertEquals("1", entity.value);
         Assertions.assertNotNull(entity.ref);
@@ -178,5 +172,4 @@ public class RdfUtilsTest {
 
         source.close();
     }
-
 }

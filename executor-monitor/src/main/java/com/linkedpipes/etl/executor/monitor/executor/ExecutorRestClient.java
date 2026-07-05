@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
+import java.nio.charset.StandardCharsets;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,21 +19,17 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.nio.charset.StandardCharsets;
-
 @Service
 class ExecutorRestClient {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ExecutorRestClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExecutorRestClient.class);
 
     private final RestTemplate restTemplate;
 
     public ExecutorRestClient() {
         restTemplate = new RestTemplate();
         // Support national character encoding in messages.
-        restTemplate.getMessageConverters()
-                .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+        restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
     }
 
     /**
@@ -44,9 +41,7 @@ class ExecutorRestClient {
         headers.add("Accept", "application/json");
         ResponseEntity<String> response;
         try {
-            response = restTemplate.exchange(
-                    getOverviewUrl(executor), HttpMethod.GET,
-                    entity, String.class);
+            response = restTemplate.exchange(getOverviewUrl(executor), HttpMethod.GET, entity, String.class);
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode().value() == HttpStatus.SC_NOT_FOUND) {
                 // There is no execution running, that is fine.
@@ -62,26 +57,24 @@ class ExecutorRestClient {
         return executor.getAddress() + "/api/v1/executions/overview";
     }
 
-    public void start(Executor executor, Execution execution)
-            throws MonitorException {
+    public void start(Executor executor, Execution execution) throws MonitorException {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Content-Type", "application/json");
 
         String body = createStartExecutionBody(execution);
         HttpEntity request = new HttpEntity<>(body, headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(
-                getExecutionsUrl(executor), HttpMethod.POST,
-                request, String.class);
+        ResponseEntity<String> response =
+                restTemplate.exchange(getExecutionsUrl(executor), HttpMethod.POST, request, String.class);
 
-        LOG.info("Starting execution: '{}' on '{}' -> {}",
+        LOG.info(
+                "Starting execution: '{}' on '{}' -> {}",
                 execution.getIri(),
                 executor.getAddress(),
                 response.getStatusCode());
 
         if (response.getStatusCode().value() != HttpStatus.SC_CREATED) {
-            throw new MonitorException("Can't start execution, response: {}",
-                    response.getStatusCode());
+            throw new MonitorException("Can't start execution, response: {}", response.getStatusCode());
         }
     }
 
@@ -89,14 +82,11 @@ class ExecutorRestClient {
         return executor.getAddress() + "/api/v1/executions";
     }
 
-    private String createStartExecutionBody(Execution execution)
-            throws MonitorException {
+    private String createStartExecutionBody(Execution execution) throws MonitorException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode root = mapper.createObjectNode();
         root.put("iri", execution.getIri());
-        root.put(
-                "directory",
-                execution.getDirectory().toString().replace("\\", "/"));
+        root.put("directory", execution.getDirectory().toString().replace("\\", "/"));
         try {
             return mapper.writeValueAsString(root);
         } catch (JsonProcessingException ex) {
@@ -104,8 +94,7 @@ class ExecutorRestClient {
         }
     }
 
-    public void cancel(Executor executor, String userRequest)
-            throws MonitorException {
+    public void cancel(Executor executor, String userRequest) throws MonitorException {
         try {
             this.cancelExecution(executor, userRequest);
         } catch (Exception ex) {
@@ -118,16 +107,13 @@ class ExecutorRestClient {
         headers.add("Content-Type", "application/json");
         HttpEntity request = new HttpEntity<>(userRequest, headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(
-                getCancelUrl(executor), HttpMethod.POST,
-                request, String.class);
+        ResponseEntity<String> response =
+                restTemplate.exchange(getCancelUrl(executor), HttpMethod.POST, request, String.class);
 
-        LOG.info("Cancelling '{}' -> {}",
-                executor.getAddress(), response.getStatusCode());
+        LOG.info("Cancelling '{}' -> {}", executor.getAddress(), response.getStatusCode());
     }
 
     private String getCancelUrl(Executor executor) {
         return executor.getAddress() + "/api/v1/executions/cancel";
     }
-
 }

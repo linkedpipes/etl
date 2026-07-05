@@ -4,16 +4,6 @@ import cz.skodape.hdt.core.MemoryReferenceSource;
 import cz.skodape.hdt.core.OperationFailed;
 import cz.skodape.hdt.core.Reference;
 import cz.skodape.hdt.core.ReferenceSource;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.Rio;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,6 +14,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.Rio;
 
 public class Rdf4jMemorySource extends Rdf4jSource {
 
@@ -40,8 +39,7 @@ public class Rdf4jMemorySource extends Rdf4jSource {
     @Override
     public void open() throws OperationFailed {
         File inputFile = this.configuration.file;
-        Optional<RDFFormat> format = Rio.getParserFormatForFileName(
-                inputFile.getName());
+        Optional<RDFFormat> format = Rio.getParserFormatForFileName(inputFile.getName());
         if (format.isEmpty()) {
             throw new OperationFailed("Can't determine file format.");
         }
@@ -68,8 +66,7 @@ public class Rdf4jMemorySource extends Rdf4jSource {
     }
 
     @Override
-    protected List<Value> property(
-            Resource graph, Resource resource, String property) {
+    protected List<Value> property(Resource graph, Resource resource, String property) {
         IRI predicate = valueFactory.createIRI(property);
         List<Value> result = new ArrayList<>();
         Iterable<Statement> statements;
@@ -85,8 +82,7 @@ public class Rdf4jMemorySource extends Rdf4jSource {
     }
 
     @Override
-    protected List<Resource> reverseProperty(
-            Resource graph, Value value, String property) {
+    protected List<Resource> reverseProperty(Resource graph, Value value, String property) {
         IRI predicate = valueFactory.createIRI(property);
         List<Resource> result = new ArrayList<>();
         Iterable<Statement> statements;
@@ -100,5 +96,4 @@ public class Rdf4jMemorySource extends Rdf4jSource {
         }
         return result;
     }
-
 }

@@ -45,5 +45,4 @@ public class Rdf4jPrimitive implements Rdf4jReference, PrimitiveReference {
     public boolean isPrimitiveReference() {
         return true;
     }
-
 }

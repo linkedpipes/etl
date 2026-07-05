@@ -13,5 +13,4 @@ public class CreatePipelineOptions {
      * If set should be used instead of a pipeline label.
      */
     public String targetLabel = null;
-
 }

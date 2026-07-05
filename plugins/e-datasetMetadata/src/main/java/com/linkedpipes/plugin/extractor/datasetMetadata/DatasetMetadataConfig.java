@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.extractor.datasetMetadata;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -96,9 +95,7 @@ public class DatasetMetadataConfig {
     @RdfToPojo.Property(iri = "http://plugins.linkedpipes.com/ontology/e-datasetMetadata#schema")
     private String schema = "";
 
-    public DatasetMetadataConfig() {
-
-    }
+    public DatasetMetadataConfig() {}
 
     public String getDatasetURI() {
         return datasetURI;
@@ -331,5 +328,4 @@ public class DatasetMetadataConfig {
     public void setSchema(String schema) {
         this.schema = schema;
     }
-
 }

@@ -55,5 +55,4 @@ public class LodCloudVocabulary {
         VCARD_FN = valueFactory.createIRI(VCARD + "fn");
         CKAN_DATASET_ID = valueFactory.createIRI(CKAN + "datasetID");
     }
-
 }

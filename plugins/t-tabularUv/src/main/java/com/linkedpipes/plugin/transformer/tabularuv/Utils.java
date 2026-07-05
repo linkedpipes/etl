@@ -5,9 +5,7 @@ import java.net.URLEncoder;
 
 public class Utils {
 
-    private Utils() {
-
-    }
+    private Utils() {}
 
     public static String convertStringToIRIPart(String part) {
         try {
@@ -16,5 +14,4 @@ public class Utils {
             throw new RuntimeException("Unsupported encoding", ex);
         }
     }
-
 }

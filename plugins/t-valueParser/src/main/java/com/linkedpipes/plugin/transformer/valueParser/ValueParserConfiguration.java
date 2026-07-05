@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.transformer.valueParser;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +28,7 @@ public class ValueParserConfiguration {
         @RdfToPojo.Property(iri = ValueParserVocabulary.HAS_TYPE)
         private String type;
 
-        public OutputBinding() {
-        }
+        public OutputBinding() {}
 
         public String getGroup() {
             return group;
@@ -81,8 +79,7 @@ public class ValueParserConfiguration {
     @RdfToPojo.Property(iri = ValueParserVocabulary.HAS_BINDING)
     private List<OutputBinding> bindings = new ArrayList<>(2);
 
-    public ValueParserConfiguration() {
-    }
+    public ValueParserConfiguration() {}
 
     public String getSource() {
         return source;

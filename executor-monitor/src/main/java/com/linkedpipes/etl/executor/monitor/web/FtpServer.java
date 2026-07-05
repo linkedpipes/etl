@@ -46,28 +46,25 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
             LOG.info("FTP server is not configured and thus is not started.");
             return;
         }
-        LOG.info("Starting FTP server on ports: {}, {} - {}",
+        LOG.info(
+                "Starting FTP server on ports: {}, {} - {}",
                 configuration.getFtpCommandPort(),
                 configuration.getFtpDataPortsStart(),
                 configuration.getFtpDataPortsEnd());
 
-        DataConnectionConfigurationFactory dataFactory
-                = new DataConnectionConfigurationFactory();
+        DataConnectionConfigurationFactory dataFactory = new DataConnectionConfigurationFactory();
 
         dataFactory.setActiveEnabled(false);
         dataFactory.setPassivePorts(getPassivePorts());
 
         ListenerFactory listenerFactory = new ListenerFactory();
         listenerFactory.setPort(configuration.getFtpCommandPort());
-        listenerFactory.setDataConnectionConfiguration(
-                dataFactory.createDataConnectionConfiguration());
+        listenerFactory.setDataConnectionConfiguration(dataFactory.createDataConnectionConfiguration());
 
-        ConnectionConfigFactory connectionConfigFactory
-                = new ConnectionConfigFactory();
+        ConnectionConfigFactory connectionConfigFactory = new ConnectionConfigFactory();
         connectionConfigFactory.setAnonymousLoginEnabled(true);
 
-        int loginLimit = (configuration.getFtpDataPortsEnd()
-                - configuration.getFtpDataPortsStart()) + 1;
+        int loginLimit = (configuration.getFtpDataPortsEnd() - configuration.getFtpDataPortsStart()) + 1;
         connectionConfigFactory.setMaxLogins(loginLimit);
         connectionConfigFactory.setMaxAnonymousLogins(loginLimit);
 
@@ -76,8 +73,7 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
         anonymous.setPassword("");
         anonymous.setHomeDirectory("");
 
-        UserManagerFactory userManagerFactory
-                = new PropertiesUserManagerFactory();
+        UserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
         UserManager userManager = userManagerFactory.createUserManager();
         try {
             userManager.save(anonymous);
@@ -89,8 +85,7 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
 
         FtpServerFactory serverFactory = new FtpServerFactory();
         serverFactory.addListener("default", listenerFactory.createListener());
-        serverFactory.setConnectionConfig(
-                connectionConfigFactory.createConnectionConfig());
+        serverFactory.setConnectionConfig(connectionConfigFactory.createConnectionConfig());
         serverFactory.setUserManager(userManager);
 
         serverFactory.setFileSystem((User user) -> virtualFileSystem.getView());
@@ -100,12 +95,12 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
             server.start();
         } catch (FtpException ex) {
             LOG.error("Can't start FTP server.", ex);
-            appContext.stop();        }
+            appContext.stop();
+        }
     }
 
     protected String getPassivePorts() {
-        return configuration.getFtpDataPortsStart() + "-"
-                + (configuration.getFtpDataPortsEnd());
+        return configuration.getFtpDataPortsStart() + "-" + (configuration.getFtpDataPortsEnd());
     }
 
     protected void stop() {
@@ -122,5 +117,4 @@ public class FtpServer implements ApplicationListener<ApplicationEvent> {
             stop();
         }
     }
-
 }

@@ -11,8 +11,7 @@ public class FilesRenamerConfiguration {
     @RdfToPojo.Property(iri = FilesRenamerVocabulary.HAS_REPLACE_WITH)
     private String replaceWith;
 
-    public FilesRenamerConfiguration() {
-    }
+    public FilesRenamerConfiguration() {}
 
     public String getPattern() {
         return pattern;
@@ -29,5 +28,4 @@ public class FilesRenamerConfiguration {
     public void setReplaceWith(String replaceWith) {
         this.replaceWith = replaceWith;
     }
-
 }

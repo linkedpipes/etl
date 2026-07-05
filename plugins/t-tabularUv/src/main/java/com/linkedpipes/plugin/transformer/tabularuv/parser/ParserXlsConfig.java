@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabularuv.parser;
 
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.NamedCell_V1;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -31,10 +30,15 @@ public class ParserXlsConfig {
 
     final boolean useDataFormatter;
 
-    public ParserXlsConfig(String sheetName, int numberOfStartLinesToIgnore,
-            boolean hasHeader, List<NamedCell_V1> namedCells,
-            Integer rowLimit, boolean checkStaticRowCounter,
-            boolean stripHeader, boolean advancedDoubleParser,
+    public ParserXlsConfig(
+            String sheetName,
+            int numberOfStartLinesToIgnore,
+            boolean hasHeader,
+            List<NamedCell_V1> namedCells,
+            Integer rowLimit,
+            boolean checkStaticRowCounter,
+            boolean stripHeader,
+            boolean advancedDoubleParser,
             boolean useDataFormatter) {
         this.sheetName = sheetName;
         this.numberOfStartLinesToIgnore = numberOfStartLinesToIgnore;
@@ -50,5 +54,4 @@ public class ParserXlsConfig {
         this.advancedDoubleParser = advancedDoubleParser;
         this.useDataFormatter = useDataFormatter;
     }
-
 }

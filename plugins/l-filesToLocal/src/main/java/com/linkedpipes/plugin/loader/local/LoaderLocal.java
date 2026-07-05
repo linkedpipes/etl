@@ -6,9 +6,6 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -20,11 +17,12 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class LoaderLocal implements Component, SequentialExecution {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(LoaderLocal.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LoaderLocal.class);
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
@@ -41,10 +39,8 @@ public final class LoaderLocal implements Component, SequentialExecution {
 
     @Override
     public void execute() throws LpException {
-        if (configuration.getPath() == null
-                || configuration.getPath().isEmpty()) {
-            throw new LpException("Missing property: {}",
-                    LoaderLocalVocabulary.HAS_PATH);
+        if (configuration.getPath() == null || configuration.getPath().isEmpty()) {
+            throw new LpException("Missing property: {}", LoaderLocalVocabulary.HAS_PATH);
         }
         //
         progress.start(input.size());
@@ -57,12 +53,10 @@ public final class LoaderLocal implements Component, SequentialExecution {
         for (FilesDataUnit.Entry entry : input) {
             //
             final File inputFile = entry.toFile();
-            final File outputFile = new File(rootDirectory,
-                    entry.getFileName());
+            final File outputFile = new File(rootDirectory, entry.getFileName());
             try {
                 outputFile.getParentFile().mkdirs();
-                Files.copy(inputFile.toPath(), outputFile.toPath(),
-                        StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(inputFile.toPath(), outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException ex) {
                 LOG.error("{} -> {}", inputFile, outputFile);
                 throw new LpException("Can't copy files.", ex);
@@ -75,37 +69,29 @@ public final class LoaderLocal implements Component, SequentialExecution {
     }
 
     private void setPermissions(Path directory) throws LpException {
-        Set<PosixFilePermission> filePermissions =
-                createPermissions(configuration.getFilePermissions());
-        Set<PosixFilePermission> directoryPermissions =
-                createPermissions(configuration.getDirectoryPermissions());
+        Set<PosixFilePermission> filePermissions = createPermissions(configuration.getFilePermissions());
+        Set<PosixFilePermission> directoryPermissions = createPermissions(configuration.getDirectoryPermissions());
         try {
             Files.walkFileTree(directory, new SimpleFileVisitor<>() {
 
                 @Override
-                public FileVisitResult preVisitDirectory(
-                        Path directory, BasicFileAttributes attributes
-                ) throws IOException {
+                public FileVisitResult preVisitDirectory(Path directory, BasicFileAttributes attributes)
+                        throws IOException {
                     if (directoryPermissions == null) {
                         return FileVisitResult.CONTINUE;
                     }
-                    Files.setPosixFilePermissions(
-                            directory, directoryPermissions);
+                    Files.setPosixFilePermissions(directory, directoryPermissions);
                     return FileVisitResult.CONTINUE;
                 }
 
                 @Override
-                public FileVisitResult visitFile(
-                        Path file, BasicFileAttributes attributes
-                ) throws IOException {
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException {
                     if (filePermissions == null) {
                         return FileVisitResult.CONTINUE;
                     }
-                    Files.setPosixFilePermissions(
-                            file, filePermissions);
+                    Files.setPosixFilePermissions(file, filePermissions);
                     return FileVisitResult.CONTINUE;
                 }
-
             });
         } catch (IOException ex) {
             throw new LpException("Can't set file permissions.", ex);
@@ -114,12 +100,10 @@ public final class LoaderLocal implements Component, SequentialExecution {
         }
     }
 
-    private Set<PosixFilePermission> createPermissions(
-            String permissionsString) {
+    private Set<PosixFilePermission> createPermissions(String permissionsString) {
         if (permissionsString == null || permissionsString.isBlank()) {
             return null;
         }
         return PosixFilePermissions.fromString(permissionsString);
     }
-
 }

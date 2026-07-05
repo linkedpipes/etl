@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.jsonldformattitanium;
 
 public final class JsonLdFormatTitaniumVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-jsonLdFormatTitanium#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-jsonLdFormatTitanium#";
 
     public static final String CONFIGURATION = PREFIX + "Configuration";
 
@@ -23,7 +22,5 @@ public final class JsonLdFormatTitaniumVocabulary {
 
     public static final String FRAME_AS_ARRAY = PREFIX + "FrameAsArray";
 
-    private JsonLdFormatTitaniumVocabulary() {
-    }
-
+    private JsonLdFormatTitaniumVocabulary() {}
 }

@@ -23,8 +23,7 @@ public class CheckExecutorTest {
 
     @Test
     public void executorBecomesOffline() {
-        ExecutorEventListener listener =
-                Mockito.mock(ExecutorEventListener.class);
+        ExecutorEventListener listener = Mockito.mock(ExecutorEventListener.class);
         ExecutorRestClient client = Mockito.mock(ExecutorRestClient.class);
         Executor executor = new Executor(null);
         executor.setAlive(true);
@@ -32,14 +31,12 @@ public class CheckExecutorTest {
         (new CheckExecutor(listener, client, null)).check(executor);
         //
         Assertions.assertFalse(executor.isAlive());
-        Mockito.verify(listener, Mockito.times(1))
-                .onExecutorUnavailable(executor);
+        Mockito.verify(listener, Mockito.times(1)).onExecutorUnavailable(executor);
     }
 
     @Test
     public void executorWithoutExecution() {
-        ExecutorEventListener listener =
-                Mockito.mock(ExecutorEventListener.class);
+        ExecutorEventListener listener = Mockito.mock(ExecutorEventListener.class);
         ExecutorRestClient client = Mockito.mock(ExecutorRestClient.class);
         Executor executor = new Executor(null);
         executor.setAlive(true);
@@ -47,8 +44,7 @@ public class CheckExecutorTest {
         (new CheckExecutor(listener, client, null)).check(executor);
         //
         Assertions.assertTrue(executor.isAlive());
-        Mockito.verify(listener, Mockito.times(1))
-                .onExecutorWithoutExecution(executor);
+        Mockito.verify(listener, Mockito.times(1)).onExecutorWithoutExecution(executor);
     }
 
     @Test
@@ -59,16 +55,12 @@ public class CheckExecutorTest {
         executor.setAlive(true);
         Mockito.when(client.check(executor)).thenReturn("{}");
         Execution execution = new Execution();
-        Mockito.when(executions.getExecution(Mockito.any(JsonNode.class)))
-                .thenReturn(execution);
-        ExecutorEventListener listener =
-                Mockito.mock(ExecutorEventListener.class);
+        Mockito.when(executions.getExecution(Mockito.any(JsonNode.class))).thenReturn(execution);
+        ExecutorEventListener listener = Mockito.mock(ExecutorEventListener.class);
         (new CheckExecutor(listener, client, executions)).check(executor);
         //
-        Mockito.verify(listener, Mockito.times(1))
-                .onExecutorHasExecution(execution, executor);
-        Mockito.verify(listener, Mockito.times(1))
-                .onOverview(Mockito.eq(execution), Mockito.any(JsonNode.class));
+        Mockito.verify(listener, Mockito.times(1)).onExecutorHasExecution(execution, executor);
+        Mockito.verify(listener, Mockito.times(1)).onOverview(Mockito.eq(execution), Mockito.any(JsonNode.class));
     }
 
     @Test
@@ -80,14 +72,10 @@ public class CheckExecutorTest {
         Mockito.when(client.check(executor)).thenReturn("{}");
         Execution execution = new Execution();
         Mockito.when(executions.getExecution(executor)).thenReturn(execution);
-        ExecutorEventListener listener =
-                Mockito.mock(ExecutorEventListener.class);
+        ExecutorEventListener listener = Mockito.mock(ExecutorEventListener.class);
         (new CheckExecutor(listener, client, executions)).check(executor);
         //
-        Mockito.verify(listener, Mockito.times(1))
-                .onExecutorHasExecution(execution, executor);
-        Mockito.verify(listener, Mockito.times(1))
-                .onOverview(Mockito.eq(execution), Mockito.any(JsonNode.class));
+        Mockito.verify(listener, Mockito.times(1)).onExecutorHasExecution(execution, executor);
+        Mockito.verify(listener, Mockito.times(1)).onOverview(Mockito.eq(execution), Mockito.any(JsonNode.class));
     }
-
 }

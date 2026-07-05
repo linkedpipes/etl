@@ -1,12 +1,11 @@
 package com.linkedpipes.plugin.transformer.rdftofile;
 
+import java.util.Collection;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.*;
-
-import java.util.Collection;
 
 class ChangeContext implements RDFWriter {
 
@@ -53,15 +52,13 @@ class ChangeContext implements RDFWriter {
     }
 
     @Override
-    public void handleNamespace(String string, String string1)
-            throws RDFHandlerException {
+    public void handleNamespace(String string, String string1) throws RDFHandlerException {
         writer.handleNamespace(string, string1);
     }
 
     @Override
     public void handleStatement(Statement st) throws RDFHandlerException {
-        writer.handleStatement(valueFactory.createStatement(
-                st.getSubject(), st.getPredicate(), st.getObject(), graph));
+        writer.handleStatement(valueFactory.createStatement(st.getSubject(), st.getPredicate(), st.getObject(), graph));
     }
 
     @Override
@@ -74,5 +71,4 @@ class ChangeContext implements RDFWriter {
         writer.set(setting, value);
         return this;
     }
-
 }

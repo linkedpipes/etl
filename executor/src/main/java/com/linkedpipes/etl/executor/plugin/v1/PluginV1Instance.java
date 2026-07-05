@@ -8,7 +8,6 @@ import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.plugin.v1.service.ServiceFactory;
-
 import java.lang.reflect.Field;
 import java.util.Map;
 
@@ -23,9 +22,7 @@ public class PluginV1Instance implements SequentialExecution {
 
     private final RdfSource definition;
 
-    public PluginV1Instance(
-            SequentialExecution component, String componentIri,
-            RdfSource definition) {
+    public PluginV1Instance(SequentialExecution component, String componentIri, RdfSource definition) {
         this.instance = component;
         this.componentIri = componentIri;
         this.definition = definition;
@@ -40,17 +37,14 @@ public class PluginV1Instance implements SequentialExecution {
         }
     }
 
-    public void initialize(
-            Map<String, DataUnit> dataUnits, Component.Context context)
-            throws LpException {
+    public void initialize(Map<String, DataUnit> dataUnits, Component.Context context) throws LpException {
         // Bind ports.
         bingPorts(dataUnits);
         // Inject services.
         injectServices(context);
     }
 
-    public void loadConfiguration(RdfSource definition)
-            throws LpException {
+    public void loadConfiguration(RdfSource definition) throws LpException {
         // Load configuration.
         for (Field field : instance.getClass().getFields()) {
             if (field.getAnnotation(Component.Configuration.class) != null) {
@@ -67,28 +61,25 @@ public class PluginV1Instance implements SequentialExecution {
         if (fieldValue instanceof RuntimeConfiguration) {
             return (RuntimeConfiguration) fieldValue;
         }
-        throw new LpException("Invalid configuration object type: {}",
-                fieldValue.getClass());
+        throw new LpException("Invalid configuration object type: {}", fieldValue.getClass());
     }
 
     /**
      * Load configuration for given field.
      */
-    private void loadConfigurationForField(Field field, RdfSource definition)
-            throws LpException {
+    private void loadConfigurationForField(Field field, RdfSource definition) throws LpException {
         final Object instance;
         try {
             instance = field.getType().newInstance();
         } catch (InstantiationException | IllegalAccessException ex) {
-            throw new LpException("Can't create instance of {} for {}",
-                    field.getType().getSimpleName(), field.getName(), ex);
+            throw new LpException(
+                    "Can't create instance of {} for {}", field.getType().getSimpleName(), field.getName(), ex);
         }
         RdfToPojoLoader.loadByReflection(definition, instance);
         try {
             field.set(this.instance, instance);
         } catch (IllegalAccessException | IllegalArgumentException ex) {
-            throw new LpException("Can't set value to {}",
-                    field.getName(), ex);
+            throw new LpException("Can't set value to {}", field.getName(), ex);
         }
     }
 
@@ -97,13 +88,11 @@ public class PluginV1Instance implements SequentialExecution {
      */
     private void bingPorts(Map<String, DataUnit> dataUnits) throws LpException {
         for (Field field : instance.getClass().getFields()) {
-            Component.InputPort input =
-                    field.getAnnotation(Component.InputPort.class);
+            Component.InputPort input = field.getAnnotation(Component.InputPort.class);
             if (input != null) {
                 bindPort(dataUnits, field, input.iri());
             }
-            Component.OutputPort output =
-                    field.getAnnotation(Component.OutputPort.class);
+            Component.OutputPort output = field.getAnnotation(Component.OutputPort.class);
             if (output != null) {
                 bindPort(dataUnits, field, output.iri());
             }
@@ -113,9 +102,7 @@ public class PluginV1Instance implements SequentialExecution {
     /**
      * Bind data unit for to given field.
      */
-    private void bindPort(
-            Map<String, DataUnit> dataUnits, Field field, String id)
-            throws LpException {
+    private void bindPort(Map<String, DataUnit> dataUnits, Field field, String id) throws LpException {
         DataUnit dataUnit = null;
         for (DataUnit item : dataUnits.values()) {
             if (id.equals(item.getBinding())) {
@@ -127,8 +114,10 @@ public class PluginV1Instance implements SequentialExecution {
             throw new LpException("Missing data unit: {}", id);
         }
         if (!field.getType().isAssignableFrom(dataUnit.getClass())) {
-            throw new LpException("Dataunit type mismatch ({}): {} -> {}",
-                    id, dataUnit.getClass().getSimpleName(),
+            throw new LpException(
+                    "Dataunit type mismatch ({}): {} -> {}",
+                    id,
+                    dataUnit.getClass().getSimpleName(),
                     field.getType().getSimpleName());
         }
         try {
@@ -148,17 +137,21 @@ public class PluginV1Instance implements SequentialExecution {
             }
             Object instance;
             try {
-                instance = ServiceFactory.create(
-                        field.getType(), componentIri, definition, context);
+                instance = ServiceFactory.create(field.getType(), componentIri, definition, context);
             } catch (LpException ex) {
-                throw new LpException("Can't instantiate: {} : {}",
-                        field.getName(), field.getType().getSimpleName(), ex);
+                throw new LpException(
+                        "Can't instantiate: {} : {}",
+                        field.getName(),
+                        field.getType().getSimpleName(),
+                        ex);
             }
             try {
                 field.set(this.instance, instance);
             } catch (IllegalAccessException | IllegalArgumentException ex) {
-                throw new LpException("Can't inject object: {} of {}",
-                        field.getName(), instance.getClass().getSimpleName(),
+                throw new LpException(
+                        "Can't inject object: {} of {}",
+                        field.getName(),
+                        instance.getClass().getSimpleName(),
                         ex);
             }
         }
@@ -166,8 +159,7 @@ public class PluginV1Instance implements SequentialExecution {
 
     private Object getConfigurationObject() throws LpException {
         for (Field field : instance.getClass().getFields()) {
-            Component.ContainsConfiguration annotation =
-                    field.getAnnotation(Component.ContainsConfiguration.class);
+            Component.ContainsConfiguration annotation = field.getAnnotation(Component.ContainsConfiguration.class);
             if (annotation == null) {
                 continue;
             }
@@ -179,5 +171,4 @@ public class PluginV1Instance implements SequentialExecution {
         }
         return null;
     }
-
 }

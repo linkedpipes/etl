@@ -4,22 +4,20 @@ import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionStatus;
-import org.eclipse.rdf4j.model.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.eclipse.rdf4j.model.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This component start a copy of a DANGLING pipeline.
  */
 class ReExecutor implements EventListener {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ReExecutor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ReExecutor.class);
 
     private final Integer retryCount;
 
@@ -31,8 +29,7 @@ class ReExecutor implements EventListener {
     }
 
     @Override
-    public void onExecutionStatusDidChange(
-            Execution execution, ExecutionStatus oldStatus) {
+    public void onExecutionStatusDidChange(Execution execution, ExecutionStatus oldStatus) {
         // Ignore.
     }
 
@@ -58,8 +55,7 @@ class ReExecutor implements EventListener {
         Resource pipeline = execution.getPipeline();
         List<Execution> executions = executionFacade.getExecutions().stream()
                 .filter(exec -> pipeline.equals(exec.getPipeline()))
-                .sorted(Comparator.comparing(Execution::getLastOverviewChange)
-                        .reversed())
+                .sorted(Comparator.comparing(Execution::getLastOverviewChange).reversed())
                 .toList();
         if (executions.isEmpty()) {
             // This should not happen as we should always have at least
@@ -82,8 +78,7 @@ class ReExecutor implements EventListener {
             }
             danglingCount++;
         }
-        LOG.info("ReExecutor dangling: {} limit: {} for {}",
-                danglingCount, retryCount, execution.getId());
+        LOG.info("ReExecutor dangling: {} limit: {} for {}", danglingCount, retryCount, execution.getId());
         return retryCount == null || danglingCount < retryCount;
     }
 
@@ -91,8 +86,7 @@ class ReExecutor implements EventListener {
         try {
             executionFacade.cloneAsNewExecution(execution);
         } catch (MonitorException ex) {
-            LOG.error("Can't re-execute execution: {}",
-                    execution.getId(), ex);
+            LOG.error("Can't re-execute execution: {}", execution.getId(), ex);
         }
         LOG.debug("Re-executing execution: {}", execution.getId());
     }
@@ -107,8 +101,7 @@ class ReExecutor implements EventListener {
         // Collect latest executions for all pipelines.
         Map<Resource, Execution> candidates = new HashMap<>();
         List<Execution> executions = executionFacade.getExecutions().stream()
-                .sorted(Comparator.comparing(Execution::getLastOverviewChange)
-                        .reversed())
+                .sorted(Comparator.comparing(Execution::getLastOverviewChange).reversed())
                 .toList();
         for (Execution execution : executions) {
             Resource pipeline = execution.getPipeline();
@@ -122,5 +115,4 @@ class ReExecutor implements EventListener {
             processExecution(execution);
         }
     }
-
 }

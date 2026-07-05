@@ -10,7 +10,6 @@ import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfigura
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,8 +45,7 @@ public final class SparqlEndpointList extends TaskExecution<QueryTask> {
     @Override
     protected List<QueryTask> loadTasks() throws LpException {
         RdfSource source = tasksRdf.asRdfSource();
-        List<String> resources = source.getByType(
-                SparqlEndpointListVocabulary.TASK);
+        List<String> resources = source.getByType(SparqlEndpointListVocabulary.TASK);
         List<QueryTask> result = new ArrayList<>(resources.size());
         for (String resource : resources) {
             QueryTask task = new QueryTask();
@@ -72,5 +70,4 @@ public final class SparqlEndpointList extends TaskExecution<QueryTask> {
         super.onInitialize(context);
         this.consumer = new StatementsConsumer(outputRdf);
     }
-
 }

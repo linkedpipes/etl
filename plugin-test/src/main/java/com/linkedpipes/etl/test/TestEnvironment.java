@@ -8,18 +8,17 @@ import com.linkedpipes.etl.executor.api.v1.service.WorkingDirectory;
 import com.linkedpipes.etl.test.dataunit.TestFilesDataUnit;
 import com.linkedpipes.etl.test.dataunit.TestGraphListDataUnit;
 import com.linkedpipes.etl.test.dataunit.TestSingleGraphDataUnit;
+import java.io.File;
+import java.lang.reflect.Field;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 
-import java.io.File;
-import java.lang.reflect.Field;
-
 public class TestEnvironment implements AutoCloseable {
 
-    private static class TestContext implements  Component.Context {
+    private static class TestContext implements Component.Context {
 
         @Override
         public void sendMessage(Event message) {
@@ -30,7 +29,6 @@ public class TestEnvironment implements AutoCloseable {
         public boolean isCancelled() {
             return false;
         }
-
     }
 
     private final SequentialExecution component;
@@ -41,8 +39,7 @@ public class TestEnvironment implements AutoCloseable {
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
-    protected TestEnvironment(SequentialExecution component,
-            File componentWorkingDirectory) {
+    protected TestEnvironment(SequentialExecution component, File componentWorkingDirectory) {
         this.component = component;
         this.dataRepository = new SailRepository(new MemoryStore());
         this.dataRepository.init();
@@ -61,8 +58,7 @@ public class TestEnvironment implements AutoCloseable {
         }
     }
 
-    public TestFilesDataUnit bindSystemDataUnit(
-            String binding, File directory) {
+    public TestFilesDataUnit bindSystemDataUnit(String binding, File directory) {
         final TestFilesDataUnit dataUnit = new TestFilesDataUnit(directory);
         bindDataUnit(binding, dataUnit);
         return dataUnit;
@@ -70,16 +66,15 @@ public class TestEnvironment implements AutoCloseable {
 
     public TestSingleGraphDataUnit bindSingleGraphDataUnit(String binding) {
         final String iri = getIriForBinding(binding);
-        final TestSingleGraphDataUnit dataUnit = new TestSingleGraphDataUnit(
-                valueFactory.createIRI(iri), dataRepository);
+        final TestSingleGraphDataUnit dataUnit =
+                new TestSingleGraphDataUnit(valueFactory.createIRI(iri), dataRepository);
         bindDataUnit(binding, dataUnit);
         return dataUnit;
     }
 
     public TestGraphListDataUnit bindGraphListDataUnit(String binding) {
         final String iri = getIriForBinding(binding);
-        final TestGraphListDataUnit dataUnit = new TestGraphListDataUnit(
-                iri, dataRepository);
+        final TestGraphListDataUnit dataUnit = new TestGraphListDataUnit(iri, dataRepository);
         bindDataUnit(binding, dataUnit);
         return dataUnit;
     }
@@ -92,8 +87,7 @@ public class TestEnvironment implements AutoCloseable {
         }
     }
 
-    private void bindExtensions() throws IllegalArgumentException,
-            IllegalAccessException {
+    private void bindExtensions() throws IllegalArgumentException, IllegalAccessException {
         for (Field field : component.getClass().getFields()) {
             if (field.getAnnotation(Component.Inject.class) != null) {
                 bindExtension(field);
@@ -105,8 +99,7 @@ public class TestEnvironment implements AutoCloseable {
         if (field.getType() == ProgressReport.class) {
             field.set(component, new MockedProgressReport());
         } else if (field.getType() == WorkingDirectory.class) {
-            field.set(component, new WorkingDirectory(
-                    componentWorkingDirectory.toURI()));
+            field.set(component, new WorkingDirectory(componentWorkingDirectory.toURI()));
         } else {
             throw new RuntimeException("Can't initialize extension!");
         }
@@ -126,21 +119,18 @@ public class TestEnvironment implements AutoCloseable {
         try {
             field.set(component, dataUnit);
         } catch (IllegalAccessException | IllegalArgumentException ex) {
-            throw new RuntimeException("Can't bind data unit, "
-                    + "check for type and access modifier.", ex);
+            throw new RuntimeException("Can't bind data unit, " + "check for type and access modifier.", ex);
         }
     }
 
     private Field getDataUnitField(String iri) {
         for (Field field : component.getClass().getFields()) {
-            for (Component.InputPort annotation : field.getAnnotationsByType(
-                    Component.InputPort.class)) {
+            for (Component.InputPort annotation : field.getAnnotationsByType(Component.InputPort.class)) {
                 if (annotation.iri().equals(iri)) {
                     return field;
                 }
             }
-            for (Component.OutputPort annotation : field.getAnnotationsByType(
-                    Component.OutputPort.class)) {
+            for (Component.OutputPort annotation : field.getAnnotationsByType(Component.OutputPort.class)) {
                 if (annotation.iri().equals(iri)) {
                     return field;
                 }
@@ -149,9 +139,7 @@ public class TestEnvironment implements AutoCloseable {
         return null;
     }
 
-    public static final TestEnvironment create(SequentialExecution component,
-            File workingDirectory) {
+    public static final TestEnvironment create(SequentialExecution component, File workingDirectory) {
         return new TestEnvironment(component, workingDirectory);
     }
-
 }

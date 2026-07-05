@@ -1,14 +1,13 @@
 package com.linkedpipes.etl.executor.api.v1.component.task;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 /**
  * This class wraps the {@link TaskConsumer}. It should be part of a pool
@@ -16,8 +15,7 @@ import java.util.Map;
  */
 class TaskConsumerWrap<T extends Task> implements Runnable {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(TaskConsumerWrap.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TaskConsumerWrap.class);
 
     /**
      * We grab compy of the context at the time the thread is created.
@@ -33,10 +31,7 @@ class TaskConsumerWrap<T extends Task> implements Runnable {
      */
     private final Path checkpointPath;
 
-    TaskConsumerWrap(
-            TaskConsumer<T> taskConsumer,
-            TaskSource<T> taskSource,
-            File checkpointFile) {
+    TaskConsumerWrap(TaskConsumer<T> taskConsumer, TaskSource<T> taskSource, File checkpointFile) {
         this.taskConsumer = taskConsumer;
         this.taskSource = taskSource;
         this.checkpointPath = checkpointFile.toPath();
@@ -62,7 +57,7 @@ class TaskConsumerWrap<T extends Task> implements Runnable {
     }
 
     private void executeTasks() {
-        while(true) {
+        while (true) {
             T task = taskSource.getTaskOrWait();
             if (task == null) {
                 return;
@@ -88,13 +83,11 @@ class TaskConsumerWrap<T extends Task> implements Runnable {
     private void writeFinishedTaskToCheckpoint(T task) {
         try {
             String content = String.format("%s%n", task.getIri());
-            StandardOpenOption mode = Files.exists(checkpointPath)
-                    ? StandardOpenOption.APPEND :
-                    StandardOpenOption.CREATE;
-            Files.writeString(checkpointPath, content,mode);
+            StandardOpenOption mode =
+                    Files.exists(checkpointPath) ? StandardOpenOption.APPEND : StandardOpenOption.CREATE;
+            Files.writeString(checkpointPath, content, mode);
         } catch (Throwable ex) {
             LOG.warn("Can't update checkpoint file.", ex);
         }
     }
-
 }

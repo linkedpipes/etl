@@ -57,5 +57,4 @@ public class SimpleValue implements BackendRdfValue {
     public boolean isIri() {
         return isIri;
     }
-
 }

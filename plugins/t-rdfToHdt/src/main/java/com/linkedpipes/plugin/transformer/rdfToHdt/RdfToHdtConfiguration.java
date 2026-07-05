@@ -11,8 +11,7 @@ public class RdfToHdtConfiguration {
     @RdfToPojo.Property(iri = RdfToHdtVocabulary.HAS_BASE_IRI)
     private String baseIri;
 
-    public RdfToHdtConfiguration() {
-    }
+    public RdfToHdtConfiguration() {}
 
     public String getFileName() {
         return fileName;
@@ -29,5 +28,4 @@ public class RdfToHdtConfiguration {
     public void setBaseIri(String baseIri) {
         this.baseIri = baseIri;
     }
-
 }

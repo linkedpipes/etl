@@ -1,15 +1,14 @@
 package com.linkedpipes.plugin.transformer.rdftowrappedjsonldchunked;
 
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.RDFWriter;
-import org.eclipse.rdf4j.rio.Rio;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
 
 class TemplateWriter {
 
@@ -20,7 +19,6 @@ class TemplateWriter {
     public interface ChunkWriter {
 
         void write(Writer writer) throws IOException;
-
     }
 
     /**
@@ -37,7 +35,6 @@ class TemplateWriter {
         public void write(Writer writer) throws IOException {
             writer.write(value);
         }
-
     }
 
     /**
@@ -51,7 +48,6 @@ class TemplateWriter {
                 writer.write(id);
             }
         }
-
     }
 
     /**
@@ -69,7 +65,6 @@ class TemplateWriter {
             }
             rdfWriter.endRDF();
         }
-
     }
 
     private String id;
@@ -121,5 +116,4 @@ class TemplateWriter {
         }
         writer.flush();
     }
-
 }

@@ -3,17 +3,16 @@ package com.linkedpipes.etl.executor.monitor.web.servlet;
 import com.linkedpipes.etl.executor.monitor.debug.http.DebugEntry;
 import com.linkedpipes.etl.executor.monitor.debug.http.FileContentEntry;
 import com.linkedpipes.etl.executor.monitor.debug.http.HttpDebugFilesFacade;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/debug")
@@ -36,8 +35,7 @@ public class DebugServlet {
             HttpServletRequest request,
             HttpServletResponse response)
             throws MissingResource, IOException {
-        String iri = request.getPathInfo().substring(
-                "/debug/metadata/".length());
+        String iri = request.getPathInfo().substring("/debug/metadata/".length());
         Optional<DebugEntry> dataHolder = debugFacade.resolve(iri);
         if (dataHolder.isEmpty()) {
             throw new MissingResource("Missing debug entry: {}", iri);
@@ -51,8 +49,7 @@ public class DebugServlet {
         offset = Math.max(0, offset);
         limit = Math.max(1, limit);
         //
-        DebugEntry data = dataHolder.get()
-                .prepareData(filter, source, offset, limit);
+        DebugEntry data = dataHolder.get().prepareData(filter, source, offset, limit);
         response.setHeader("Content-Type", "application/json");
         response.setStatus(HttpServletResponse.SC_OK);
         data.write(response.getOutputStream());
@@ -85,5 +82,4 @@ public class DebugServlet {
         fileData.writeFileContent(response.getOutputStream());
         response.getOutputStream().flush();
     }
-
 }

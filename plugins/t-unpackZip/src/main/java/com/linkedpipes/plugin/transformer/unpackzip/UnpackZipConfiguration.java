@@ -8,8 +8,7 @@ public class UnpackZipConfiguration {
     @RdfToPojo.Property(iri = UnpackZipVocabulary.CONFIG_USE_PREFIX)
     private boolean usePrefix = true;
 
-    public UnpackZipConfiguration() {
-    }
+    public UnpackZipConfiguration() {}
 
     public boolean isUsePrefix() {
         return usePrefix;
@@ -18,5 +17,4 @@ public class UnpackZipConfiguration {
     public void setUsePrefix(boolean usePrefix) {
         this.usePrefix = usePrefix;
     }
-
 }

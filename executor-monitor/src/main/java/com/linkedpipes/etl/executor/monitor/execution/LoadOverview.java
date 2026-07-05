@@ -8,9 +8,6 @@ import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewFactory;
 import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewObject;
 import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewToListStatements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -79,8 +76,7 @@ public class LoadOverview {
      * To make loading uniform we add some data to overview, that we load
      * later but are not produced by the executor.
      */
-    public void addMonitorInformationToOverview(
-            Execution execution, JsonNode node) {
+    public void addMonitorInformationToOverview(Execution execution, JsonNode node) {
         ObjectNode root = (ObjectNode) node;
         ObjectNode context = (ObjectNode) root.get("@context");
         context.put("finalData", LP_MONITOR.HAS_FINAL_DATA);
@@ -88,14 +84,12 @@ public class LoadOverview {
     }
 
     private void updateExecutionFromOverview(Execution execution) {
-        OverviewObject overview =
-                OverviewObject.fromJson(execution.getOverviewJson());
+        OverviewObject overview = OverviewObject.fromJson(execution.getOverviewJson());
         // In case of failure, where pipeline can not be loaded, it is
         // not present in the overview file. As a result,
         // pipeline is not visible in the execution list.
         // The null check is for backward compatibility.
-        if (overview.getPipeline() == null
-                || overview.getPipeline().equals("null")) {
+        if (overview.getPipeline() == null || overview.getPipeline().equals("null")) {
             overview.setPipeline(execution.getPipeline().stringValue());
         }
         //
@@ -105,17 +99,12 @@ public class LoadOverview {
         setLastChange(execution, overview, statusChanged);
     }
 
-    private void updateStatements(
-            Execution execution, OverviewObject overview) {
-        OverviewToListStatements overviewToStatements =
-                new OverviewToListStatements();
-        execution.setOverviewStatements(
-                overviewToStatements.asStatements(execution, overview));
+    private void updateStatements(Execution execution, OverviewObject overview) {
+        OverviewToListStatements overviewToStatements = new OverviewToListStatements();
+        execution.setOverviewStatements(overviewToStatements.asStatements(execution, overview));
     }
 
-    private void setLastChange(
-            Execution execution, OverviewObject overview,
-            boolean statusChanged) {
+    private void setLastChange(Execution execution, OverviewObject overview, boolean statusChanged) {
         if (!statusChanged && !hasOverviewChanged(execution, overview)) {
             return;
         }
@@ -129,10 +118,8 @@ public class LoadOverview {
         execution.setLastOverviewChange(overview.getLastChange());
     }
 
-    private boolean hasOverviewChanged(
-            Execution execution, OverviewObject overview) {
+    private boolean hasOverviewChanged(Execution execution, OverviewObject overview) {
         Date change = execution.getLastOverviewChange();
         return change == null || !change.equals(overview.getLastChange());
     }
-
 }

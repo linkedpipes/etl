@@ -5,11 +5,10 @@ import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.model.SimpleStore;
 import com.linkedpipes.etl.rdf.utils.model.SimpleTriple;
 import com.linkedpipes.etl.rdf.utils.model.SimpleValue;
+import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import java.util.Arrays;
 
 public class RdfToPojoLoaderTest {
 
@@ -45,13 +44,9 @@ public class RdfToPojoLoaderTest {
     @Test
     public void loadResource() throws RdfUtilsException {
         SimpleStore store = new SimpleStore(Arrays.asList(
-                new SimpleTriple("resource", "title",
-                        new SimpleValue("TestObjectTitle", false)),
-                new SimpleTriple("resource", "object",
-                        new SimpleValue("ref", true)),
-                new SimpleTriple("ref", "title",
-                        new SimpleValue("InnerObject", false))
-        ));
+                new SimpleTriple("resource", "title", new SimpleValue("TestObjectTitle", false)),
+                new SimpleTriple("resource", "object", new SimpleValue("ref", true)),
+                new SimpleTriple("ref", "title", new SimpleValue("InnerObject", false))));
 
         RdfToPojoLoader loader = new RdfToPojoLoader(store);
         TestObject testObject = new TestObject();
@@ -65,37 +60,23 @@ public class RdfToPojoLoaderTest {
     }
 
     @Test
-    public void loadByReflection()
-            throws RdfUtilsException, NoSuchFieldException {
+    public void loadByReflection() throws RdfUtilsException, NoSuchFieldException {
         SimpleStore store = new SimpleStore(Arrays.asList(
-                new SimpleTriple("resource", "title",
-                        new SimpleValue("TestObjectTitle", false)),
-                new SimpleTriple("resource", "object",
-                        new SimpleValue("ref", true)),
-                new SimpleTriple("ref", "title",
-                        new SimpleValue("InnerObject", false))
-        ));
+                new SimpleTriple("resource", "title", new SimpleValue("TestObjectTitle", false)),
+                new SimpleTriple("resource", "object", new SimpleValue("ref", true)),
+                new SimpleTriple("ref", "title", new SimpleValue("InnerObject", false))));
 
         Descriptor descriptor = Mockito.mock(Descriptor.class);
-        Mockito.when(descriptor.getFieldForResource()).thenReturn(
-                TestObject.class.getDeclaredField("resource")
-        );
-        Mockito.when(descriptor.getFieldForPredicate("title")).thenReturn(
-                TestObject.class.getDeclaredField("title")
-        );
-        Mockito.when(descriptor.getFieldForPredicate("object")).thenReturn(
-                TestObject.class.getDeclaredField("object")
-        );
+        Mockito.when(descriptor.getFieldForResource()).thenReturn(TestObject.class.getDeclaredField("resource"));
+        Mockito.when(descriptor.getFieldForPredicate("title")).thenReturn(TestObject.class.getDeclaredField("title"));
+        Mockito.when(descriptor.getFieldForPredicate("object")).thenReturn(TestObject.class.getDeclaredField("object"));
 
-        DescriptorFactory descriptorFactory =
-                Mockito.mock(DescriptorFactory.class);
-        Mockito.when(descriptorFactory.create(Mockito.any()))
-                .thenReturn(descriptor);
+        DescriptorFactory descriptorFactory = Mockito.mock(DescriptorFactory.class);
+        Mockito.when(descriptorFactory.create(Mockito.any())).thenReturn(descriptor);
 
         RdfToPojoLoader loader = new RdfToPojoLoader(store);
         TestObject testObject = new TestObject();
-        loader.loadResourceByReflection("resource", "", testObject,
-                descriptorFactory);
+        loader.loadResourceByReflection("resource", "", testObject, descriptorFactory);
 
         Assertions.assertEquals("resource", testObject.resource);
         Assertions.assertEquals("TestObjectTitle", testObject.title);
@@ -103,5 +84,4 @@ public class RdfToPojoLoaderTest {
         Assertions.assertEquals("ref", testObject.object.resource);
         Assertions.assertEquals("InnerObject", testObject.object.title);
     }
-
 }

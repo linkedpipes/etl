@@ -2,14 +2,13 @@ package com.linkedpipes.plugin.http.request.main;
 
 import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.eclipse.rdf4j.model.Resource;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class ResponseHandler {
 
@@ -26,16 +25,15 @@ public class ResponseHandler {
             Resource reportResource) {
         this.fileWriter = outputFile;
         this.task = task;
-        this.headerWriter = new HeaderWriter(
-                statementsWriter, task, reportResource);
+        this.headerWriter = new HeaderWriter(statementsWriter, task, reportResource);
     }
 
     public void apply(HttpResponse response) throws LpException {
         StatusLine statusLine = response.getStatusLine();
         if (hasRequestFailed(statusLine)) {
             headerWriter.write(response);
-            throw new LpException("Request failed '{}' : '{}'",
-                    statusLine.getStatusCode(), statusLine.getReasonPhrase());
+            throw new LpException(
+                    "Request failed '{}' : '{}'", statusLine.getStatusCode(), statusLine.getReasonPhrase());
         }
         if (task.isOutputHeaders()) {
             headerWriter.write(response);
@@ -46,8 +44,8 @@ public class ResponseHandler {
     private boolean hasRequestFailed(StatusLine statusLine) {
         int code = statusLine.getStatusCode();
         // We consider only 400, 500 ... to be failures.
-        boolean clientError = 400 <= code  && code < 500;
-        boolean serverError = 500 <= code  && code < 600;
+        boolean clientError = 400 <= code && code < 500;
+        boolean serverError = 500 <= code && code < 600;
         return clientError || serverError;
     }
 
@@ -63,5 +61,4 @@ public class ResponseHandler {
             throw new LpException("Can't save content to file.", ex);
         }
     }
-
 }

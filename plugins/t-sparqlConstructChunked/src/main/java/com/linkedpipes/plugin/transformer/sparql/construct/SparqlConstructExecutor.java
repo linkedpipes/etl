@@ -2,6 +2,7 @@ package com.linkedpipes.plugin.transformer.sparql.construct;
 
 import com.linkedpipes.etl.dataunit.core.rdf.ChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import java.util.*;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.query.GraphQueryResult;
 import org.eclipse.rdf4j.query.QueryResults;
@@ -14,14 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import java.util.*;
-
 class SparqlConstructExecutor implements Runnable {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(SparqlConstructExecutor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SparqlConstructExecutor.class);
 
-    private final Map<String,String> contextMap = MDC.getCopyOfContextMap();
+    private final Map<String, String> contextMap = MDC.getCopyOfContextMap();
 
     private final ExecutorManager manager;
 
@@ -37,8 +35,8 @@ class SparqlConstructExecutor implements Runnable {
 
     private ChunkedTriples.Chunk chunk;
 
-    public SparqlConstructExecutor(ExecutorManager manager, String query,
-            boolean deduplicateResults, boolean isSoftFail) {
+    public SparqlConstructExecutor(
+            ExecutorManager manager, String query, boolean deduplicateResults, boolean isSoftFail) {
         this.manager = manager;
         this.query = query;
         this.deduplicateResults = deduplicateResults;
@@ -101,8 +99,7 @@ class SparqlConstructExecutor implements Runnable {
 
     private void executeQuery(RepositoryConnection connection) {
         outputBuffer.clear();
-        GraphQueryResult result =
-                connection.prepareGraphQuery(query).evaluate();
+        GraphQueryResult result = connection.prepareGraphQuery(query).evaluate();
         if (deduplicateResults) {
             // Sparql construct does not return distinct results by default:
             // https://github.com/eclipse/rdf4j/issues/857
@@ -116,5 +113,4 @@ class SparqlConstructExecutor implements Runnable {
     public boolean isFailed() {
         return failed;
     }
-
 }

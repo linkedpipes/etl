@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.exec.virtuosoExtractor;
 
 public final class VirtuosoExtractorVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/x-virtuosoExtractor#";
 
     public static final String CONFIG_CLASS = PREFIX + "Configuration";
 
@@ -16,5 +15,4 @@ public final class VirtuosoExtractorVocabulary {
     public static final String OUTPUT_PATH = PREFIX + "outputPath";
 
     public static final String GRAPH = PREFIX + "graph";
-
 }

@@ -4,16 +4,15 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.plugin.transformer.tabularuv.RdfWriter;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularOntology;
 import com.linkedpipes.plugin.transformer.tabularuv.column.ValueGenerator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Parse table data into RDF. Before usage this class must be configured by
@@ -45,23 +44,21 @@ public class TableToRdf {
 
     final RdfWriter outRdf;
 
-    public TableToRdf(TableToRdfConfig config, RdfWriter writer,
-            ValueFactory valueFactory) {
+    public TableToRdf(TableToRdfConfig config, RdfWriter writer, ValueFactory valueFactory) {
         this.config = config;
         this.outRdf = writer;
         this.valueFactory = valueFactory;
-        this.typeUri = valueFactory.createIRI(
-                "http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+        this.typeUri = valueFactory.createIRI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
     }
 
     public void paserRow(List<Object> row, int rowNumber) throws LpException {
         if (row.size() < nameToIndex.size()) {
-            LOG.warn("Row is smaller ({} instead of {}) - ignore.",
-                    row.size(), nameToIndex.size());
+            LOG.warn("Row is smaller ({} instead of {}) - ignore.", row.size(), nameToIndex.size());
             return;
         } else if (row.size() > nameToIndex.size()) {
-            LOG.warn("Row is too big, some data may be invalid!"
-                            + " (size: {} expected: {})", row.size(),
+            LOG.warn(
+                    "Row is too big, some data may be invalid!" + " (size: {} expected: {})",
+                    row.size(),
                     nameToIndex.size());
         }
         // trim string values
@@ -100,8 +97,7 @@ public class TableToRdf {
         }
         // add row data - number, class, connection to table
         if (config.generateRowTriple) {
-            outRdf.add(subj, TabularOntology.ROW_NUMBER,
-                    valueFactory.createLiteral(rowNumber));
+            outRdf.add(subj, TabularOntology.ROW_NUMBER, valueFactory.createLiteral(rowNumber));
         }
         if (rowClass != null) {
             outRdf.add(subj, typeUri, rowClass);
@@ -137,11 +133,9 @@ public class TableToRdf {
      */
     protected IRI prepareUri(List<Object> row, int rowNumber) {
         if (keyColumn == null) {
-            return valueFactory
-                    .createIRI(baseUri + Integer.toString(rowNumber));
+            return valueFactory.createIRI(baseUri + Integer.toString(rowNumber));
         } else {
             return (IRI) keyColumn.generateValue(row, valueFactory);
         }
     }
-
 }

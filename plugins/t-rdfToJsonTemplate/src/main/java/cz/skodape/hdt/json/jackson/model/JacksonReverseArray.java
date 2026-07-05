@@ -2,7 +2,6 @@ package cz.skodape.hdt.json.jackson.model;
 
 import cz.skodape.hdt.core.ArrayReference;
 import cz.skodape.hdt.core.Reference;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -11,7 +10,7 @@ import java.util.List;
  * it does not have a parent.
  */
 public class JacksonReverseArray implements ArrayReference {
-    
+
     private List<Reference> references;
 
     public JacksonReverseArray() {
@@ -25,7 +24,7 @@ public class JacksonReverseArray implements ArrayReference {
     public List<Reference> getReferences() {
         return this.references;
     }
-    
+
     @Override
     public String asDebugString() {
         return "JsonNodeReverseArray";
@@ -45,5 +44,4 @@ public class JacksonReverseArray implements ArrayReference {
     public boolean isPrimitiveReference() {
         return false;
     }
-
 }

@@ -1,8 +1,7 @@
 package com.linkedpipes.plugin.transformer.tabularuv.dbf;
 
-import org.jamel.dbf.exception.DbfException;
-
 import java.io.*;
+import org.jamel.dbf.exception.DbfException;
 
 public class DbfReaderLanguageDriver implements Closeable {
 
@@ -38,5 +37,4 @@ public class DbfReaderLanguageDriver implements Closeable {
             // ignore
         }
     }
-
 }

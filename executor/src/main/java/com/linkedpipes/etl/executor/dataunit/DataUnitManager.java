@@ -5,7 +5,6 @@ import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.execution.model.DataUnit;
 import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,8 +15,7 @@ import java.util.Map;
  */
 public class DataUnitManager {
 
-    private final Map<DataUnit, DataUnitContainer> dataUnits
-            = new HashMap<>();
+    private final Map<DataUnit, DataUnitContainer> dataUnits = new HashMap<>();
 
     /**
      * Map of instances. Given to data units for initialization.
@@ -30,29 +28,24 @@ public class DataUnitManager {
 
     public DataUnitManager(PipelineModel pipeline) {
         this.pipelineQuery = new PipelineQuery(pipeline);
-        this.portCloser =
-                new DataUnitCloser(this.dataUnits, this.pipelineQuery);
+        this.portCloser = new DataUnitCloser(this.dataUnits, this.pipelineQuery);
     }
 
-    public void initialize(
-            DataUnitInstanceSource dataUnitInstanceSource,
-            Collection<DataUnit> dataUnits)
+    public void initialize(DataUnitInstanceSource dataUnitInstanceSource, Collection<DataUnit> dataUnits)
             throws ExecutorException {
         for (DataUnit dataUnit : dataUnits) {
             createDataUnitContainer(dataUnitInstanceSource, dataUnit);
         }
     }
 
-    private void createDataUnitContainer(
-            DataUnitInstanceSource dataUnitInstanceSource,
-            DataUnit dataUnit) throws ExecutorException {
+    private void createDataUnitContainer(DataUnitInstanceSource dataUnitInstanceSource, DataUnit dataUnit)
+            throws ExecutorException {
         String iri = dataUnit.getIri();
         ManageableDataUnit instance;
         try {
             instance = dataUnitInstanceSource.getDataUnit(iri);
         } catch (ExecutorException ex) {
-            throw new ExecutorException(
-                    "Can't instantiate data unit: {}", iri, ex);
+            throw new ExecutorException("Can't instantiate data unit: {}", iri, ex);
         }
         this.dataUnits.put(dataUnit, new DataUnitContainer(instance, dataUnit));
         this.instances.put(iri, instance);
@@ -66,11 +59,9 @@ public class DataUnitManager {
         }
     }
 
-    public Map<String, com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit>
-            onComponentWillExecute(ExecutionComponent component)
-            throws ExecutorException {
-        Map<String, com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit>
-                result = new HashMap<>();
+    public Map<String, com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit> onComponentWillExecute(
+            ExecutionComponent component) throws ExecutorException {
+        Map<String, com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit> result = new HashMap<>();
         //
         for (DataUnit dataUnit : component.getDataUnits()) {
             DataUnitContainer container = getContainer(dataUnit);
@@ -87,18 +78,15 @@ public class DataUnitManager {
         return result;
     }
 
-    private DataUnitContainer getContainer(DataUnit dataUnit)
-            throws ExecutorException {
+    private DataUnitContainer getContainer(DataUnit dataUnit) throws ExecutorException {
         DataUnitContainer container = this.dataUnits.get(dataUnit);
         if (container == null) {
-            throw new ExecutorException(
-                    "Missing data unit: {}", dataUnit.getIri());
+            throw new ExecutorException("Missing data unit: {}", dataUnit.getIri());
         }
         return container;
     }
 
-    public void onComponentDidExecute(ExecutionComponent component)
-            throws ExecutorException {
+    public void onComponentDidExecute(ExecutionComponent component) throws ExecutorException {
         for (DataUnit dataUnit : component.getDataUnits()) {
             DataUnitContainer container = getContainer(dataUnit);
             container.onComponentDidExecute();
@@ -110,13 +98,11 @@ public class DataUnitManager {
         this.portCloser.closeUnusedDataUnits();
     }
 
-    public void onComponentMapByReference(ExecutionComponent component)
-            throws ExecutorException {
+    public void onComponentMapByReference(ExecutionComponent component) throws ExecutorException {
         for (DataUnit dataUnit : component.getDataUnits()) {
             DataUnitContainer container = this.dataUnits.get(dataUnit);
             if (container == null) {
-                throw new ExecutorException("Missing data unit: {} for {}",
-                        dataUnit.getIri(), component.getIri());
+                throw new ExecutorException("Missing data unit: {} for {}", dataUnit.getIri(), component.getIri());
             }
             File sourceFile = dataUnit.getLoadDirectory();
             if (pipelineQuery.isDataUnitUsed(component, dataUnit)) {
@@ -132,5 +118,4 @@ public class DataUnitManager {
         // After this there are no new data-units that can be closed.
         this.portCloser.addComponentDataUnits(component);
     }
-
 }

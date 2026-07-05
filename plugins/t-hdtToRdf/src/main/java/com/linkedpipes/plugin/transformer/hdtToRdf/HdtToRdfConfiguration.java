@@ -8,8 +8,7 @@ public class HdtToRdfConfiguration {
     @RdfToPojo.Property(iri = HdtToRdfVocabulary.HAS_COMMIT_SIZE)
     private int commitSize = 10000;
 
-    public HdtToRdfConfiguration() {
-    }
+    public HdtToRdfConfiguration() {}
 
     public int getCommitSize() {
         return commitSize;
@@ -18,5 +17,4 @@ public class HdtToRdfConfiguration {
     public void setCommitSize(int commitSize) {
         this.commitSize = commitSize;
     }
-
 }

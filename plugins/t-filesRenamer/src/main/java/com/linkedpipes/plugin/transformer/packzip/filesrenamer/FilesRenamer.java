@@ -6,7 +6,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,8 +36,7 @@ public class FilesRenamer implements Component, SequentialExecution {
             throw new LpException("Invalid file pattern.", ex);
         }
         for (FilesDataUnit.Entry entry : inputFiles) {
-            final String newName = pattern.matcher(entry.getFileName())
-                    .replaceAll(configuration.getReplaceWith());
+            final String newName = pattern.matcher(entry.getFileName()).replaceAll(configuration.getReplaceWith());
             // Copy file.
             final File targetFile = outputFiles.createFile(newName);
             targetFile.getParentFile().mkdirs();
@@ -49,5 +47,4 @@ public class FilesRenamer implements Component, SequentialExecution {
             }
         }
     }
-
 }

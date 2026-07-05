@@ -6,7 +6,6 @@ import com.linkedpipes.etl.rdf.utils.RdfFormatter;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
-
 import java.util.Date;
 
 public class TripleWriterWrap implements TripleWriter {
@@ -30,8 +29,7 @@ public class TripleWriterWrap implements TripleWriter {
     }
 
     @Override
-    public void string(
-            String subject, String predicate, String object, String lang) {
+    public void string(String subject, String predicate, String object, String lang) {
         writer.string(subject, predicate, object, lang);
     }
 
@@ -42,8 +40,7 @@ public class TripleWriterWrap implements TripleWriter {
     }
 
     @Override
-    public void typed(
-            String subject, String predicate, String object, String type) {
+    public void typed(String subject, String predicate, String object, String type) {
         writer.typed(subject, predicate, object, type);
     }
 
@@ -55,5 +52,4 @@ public class TripleWriterWrap implements TripleWriter {
             throw new RdfException("", ex);
         }
     }
-
 }

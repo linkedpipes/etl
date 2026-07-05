@@ -24,5 +24,4 @@ public class Executor {
     void setAlive(boolean alive) {
         this.alive = alive;
     }
-
 }

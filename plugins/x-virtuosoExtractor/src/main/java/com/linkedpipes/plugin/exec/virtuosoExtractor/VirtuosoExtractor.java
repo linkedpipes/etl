@@ -4,26 +4,22 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import java.sql.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.*;
-
 public final class VirtuosoExtractor implements Component, SequentialExecution {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(VirtuosoExtractor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(VirtuosoExtractor.class);
 
-    private static final String SQL_DUMP
-            = "dump_one_graph ('%s', '%s', 1000000000)";
+    private static final String SQL_DUMP = "dump_one_graph ('%s', '%s', 1000000000)";
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
     public SingleGraphDataUnit configurationRdf;
 
     @Component.Configuration
-    public VirtuosoExtractorConfiguration
-            configuration;
+    public VirtuosoExtractorConfiguration configuration;
 
     @Override
     public void execute() throws LpException {
@@ -34,9 +30,7 @@ public final class VirtuosoExtractor implements Component, SequentialExecution {
             throw new LpException("Can't find virtuoso drivers.", ex);
         }
         //
-        final String statement = String.format(SQL_DUMP,
-                configuration.getGraph(),
-                configuration.getOutputPath());
+        final String statement = String.format(SQL_DUMP, configuration.getGraph(), configuration.getOutputPath());
         try {
             executeSqlStatement(statement);
         } catch (SQLException ex) {
@@ -52,9 +46,7 @@ public final class VirtuosoExtractor implements Component, SequentialExecution {
     private void executeSqlStatement(String command) throws SQLException {
         LOG.info("Executing statement: {}", command);
         try (Connection connection = DriverManager.getConnection(
-                configuration.getVirtuosoUrl(),
-                configuration.getUsername(),
-                configuration.getPassword())) {
+                configuration.getVirtuosoUrl(), configuration.getUsername(), configuration.getPassword())) {
             // Execute statement.
             try (Statement statement = connection.createStatement()) {
                 try (ResultSet result = statement.executeQuery(command)) {
@@ -63,5 +55,4 @@ public final class VirtuosoExtractor implements Component, SequentialExecution {
             }
         }
     }
-
 }

@@ -7,16 +7,14 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.chunk.ChunkExecution;
 import com.linkedpipes.etl.executor.api.v1.component.chunk.ChunkTransformer;
-import org.eclipse.rdf4j.model.Statement;
-
 import java.util.Collection;
 import java.util.Iterator;
+import org.eclipse.rdf4j.model.Statement;
 
 /**
  * Chunked version of SparqlUpdate.
  */
-public final class SparqlUpdateChunked
-        extends ChunkExecution<ChunkedTriples.Chunk, Collection<Statement>>
+public final class SparqlUpdateChunked extends ChunkExecution<ChunkedTriples.Chunk, Collection<Statement>>
         implements Component {
 
     @Component.InputPort(iri = "InputRdf")
@@ -48,8 +46,7 @@ public final class SparqlUpdateChunked
     }
 
     @Override
-    protected ChunkTransformer<ChunkedTriples.Chunk, Collection<Statement>>
-    createExecutor() {
+    protected ChunkTransformer<ChunkedTriples.Chunk, Collection<Statement>> createExecutor() {
         return new SparqlUpdateChunkedTransformer(this, configuration.getQuery());
     }
 
@@ -59,10 +56,8 @@ public final class SparqlUpdateChunked
     }
 
     @Override
-    protected void submitInternal(Collection<Statement> statements)
-            throws LpException {
+    protected void submitInternal(Collection<Statement> statements) throws LpException {
         outputRdf.submit(statements);
         statements.clear();
     }
-
 }

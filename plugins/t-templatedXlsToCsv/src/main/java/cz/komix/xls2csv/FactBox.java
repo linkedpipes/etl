@@ -26,7 +26,7 @@ public class FactBox {
             if (f.getOrder() == order) {
                 f.getData().add(dato);
                 f.saveDimenze(dimenze);
-                //f.dimenze.saveDimenze(d);
+                // f.dimenze.saveDimenze(d);
                 return; // Uz existuje
             }
         }
@@ -42,9 +42,7 @@ public class FactBox {
                 if (f.getFiltr() == null) {
                     f.setFiltr(filtr);
                 } else {
-                    throw new RuntimeException(
-                            "Chyba - duplicitni prirazeni filtru k dimenzi "
-                            + poradi);
+                    throw new RuntimeException("Chyba - duplicitni prirazeni filtru k dimenzi " + poradi);
                 }
             }
         }
@@ -63,8 +61,7 @@ public class FactBox {
      * @param cellTemplate
      * @return
      */
-    String getTextDimenzi(int poradi, HSSFSheet sheet,
-            List<Dimension> dims, HSSFCell cellTemplate) {
+    String getTextDimenzi(int poradi, HSSFSheet sheet, List<Dimension> dims, HSSFCell cellTemplate) {
         Fact fakt = null;
         for (Fact f : this.box) {
             if (f.getOrder() == poradi) {
@@ -82,8 +79,7 @@ public class FactBox {
             }
         }
         if (fakt.getFiltr() == null) {
-            throw new RuntimeException("Filtr pro fakt " + poradi
-                    + " nebyl naplnen");
+            throw new RuntimeException("Filtr pro fakt " + poradi + " nebyl naplnen");
         }
         String result = "";
         for (int i : fakt.getFiltr()) {
@@ -136,9 +132,9 @@ public class FactBox {
         return Collections.unmodifiableList(box);
     }
 
-    private static String getCellFormatedData(HSSFSheet wbSheet, int rowNum,
-            int colIndex) {
-        if (wbSheet == null || wbSheet.getRow(rowNum) == null
+    private static String getCellFormatedData(HSSFSheet wbSheet, int rowNum, int colIndex) {
+        if (wbSheet == null
+                || wbSheet.getRow(rowNum) == null
                 || wbSheet.getRow(rowNum).getCell(colIndex) == null) {
             return "";
         }
@@ -147,14 +143,12 @@ public class FactBox {
             return cell.getStringCellValue().trim();
         }
         if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-            //cell.getCellStyle().getDataFormatString();
+            // cell.getCellStyle().getDataFormatString();
             return "" + cell.getNumericCellValue();
         }
         if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
-            return cell.getCellFormula() + " / "
-                    + cell.getCachedFormulaResultType();
+            return cell.getCellFormula() + " / " + cell.getCachedFormulaResultType();
         }
         return "";
     }
-
 }

@@ -61,8 +61,7 @@ public class Fact {
             finalOutputFilePath = finalOutputFilePath.replaceAll(" ", "");
 
         } else {
-            finalOutputFilePath = "F" + String.format("%02d", this.order)
-                    + "_" + baseName + ".csv";
+            finalOutputFilePath = "F" + String.format("%02d", this.order) + "_" + baseName + ".csv";
             finalOutputFilePath = finalOutputFilePath.replaceAll(" ", "");
         }
         return finalOutputFilePath;
@@ -70,8 +69,7 @@ public class Fact {
 
     public void saveToFile(File outputFile, String baseName) {
         try (OutputStreamWriter csv = new OutputStreamWriter(
-                new FileOutputStream(outputFile),
-                Charset.forName("UTF-8").newEncoder())) {
+                new FileOutputStream(outputFile), Charset.forName("UTF-8").newEncoder())) {
             //
             List<Dimension> dims = dimension.getSortedDimenze();
             csv.append("\"Fakt\"");
@@ -95,8 +93,7 @@ public class Fact {
             }
             csv.flush();
         } catch (IOException ex) {
-            LOG.error("Problem creating output csv file {}: {}",
-                    outputFile, ex);
+            LOG.error("Problem creating output csv file {}: {}", outputFile, ex);
         }
     }
 
@@ -115,5 +112,4 @@ public class Fact {
     int getOrder() {
         return order;
     }
-
 }

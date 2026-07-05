@@ -11,8 +11,7 @@ public class QueryTask {
     @RdfToPojo.Property(iri = SparqlConstructToFileListVocabulary.HAS_QUERY)
     private String query;
 
-    public QueryTask() {
-    }
+    public QueryTask() {}
 
     public String getGraph() {
         return graph;
@@ -29,5 +28,4 @@ public class QueryTask {
     public void setQuery(String query) {
         this.query = query;
     }
-
 }

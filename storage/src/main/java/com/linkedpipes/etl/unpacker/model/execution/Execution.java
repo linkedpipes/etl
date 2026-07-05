@@ -3,11 +3,10 @@ package com.linkedpipes.etl.unpacker.model.execution;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.unpacker.rdf.Loadable;
-import org.eclipse.rdf4j.model.Value;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.eclipse.rdf4j.model.Value;
 
 public class Execution implements Loadable {
 
@@ -50,5 +49,4 @@ public class Execution implements Loadable {
         }
         return null;
     }
-
 }

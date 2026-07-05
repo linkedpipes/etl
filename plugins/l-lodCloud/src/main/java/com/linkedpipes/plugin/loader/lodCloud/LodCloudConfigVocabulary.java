@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.loader.lodCloud;
 
 public final class LodCloudConfigVocabulary {
 
-    private static final String PREFIX =
-            "http://plugins.linkedpipes.com/ontology/l-lodCloud#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/l-lodCloud#";
 
     public static final String CONFIG_CLASS = PREFIX + "Configuration";
 
@@ -70,5 +69,4 @@ public final class LodCloudConfigVocabulary {
     public static final String SPARQL_ENDPOINT_NAME = PREFIX + "sparqlEndpointName";
 
     public static final String SPARQL_ENDPOINT_DESCRIPTION = PREFIX + "sparqlEndpointDescription";
-
 }

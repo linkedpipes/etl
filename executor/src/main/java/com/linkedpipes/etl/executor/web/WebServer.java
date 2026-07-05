@@ -1,8 +1,10 @@
 package com.linkedpipes.etl.executor.web;
 
 import com.linkedpipes.etl.executor.ConfigurationHolder;
-import com.linkedpipes.etl.executor.logging.LoggerUtils;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -25,10 +27,6 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 @Service
 class WebServer implements ApplicationListener<ApplicationEvent> {
 
@@ -43,9 +41,7 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
     private Server server = null;
 
     @Autowired
-    public WebServer(
-            ConfigurationHolder configuration,
-            AbstractApplicationContext appContext) {
+    public WebServer(ConfigurationHolder configuration, AbstractApplicationContext appContext) {
         this.configuration = configuration;
         this.appContext = appContext;
     }
@@ -85,24 +81,21 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
     }
 
     private void buildServer() throws IOException {
-        LOG.info("Starting server on port: {}",
-                configuration.getWebServerPort());
+        LOG.info("Starting server on port: {}", configuration.getWebServerPort());
         //
         final ServletContextHandler handler;
         handler = new ServletContextHandler();
         handler.setErrorHandler(null);
         handler.setContextPath("/");
         // Servlet.
-        final XmlWebApplicationContext webContext
-                = new XmlWebApplicationContext();
+        final XmlWebApplicationContext webContext = new XmlWebApplicationContext();
         webContext.setParent(appContext);
         webContext.setConfigLocation("spring/context-web.xml");
         final DispatcherServlet dispatcher = new DispatcherServlet(webContext);
         final ServletHolder servlet = new ServletHolder(dispatcher);
         handler.addEventListener(new ContextLoaderListener(webContext));
         handler.addServlet(servlet, "/api/*");
-        handler.setResourceBase(
-                new ClassPathResource("/web/").getURI().toString());
+        handler.setResourceBase(new ClassPathResource("/web/").getURI().toString());
 
         //
         server = new Server(createThreadPool());
@@ -121,14 +114,12 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
         return threadPool;
     }
 
-    private static HandlerWrapper wrapHandlerWithMdcContext(
-            HandlerWrapper handler) {
+    private static HandlerWrapper wrapHandlerWithMdcContext(HandlerWrapper handler) {
         final HandlerWrapper handlerWrap = new HandlerWrapper() {
 
             @Override
             public void handle(
-                    String target, Request baseRequest,
-                    HttpServletRequest request, HttpServletResponse response)
+                    String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
                     throws IOException, ServletException {
                 MDC.put(WEB_MDC, null);
                 try {
@@ -137,10 +128,8 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
                     MDC.remove(WEB_MDC);
                 }
             }
-
         };
         handlerWrap.setHandler(handler);
         return handlerWrap;
     }
-
 }

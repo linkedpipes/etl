@@ -7,15 +7,6 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import net.sf.saxon.s9api.SaxonApiException;
-import org.eclipse.rdf4j.query.BindingSet;
-import org.eclipse.rdf4j.query.QueryLanguage;
-import org.eclipse.rdf4j.query.TupleQuery;
-import org.eclipse.rdf4j.query.TupleQueryResult;
-import org.eclipse.rdf4j.query.impl.SimpleDataset;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +15,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import net.sf.saxon.s9api.SaxonApiException;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.impl.SimpleDataset;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class Xslt implements Component, SequentialExecution {
 
@@ -54,62 +53,52 @@ public final class Xslt implements Component, SequentialExecution {
         final Map<String, String> nameMapping = new HashMap<>();
         parametersRdf.execute((connection) -> {
             final String strQuery = createNamesQuery();
-            final TupleQuery query = connection.prepareTupleQuery(
-                    QueryLanguage.SPARQL, strQuery);
+            final TupleQuery query = connection.prepareTupleQuery(QueryLanguage.SPARQL, strQuery);
             final SimpleDataset dataset = new SimpleDataset();
             dataset.addDefaultGraph(parametersRdf.getReadGraph());
             query.setDataset(dataset);
             final TupleQueryResult result = query.evaluate();
             while (result.hasNext()) {
                 final BindingSet binding = result.next();
-                nameMapping.put(binding.getValue("fileName").stringValue(),
+                nameMapping.put(
+                        binding.getValue("fileName").stringValue(),
                         binding.getValue("outputName").stringValue());
             }
         });
         // Prepare
-        final ConcurrentLinkedQueue<XsltWorker.Payload> workQueue =
-                new ConcurrentLinkedQueue<>();
-        final ConcurrentLinkedQueue<Exception> exceptions =
-                new ConcurrentLinkedQueue<>();
+        final ConcurrentLinkedQueue<XsltWorker.Payload> workQueue = new ConcurrentLinkedQueue<>();
+        final ConcurrentLinkedQueue<Exception> exceptions = new ConcurrentLinkedQueue<>();
         for (FilesDataUnit.Entry entry : inputFiles) {
             final XsltWorker.Payload payload = new XsltWorker.Payload();
             payload.entry = entry;
             // Prepare output name.
             final File outputFile;
             if (nameMapping.containsKey(entry.getFileName())) {
-                outputFile = outputFiles.createFile(
-                        nameMapping.get(entry.getFileName()));
+                outputFile = outputFiles.createFile(nameMapping.get(entry.getFileName()));
                 nameMapping.get(entry.getFileName());
             } else {
-                payload.output = outputFiles.createFile(addExtension(
-                        entry.getFileName(),
-                        configuration.getNewExtension()));
+                payload.output =
+                        outputFiles.createFile(addExtension(entry.getFileName(), configuration.getNewExtension()));
             }
             // Prepare transformer.
 
             if (parametersRdf != null) {
                 LOG.debug("Reading parameters.");
                 parametersRdf.execute((connection) -> {
-                    final String strQuery =
-                            createParametersQuery(entry.getFileName());
-                    final TupleQuery query = connection.prepareTupleQuery(
-                            QueryLanguage.SPARQL, strQuery);
+                    final String strQuery = createParametersQuery(entry.getFileName());
+                    final TupleQuery query = connection.prepareTupleQuery(QueryLanguage.SPARQL, strQuery);
                     final SimpleDataset dataset = new SimpleDataset();
                     dataset.addDefaultGraph(parametersRdf.getReadGraph());
                     query.setDataset(dataset);
                     final TupleQueryResult result = query.evaluate();
                     while (result.hasNext()) {
                         final BindingSet binding = result.next();
-                        final String name
-                                = binding.getValue("name").stringValue();
-                        final String value
-                                = binding.getValue("value").stringValue();
+                        final String name = binding.getValue("name").stringValue();
+                        final String value = binding.getValue("value").stringValue();
                         //
                         LOG.debug("Parameter: {} = {}", name, value);
                         //
-                        payload.parameter.add(
-                                new XsltWorker.Parameter(name, value));
-
+                        payload.parameter.add(new XsltWorker.Parameter(name, value));
                     }
                 });
             }
@@ -118,12 +107,11 @@ public final class Xslt implements Component, SequentialExecution {
         // Execute.
         long size = inputFiles.size();
         progressReport.start(size);
-        final ExecutorService executor = Executors.newFixedThreadPool(
-                configuration.getThreads());
+        final ExecutorService executor = Executors.newFixedThreadPool(configuration.getThreads());
         final AtomicInteger counter = new AtomicInteger();
         for (int i = 0; i < configuration.getThreads(); ++i) {
-            XsltWorker worker = new XsltWorker(workQueue, exceptions, counter,
-                    configuration.isSkipOnError(), size, progressReport);
+            XsltWorker worker =
+                    new XsltWorker(workQueue, exceptions, counter, configuration.isSkipOnError(), size, progressReport);
             try {
                 worker.initialize(configuration.getXsltTemplate());
             } catch (SaxonApiException ex) {
@@ -188,17 +176,12 @@ public final class Xslt implements Component, SequentialExecution {
     private static String createNamesQuery() {
         return ""
                 + "SELECT ?fileName ?outputName WHERE {\n"
-                +
-                "    ?config a <http://etl.linkedpipes.com/ontology/components/t-xslt/Config> ;\n"
-                +
-                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileInfo> ?fileInfo .\n"
+                + "    ?config a <http://etl.linkedpipes.com/ontology/components/t-xslt/Config> ;\n"
+                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileInfo> ?fileInfo .\n"
                 + "        \n"
-                +
-                "    ?fileInfo a <http://etl.linkedpipes.com/ontology/components/t-xslt/FileInfo> ;\n"
-                +
-                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileName> ?fileName ;\n"
-                +
-                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/outputName> ?outputName .\n"
+                + "    ?fileInfo a <http://etl.linkedpipes.com/ontology/components/t-xslt/FileInfo> ;\n"
+                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileName> ?fileName ;\n"
+                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/outputName> ?outputName .\n"
                 + "}";
     }
 
@@ -212,27 +195,18 @@ public final class Xslt implements Component, SequentialExecution {
     private static String createParametersQuery(String fileName) {
         return ""
                 + "SELECT ?name ?value WHERE {\n"
-                +
-                "    ?config a <http://etl.linkedpipes.com/ontology/components/t-xslt/Config> ;\n"
-                +
-                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileInfo> ?fileInfo .\n"
+                + "    ?config a <http://etl.linkedpipes.com/ontology/components/t-xslt/Config> ;\n"
+                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileInfo> ?fileInfo .\n"
                 + "        \n"
-                +
-                "    ?fileInfo a <http://etl.linkedpipes.com/ontology/components/t-xslt/FileInfo> ;\n"
-                +
-                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileName> \""
+                + "    ?fileInfo a <http://etl.linkedpipes.com/ontology/components/t-xslt/FileInfo> ;\n"
+                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/fileName> \""
                 + fileName
                 + "\" ;\n"
-                +
-                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameter> ?parameter .\n"
+                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameter> ?parameter .\n"
                 + "        \n"
-                +
-                "    ?parameter a <http://etl.linkedpipes.com/ontology/components/t-xslt/Parameter> ;\n"
-                +
-                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameterValue> ?value ;\n"
-                +
-                "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameterName> ?name .\n"
+                + "    ?parameter a <http://etl.linkedpipes.com/ontology/components/t-xslt/Parameter> ;\n"
+                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameterValue> ?value ;\n"
+                + "        <http://etl.linkedpipes.com/ontology/components/t-xslt/parameterName> ?name .\n"
                 + "}";
     }
-
 }

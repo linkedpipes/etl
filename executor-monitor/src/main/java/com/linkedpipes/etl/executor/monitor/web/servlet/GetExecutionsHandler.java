@@ -2,14 +2,13 @@ package com.linkedpipes.etl.executor.monitor.web.servlet;
 
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
+import java.util.Collection;
+import java.util.Date;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.rio.RDFWriter;
-
-import java.util.Collection;
-import java.util.Date;
 
 class GetExecutionsHandler {
 
@@ -35,31 +34,21 @@ class GetExecutionsHandler {
         }
 
         writer.handleStatement(valueFactory.createStatement(
-                valueFactory.createIRI(
-                        "http://etl.linkedpipes.com/metadata"),
+                valueFactory.createIRI("http://etl.linkedpipes.com/metadata"),
                 RDF.TYPE,
-                valueFactory.createIRI(
-                        "http://etl.linkedpipes.com/ontology/Metadata"),
-                valueFactory.createIRI(
-                        "http://etl.linkedpipes.com/metadata")));
+                valueFactory.createIRI("http://etl.linkedpipes.com/ontology/Metadata"),
+                valueFactory.createIRI("http://etl.linkedpipes.com/metadata")));
 
         writer.handleStatement(valueFactory.createStatement(
-                valueFactory.createIRI(
-                        "http://etl.linkedpipes.com/metadata"),
-                valueFactory.createIRI(
-                        "http://etl.linkedpipes.com/ontology/serverTime"),
+                valueFactory.createIRI("http://etl.linkedpipes.com/metadata"),
+                valueFactory.createIRI("http://etl.linkedpipes.com/ontology/serverTime"),
                 valueFactory.createLiteral((new Date()).getTime()),
-                valueFactory.createIRI(
-                        "http://etl.linkedpipes.com/metadata")));
+                valueFactory.createIRI("http://etl.linkedpipes.com/metadata")));
     }
 
-    private void writeStatements(
-            Collection<Statement> statements,
-            RDFWriter writer) {
+    private void writeStatements(Collection<Statement> statements, RDFWriter writer) {
         for (Statement statement : statements) {
             writer.handleStatement(statement);
         }
     }
-
-
 }

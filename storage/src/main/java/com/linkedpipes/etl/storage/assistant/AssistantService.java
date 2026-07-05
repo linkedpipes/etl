@@ -11,21 +11,19 @@ import com.linkedpipes.etl.storage.assistant.model.PipelineInfo;
 import com.linkedpipes.etl.storage.assistant.model.TemplateUseInfo;
 import com.linkedpipes.etl.storage.pipeline.PipelineEvents;
 import com.linkedpipes.etl.storage.template.TemplateEvents;
-import org.eclipse.rdf4j.model.Resource;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import org.eclipse.rdf4j.model.Resource;
 
 /**
  * Using existing pipeline provide functionality to assist a user.
  * As a side effect this class also provide list of pipelines.
  */
-public class AssistantService implements
-        PipelineEvents.Listener, TemplateEvents.Listener {
+public class AssistantService implements PipelineEvents.Listener, TemplateEvents.Listener {
 
     /**
      * Cache for RDF representation of assistant data.
@@ -45,9 +43,7 @@ public class AssistantService implements
 
     private void regenerate() {
         PipelineDesign designInformation = new PipelineDesign();
-        pipelineInfo.values().stream()
-                .map(PipelineDesign::new)
-                .forEach(designInformation::addAll);
+        pipelineInfo.values().stream().map(PipelineDesign::new).forEach(designInformation::addAll);
         cache = PipelineDesignToRdf.asRdf(designInformation);
     }
 
@@ -88,8 +84,7 @@ public class AssistantService implements
     }
 
     @Override
-    public void onReferenceTemplateUpdated(
-            ReferenceTemplate previous, ReferenceTemplate next) {
+    public void onReferenceTemplateUpdated(ReferenceTemplate previous, ReferenceTemplate next) {
         templateToParent.put(next.resource(), next.template());
     }
 
@@ -146,5 +141,4 @@ public class AssistantService implements
     public Collection<PipelineInfo> getPipelineInfo() {
         return pipelineInfo.values();
     }
-
 }

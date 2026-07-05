@@ -23,8 +23,7 @@ public class JsonToJsonLdConfiguration {
     @RdfToPojo.Property(iri = JsonToJsonLdVocabulary.HAS_FILE_PREDICATE)
     private String filePredicate;
 
-    public JsonToJsonLdConfiguration() {
-    }
+    public JsonToJsonLdConfiguration() {}
 
     public String getContext() {
         return context;

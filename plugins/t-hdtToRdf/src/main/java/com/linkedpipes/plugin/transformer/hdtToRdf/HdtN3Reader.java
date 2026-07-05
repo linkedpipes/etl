@@ -1,9 +1,8 @@
 package com.linkedpipes.plugin.transformer.hdtToRdf;
 
-import org.rdfhdt.hdt.triples.IteratorTripleString;
-
 import java.io.IOException;
 import java.io.Reader;
+import org.rdfhdt.hdt.triples.IteratorTripleString;
 
 public class HdtN3Reader extends Reader {
 
@@ -55,5 +54,4 @@ public class HdtN3Reader extends Reader {
     public void close() {
         // No operation here.
     }
-
 }

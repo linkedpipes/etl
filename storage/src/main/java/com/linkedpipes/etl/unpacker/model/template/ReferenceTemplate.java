@@ -34,5 +34,4 @@ public class ReferenceTemplate extends Template {
     public String getConfigGraph() {
         return configGraph;
     }
-
 }

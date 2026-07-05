@@ -23,8 +23,7 @@ public class FilesToRdfConfiguration {
     @RdfToPojo.Property(iri = FilesToRdfVocabulary.HAS_NUMBER_OF_THREADS)
     private int threadCount = 1;
 
-    public FilesToRdfConfiguration() {
-    }
+    public FilesToRdfConfiguration() {}
 
     public String getMimeType() {
         return mimeType;
@@ -73,5 +72,4 @@ public class FilesToRdfConfiguration {
     public void setThreadCount(int threadCount) {
         this.threadCount = threadCount;
     }
-
 }

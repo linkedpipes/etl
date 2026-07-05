@@ -15,18 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.semarglproject.jsonld;
 
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.regex.Pattern;
 import org.semarglproject.ri.MalformedIriException;
 import org.semarglproject.sink.QuadSink;
 import org.semarglproject.vocab.JsonLd;
 import org.semarglproject.vocab.RDF;
 import org.semarglproject.vocab.XSD;
-
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.regex.Pattern;
 
 /**
  * Handler class for JsonLdParser. Handles events in SAX-like manner.
@@ -97,11 +95,12 @@ final class JsonLdContentHandler {
             addSubjectTypeDefinition(currentContext.objectLitDt, currentContext.base);
             if (contextStack.size() > 1 && currentContext.containerType == null) {
                 // TODO: check for property reordering issues
-                addSubjectTypeDefinition(currentContext.parent.getDtMapping(currentContext.parent.predicate),
+                addSubjectTypeDefinition(
+                        currentContext.parent.getDtMapping(currentContext.parent.predicate),
                         currentContext.parent.base);
                 if (!JsonLd.SET_KEY.equals(currentContext.parent.predicate) || currentContext.hasProps) {
-                    currentContext.parent.addNonLiteral(currentContext.parent.predicate,
-                            currentContext.subject, currentContext.base);
+                    currentContext.parent.addNonLiteral(
+                            currentContext.parent.predicate, currentContext.subject, currentContext.base);
                 }
             }
         }
@@ -135,8 +134,8 @@ final class JsonLdContentHandler {
             String dt = currentContext.getDtMapping(currentContext.predicate);
             if (JsonLd.CONTAINER_LIST_KEY.equals(dt)) {
                 try {
-                    currentContext.addNonLiteral(currentContext.resolveMapping(currentContext.predicate), RDF.NIL,
-                            currentContext.base);
+                    currentContext.addNonLiteral(
+                            currentContext.resolveMapping(currentContext.predicate), RDF.NIL, currentContext.base);
                 } catch (MalformedIriException e) {
                 }
             }
@@ -190,7 +189,8 @@ final class JsonLdContentHandler {
         if (JsonLd.SET_KEY.equals(currentContext.predicate) || JsonLd.LIST_KEY.equals(currentContext.predicate)) {
             onArrayStart();
         }
-        if (!JsonLd.GRAPH_KEY.equals(currentContext.predicate) && !JsonLd.CONTEXT_KEY.equals(currentContext.predicate)) {
+        if (!JsonLd.GRAPH_KEY.equals(currentContext.predicate)
+                && !JsonLd.CONTEXT_KEY.equals(currentContext.predicate)) {
             currentContext.hasNonGraphContextProps = true;
             if (!currentContext.predicate.startsWith("@")) {
                 currentContext.hasProps = true;
@@ -292,8 +292,9 @@ final class JsonLdContentHandler {
     }
 
     private boolean isNotFloating() {
-        return currentContext.parent != null && currentContext.parent.predicate != null &&
-                !currentContext.parent.predicate.startsWith("@");
+        return currentContext.parent != null
+                && currentContext.parent.predicate != null
+                && !currentContext.parent.predicate.startsWith("@");
     }
 
     private void addSubjectTypeDefinition(String dt, String base) {

@@ -8,8 +8,7 @@ public class SparqlUpdateConfiguration {
     @RdfToPojo.Property(iri = SparqlUpdateVocabulary.CONFIG_SPARQL)
     private String query = "INSERT { ?s ?p ?o } WHERE { ?s ?p ?o }";
 
-    public SparqlUpdateConfiguration() {
-    }
+    public SparqlUpdateConfiguration() {}
 
     public String getQuery() {
         return query;
@@ -18,5 +17,4 @@ public class SparqlUpdateConfiguration {
     public void setQuery(String query) {
         this.query = query;
     }
-
 }

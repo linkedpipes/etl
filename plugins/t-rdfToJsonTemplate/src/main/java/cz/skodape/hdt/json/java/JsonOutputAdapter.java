@@ -3,11 +3,9 @@ package cz.skodape.hdt.json.java;
 import com.fasterxml.jackson.databind.JsonNode;
 import cz.skodape.hdt.model.OutputConfiguration;
 import cz.skodape.hdt.model.TransformationFileAdapter;
-
 import java.io.IOException;
 
-public class JsonOutputAdapter
-        implements TransformationFileAdapter.OutputConfigurationAdapter {
+public class JsonOutputAdapter implements TransformationFileAdapter.OutputConfigurationAdapter {
 
     @Override
     public OutputConfiguration readJson(JsonNode root) throws IOException {
@@ -22,8 +20,7 @@ public class JsonOutputAdapter
         return result;
     }
 
-    public JsonOutputConfiguration.Type asType(String string)
-            throws IOException {
+    public JsonOutputConfiguration.Type asType(String string) throws IOException {
         switch (string) {
             case "string":
                 return JsonOutputConfiguration.Type.String;
@@ -35,5 +32,4 @@ public class JsonOutputAdapter
                 throw new IOException("Invalid type '" + string + "'.");
         }
     }
-
 }

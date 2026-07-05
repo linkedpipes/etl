@@ -9,5 +9,4 @@ public class Entry {
 
     @RdfToPojo.Property(iri = GraphStoreProtocolVocabulary.HAS_GRAPH)
     public String targetGraph;
-
 }

@@ -11,5 +11,4 @@ class SkipComponent implements ComponentExecutor {
     public boolean execute(DataUnitManager dataUnitManager) {
         return true;
     }
-
 }

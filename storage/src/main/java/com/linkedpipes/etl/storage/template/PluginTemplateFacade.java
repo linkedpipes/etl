@@ -2,9 +2,8 @@ package com.linkedpipes.etl.storage.template;
 
 import com.linkedpipes.etl.library.template.plugin.model.PluginTemplate;
 import com.linkedpipes.etl.storage.StorageException;
-import org.eclipse.rdf4j.model.Resource;
-
 import java.util.Set;
+import org.eclipse.rdf4j.model.Resource;
 
 public interface PluginTemplateFacade {
 
@@ -13,10 +12,7 @@ public interface PluginTemplateFacade {
     /**
      * Return null if no template is found.
      */
-    PluginTemplate getPluginTemplate(Resource resource)
-            throws StorageException;
+    PluginTemplate getPluginTemplate(Resource resource) throws StorageException;
 
-    Set<PluginTemplate> getPluginTemplates()
-            throws StorageException;
-
+    Set<PluginTemplate> getPluginTemplates() throws StorageException;
 }

@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.xslt;
 
 public final class XsltVocabulary {
 
-    private static final String PREFIX =
-            "http://plugins.linkedpipes.com/ontology/t-xslt#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-xslt#";
 
     public static final String CONFIG_CLASS = PREFIX + "Configuration";
 
@@ -14,5 +13,4 @@ public final class XsltVocabulary {
     public static final String SKIP_ON_ERROR = PREFIX + "skipOnError";
 
     public static final String THREADS = PREFIX + "threads";
-
 }

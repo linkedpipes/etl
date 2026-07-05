@@ -5,60 +5,44 @@ import com.linkedpipes.etl.library.rdf.StatementsSelector;
 import com.linkedpipes.etl.model.vocabulary.RDF;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.cli.Configuration;
+import java.io.File;
+import java.util.Collection;
+import java.util.List;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.rio.RDFFormat;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-
 public class RdfToConfiguration {
 
-    private static final String PREFIX =
-            "https://etl.linkedpipes.com/ontology/configuration#";
+    private static final String PREFIX = "https://etl.linkedpipes.com/ontology/configuration#";
 
-    private static final String TYPE =
-            PREFIX + "Configuration";
+    private static final String TYPE = PREFIX + "Configuration";
 
-    private static final String PART =
-            PREFIX + "hasPart";
+    private static final String PART = PREFIX + "hasPart";
 
-    private static final String STORAGE =
-            PREFIX + "Storage";
+    private static final String STORAGE = PREFIX + "Storage";
 
-    private static final String WORKING_DIRECTORY =
-            PREFIX + "workingDirectory";
+    private static final String WORKING_DIRECTORY = PREFIX + "workingDirectory";
 
-    private static final String PORT =
-            PREFIX + "httpPort";
+    private static final String PORT = PREFIX + "httpPort";
 
-    private static final String OSGI =
-            PREFIX + "osgi";
+    private static final String OSGI = PREFIX + "osgi";
 
-    private static final String PLUGIN_DIRECTORY =
-            PREFIX + "pluginDirectory";
+    private static final String PLUGIN_DIRECTORY = PREFIX + "pluginDirectory";
 
-    private static final String LOG =
-            PREFIX + "log";
+    private static final String LOG = PREFIX + "log";
 
-    private static final String LOG_DIRECTORY =
-            PREFIX + "logDirectory";
+    private static final String LOG_DIRECTORY = PREFIX + "logDirectory";
 
-    private static final String LOG_LEVEL =
-            PREFIX + "logLevel";
+    private static final String LOG_LEVEL = PREFIX + "logLevel";
 
-    private static final String DOMAIN =
-            PREFIX + "domainName";
+    private static final String DOMAIN = PREFIX + "domainName";
 
-    private static final String EXECUTOR_MONITOR =
-            PREFIX + "executorMonitor";
+    private static final String EXECUTOR_MONITOR = PREFIX + "executorMonitor";
 
-    private static final String INTERNAL_URL =
-            PREFIX + "internalUrl";
+    private static final String INTERNAL_URL = PREFIX + "internalUrl";
 
     private final StatementsSelector selector;
 
@@ -68,8 +52,7 @@ public class RdfToConfiguration {
         this.selector = selector;
     }
 
-    public static Configuration updateConfiguration(
-            Configuration defaults, File file, RDFFormat format)
+    public static Configuration updateConfiguration(Configuration defaults, File file, RDFFormat format)
             throws StorageException {
         Statements statements = Statements.arrayList();
         try {
@@ -85,16 +68,15 @@ public class RdfToConfiguration {
 
     private void load() {
         for (Resource subject : selector.selectByType(TYPE).subjects()) {
-            Collection<Value> parts = selector.select(
-                    subject, PART, null).objects();
+            Collection<Value> parts = selector.select(subject, PART, null).objects();
             for (Value value : parts) {
                 if (!value.isResource()) {
                     continue;
                 }
                 Resource resource = (Resource) value;
-                List<String> types = selector.select(
-                        resource, RDF.TYPE, null).objects()
-                        .stream().map(Value::stringValue).toList();
+                List<String> types = selector.select(resource, RDF.TYPE, null).objects().stream()
+                        .map(Value::stringValue)
+                        .toList();
                 if (types.contains(STORAGE)) {
                     loadExecutor(resource);
                 }
@@ -179,5 +161,4 @@ public class RdfToConfiguration {
             }
         }
     }
-
 }

@@ -15,13 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.semarglproject.jsonld;
-
-import org.semarglproject.vocab.RDF;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.semarglproject.vocab.RDF;
 
 /**
  * Holds document context: source IRI and bnode generation info.
@@ -39,8 +37,8 @@ final class DocumentContext {
     }
 
     String resolveBNode(String value) {
-        if (value.startsWith(RDF.BNODE_PREFIX) || value.startsWith('[' + RDF.BNODE_PREFIX)
-                && value.charAt(value.length() - 1) == ']') {
+        if (value.startsWith(RDF.BNODE_PREFIX)
+                || value.startsWith('[' + RDF.BNODE_PREFIX) && value.charAt(value.length() - 1) == ']') {
             String name;
             if (value.charAt(0) == '[') {
                 name = value.substring(RDF.BNODE_PREFIX.length() + 1, value.length() - 1);
@@ -66,5 +64,4 @@ final class DocumentContext {
         bnodeMapping.clear();
         iri = null;
     }
-
 }

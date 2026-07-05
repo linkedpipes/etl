@@ -14,8 +14,7 @@ public class UnpackConfiguration {
     @RdfToPojo.Property(iri = UnpackVocabulary.SKIP_ON_ERROR)
     private boolean skipOnError = false;
 
-    public UnpackConfiguration() {
-    }
+    public UnpackConfiguration() {}
 
     public boolean isUsePrefix() {
         return usePrefix;

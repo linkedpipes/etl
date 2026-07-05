@@ -1,10 +1,9 @@
 package com.linkedpipes.plugin.transformer.rdftofile;
 
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.util.Collection;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.rio.*;
-
-import java.util.Collection;
 
 class PerStatementProgressReport implements RDFWriter {
 
@@ -12,8 +11,7 @@ class PerStatementProgressReport implements RDFWriter {
 
     private final ProgressReport progressReport;
 
-    public PerStatementProgressReport(RDFWriter writer,
-            ProgressReport progressReport) {
+    public PerStatementProgressReport(RDFWriter writer, ProgressReport progressReport) {
         this.writer = writer;
         this.progressReport = progressReport;
     }
@@ -50,8 +48,7 @@ class PerStatementProgressReport implements RDFWriter {
     }
 
     @Override
-    public void handleNamespace(String string, String string1)
-            throws RDFHandlerException {
+    public void handleNamespace(String string, String string1) throws RDFHandlerException {
         writer.handleNamespace(string, string1);
     }
 
@@ -71,5 +68,4 @@ class PerStatementProgressReport implements RDFWriter {
         writer.set(setting, value);
         return this;
     }
-
 }

@@ -5,8 +5,7 @@ package com.linkedpipes.plugin.transformer.filesToRdfGraph;
  */
 public final class FilesToRdfGraphVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-filesToRdfGraph#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -16,7 +15,5 @@ public final class FilesToRdfGraphVocabulary {
 
     public static final String HAS_SKIP_ON_FAILURE = PREFIX + "softFail";
 
-    private FilesToRdfGraphVocabulary() {
-    }
-
+    private FilesToRdfGraphVocabulary() {}
 }

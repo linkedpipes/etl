@@ -7,16 +7,15 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Optional;
 import org.eclipse.rdf4j.rio.*;
 import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Optional;
 
 public final class FilesToRdf implements Component, SequentialExecution {
 
@@ -54,8 +53,7 @@ public final class FilesToRdf implements Component, SequentialExecution {
         if (mimeType == null || mimeType.isEmpty()) {
             defaultFormat = null;
         } else {
-            Optional<RDFFormat> format = Rio.getParserFormatForMIMEType(
-                    configuration.getMimeType());
+            Optional<RDFFormat> format = Rio.getParserFormatForMIMEType(configuration.getMimeType());
             if (format.isPresent()) {
                 defaultFormat = format.get();
             } else {
@@ -78,7 +76,7 @@ public final class FilesToRdf implements Component, SequentialExecution {
                 if (configuration.isSkipOnFailure()) {
                     LOG.error("Can't load file: {}", entry.getFileName());
                 } else {
-                    throw  ex;
+                    throw ex;
                 }
             }
             progressReport.entryProcessed();
@@ -107,8 +105,7 @@ public final class FilesToRdf implements Component, SequentialExecution {
         }
         Optional<RDFFormat> format = Rio.getParserFormatForFileName(fileName);
         if (!format.isPresent()) {
-            throw new LpException(
-                    "Can't determine format for file: {}", fileName);
+            throw new LpException("Can't determine format for file: {}", fileName);
         }
         return format.get();
     }
@@ -124,10 +121,7 @@ public final class FilesToRdf implements Component, SequentialExecution {
         return rdfParser;
     }
 
-    private void handleLoadingException(String fileName, Exception ex)
-            throws LpException {
-        throw new LpException(
-                "Can't parse file: {}", fileName, ex);
+    private void handleLoadingException(String fileName, Exception ex) throws LpException {
+        throw new LpException("Can't parse file: {}", fileName, ex);
     }
-
 }

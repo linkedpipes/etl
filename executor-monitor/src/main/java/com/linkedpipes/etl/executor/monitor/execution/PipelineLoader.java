@@ -5,17 +5,16 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsBuilder;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.SKOS;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 class PipelineLoader {
 
@@ -41,9 +40,7 @@ class PipelineLoader {
 
         execution.setPipeline(pipelineResource);
         if (pipelineResource == null) {
-            throw new MonitorException(
-                    "Missing pipeline resource for: {}",
-                    execution.getId());
+            throw new MonitorException("Missing pipeline resource for: {}", execution.getId());
         }
 
         StatementsBuilder output = Statements.arrayList().builder();
@@ -56,13 +53,11 @@ class PipelineLoader {
     }
 
     private File getPipelineFile() throws MonitorException {
-        File definitionFile = new File(
-                execution.getDirectory(), "definition/definition.trig");
+        File definitionFile = new File(execution.getDirectory(), "definition/definition.trig");
         if (definitionFile.exists()) {
             return definitionFile;
         }
-        File definitionFileJsonld = new File(
-                execution.getDirectory(), "definition/definition.jsonld");
+        File definitionFileJsonld = new File(execution.getDirectory(), "definition/definition.jsonld");
         if (definitionFileJsonld.exists()) {
             return definitionFileJsonld;
         }
@@ -70,9 +65,7 @@ class PipelineLoader {
         if (pipelineFile.exists()) {
             return pipelineFile;
         }
-        throw new MonitorException(
-                "Missing pipeline file for execution: {}",
-                execution.getIri());
+        throw new MonitorException("Missing pipeline file for execution: {}", execution.getIri());
     }
 
     private Statements loadPipelineFile(File file) throws MonitorException {
@@ -86,22 +79,20 @@ class PipelineLoader {
     }
 
     private void searchForPipelineAndMetadata(Statements pipeline) {
-        pipeline.stream()
-                .filter(st -> st.getPredicate().equals(RDF.TYPE))
-                .forEach(st -> {
-                    String object = st.getObject().stringValue();
-                    switch (object) {
-                        case LP_PIPELINE.PIPELINE:
-                            pipelineResource = st.getSubject();
-                            subjectWithLabels.add(st.getSubject());
-                            break;
-                        case LP_PIPELINE.EXECUTION_METADATA:
-                            pipelineMetadata = st.getSubject();
-                            break;
-                        default:
-                            break;
-                    }
-                });
+        pipeline.stream().filter(st -> st.getPredicate().equals(RDF.TYPE)).forEach(st -> {
+            String object = st.getObject().stringValue();
+            switch (object) {
+                case LP_PIPELINE.PIPELINE:
+                    pipelineResource = st.getSubject();
+                    subjectWithLabels.add(st.getSubject());
+                    break;
+                case LP_PIPELINE.EXECUTION_METADATA:
+                    pipelineMetadata = st.getSubject();
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     private Statements processMetadata(Statements pipeline) {
@@ -110,42 +101,27 @@ class PipelineLoader {
         }
         StatementsBuilder statements = Statements.arrayList().builder();
         statements.setDefaultGraph(execution.getListGraph());
-        statements.addIri(
-                pipelineMetadata,
-                RDF.TYPE,
-                LP_PIPELINE.EXECUTION_METADATA);
-        statements.add(
-                pipelineResource,
-                LP_PIPELINE.HAS_EXECUTION_METADATA,
-                pipelineMetadata);
+        statements.addIri(pipelineMetadata, RDF.TYPE, LP_PIPELINE.EXECUTION_METADATA);
+        statements.add(pipelineResource, LP_PIPELINE.HAS_EXECUTION_METADATA, pipelineMetadata);
 
-        pipeline.stream()
-                .filter(st -> st.getSubject().equals(pipelineMetadata))
-                .forEach(st -> {
-                    switch (st.getPredicate().stringValue()) {
-                        case LP_EXEC.HAS_TARGET_COMPONENT:
-                            statements.add(
-                                    pipelineMetadata,
-                                    LP_EXEC.HAS_TARGET_COMPONENT,
-                                    st.getObject());
-                            subjectWithLabels.add(
-                                    (Resource) st.getObject());
-                            break;
-                        default:
-                            statements.addToDefaultGraph(st);
-                            break;
-                    }
-                });
+        pipeline.stream().filter(st -> st.getSubject().equals(pipelineMetadata)).forEach(st -> {
+            switch (st.getPredicate().stringValue()) {
+                case LP_EXEC.HAS_TARGET_COMPONENT:
+                    statements.add(pipelineMetadata, LP_EXEC.HAS_TARGET_COMPONENT, st.getObject());
+                    subjectWithLabels.add((Resource) st.getObject());
+                    break;
+                default:
+                    statements.addToDefaultGraph(st);
+                    break;
+            }
+        });
         return statements;
     }
 
     private Statements processPipeline() {
         StatementsBuilder statements = Statements.arrayList().builder();
         statements.setDefaultGraph(execution.getListGraph());
-        statements.addIri(
-                pipelineResource,
-                RDF.TYPE,
-                LP_PIPELINE.PIPELINE);
+        statements.addIri(pipelineResource, RDF.TYPE, LP_PIPELINE.PIPELINE);
         return statements;
     }
 
@@ -154,5 +130,4 @@ class PipelineLoader {
                 .filter(st -> st.getPredicate().equals(SKOS.PREF_LABEL))
                 .filter(st -> subjectWithLabels.contains(st.getSubject()));
     }
-
 }

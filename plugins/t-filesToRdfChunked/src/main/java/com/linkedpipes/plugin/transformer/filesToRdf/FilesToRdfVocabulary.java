@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.filesToRdf;
 
 public final class FilesToRdfVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-filesToRdfChunked#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -19,7 +18,5 @@ public final class FilesToRdfVocabulary {
 
     public static final String HAS_NUMBER_OF_THREADS = PREFIX + "threads";
 
-    private FilesToRdfVocabulary() {
-    }
-
+    private FilesToRdfVocabulary() {}
 }

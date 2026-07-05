@@ -2,14 +2,11 @@ package com.linkedpipes.plugin.extractor.local;
 
 public final class FilesFromLocalVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/e-filesFromLocal#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/e-filesFromLocal#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
     public static final String HAS_PATH = PREFIX + "path";
 
-    private FilesFromLocalVocabulary() {
-    }
-
+    private FilesFromLocalVocabulary() {}
 }

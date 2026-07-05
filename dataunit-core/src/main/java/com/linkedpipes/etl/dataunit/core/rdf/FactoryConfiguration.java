@@ -3,7 +3,6 @@ package com.linkedpipes.etl.dataunit.core.rdf;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.Loadable;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
-
 import java.io.File;
 import java.net.URI;
 
@@ -35,5 +34,4 @@ class FactoryConfiguration implements Loadable {
         }
         return new File(URI.create(directory));
     }
-
 }

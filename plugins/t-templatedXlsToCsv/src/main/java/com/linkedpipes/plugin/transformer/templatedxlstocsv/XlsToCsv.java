@@ -9,7 +9,6 @@ import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import cz.komix.xls2csv.Fact;
 import cz.komix.xls2csv.Xls2Csv;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -25,7 +24,6 @@ public class XlsToCsv implements Component, SequentialExecution {
         private File input;
 
         private File template;
-
     }
 
     @Component.ContainsConfiguration
@@ -76,8 +74,7 @@ public class XlsToCsv implements Component, SequentialExecution {
             // Iterate output and save.
             for (Fact fact : xls2Csv.getFactBox().getBox()) {
                 String outputFile = fact.createFileName(fileName);
-                fact.saveToFile(outputFiles.createFile(outputFile),
-                        fileName);
+                fact.saveToFile(outputFiles.createFile(outputFile), fileName);
             }
             progressReport.entryProcessed();
         }
@@ -102,5 +99,4 @@ public class XlsToCsv implements Component, SequentialExecution {
         }
         return task;
     }
-
 }

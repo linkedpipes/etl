@@ -25,5 +25,4 @@ public class RdfUtilsException extends Exception {
     public String getMessage() {
         return MessageFormatter.arrayFormat(message, args).getMessage();
     }
-
 }

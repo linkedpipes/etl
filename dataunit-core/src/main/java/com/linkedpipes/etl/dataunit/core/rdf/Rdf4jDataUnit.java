@@ -10,21 +10,18 @@ public interface Rdf4jDataUnit {
     interface RepositoryFunction<T> {
 
         T accept(RepositoryConnection connection) throws LpException;
-
     }
 
     @FunctionalInterface
     interface RepositoryProcedure {
 
         void accept(RepositoryConnection connection) throws LpException;
-
     }
 
     @FunctionalInterface
     interface Procedure {
 
         void accept() throws LpException;
-
     }
 
     void execute(RepositoryProcedure action) throws LpException;
@@ -34,5 +31,4 @@ public interface Rdf4jDataUnit {
     void execute(Procedure action) throws LpException;
 
     Repository getRepository();
-
 }

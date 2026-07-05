@@ -7,7 +7,6 @@ import com.linkedpipes.etl.unpacker.model.designer.DesignerRunAfter;
 import com.linkedpipes.etl.unpacker.model.executor.ExecutorComponent;
 import com.linkedpipes.etl.unpacker.model.executor.ExecutorConnection;
 import com.linkedpipes.etl.unpacker.model.executor.ExecutorPipeline;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,8 +31,7 @@ class ExecutionFlow {
     private final List<DesignerRunAfter> runAfter;
 
     public ExecutionFlow(
-            DesignerPipeline source, ExecutorPipeline target,
-            List<DesignerRunAfter> runAfter, UnpackOptions options) {
+            DesignerPipeline source, ExecutorPipeline target, List<DesignerRunAfter> runAfter, UnpackOptions options) {
         this.source = source;
         this.target = target;
         this.options = options;
@@ -59,15 +57,13 @@ class ExecutionFlow {
         while (!dependencies.isEmpty()) {
             //
             for (String componentIri : orderedIriList) {
-                Set<String> componentDependencies =
-                        dependencies.get(componentIri);
+                Set<String> componentDependencies = dependencies.get(componentIri);
                 if (componentDependencies == null) {
                     continue;
                 }
                 if (componentDependencies.isEmpty()) {
                     toRemove.add(componentIri);
-                    target.getComponent(componentIri).setExecutionOrder(
-                            ++executionOrder);
+                    target.getComponent(componentIri).setExecutionOrder(++executionOrder);
                 }
             }
             //
@@ -103,8 +99,7 @@ class ExecutionFlow {
         return dependencies;
     }
 
-    private Map<String, Set<String>> filterDisabledComponents(
-            Map<String, Set<String>> dependencies) {
+    private Map<String, Set<String>> filterDisabledComponents(Map<String, Set<String>> dependencies) {
         Map<String, Set<String>> filtered = new LinkedHashMap<>();
         for (ExecutorComponent component : target.getComponents()) {
             String iri = component.getIri();
@@ -116,11 +111,8 @@ class ExecutionFlow {
         return filtered;
     }
 
-    private void setComponentExecutionType(
-            UnpackOptions options,
-            Map<String, Set<String>> dependencies) {
-        Set<String> componentsToExecute =
-                getComponentsToExecute(options, dependencies);
+    private void setComponentExecutionType(UnpackOptions options, Map<String, Set<String>> dependencies) {
+        Set<String> componentsToExecute = getComponentsToExecute(options, dependencies);
         //
         for (ExecutorComponent component : target.getComponents()) {
             String iri = component.getIri();
@@ -133,10 +125,8 @@ class ExecutionFlow {
         }
     }
 
-    private Set<String> getComponentsToExecute(
-            UnpackOptions options, Map<String, Set<String>> dependencies) {
-        if (options.getRunToComponent() == null
-                || options.getRunToComponent().isEmpty()) {
+    private Set<String> getComponentsToExecute(UnpackOptions options, Map<String, Set<String>> dependencies) {
+        if (options.getRunToComponent() == null || options.getRunToComponent().isEmpty()) {
             return dependencies.keySet();
         } else {
             // Use all dependencies.
@@ -149,8 +139,7 @@ class ExecutionFlow {
                     if (componentsToExecute.contains(component)) {
                         continue;
                     }
-                    newToAdd.addAll(dependencies.getOrDefault(
-                            component, Collections.EMPTY_SET));
+                    newToAdd.addAll(dependencies.getOrDefault(component, Collections.EMPTY_SET));
                     componentsToExecute.add(component);
                 }
                 toAdd = newToAdd;
@@ -158,6 +147,4 @@ class ExecutionFlow {
             return componentsToExecute;
         }
     }
-
-
 }

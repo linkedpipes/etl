@@ -13,8 +13,7 @@ public class EntityReference {
 
     private final BackendRdfSource source;
 
-    public EntityReference(String resource, String graph,
-            BackendRdfSource source) {
+    public EntityReference(String resource, String graph, BackendRdfSource source) {
         this.resource = resource;
         this.graph = graph;
         this.source = source;
@@ -31,5 +30,4 @@ public class EntityReference {
     public BackendRdfSource getSource() {
         return source;
     }
-
 }

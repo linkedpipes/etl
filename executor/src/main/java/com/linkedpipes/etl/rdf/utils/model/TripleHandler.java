@@ -4,5 +4,4 @@ package com.linkedpipes.etl.rdf.utils.model;
 public interface TripleHandler {
 
     void handle(RdfTriple triple) throws Exception;
-
 }

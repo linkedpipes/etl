@@ -30,8 +30,7 @@ public class Tabular implements Component, SequentialExecution {
     public void execute() throws LpException {
         final BufferedOutput output = new BufferedOutput(outputRdfDataUnit);
         final Parser parser = new Parser(configuration);
-        final Mapper mapper = new Mapper(output, configuration,
-                ColumnFactory.createColumnList(configuration));
+        final Mapper mapper = new Mapper(output, configuration, ColumnFactory.createColumnList(configuration));
         // TODO We could use some table group URI from user?
         mapper.initialize(null);
         for (FilesDataUnit.Entry entry : inputFilesDataUnit) {
@@ -51,16 +50,13 @@ public class Tabular implements Component, SequentialExecution {
                 parser.parse(entry, mapper);
             } catch (Exception ex) {
                 if (configuration.isSkipOnError()) {
-                    LOG.error("Can't process file: {}",
-                            entry.getFileName(), ex);
+                    LOG.error("Can't process file: {}", entry.getFileName(), ex);
                 } else {
-                    throw new LpException("Can't process file: {}",
-                            entry.getFileName(), ex);
+                    throw new LpException("Can't process file: {}", entry.getFileName(), ex);
                 }
             }
             mapper.onTableEnd();
             output.onFileEnd();
         }
     }
-
 }

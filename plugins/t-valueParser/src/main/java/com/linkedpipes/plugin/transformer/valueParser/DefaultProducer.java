@@ -11,8 +11,7 @@ class DefaultProducer extends ValueProducer {
 
     protected Value originalValue;
 
-    public DefaultProducer(WritableSingleGraphDataUnit output,
-            String predicate, boolean transferType) {
+    public DefaultProducer(WritableSingleGraphDataUnit output, String predicate, boolean transferType) {
         super(output, predicate);
         this.transferType = transferType;
     }
@@ -26,8 +25,7 @@ class DefaultProducer extends ValueProducer {
     @Override
     public void onValue(String value) {
         Value rdfValue = createValue(value);
-        this.buffer.add(valueFactory.createStatement(
-                resource, predicate, rdfValue));
+        this.buffer.add(valueFactory.createStatement(resource, predicate, rdfValue));
     }
 
     protected Value createValue(String value) {
@@ -44,13 +42,11 @@ class DefaultProducer extends ValueProducer {
 
     protected Value createPreserveTypeAndLanguage(String value) {
         if (originalValue instanceof Literal) {
-            Literal literal = (Literal)originalValue;
+            Literal literal = (Literal) originalValue;
             if (literal.getLanguage().isPresent()) {
-                return valueFactory.createLiteral(value,
-                        literal.getLanguage().get());
-            } else  if (literal.getDatatype() != null) {
-                return valueFactory.createLiteral(value,
-                        literal.getDatatype());
+                return valueFactory.createLiteral(value, literal.getLanguage().get());
+            } else if (literal.getDatatype() != null) {
+                return valueFactory.createLiteral(value, literal.getDatatype());
             } else {
                 return createPureStringValue(value);
             }
@@ -58,5 +54,4 @@ class DefaultProducer extends ValueProducer {
             return createPureStringValue(value);
         }
     }
-
 }

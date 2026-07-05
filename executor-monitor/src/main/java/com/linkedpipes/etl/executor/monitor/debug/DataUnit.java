@@ -2,14 +2,13 @@ package com.linkedpipes.etl.executor.monitor.debug;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DataUnit {
 
@@ -37,12 +36,13 @@ public class DataUnit {
 
     private boolean loaded = false;
 
-    public DataUnit() {
-    }
+    public DataUnit() {}
 
     public DataUnit(
-            String ownerExecution, String name,
-            String relativeDataPath, String mappedFromExecution,
+            String ownerExecution,
+            String name,
+            String relativeDataPath,
+            String mappedFromExecution,
             List<File> debugDirectories) {
         this.ownerExecution = ownerExecution;
         this.name = name;
@@ -110,23 +110,18 @@ public class DataUnit {
 
     private void updateDebugDirectories(File root, List<String> relativePaths) {
         File dataUnitRoot = new File(root, relativeDataPath);
-        this.debugDirectories =
-                relativePaths.stream()
-                        .map((path) -> new File(dataUnitRoot, path))
-                        .collect(Collectors.toList());
+        this.debugDirectories = relativePaths.stream()
+                .map((path) -> new File(dataUnitRoot, path))
+                .collect(Collectors.toList());
     }
 
     private File getDebugInfoFile(File directory) {
-        return new File(
-                directory,
-                relativeDataPath + File.separator + DEBUG_FILE_NAME);
+        return new File(directory, relativeDataPath + File.separator + DEBUG_FILE_NAME);
     }
 
     private List<String> loadJsonList(File path) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        JavaType type = mapper.getTypeFactory()
-                .constructCollectionType(List.class, String.class);
+        JavaType type = mapper.getTypeFactory().constructCollectionType(List.class, String.class);
         return mapper.readValue(path, type);
     }
-
 }

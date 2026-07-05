@@ -5,7 +5,6 @@ import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +12,7 @@ public class PipelineModel {
 
     Pipeline pipeline;
 
-    public void load(String pipeline, RdfSource source)
-            throws RdfException {
+    public void load(String pipeline, RdfSource source) throws RdfException {
         this.pipeline = new Pipeline();
         RdfToPojoLoader.load(source, pipeline, this.pipeline);
     }
@@ -41,8 +39,7 @@ public class PipelineModel {
         for (Connection conn : pipeline.getConnections().values()) {
             if (conn.getTargetComponent().equals(componentResource)
                     && conn.getTargetBinding().equals(binding)) {
-                Component sourceComponent = pipeline.getComponents()
-                        .get(conn.getSourceComponent());
+                Component sourceComponent = pipeline.getComponents().get(conn.getSourceComponent());
                 String sourceBinding = conn.getSourceBinding();
                 //
                 sourceComponent.getDataUnits().stream()
@@ -78,5 +75,4 @@ public class PipelineModel {
         }
         return pipeline.getExecutionProfile().getRdfRepositoryType();
     }
-
 }

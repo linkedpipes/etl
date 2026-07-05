@@ -13,16 +13,15 @@ import com.linkedpipes.etl.executor.pipeline.model.Port;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 import com.linkedpipes.etl.rdf.rdf4j.Rdf4jUtils;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 public class ExecutionInformation {
 
@@ -33,16 +32,13 @@ public class ExecutionInformation {
         public LocalDateTime start = null;
 
         public LocalDateTime end = null;
-
     }
 
     // TODO Replace with vocabulary.
-    private static final String ETL_PREFIX =
-            "http://etl.linkedpipes.com/ontology/";
+    private static final String ETL_PREFIX = "http://etl.linkedpipes.com/ontology/";
 
     // TODO Replace with vocabulary.
-    private static final String LP_PREFIX =
-            "http://linkedpipes.com/ontology/";
+    private static final String LP_PREFIX = "http://linkedpipes.com/ontology/";
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
@@ -50,8 +46,7 @@ public class ExecutionInformation {
      * Holds only statements that do not change over time (like component
      * status).
      */
-    private final StatementsBuilder statements =
-            Statements.arrayList().builder();
+    private final StatementsBuilder statements = Statements.arrayList().builder();
 
     private IRI iri;
 
@@ -65,10 +60,7 @@ public class ExecutionInformation {
 
     private final File file;
 
-    public ExecutionInformation(
-            ExecutionStatusMonitor executionStatus,
-            ExecutionModel execution,
-            File file) {
+    public ExecutionInformation(ExecutionStatusMonitor executionStatus, ExecutionModel execution, File file) {
         this.executionStatus = executionStatus;
         this.execution = execution;
         this.file = file;
@@ -85,12 +77,8 @@ public class ExecutionInformation {
     public void onPipelineLoaded(PipelineModel pipeline) {
         this.pipeline = pipeline;
         statements.add(
-                iri,
-                LP_EXEC.HAS_DELETE_WORKING_DATA,
-                valueFactory.createLiteral(pipeline.isDeleteWorkingData())
-        );
-        statements.addIri(
-                iri, ETL_PREFIX + "pipeline", pipeline.getIri());
+                iri, LP_EXEC.HAS_DELETE_WORKING_DATA, valueFactory.createLiteral(pipeline.isDeleteWorkingData()));
+        statements.addIri(iri, ETL_PREFIX + "pipeline", pipeline.getIri());
         for (PipelineComponent component : pipeline.getComponents()) {
             addPipelineComponent(component);
         }
@@ -106,17 +94,11 @@ public class ExecutionInformation {
         statements.addIri(componentIri, RDF.TYPE, LP_PIPELINE.COMPONENT);
 
         if (component.getExecution() != null) {
-            statements.addIri(
-                    componentIri,
-                    LP_EXEC.HAS_EXECUTION,
-                    component.getExecution());
+            statements.addIri(componentIri, LP_EXEC.HAS_EXECUTION, component.getExecution());
         }
 
         int order = component.getExecutionOrder();
-        statements.add(
-                componentIri,
-                LP_PREFIX + "order",
-                valueFactory.createLiteral(order));
+        statements.add(componentIri, LP_PREFIX + "order", valueFactory.createLiteral(order));
 
         for (Port port : component.getPorts()) {
             addPipelinePort(componentIri, port);
@@ -139,10 +121,8 @@ public class ExecutionInformation {
     }
 
     private void addPipelinePortSource(IRI portIri, DataSource source) {
-        statements.addIri(
-                portIri, LP_EXEC.HAS_EXECUTION, source.getExecution());
-        statements.add(
-                portIri, LP_EXEC.HAS_LOAD_PATH, source.getDataPath());
+        statements.addIri(portIri, LP_EXEC.HAS_EXECUTION, source.getExecution());
+        statements.add(portIri, LP_EXEC.HAS_LOAD_PATH, source.getDataPath());
     }
 
     public void onComponentBegin(ExecutionComponent component) {
@@ -153,8 +133,7 @@ public class ExecutionInformation {
     }
 
     private ComponentStatus getComponentStatus(ExecutionComponent component) {
-        return componentStatus.computeIfAbsent(
-                component.getIri(), (key) -> new ComponentStatus());
+        return componentStatus.computeIfAbsent(component.getIri(), (key) -> new ComponentStatus());
     }
 
     private void writeDebugData(ExecutionComponent component) {
@@ -164,26 +143,22 @@ public class ExecutionInformation {
         for (DataUnit dataUnit : component.getDataUnits()) {
             IRI dataUnitIri = valueFactory.createIRI(dataUnit.getIri());
 
-            statements.add(dataUnitIri,
-                    "http://etl.linkedpipes.com/ontology/dataPath",
-                    dataUnit.getRelativeSaveDataPath());
+            statements.add(
+                    dataUnitIri, "http://etl.linkedpipes.com/ontology/dataPath", dataUnit.getRelativeSaveDataPath());
 
             if (!dataUnit.getPort().isSaveDebugData()) {
                 continue;
             }
-            statements.add(dataUnitIri,
-                    "http://etl.linkedpipes.com/ontology/debug",
-                    dataUnit.getVirtualDebugPath());
+            statements.add(dataUnitIri, "http://etl.linkedpipes.com/ontology/debug", dataUnit.getVirtualDebugPath());
         }
     }
 
-    public void onComponentEnd(
-            ExecutionComponent component, boolean cancelled) {
+    public void onComponentEnd(ExecutionComponent component, boolean cancelled) {
         ComponentStatus componentStatus = getComponentStatus(component);
         if (cancelled) {
             componentStatus.status = LP_EXEC.STATUS_CANCELLED;
         } else {
-            componentStatus.status  = LP_EXEC.STATUS_FINISHED;
+            componentStatus.status = LP_EXEC.STATUS_FINISHED;
         }
         componentStatus.end = LocalDateTime.now();
     }
@@ -207,22 +182,17 @@ public class ExecutionInformation {
         StatementsBuilder dynamic = Statements.arrayList().builder();
         dynamic.setDefaultGraph(iri);
 
-        dynamic.addIri(iri,
+        dynamic.addIri(
+                iri,
                 "http://etl.linkedpipes.com/ontology/status",
                 executionStatus.getStatus().getIri());
 
         for (var entry : componentStatus.entrySet()) {
             IRI componentIri = valueFactory.createIRI(entry.getKey());
             ComponentStatus status = entry.getValue();
-            dynamic.addIri(componentIri,
-                    "http://etl.linkedpipes.com/ontology/status",
-                    status.status);
-            dynamic.add(componentIri,
-                    "http://etl.linkedpipes.com/ontology/executionStart",
-                    status.start);
-            dynamic.add(componentIri,
-                    "http://etl.linkedpipes.com/ontology/executionEnd",
-                    status.end);
+            dynamic.addIri(componentIri, "http://etl.linkedpipes.com/ontology/status", status.status);
+            dynamic.add(componentIri, "http://etl.linkedpipes.com/ontology/executionStart", status.start);
+            dynamic.add(componentIri, "http://etl.linkedpipes.com/ontology/executionEnd", status.end);
         }
         return dynamic;
     }
@@ -230,5 +200,4 @@ public class ExecutionInformation {
     public void save() throws IOException {
         Rdf4jUtils.save(getStatements(), file);
     }
-
 }

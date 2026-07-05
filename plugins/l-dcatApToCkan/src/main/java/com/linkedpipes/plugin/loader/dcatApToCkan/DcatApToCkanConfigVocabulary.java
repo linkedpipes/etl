@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.loader.dcatApToCkan;
 
 public final class DcatApToCkanConfigVocabulary {
 
-    private static final String PREFIX =
-            "http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/l-dcatApToCkan#";
 
     public static final String CONFIG_CLASS = PREFIX + "Configuration";
 
@@ -21,11 +20,9 @@ public final class DcatApToCkanConfigVocabulary {
 
     public static final String LOAD_LANGUAGE = PREFIX + "loadLanguage";
 
-    public static final String GENERATE_VIRTUOSO_EXAMPLE =
-            PREFIX + "generateVirtuosoExample";
+    public static final String GENERATE_VIRTUOSO_EXAMPLE = PREFIX + "generateVirtuosoExample";
 
     public static final String GENERATE_EXAMPLE = PREFIX + "generateExample";
 
     public static final String OVERWRITE = PREFIX + "overwrite";
-
 }

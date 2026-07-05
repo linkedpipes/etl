@@ -90,5 +90,4 @@ class ExecutionStatusMonitor {
     public boolean isExecutionSuccessful() {
         return !this.failed;
     }
-
 }

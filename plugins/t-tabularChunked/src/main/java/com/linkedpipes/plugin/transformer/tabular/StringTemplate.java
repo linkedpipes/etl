@@ -18,7 +18,6 @@ class StringTemplate {
     private static interface Token {
 
         public abstract String process(List<String> row);
-
     }
 
     /**
@@ -36,7 +35,6 @@ class StringTemplate {
         public String process(List<String> row) {
             return string;
         }
-
     }
 
     /**
@@ -132,8 +130,7 @@ class StringTemplate {
      * @param tableUri URI of currently parsed table.
      * @param header Names of columns headers.
      */
-    public void initialize(String tableUri, List<String> header)
-            throws InvalidTemplate {
+    public void initialize(String tableUri, List<String> header) throws InvalidTemplate {
         tokens.clear();
         // Parse inner template;
         String toParse = template;
@@ -160,8 +157,7 @@ class StringTemplate {
                 // } --> name
                 String name = toParse.substring(0, right);
                 // Revert escaping of { } in the pattern.
-                name = name.replaceAll("\\\\\\{", "\\{")
-                        .replaceAll("\\\\}", "\\}");
+                name = name.replaceAll("\\\\\\{", "\\{").replaceAll("\\\\}", "\\}");
                 toParse = toParse.substring(right + 1);
                 // Now name contains the pattern so we can create token.
                 if (name.equals(TABLE_RESOURCE_REF)) {
@@ -171,8 +167,7 @@ class StringTemplate {
                     tokens.add(createToken(name, header));
                 }
             } else {
-                throw new InvalidTemplate(
-                        "Invalid template '" + template + "'");
+                throw new InvalidTemplate("Invalid template '" + template + "'");
             }
         }
     }
@@ -236,17 +231,13 @@ class StringTemplate {
      * @param header
      * @return
      */
-    private static Token createToken(String template, List<String> header)
-            throws InvalidTemplate {
+    private static Token createToken(String template, List<String> header) throws InvalidTemplate {
         if (template.startsWith("+")) {
-            return new TokenReservedExpansion(getIndexForTemplate(
-                    template.substring(1), header));
+            return new TokenReservedExpansion(getIndexForTemplate(template.substring(1), header));
         } else if (template.startsWith("#")) {
-            return new TokenFragmentExpansion(getIndexForTemplate(
-                    template.substring(1), header));
+            return new TokenFragmentExpansion(getIndexForTemplate(template.substring(1), header));
         } else {
-            return new TokenSimpleExpansion(getIndexForTemplate(
-                    template, header));
+            return new TokenSimpleExpansion(getIndexForTemplate(template, header));
         }
     }
 
@@ -257,15 +248,12 @@ class StringTemplate {
      * @param header
      * @return
      */
-    private static int getIndexForTemplate(String template,
-            List<String> header) throws InvalidTemplate {
+    private static int getIndexForTemplate(String template, List<String> header) throws InvalidTemplate {
         int value = header.indexOf(template);
         if (value == -1) {
-            throw new InvalidTemplate("Missing template in header '"
-                    + template + "'");
+            throw new InvalidTemplate("Missing template in header '" + template + "'");
         } else {
             return value;
         }
     }
-
 }

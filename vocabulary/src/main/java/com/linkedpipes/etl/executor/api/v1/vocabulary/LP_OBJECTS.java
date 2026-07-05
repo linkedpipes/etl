@@ -2,11 +2,9 @@ package com.linkedpipes.etl.executor.api.v1.vocabulary;
 
 public final class LP_OBJECTS {
 
-    private static final String PREFIX =
-            "http://plugins.linkedpipes.com/ontology/configuration/";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/configuration/";
 
-    private static final String RESOURCE =
-            "http://plugins.linkedpipes.com/resource/configuration/";
+    private static final String RESOURCE = "http://plugins.linkedpipes.com/resource/configuration/";
 
     /**
      * Object control, cause given value to inherit from the
@@ -24,8 +22,7 @@ public final class LP_OBJECTS {
      * Object control, inherit value from ancestor and force it to
      * all successors.
      */
-    public static final String INHERIT_AND_FORCE =
-            RESOURCE + "InheritAndForce";
+    public static final String INHERIT_AND_FORCE = RESOURCE + "InheritAndForce";
 
     /**
      * Object control, replace value from parent if that value is not forced.
@@ -42,14 +39,12 @@ public final class LP_OBJECTS {
     /**
      * Type of description object.
      */
-    public static final String DESCRIPTION =
-            "http://plugins.linkedpipes.com/ontology/ConfigurationDescription";
+    public static final String DESCRIPTION = "http://plugins.linkedpipes.com/ontology/ConfigurationDescription";
 
     /**
      * Point to type the object describe.
      */
-    public static final String HAS_DESCRIBE =
-            "http://plugins.linkedpipes.com/ontology/configuration/type";
+    public static final String HAS_DESCRIBE = "http://plugins.linkedpipes.com/ontology/configuration/type";
 
     /**
      * Description has member entities.
@@ -76,5 +71,4 @@ public final class LP_OBJECTS {
      * The complex objects are merged on the object level.
      */
     public static final String IS_COMPLEX = PREFIX + "complex";
-
 }

@@ -7,15 +7,14 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.util.*;
+import java.util.stream.Collectors;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.RDFHandler;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Linker is designed to solve problems, where links SPARQL construct
@@ -29,11 +28,9 @@ import java.util.stream.Collectors;
  * of objects using user provided property. In this index
  * we then search for matching objects to every chunk.
  */
-public final class PropertyLinkerChunked implements Component,
-        SequentialExecution {
+public final class PropertyLinkerChunked implements Component, SequentialExecution {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(PropertyLinkerChunked.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PropertyLinkerChunked.class);
 
     private static final int EXPECTED_CHUNK_SIZE = 4;
 
@@ -87,13 +84,10 @@ public final class PropertyLinkerChunked implements Component,
         }
     }
 
-
-    private Map<Value, List<Statement>> createReferenceIndex()
-            throws LpException {
+    private Map<Value, List<Statement>> createReferenceIndex() throws LpException {
         Map<Resource, Value> resourceToValue = new HashMap<>();
         Map<Value, List<Statement>> output = new HashMap<>();
-        IRI predicate = SimpleValueFactory.getInstance().createIRI(
-                this.configuration.getDataPredicate());
+        IRI predicate = SimpleValueFactory.getInstance().createIRI(this.configuration.getDataPredicate());
 
         RDFHandler findRelevantResources = new AbstractRDFHandler() {
             @Override
@@ -115,38 +109,31 @@ public final class PropertyLinkerChunked implements Component,
         };
 
         this.referenceRdf.execute((connection) -> {
-            connection.exportStatements(null, predicate, null, false,
-                    findRelevantResources, referenceRdf.getReadGraph());
+            connection.exportStatements(
+                    null, predicate, null, false, findRelevantResources, referenceRdf.getReadGraph());
             connection.export(collectObjects, referenceRdf.getReadGraph());
         });
 
         return output;
     }
 
-
-    private void linkChunk(
-            ChunkedTriples.Chunk chunk, Map<Value, List<Statement>> reference)
-            throws LpException {
+    private void linkChunk(ChunkedTriples.Chunk chunk, Map<Value, List<Statement>> reference) throws LpException {
         Collection<Statement> inputChunk = chunk.toCollection();
         List<Value> chunkValues = findChunkLinkingValues(inputChunk);
         this.outputChunk.clear();
         this.outputChunk.addAll(inputChunk);
         for (Value value : chunkValues) {
-            List<Statement> toAdd = reference.getOrDefault(
-                    value, Collections.EMPTY_LIST);
+            List<Statement> toAdd = reference.getOrDefault(value, Collections.EMPTY_LIST);
             this.outputChunk.addAll(toAdd);
         }
         this.outputRdf.submit(outputChunk);
     }
 
-    private List<Value> findChunkLinkingValues(
-            Collection<Statement> statements) {
-        IRI predicate = SimpleValueFactory.getInstance().createIRI(
-                this.configuration.getChunkPredicate());
+    private List<Value> findChunkLinkingValues(Collection<Statement> statements) {
+        IRI predicate = SimpleValueFactory.getInstance().createIRI(this.configuration.getChunkPredicate());
         return statements.stream()
                 .filter((st) -> st.getPredicate().equals(predicate))
                 .map((st) -> st.getObject())
                 .collect(Collectors.toList());
     }
-
 }

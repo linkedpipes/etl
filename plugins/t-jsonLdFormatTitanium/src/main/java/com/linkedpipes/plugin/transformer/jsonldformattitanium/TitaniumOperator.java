@@ -14,9 +14,6 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonStructure;
 import jakarta.json.JsonValue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -26,14 +23,14 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TitaniumOperator {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(TitaniumOperator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TitaniumOperator.class);
 
-    public void compact(File input, String contextAsString, File output)
-            throws LpException {
+    public void compact(File input, String contextAsString, File output) throws LpException {
         JsonDocument json = documentFromFile(input);
         JsonDocument context = documentFromString(contextAsString);
         JsonObject result;
@@ -49,8 +46,7 @@ public class TitaniumOperator {
         try (InputStream input = new FileInputStream(file)) {
             return JsonDocument.of(input);
         } catch (IOException | JsonLdError ex) {
-            throw new LpException(
-                    "Can't convert file '{}' to document.", file, ex);
+            throw new LpException("Can't convert file '{}' to document.", file, ex);
         }
     }
 
@@ -63,10 +59,9 @@ public class TitaniumOperator {
         }
     }
 
-    private void documentToFile(JsonStructure jsonStructure, File file)
-            throws LpException {
+    private void documentToFile(JsonStructure jsonStructure, File file) throws LpException {
         try (var fileWriter = new FileWriter(file, StandardCharsets.UTF_8);
-             var jsonWriter = Json.createWriter(fileWriter)) {
+                var jsonWriter = Json.createWriter(fileWriter)) {
             jsonWriter.write(jsonStructure);
         } catch (IOException ex) {
             throw new LpException("Can't write file: {}", file, ex);
@@ -95,15 +90,12 @@ public class TitaniumOperator {
         documentToFile(result, output);
     }
 
-    public void frame(
-            File jsonAsFile, String frameAsString, File output)
-            throws LpException {
+    public void frame(File jsonAsFile, String frameAsString, File output) throws LpException {
         JsonStructure result = frameToJson(jsonAsFile, frameAsString);
         documentToFile(result, output);
     }
 
-    private JsonStructure frameToJson(
-            File jsonAsFile, String frameAsString) throws LpException {
+    private JsonStructure frameToJson(File jsonAsFile, String frameAsString) throws LpException {
         JsonDocument json = documentFromFile(jsonAsFile);
         JsonDocument frame = documentFromString(frameAsString);
         try {
@@ -115,9 +107,7 @@ public class TitaniumOperator {
         }
     }
 
-    public void frameAsArray(
-            File jsonAsFile, String frameAsString,
-            String contextAsString, File output)
+    public void frameAsArray(File jsonAsFile, String frameAsString, String contextAsString, File output)
             throws LpException {
         JsonStructure framedJson = frameToJson(jsonAsFile, frameAsString);
         Optional<JsonValue> context = valueFromString(contextAsString);
@@ -125,12 +115,10 @@ public class TitaniumOperator {
         documentToFile(result, output);
     }
 
-    private Optional<JsonValue> valueFromString(
-            String string) throws LpException {
+    private Optional<JsonValue> valueFromString(String string) throws LpException {
         Reader reader = new StringReader(string);
         try {
-            Optional<JsonStructure> structure =
-                    JsonDocument.of(reader).getJsonContent();
+            Optional<JsonStructure> structure = JsonDocument.of(reader).getJsonContent();
             if (structure.isEmpty()) {
                 return Optional.empty();
             }
@@ -140,8 +128,7 @@ public class TitaniumOperator {
         }
         String trimString = string.strip();
         if (trimString.startsWith("\"") && trimString.endsWith("\"")) {
-            return Optional.of(Json.createValue(
-                    trimString.substring(1, trimString.length() - 1)));
+            return Optional.of(Json.createValue(trimString.substring(1, trimString.length() - 1)));
         }
         throw new LpException("Invalid context");
     }
@@ -152,8 +139,7 @@ public class TitaniumOperator {
      * this so the root is an array and the context is set to each item in
      * the array.
      */
-    private JsonStructure sanitizeToArray(
-            JsonStructure framedJson, Optional<JsonValue> context) {
+    private JsonStructure sanitizeToArray(JsonStructure framedJson, Optional<JsonValue> context) {
         if (!JsonUtils.isObject(framedJson)) {
             return framedJson;
         }
@@ -175,8 +161,7 @@ public class TitaniumOperator {
     /**
      * Wrap the object in an array and replace context.
      */
-    private JsonStructure sanitizeEntityToArray(
-            JsonObject entity, Optional<JsonValue> context) {
+    private JsonStructure sanitizeEntityToArray(JsonObject entity, Optional<JsonValue> context) {
         JsonObjectBuilder objectBuilder = Json.createObjectBuilder(entity);
         setJsonLdContext(objectBuilder, context);
         JsonArrayBuilder resultBuilder = Json.createArrayBuilder();
@@ -184,8 +169,7 @@ public class TitaniumOperator {
         return resultBuilder.build();
     }
 
-    private void setJsonLdContext(
-            JsonObjectBuilder objectBuilder, Optional<JsonValue> context) {
+    private void setJsonLdContext(JsonObjectBuilder objectBuilder, Optional<JsonValue> context) {
         if (context.isEmpty()) {
             objectBuilder.remove("@context");
         } else {
@@ -196,8 +180,7 @@ public class TitaniumOperator {
     /**
      * Replace @graph with root array, and add context to each entity.
      */
-    private JsonStructure sanitizeGraphToArray(
-            JsonArray graph, Optional<JsonValue> context) {
+    private JsonStructure sanitizeGraphToArray(JsonArray graph, Optional<JsonValue> context) {
         JsonArrayBuilder resultBuilder = Json.createArrayBuilder();
         for (JsonValue graphItem : graph) {
             JsonObject graphItemObject;
@@ -208,12 +191,10 @@ public class TitaniumOperator {
                 resultBuilder.add(graphItem);
                 continue;
             }
-            JsonObjectBuilder objectBuilder =
-                    Json.createObjectBuilder(graphItemObject);
+            JsonObjectBuilder objectBuilder = Json.createObjectBuilder(graphItemObject);
             setJsonLdContext(objectBuilder, context);
             resultBuilder.add(objectBuilder.build());
         }
         return resultBuilder.build();
     }
-
 }

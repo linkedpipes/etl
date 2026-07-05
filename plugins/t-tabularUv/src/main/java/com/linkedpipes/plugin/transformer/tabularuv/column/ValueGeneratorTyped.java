@@ -1,12 +1,11 @@
 package com.linkedpipes.plugin.transformer.tabularuv.column;
 
 import com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed;
+import java.util.List;
+import java.util.Map;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
-
-import java.util.List;
-import java.util.Map;
 
 public class ValueGeneratorTyped extends ValueGeneratorReplace {
 
@@ -30,10 +29,8 @@ public class ValueGeneratorTyped extends ValueGeneratorReplace {
     }
 
     @Override
-    public void compile(Map<String, Integer> nameToIndex,
-            ValueFactory valueFactory) throws ParseFailed {
+    public void compile(Map<String, Integer> nameToIndex, ValueFactory valueFactory) throws ParseFailed {
         super.compile(nameToIndex, valueFactory);
         typeUri = valueFactory.createIRI(typeStr);
     }
-
 }

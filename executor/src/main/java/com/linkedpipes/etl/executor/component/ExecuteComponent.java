@@ -2,7 +2,6 @@ package com.linkedpipes.etl.executor.component;
 
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import com.linkedpipes.etl.executor.plugin.v1.PluginV1Instance;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
@@ -12,16 +11,16 @@ import com.linkedpipes.etl.executor.execution.ExecutionObserver;
 import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
+import com.linkedpipes.etl.executor.plugin.v1.PluginV1Instance;
 import com.linkedpipes.etl.executor.rdf.RdfSourceWrap;
 import com.linkedpipes.etl.executor.rdf.TripleWriterWrap;
+import com.linkedpipes.etl.rdf.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
 import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
-import com.linkedpipes.etl.rdf.rdf4j.Rdf4jSource;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
  * The component is initialized with data units and configuration in
@@ -32,11 +31,9 @@ import java.util.Map;
  */
 class ExecuteComponent implements ComponentExecutor {
 
-    private static final String RUNTIME_CONFIGURATION_GRAPH
-            = "http://localhost/runtimeConfiguration";
+    private static final String RUNTIME_CONFIGURATION_GRAPH = "http://localhost/runtimeConfiguration";
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ExecuteComponent.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExecuteComponent.class);
 
     private final Pipeline pipeline;
 
@@ -69,12 +66,10 @@ class ExecuteComponent implements ComponentExecutor {
     public boolean execute(DataUnitManager dataUnitManager) {
         try {
             execution.onExecuteComponentInitializing(execComponent);
-            Map<String, DataUnit> dataUnits =
-                    dataUnitManager.onComponentWillExecute(execComponent);
+            Map<String, DataUnit> dataUnits = dataUnitManager.onComponentWillExecute(execComponent);
             initialize(dataUnits);
             executeInstance();
-            execution.onExecuteComponentSuccessful(
-                    execComponent, context.isCancelled());
+            execution.onExecuteComponentSuccessful(execComponent, context.isCancelled());
         } catch (ExecutorException ex) {
             try {
                 dataUnitManager.onComponentDidExecute(execComponent);
@@ -99,11 +94,9 @@ class ExecuteComponent implements ComponentExecutor {
         context.cancel();
     }
 
-    public void initialize(Map<String, DataUnit> dataUnits)
-            throws ExecutorException {
+    public void initialize(Map<String, DataUnit> dataUnits) throws ExecutorException {
         if (instance == null) {
-            throw new ExecutorException("The component instance is null: {}",
-                    pplComponent.getIri());
+            throw new ExecutorException("The component instance is null: {}", pplComponent.getIri());
         }
         try {
             instance.initialize(dataUnits, context);
@@ -117,11 +110,9 @@ class ExecuteComponent implements ComponentExecutor {
         executeSequential(instance);
     }
 
-    private void executeSequential(SequentialExecution executable)
-            throws ExecutorException {
+    private void executeSequential(SequentialExecution executable) throws ExecutorException {
         SequentialComponentExecutor executor =
-                new SequentialComponentExecutor(
-                        executable, execution, execComponent, context);
+                new SequentialComponentExecutor(executable, execution, execComponent, context);
         Thread thread = new Thread(executor, pplComponent.getLabel());
         thread.start();
         waitForThreadToFinish(thread);
@@ -153,48 +144,37 @@ class ExecuteComponent implements ComponentExecutor {
         }
 
         String resultGraph = pplComponent.getIri() + "/configuration/effective";
-        BackendTripleWriter writer = pipeline.configurationWriter(
-                pplComponent, resultGraph);
+        BackendTripleWriter writer = pipeline.configurationWriter(pplComponent, resultGraph);
 
         if (runtimeConfig == null) {
-            Configuration.prepareConfiguration(
-                    resultGraph, pplComponent,
-                    null,
-                    null,
-                    writer, pipeline);
+            Configuration.prepareConfiguration(resultGraph, pplComponent, null, null, writer, pipeline);
         } else {
             Configuration.prepareConfiguration(
-                    resultGraph, pplComponent,
+                    resultGraph,
+                    pplComponent,
                     wrapRuntimeConfiguration(runtimeConfig),
                     RUNTIME_CONFIGURATION_GRAPH,
-                    writer, pipeline);
+                    writer,
+                    pipeline);
         }
 
         try {
-            instance.loadConfiguration(new RdfSourceWrap(
-                    pipeline.getSource(),
-                    resultGraph));
+            instance.loadConfiguration(new RdfSourceWrap(pipeline.getSource(), resultGraph));
         } catch (LpException ex) {
-            throw new ExecutorException(
-                    "Can't load component configuration", ex);
+            throw new ExecutorException("Can't load component configuration", ex);
         }
     }
 
-    private BackendRdfSource wrapRuntimeConfiguration(
-            RuntimeConfiguration runtimeConfiguration)
+    private BackendRdfSource wrapRuntimeConfiguration(RuntimeConfiguration runtimeConfiguration)
             throws ExecutorException {
         BackendRdfSource source = Rdf4jSource.createInMemory();
-        BackendTripleWriter writer =
-                source.getTripleWriter(RUNTIME_CONFIGURATION_GRAPH);
+        BackendTripleWriter writer = source.getTripleWriter(RUNTIME_CONFIGURATION_GRAPH);
         try {
             runtimeConfiguration.write(new TripleWriterWrap(writer));
             writer.flush();
         } catch (LpException | RdfUtilsException ex) {
-            throw new ExecutorException(
-                    "Can't copy runtime configuration.", ex);
+            throw new ExecutorException("Can't copy runtime configuration.", ex);
         }
         return source;
     }
-
-
 }

@@ -5,6 +5,9 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import java.net.IDN;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -25,18 +28,12 @@ import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.IDN;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Use scrollable cursors to execute SPARQL construct.
  */
-public final class SparqlEndpointConstructScrollableCursor
-        implements Component, SequentialExecution {
+public final class SparqlEndpointConstructScrollableCursor implements Component, SequentialExecution {
 
-    private static final Logger LOG = LoggerFactory.getLogger(
-            SparqlEndpointConstructScrollableCursor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SparqlEndpointConstructScrollableCursor.class);
 
     @Component.InputPort(iri = "OutputFiles")
     public WritableChunkedTriples outputRdf;
@@ -95,31 +92,24 @@ public final class SparqlEndpointConstructScrollableCursor
         if (configuration.isUseAuthentication()) {
             provider.setCredentials(
                     new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
-                    new UsernamePasswordCredentials(
-                            configuration.getUsername(),
-                            configuration.getPassword()));
+                    new UsernamePasswordCredentials(configuration.getUsername(), configuration.getPassword()));
         }
-        return HttpClients.custom()
-                .setDefaultCredentialsProvider(provider).build();
+        return HttpClients.custom().setDefaultCredentialsProvider(provider).build();
     }
 
     /**
      * @param repository
      * @param offset
      */
-    protected void executeQuery(Repository repository, int offset,
-            List<Statement> buffer) throws LpException {
-        try (final RepositoryConnection connection =
-                     repository.getConnection()) {
+    protected void executeQuery(Repository repository, int offset, List<Statement> buffer) throws LpException {
+        try (final RepositoryConnection connection = repository.getConnection()) {
             //
-            final GraphQuery query = connection.prepareGraphQuery(
-                    QueryLanguage.SPARQL, prepareQuery(offset));
+            final GraphQuery query = connection.prepareGraphQuery(QueryLanguage.SPARQL, prepareQuery(offset));
             //
             final SimpleDataset dataset = new SimpleDataset();
             for (String iri : configuration.getDefaultGraphs()) {
                 if (!iri.isEmpty()) {
-                    dataset.addDefaultGraph(
-                            SimpleValueFactory.getInstance().createIRI(iri));
+                    dataset.addDefaultGraph(SimpleValueFactory.getInstance().createIRI(iri));
                 }
             }
             query.setDataset(dataset);
@@ -139,12 +129,11 @@ public final class SparqlEndpointConstructScrollableCursor
     }
 
     protected String prepareQuery(int offset) {
-        return configuration.getPrefixes() + "\n CONSTRUCT {\n" +
-                configuration.getOuterConstruct() + "\n } WHERE { {" +
-                configuration.getInnerSelect() +
-                "\n} }" +
-                "\nLIMIT " + Integer.toString(configuration.getPageSize()) +
-                "\nOFFSET " + Integer.toString(offset);
+        return configuration.getPrefixes() + "\n CONSTRUCT {\n" + configuration.getOuterConstruct()
+                + "\n } WHERE { {" + configuration.getInnerSelect()
+                + "\n} }"
+                + "\nLIMIT "
+                + Integer.toString(configuration.getPageSize()) + "\nOFFSET "
+                + Integer.toString(offset);
     }
-
 }

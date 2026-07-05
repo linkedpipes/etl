@@ -11,24 +11,22 @@ import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.plugin.api.v2.ComponentV2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ComponentV2.IRI(HttpGetFilesVocabulary.IRI)
 public final class HttpGetFiles extends TaskExecution<DownloadTask> {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(HttpGetFiles.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HttpGetFiles.class);
 
     @ContainsConfiguration
     @InputPort(iri = "Configuration")
@@ -58,8 +56,7 @@ public final class HttpGetFiles extends TaskExecution<DownloadTask> {
     protected TaskExecutionConfiguration getExecutionConfiguration() {
         TaskExecutionConfiguration result = new TaskExecutionConfiguration();
         result.numberOfThreads = configuration.getThreads();
-        result.numberOfThreadsPerGroup =
-                configuration.getThreadsPerGroup();
+        result.numberOfThreadsPerGroup = configuration.getThreadsPerGroup();
         result.skipFailedTasks = configuration.isSkipOnError();
         result.numberOfRetries = configuration.getRetryCount();
         result.waitAfterFailedTaskMs = configuration.getRetryWaitTimeMs();
@@ -70,8 +67,7 @@ public final class HttpGetFiles extends TaskExecution<DownloadTask> {
     @Override
     protected List<DownloadTask> loadTasks() throws LpException {
         RdfSource source = configurationRdf.asRdfSource();
-        List<String> resources =
-                source.getByType(HttpGetFilesVocabulary.REFERENCE);
+        List<String> resources = source.getByType(HttpGetFilesVocabulary.REFERENCE);
         List<DownloadTask> result = new ArrayList<>(resources.size());
         for (String resource : resources) {
             DownloadTask task = new DownloadTask();
@@ -88,52 +84,39 @@ public final class HttpGetFiles extends TaskExecution<DownloadTask> {
 
     @Override
     protected TaskConsumer<DownloadTask> createConsumer() {
-        return new DownloadTaskExecutor(
-                configuration, output, statementsConsumer, reportWriter);
+        return new DownloadTaskExecutor(configuration, output, statementsConsumer, reportWriter);
     }
 
     @Override
-    protected void onExecutionWillBegin(List<DownloadTask> tasks)
-            throws LpException {
+    protected void onExecutionWillBegin(List<DownloadTask> tasks) throws LpException {
         super.onExecutionWillBegin(tasks);
         setTrustAllCerts();
     }
 
     private void setTrustAllCerts() throws LpException {
         LOG.warn("'Trust all certs' policy used -> security risk!");
-        final TrustManager[] trustAllCerts = new TrustManager[]{
-                new X509TrustManager() {
-                    @Override
-                    public java.security.cert.X509Certificate[]
-                    getAcceptedIssuers() {
-                        return null;
-                    }
-
-                    @Override
-                    public void checkClientTrusted(
-                            java.security.cert.X509Certificate[] certs,
-                            String authType) {
-                    }
-
-                    @Override
-                    public void checkServerTrusted(
-                            java.security.cert.X509Certificate[] certs,
-                            String authType) {
-                    }
+        final TrustManager[] trustAllCerts = new TrustManager[] {
+            new X509TrustManager() {
+                @Override
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
                 }
+
+                @Override
+                public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {}
+
+                @Override
+                public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {}
+            }
         };
         // Install the all-trusting trust manager.
         try {
             final SSLContext sc = SSLContext.getInstance("SSL");
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(
-                    sc.getSocketFactory());
-            HttpsURLConnection.setDefaultHostnameVerifier(
-                    (String urlHostName, SSLSession session) -> true);
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            HttpsURLConnection.setDefaultHostnameVerifier((String urlHostName, SSLSession session) -> true);
         } catch (KeyManagementException | NoSuchAlgorithmException ex) {
-            throw new LpException(
-                    "Can't set trust all certificates.", ex);
+            throw new LpException("Can't set trust all certificates.", ex);
         }
     }
-
 }

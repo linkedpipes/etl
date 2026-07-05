@@ -1,10 +1,7 @@
 package com.linkedpipes.etl.rdf.utils.pojo;
 
-import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -16,6 +13,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Can be used to load values into a properties of an object.
@@ -32,8 +31,7 @@ class FieldLoader {
 
     private static final Set<Class<?>> WRAP_TYPES;
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(FieldLoader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FieldLoader.class);
 
     static {
         WRAP_TYPES = new HashSet<>();
@@ -63,24 +61,20 @@ class FieldLoader {
      * <p>If the extendExisting is false, the collection is cleared before
      * adding any object and new complex objects are created.
      */
-    public Object set(
-            Object target, Field field, BackendRdfValue value,
-            boolean extendExisting)
+    public Object set(Object target, Field field, BackendRdfValue value, boolean extendExisting)
             throws LoaderException {
         Class<?> fieldType = field.getType();
         if (Collection.class.isAssignableFrom(fieldType)) {
             return setCollection(target, field, value, extendExisting);
         } else if (isPrimitive(fieldType)) {
-            FieldUtils.setValue(target, field,
-                    valueToPrimitive(fieldType, value));
+            FieldUtils.setValue(target, field, valueToPrimitive(fieldType, value));
         } else if (fieldType.isEnum()) {
             FieldUtils.setValue(target, field, valueToEnum(fieldType, value));
         } else if (fieldType.isArray()) {
             throw new LoaderException("Arrays are not supported.");
         } else {
             if (LangString.class.isAssignableFrom(fieldType)) {
-                FieldUtils.setValue(target, field,
-                        valueToStringLang(fieldType, value));
+                FieldUtils.setValue(target, field, valueToStringLang(fieldType, value));
                 return null;
             }
             // It's a regular object.
@@ -98,26 +92,20 @@ class FieldLoader {
         return null;
     }
 
-    private static Object setCollection(
-            Object target, Field field, BackendRdfValue value,
-            boolean extendExisting) throws LoaderException {
+    private static Object setCollection(Object target, Field field, BackendRdfValue value, boolean extendExisting)
+            throws LoaderException {
         Class<?> genericType = getCollectionType(field.getGenericType());
         if (Collection.class.isAssignableFrom(genericType)) {
-            throw new LoaderException(
-                    "Nested collection are not supported.");
+            throw new LoaderException("Nested collection are not supported.");
         } else if (isPrimitive(genericType)) {
-            addToCollection(target, field,
-                    valueToPrimitive(genericType, value), extendExisting);
+            addToCollection(target, field, valueToPrimitive(genericType, value), extendExisting);
         } else if (genericType.isEnum()) {
-            addToCollection(target, field, valueToEnum(genericType, value),
-                    extendExisting);
+            addToCollection(target, field, valueToEnum(genericType, value), extendExisting);
         } else if (genericType.isArray()) {
             throw new LoaderException("Arrays are not supported.");
         } else {
             if (LangString.class.isAssignableFrom(genericType)) {
-                addToCollection(target, field,
-                        valueToStringLang(genericType, value),
-                        extendExisting);
+                addToCollection(target, field, valueToStringLang(genericType, value), extendExisting);
                 return null;
             } else {
                 final Object newObject = createInstance(genericType);
@@ -128,16 +116,14 @@ class FieldLoader {
         return null;
     }
 
-    private static void addToCollection(
-            Object object, Field field, Object value, boolean extend)
+    private static void addToCollection(Object object, Field field, Object value, boolean extend)
             throws LoaderException {
         Collection collection = (Collection) FieldUtils.getValue(object, field);
         if (collection == null) {
-            throw new LoaderException(
-                    "Collection must be initialized prior to loading."
-                            + " Collection: '" + field.getName()
-                            + "' on class: '"
-                            + object.getClass().getCanonicalName() + "'");
+            throw new LoaderException("Collection must be initialized prior to loading."
+                    + " Collection: '" + field.getName()
+                    + "' on class: '"
+                    + object.getClass().getCanonicalName() + "'");
         }
         if (!extend) {
             collection.clear();
@@ -157,16 +143,14 @@ class FieldLoader {
         return Enum.valueOf((Class<Enum>) type, value.asString());
     }
 
-    private static Object valueToStringLang(
-            Class<?> fieldType, BackendRdfValue value) throws LoaderException {
+    private static Object valueToStringLang(Class<?> fieldType, BackendRdfValue value) throws LoaderException {
         LangString langString = (LangString) createInstance(fieldType);
         String language = value.getLanguage();
         langString.setValue(value.asString(), language);
         return langString;
     }
 
-    private static Object valueToPrimitive(Class<?> type, BackendRdfValue value)
-            throws LoaderException {
+    private static Object valueToPrimitive(Class<?> type, BackendRdfValue value) throws LoaderException {
         try {
             if (type == String.class) {
                 return value.asString();
@@ -198,8 +182,7 @@ class FieldLoader {
         return fieldClass.isPrimitive() || WRAP_TYPES.contains(fieldClass);
     }
 
-    private static Class<?> getCollectionType(Type type)
-            throws LoaderException {
+    private static Class<?> getCollectionType(Type type) throws LoaderException {
         if (!(type instanceof ParameterizedType)) {
             LOG.warn("Superclass it not instance of ParameterizedType");
             return null;
@@ -207,14 +190,11 @@ class FieldLoader {
         Type[] params = ((ParameterizedType) type).getActualTypeArguments();
         // We know there should be just one for Collection.
         if (params.length != 1) {
-            throw new LoaderException("Unexpected number of generic types: "
-                    + params.length + " (1 expected)");
+            throw new LoaderException("Unexpected number of generic types: " + params.length + " (1 expected)");
         }
         if (!(params[0] instanceof Class)) {
-            throw new LoaderException(
-                    "Unexpected type: " + params[0].toString());
+            throw new LoaderException("Unexpected type: " + params[0].toString());
         }
         return (Class<?>) params[0];
     }
-
 }

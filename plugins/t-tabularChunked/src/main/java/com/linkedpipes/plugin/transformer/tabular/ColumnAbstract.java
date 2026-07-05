@@ -1,11 +1,10 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import java.util.List;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-
-import java.util.List;
 
 /**
  * Default predicate: configuration.url + "#"
@@ -19,10 +18,8 @@ abstract class ColumnAbstract {
     public static class MissingColumnValue extends Exception {
 
         public MissingColumnValue(String name, int rowNumber) {
-            super("Missing value for required column: '" + name + "' on row "
-                    + Integer.toString(rowNumber));
+            super("Missing value for required column: '" + name + "' on row " + Integer.toString(rowNumber));
         }
-
     }
 
     public static class MissingNameInHeader extends Exception {
@@ -30,11 +27,9 @@ abstract class ColumnAbstract {
         public MissingNameInHeader(String name) {
             super("Missing column with name '" + name + "'.");
         }
-
     }
 
-    protected static final ValueFactory VALUE_FACTORY
-            = SimpleValueFactory.getInstance();
+    protected static final ValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
 
     protected final String name;
 
@@ -46,8 +41,7 @@ abstract class ColumnAbstract {
 
     private int valueIndex;
 
-    ColumnAbstract(String name, boolean required, ResourceTemplate aboutUrl,
-            UrlTemplate predicate) {
+    ColumnAbstract(String name, boolean required, ResourceTemplate aboutUrl, UrlTemplate predicate) {
         this.name = name;
         this.required = required;
         this.aboutUrl = aboutUrl;
@@ -60,8 +54,7 @@ abstract class ColumnAbstract {
      * @param tableUri
      * @param header
      */
-    public void initialize(String tableUri, List<String> header)
-            throws MissingNameInHeader, InvalidTemplate {
+    public void initialize(String tableUri, List<String> header) throws MissingNameInHeader, InvalidTemplate {
         aboutUrl.initialize(tableUri, header);
         predicate.initialize(tableUri, header);
         valueIndex = -1;
@@ -83,8 +76,7 @@ abstract class ColumnAbstract {
      * @param rowNumber
      * @return Must not return null.
      */
-    public abstract List<Resource> emit(RdfOutput outputConsumer,
-            List<String> row, int rowNumber)
+    public abstract List<Resource> emit(RdfOutput outputConsumer, List<String> row, int rowNumber)
             throws LpException, MissingColumnValue;
 
     /**
@@ -94,8 +86,7 @@ abstract class ColumnAbstract {
      * @param rowNumber
      * @return Null if the value is missing.
      */
-    protected String getValue(List<String> row, int rowNumber)
-            throws MissingColumnValue {
+    protected String getValue(List<String> row, int rowNumber) throws MissingColumnValue {
         if (row.size() <= valueIndex) {
             if (required) {
                 throw new MissingColumnValue(this.name, rowNumber);
@@ -106,5 +97,4 @@ abstract class ColumnAbstract {
             return row.get(valueIndex);
         }
     }
-
 }

@@ -5,5 +5,4 @@ import cz.skodape.hdt.core.PropertySource;
 public interface SourceConfiguration {
 
     PropertySource createSource();
-
 }

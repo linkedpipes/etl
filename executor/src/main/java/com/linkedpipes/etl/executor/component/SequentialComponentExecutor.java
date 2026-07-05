@@ -9,7 +9,6 @@ import org.slf4j.MDC;
 
 class SequentialComponentExecutor implements Runnable {
 
-
     private final SequentialExecution executable;
 
     private ExecutionObserver execution;
@@ -40,8 +39,7 @@ class SequentialComponentExecutor implements Runnable {
             execution.onComponentUserCodeSuccessful(component);
         } catch (Throwable ex) {
             execution.onComponentUserCodeFailed(component, ex);
-            exception = new ExecutorException(
-                    "PipelineComponent execution failed.", ex);
+            exception = new ExecutorException("PipelineComponent execution failed.", ex);
         }
         MDC.remove(ExecutionLogger.EXECUTION_MDC);
     }
@@ -49,5 +47,4 @@ class SequentialComponentExecutor implements Runnable {
     public ExecutorException getException() {
         return exception;
     }
-    
 }

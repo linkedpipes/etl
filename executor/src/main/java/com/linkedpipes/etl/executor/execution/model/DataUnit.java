@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.execution.model;
 
 import com.linkedpipes.etl.executor.pipeline.model.Port;
-
 import java.io.File;
 
 /**
@@ -20,8 +19,11 @@ public class DataUnit {
     private final String relativeSaveDataPath;
 
     public DataUnit(
-            Port dataUnit, String debugVirtualPathSuffix,
-            File saveDirectory, File loadDirectory, String relativeDataPath) {
+            Port dataUnit,
+            String debugVirtualPathSuffix,
+            File saveDirectory,
+            File loadDirectory,
+            String relativeDataPath) {
         this.port = dataUnit;
         this.debugVirtualPathSuffix = debugVirtualPathSuffix;
         this.saveDirectory = saveDirectory;
@@ -29,8 +31,7 @@ public class DataUnit {
         this.relativeSaveDataPath = relativeDataPath;
     }
 
-    public DataUnit(
-            Port dataUnit, File loadDirectory) {
+    public DataUnit(Port dataUnit, File loadDirectory) {
         this.port = dataUnit;
         this.debugVirtualPathSuffix = null;
         this.saveDirectory = null;
@@ -61,5 +62,4 @@ public class DataUnit {
     public Port getPort() {
         return this.port;
     }
-
 }

@@ -1,14 +1,13 @@
 package com.linkedpipes.plugin.transformer.rdfdifftoevent;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Iterator;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
-
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Iterator;
 
 /**
  * Iterates over distinct IRI subjects in a named graph, in ascending
@@ -53,15 +52,13 @@ class SubjectsIterator implements Iterator<IRI> {
         }
 
         // Queue exhausted — fetch the next page.
-        String query =
-                "SELECT DISTINCT ?s " +
-                "WHERE { GRAPH <" + graphIri + "> { ?s ?p ?o . } " +
-                "FILTER(isIRI(?s)) } " +
-                "ORDER BY ?s " +
-                "LIMIT " + PAGE_SIZE + " OFFSET " + offset;
+        String query = "SELECT DISTINCT ?s " + "WHERE { GRAPH <"
+                + graphIri + "> { ?s ?p ?o . } " + "FILTER(isIRI(?s)) } "
+                + "ORDER BY ?s "
+                + "LIMIT "
+                + PAGE_SIZE + " OFFSET " + offset;
 
-        try (TupleQueryResult result =
-                     connection.prepareTupleQuery(query).evaluate()) {
+        try (TupleQueryResult result = connection.prepareTupleQuery(query).evaluate()) {
             for (BindingSet binding : result) {
                 queue.add((IRI) binding.getValue("s"));
             }

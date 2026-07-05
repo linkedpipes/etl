@@ -7,15 +7,14 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.Optional;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.*;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
-
-import java.io.*;
-import java.nio.charset.Charset;
-import java.util.Optional;
 
 public final class RdfToFileChunked implements Component, SequentialExecution {
 
@@ -49,11 +48,9 @@ public final class RdfToFileChunked implements Component, SequentialExecution {
     }
 
     private void prepareOutputFormat() throws LpException {
-        Optional<RDFFormat> rdfFormat = Rio.getParserFormatForMIMEType(
-                configuration.getFileType());
+        Optional<RDFFormat> rdfFormat = Rio.getParserFormatForMIMEType(configuration.getFileType());
         if (!rdfFormat.isPresent()) {
-            throw new LpException("Invalid output file type: {}",
-                    configuration.getFileName());
+            throw new LpException("Invalid output file type: {}", configuration.getFileName());
         }
         outputFormat = rdfFormat.get();
     }
@@ -65,8 +62,7 @@ public final class RdfToFileChunked implements Component, SequentialExecution {
     private void export() throws LpException {
         reportStart();
         try (FileOutputStream outStream = new FileOutputStream(outputFile);
-             OutputStreamWriter outWriter = new OutputStreamWriter(
-                     outStream, Charset.forName(FILE_ENCODE))) {
+                OutputStreamWriter outWriter = new OutputStreamWriter(outStream, Charset.forName(FILE_ENCODE))) {
             RDFWriter writer = createWriter(outWriter);
             writer.startRDF();
             writePrefixes(writer);
@@ -109,39 +105,30 @@ public final class RdfToFileChunked implements Component, SequentialExecution {
         if (configuration.getGraphUri() == null) {
             return null;
         }
-        return SimpleValueFactory.getInstance().createIRI(
-                configuration.getGraphUri());
+        return SimpleValueFactory.getInstance().createIRI(configuration.getGraphUri());
     }
 
-    private void writePrefixes(RDFWriter writer)
-            throws LpException {
+    private void writePrefixes(RDFWriter writer) throws LpException {
         if (configuration.getPrefixes() == null) {
             return;
         }
         final RDFParser parser = Rio.createParser(RDFFormat.TURTLE);
         final InputStream stream;
         try {
-            stream = new ByteArrayInputStream(
-                    configuration.getPrefixes().getBytes("UTF-8"));
+            stream = new ByteArrayInputStream(configuration.getPrefixes().getBytes("UTF-8"));
         } catch (UnsupportedEncodingException ex) {
-            throw new LpException("Unsupported encoding exception.",
-                    ex);
+            throw new LpException("Unsupported encoding exception.", ex);
         }
         try {
             parser.setRDFHandler(new AbstractRDFHandler() {
                 @Override
-                public void handleNamespace(String prefix, String uri)
-                        throws RDFHandlerException {
+                public void handleNamespace(String prefix, String uri) throws RDFHandlerException {
                     writer.handleNamespace(prefix, uri);
                 }
             });
             parser.parse(stream, "http://localhost/base");
         } catch (IOException ex) {
-            throw new LpException(
-                    "Can't read prefixes.", ex);
+            throw new LpException("Can't read prefixes.", ex);
         }
-
     }
-
-
 }

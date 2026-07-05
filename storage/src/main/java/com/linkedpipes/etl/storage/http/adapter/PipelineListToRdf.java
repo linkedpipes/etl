@@ -7,20 +7,16 @@ import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.assistant.AssistantService;
 import com.linkedpipes.etl.storage.assistant.model.PipelineInfo;
 import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
-import org.eclipse.rdf4j.model.Resource;
-
 import java.util.Set;
+import org.eclipse.rdf4j.model.Resource;
 
 public class PipelineListToRdf {
 
-    private static final String PIPELINE =
-            "http://linkedpipes.com/ontology/Pipeline";
+    private static final String PIPELINE = "http://linkedpipes.com/ontology/Pipeline";
 
-    private static final String HAS_LABEL =
-            "http://www.w3.org/2004/02/skos/core#prefLabel";
+    private static final String HAS_LABEL = "http://www.w3.org/2004/02/skos/core#prefLabel";
 
-    private static final String HAS_TAG =
-            "http://etl.linkedpipes.com/ontology/tag";
+    private static final String HAS_TAG = "http://etl.linkedpipes.com/ontology/tag";
 
     /**
      * Implementation using pipeline facade.
@@ -29,8 +25,7 @@ public class PipelineListToRdf {
      * <p>
      * This method can be removed at any time in the future.
      */
-    public static Statements asRdf(PipelineFacade pipelineFacade)
-            throws StorageException {
+    public static Statements asRdf(PipelineFacade pipelineFacade) throws StorageException {
         StatementsBuilder result = Statements.arrayList().builder();
         Set<Resource> pipelineResources = pipelineFacade.getPipelines();
         for (Resource resource : pipelineResources) {
@@ -57,5 +52,4 @@ public class PipelineListToRdf {
         }
         return result;
     }
-
 }

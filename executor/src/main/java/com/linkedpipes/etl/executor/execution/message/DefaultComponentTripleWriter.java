@@ -3,13 +3,12 @@ package com.linkedpipes.etl.executor.execution.message;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
 import com.linkedpipes.etl.rdf.utils.RdfFormatter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
+import java.util.Collection;
+import java.util.Date;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-
-import java.util.Collection;
-import java.util.Date;
 
 class DefaultComponentTripleWriter implements TripleWriter {
 
@@ -21,8 +20,7 @@ class DefaultComponentTripleWriter implements TripleWriter {
 
     private final RdfFormatter format = new RdfFormatter();
 
-    public DefaultComponentTripleWriter(
-            Collection<Statement> statements, IRI graph) {
+    public DefaultComponentTripleWriter(Collection<Statement> statements, IRI graph) {
         this.statements = statements;
         this.graph = graph;
     }
@@ -63,8 +61,7 @@ class DefaultComponentTripleWriter implements TripleWriter {
         this.statements.add(this.valueFactory.createStatement(
                 this.valueFactory.createIRI(s),
                 this.valueFactory.createIRI(p),
-                this.valueFactory.createLiteral(
-                        o, this.valueFactory.createIRI(type)),
+                this.valueFactory.createLiteral(o, this.valueFactory.createIRI(type)),
                 this.graph));
     }
 
@@ -78,5 +75,4 @@ class DefaultComponentTripleWriter implements TripleWriter {
     public void flush() {
         // Do nothing here.
     }
-
 }

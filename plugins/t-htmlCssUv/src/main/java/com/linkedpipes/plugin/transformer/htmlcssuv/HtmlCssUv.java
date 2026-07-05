@@ -6,6 +6,11 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableGraphListDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.jsoup.Jsoup;
@@ -15,20 +20,13 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
-
 public class HtmlCssUv implements Component, SequentialExecution {
 
     public static final String WEB_PAGE_NAME = "webPage";
 
     public static final String SUBJECT_URI_TEMPLATE = "http://localhost/temp/";
 
-    public static final String RDF_TYPE_PREDICATE
-            = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
+    public static final String RDF_TYPE_PREDICATE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 
     private static final Logger LOG = LoggerFactory.getLogger(HtmlCssUv.class);
 
@@ -60,35 +58,27 @@ public class HtmlCssUv implements Component, SequentialExecution {
 
     @Override
     public void execute() throws LpException {
-        final IRI predicateSource = valueFactory.createIRI(
-                HtmlCssUvOntology.PREDICATE_SOURCE);
+        final IRI predicateSource = valueFactory.createIRI(HtmlCssUvOntology.PREDICATE_SOURCE);
         for (FilesDataUnit.Entry entry : inFilesHtml) {
             LOG.info("Parsing file: {}", entry);
             final File entryFile = entry.toFile();
-            final IRI rootSubject = valueFactory.createIRI(
-                    entryFile.toURI().toString());
+            final IRI rootSubject = valueFactory.createIRI(entryFile.toURI().toString());
             // Read and parse document.
             try {
                 final Document doc = Jsoup.parse(entryFile, null);
                 parse(valueFactory, doc, rootSubject);
             } catch (IOException ex) {
-                throw new LpException("Can't parse file: {}",
-                        entry.getFileName(), ex);
+                throw new LpException("Can't parse file: {}", entry.getFileName(), ex);
             }
             // Add "metadata"
-            if (config.getClassAsStr() != null
-                    && !config.getClassAsStr().isEmpty()) {
+            if (config.getClassAsStr() != null && !config.getClassAsStr().isEmpty()) {
                 // Class for root object.
-                final IRI rootClass =
-                        valueFactory.createIRI(config.getClassAsStr());
-                add(rootSubject, valueFactory.createIRI(
-                        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-                        rootClass);
+                final IRI rootClass = valueFactory.createIRI(config.getClassAsStr());
+                add(rootSubject, valueFactory.createIRI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), rootClass);
             }
             if (config.isSourceInformation()) {
                 // Symbolic name of a source file.
-                add(rootSubject, predicateSource,
-                        valueFactory.createLiteral(entry.getFileName()));
+                add(rootSubject, predicateSource, valueFactory.createLiteral(entry.getFileName()));
             }
             // Save
             outRdfData.execute((connection) -> {
@@ -98,14 +88,11 @@ public class HtmlCssUv implements Component, SequentialExecution {
         }
     }
 
-    private void parse(ValueFactory valueFactory, Document doc, IRI rootSubject)
-            throws LpException {
-        final IRI defaultHasPredicate =
-                createIri(valueFactory, config.getHasPredicateAsStr());
+    private void parse(ValueFactory valueFactory, Document doc, IRI rootSubject) throws LpException {
+        final IRI defaultHasPredicate = createIri(valueFactory, config.getHasPredicateAsStr());
         // Parse.
         final Stack<NamedData> states = new Stack();
-        states.add(new NamedData(WEB_PAGE_NAME, doc.getAllElements(),
-                rootSubject, null, null));
+        states.add(new NamedData(WEB_PAGE_NAME, doc.getAllElements(), rootSubject, null, null));
         final IRI rdfType = valueFactory.createIRI(RDF_TYPE_PREDICATE);
         while (!states.isEmpty()) {
             final NamedData state = states.pop();
@@ -122,25 +109,21 @@ public class HtmlCssUv implements Component, SequentialExecution {
                         checkElementNotNull(state);
                         // Check for attribute existence.
                         // If it exists then extract its value.
-                        if (state.elements.size() == 1
-                                && state.elements.get(0)
-                                .hasAttr(action.getActionData())) {
-                            states.add(new NamedData(state, action,
-                                    state.elements.get(0)
-                                            .attr(action.getActionData())));
+                        if (state.elements.size() == 1 && state.elements.get(0).hasAttr(action.getActionData())) {
+                            states.add(new NamedData(
+                                    state, action, state.elements.get(0).attr(action.getActionData())));
                         } else {
                             throw new LpException(
-                                    "Element does not have required attribute:" +
-                                            "{} action: {} html: {}",
-                                    action.getActionData(), action.getName(),
+                                    "Element does not have required attribute:" + "{} action: {} html: {}",
+                                    action.getActionData(),
+                                    action.getName(),
                                     state.elements.html());
                         }
                         break;
                     case HTML:
                         checkElementNotNull(state);
                         // Get value as html.
-                        states.add(new NamedData(state, action,
-                                state.elements.html()));
+                        states.add(new NamedData(state, action, state.elements.html()));
                         break;
                     case OUTPUT:
                         // Output string value as RDF statement.
@@ -148,12 +131,12 @@ public class HtmlCssUv implements Component, SequentialExecution {
                             // Nothing to output.
                             if (state.elements != null) {
                                 throw new LpException(
-                                        "No string value but JSOUP elements set for: {}",
-                                        action.getActionData());
+                                        "No string value but JSOUP elements set for: {}", action.getActionData());
                             }
                         }
                         // Create triple.
-                        add(state.subject,
+                        add(
+                                state.subject,
                                 valueFactory.createIRI(action.getActionData()),
                                 valueFactory.createLiteral(state.value));
                         // Create triple with type.
@@ -161,51 +144,43 @@ public class HtmlCssUv implements Component, SequentialExecution {
                             add(state.subject, rdfType, state.subjectClass);
                         }
                         // Connect to parent subject.
-                        if (state.parentSubject != null
-                                && state.hasPredicate != null) {
-                            add(state.parentSubject,
-                                    state.hasPredicate, state.subject);
+                        if (state.parentSubject != null && state.hasPredicate != null) {
+                            add(state.parentSubject, state.hasPredicate, state.subject);
                         }
                         break;
                     case QUERY:
                         checkElementNotNull(state);
                         // Execute query and store result.
-                        states.add(new NamedData(state, action,
-                                state.elements.select(
-                                        action.getActionData())));
+                        states.add(new NamedData(state, action, state.elements.select(action.getActionData())));
                         break;
                     case SUBJECT:
                         // Test given data.
-                        final IRI hasPredicate = createIri(valueFactory,
-                                action.getActionData());
-                        final IRI newSubject = valueFactory.createIRI(
-                                SUBJECT_URI_TEMPLATE + Integer.toString(
-                                        subjectIndex++));
+                        final IRI hasPredicate = createIri(valueFactory, action.getActionData());
+                        final IRI newSubject =
+                                valueFactory.createIRI(SUBJECT_URI_TEMPLATE + Integer.toString(subjectIndex++));
                         // Create a new subject with given type and put
                         // it into the tree.
-                        states.add(new NamedData(state, action, newSubject,
+                        states.add(new NamedData(
+                                state,
+                                action,
+                                newSubject,
                                 null,
-                                hasPredicate == null ? defaultHasPredicate :
-                                        hasPredicate));
+                                hasPredicate == null ? defaultHasPredicate : hasPredicate));
                         break;
                     case TEXT:
                         checkElementNotNull(state);
                         // Get value as a string.
-                        states.add(new NamedData(state, action,
-                                state.elements.text()));
+                        states.add(new NamedData(state, action, state.elements.text()));
                         break;
                     case UNLIST:
                         checkElementNotNull(state);
                         for (Element subElement : state.elements) {
-                            states.add(new NamedData(state, action,
-                                    new Elements(subElement)));
+                            states.add(new NamedData(state, action, new Elements(subElement)));
                         }
                         break;
                     case SUBJECT_CLASS:
-                        final IRI classUri = createIri(valueFactory,
-                                action.getActionData());
-                        states.add(new NamedData(state, action, null, classUri,
-                                null));
+                        final IRI classUri = createIri(valueFactory, action.getActionData());
+                        states.add(new NamedData(state, action, null, classUri, null));
                         break;
                     default:
                         break;
@@ -227,9 +202,7 @@ public class HtmlCssUv implements Component, SequentialExecution {
 
     private void checkElementNotNull(NamedData state) throws LpException {
         if (state.elements == null) {
-            throw new LpException("Elements are null for action: {}",
-                    state.name);
+            throw new LpException("Elements are null for action: {}", state.name);
         }
     }
-
 }

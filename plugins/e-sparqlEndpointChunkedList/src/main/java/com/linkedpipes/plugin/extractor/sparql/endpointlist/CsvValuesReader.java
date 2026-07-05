@@ -1,9 +1,6 @@
 package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import org.supercsv.io.CsvListReader;
-import org.supercsv.prefs.CsvPreference;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.supercsv.io.CsvListReader;
+import org.supercsv.prefs.CsvPreference;
 
 class CsvValuesReader {
 
@@ -19,11 +18,9 @@ class CsvValuesReader {
     public interface ValueConsumer {
 
         void accept(String valuesClause) throws LpException;
-
     }
 
-    private final CsvPreference CSV_PREFERENCE
-            = new CsvPreference.Builder('"', ',', "\\n").build();
+    private final CsvPreference CSV_PREFERENCE = new CsvPreference.Builder('"', ',', "\\n").build();
 
     private final int chunkSize;
 
@@ -43,20 +40,16 @@ class CsvValuesReader {
     }
 
     public void readFile(File inputFile) throws LpException {
-        try (FileInputStream fileInputStream
-                     = new FileInputStream(inputFile);
-             InputStreamReader inputStreamReader
-                     = new InputStreamReader(fileInputStream, "UTF-8");
-             CsvListReader csvReader
-                     = new CsvListReader(inputStreamReader, CSV_PREFERENCE)) {
+        try (FileInputStream fileInputStream = new FileInputStream(inputFile);
+                InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
+                CsvListReader csvReader = new CsvListReader(inputStreamReader, CSV_PREFERENCE)) {
             readCsvTable(csvReader);
         } catch (IOException ex) {
             throw new LpException("Can't read input file.", ex);
         }
     }
 
-    private void readCsvTable(CsvListReader csvReader)
-            throws IOException, LpException {
+    private void readCsvTable(CsvListReader csvReader) throws IOException, LpException {
         this.header = csvReader.read();
         List<List<String>> rows = new ArrayList<>(chunkSize);
         List<String> row = csvReader.read();
@@ -108,5 +101,4 @@ class CsvValuesReader {
             return " <" + value + ">";
         }
     }
-
 }

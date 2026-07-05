@@ -4,9 +4,6 @@ import com.linkedpipes.etl.dataunit.core.AbstractDataUnit;
 import com.linkedpipes.etl.dataunit.core.DataUnitConfiguration;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,24 +12,21 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * TODO Do not require working directory for input data unit.
  */
-class DefaultFilesDataUnit
-        extends AbstractDataUnit
-        implements FilesDataUnit, WritableFilesDataUnit {
+class DefaultFilesDataUnit extends AbstractDataUnit implements FilesDataUnit, WritableFilesDataUnit {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(DefaultFilesDataUnit.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultFilesDataUnit.class);
 
     private final File writeDirectory;
 
     private final List<File> dataDirectories = new LinkedList<>();
 
-    public DefaultFilesDataUnit(
-            DataUnitConfiguration configuration,
-            Collection<String> sources) {
+    public DefaultFilesDataUnit(DataUnitConfiguration configuration, Collection<String> sources) {
         super(configuration, sources);
         //
         this.writeDirectory = configuration.getWorkingDirectory();
@@ -42,13 +36,11 @@ class DefaultFilesDataUnit
         }
     }
 
-
     @Override
     public File createFile(String fileName) throws LpException {
         File output = new File(this.writeDirectory, fileName);
         if (output.exists()) {
-            throw new LpException(
-                    "File already exists: {} ({})", fileName, output);
+            throw new LpException("File already exists: {} ({})", fileName, output);
         }
         output.getParentFile().mkdirs();
         return output;
@@ -66,8 +58,7 @@ class DefaultFilesDataUnit
     }
 
     @Override
-    public void initialize(Map<String, ManageableDataUnit> dataUnits)
-            throws LpException {
+    public void initialize(Map<String, ManageableDataUnit> dataUnits) throws LpException {
         initializeFromSource(dataUnits);
     }
 
@@ -94,8 +85,7 @@ class DefaultFilesDataUnit
         for (FilesDataUnit.Entry item : this) {
             ++size;
         }
-        LOG.debug("Computing size takes: {} ms",
-                (new Date()).getTime() - start.getTime());
+        LOG.debug("Computing size takes: {} ms", (new Date()).getTime() - start.getTime());
         return size;
     }
 
@@ -109,8 +99,7 @@ class DefaultFilesDataUnit
     }
 
     @Override
-    protected List<File> loadDataDirectories(File directory)
-            throws LpException {
+    protected List<File> loadDataDirectories(File directory) throws LpException {
         File dataFile = new File(directory, "data.json");
         boolean currentVersion = dataFile.exists();
         if (currentVersion) {
@@ -120,8 +109,7 @@ class DefaultFilesDataUnit
         }
     }
 
-    protected List<File> loadDataDirectoriesBackwardCompatible(File directory)
-            throws LpException {
+    protected List<File> loadDataDirectoriesBackwardCompatible(File directory) throws LpException {
         return loadRelativePaths(new File(directory, "data"), "data.json");
     }
 
@@ -133,8 +121,8 @@ class DefaultFilesDataUnit
         } else {
             throw new LpException(
                     "Can't merge with source data unit: {} of type {}",
-                    getIri(), dataUnit.getClass().getSimpleName());
+                    getIri(),
+                    dataUnit.getClass().getSimpleName());
         }
     }
-
 }

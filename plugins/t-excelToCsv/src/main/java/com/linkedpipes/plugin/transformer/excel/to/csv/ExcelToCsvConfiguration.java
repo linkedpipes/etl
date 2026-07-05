@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.transformer.excel.to.csv;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,8 +26,7 @@ public class ExcelToCsvConfiguration {
         @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_NAME)
         private String name;
 
-        public VirtualColumn() {
-        }
+        public VirtualColumn() {}
 
         public VirtualColumn(int row, int column, String name) {
             this.row = row;
@@ -59,7 +57,6 @@ public class ExcelToCsvConfiguration {
         public void setName(String name) {
             this.name = name;
         }
-
     }
 
     /**
@@ -132,8 +129,7 @@ public class ExcelToCsvConfiguration {
     @RdfToPojo.Property(iri = ExcelToCsvVocabulary.HAS_EVAL_FORMULA)
     private boolean evaluateFormulas = false;
 
-    public ExcelToCsvConfiguration() {
-    }
+    public ExcelToCsvConfiguration() {}
 
     public String getFileNamePattern() {
         return fileNamePattern;

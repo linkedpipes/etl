@@ -5,8 +5,7 @@ package com.linkedpipes.etl.executor.plugin.osgi;
  */
 class OsgiPackageList {
 
-    private OsgiPackageList() {
-    }
+    private OsgiPackageList() {}
 
     private static final String JAVAX = ""
             + "" // javax additional - FIND BUNDLE WITH THIS !
@@ -46,11 +45,9 @@ class OsgiPackageList {
             + "org.apache.log4j.api;version=\"1.7.18\","
             + "org.apache.log4j.xml;version=\"1.7.18\"";
 
-    private static final String LP_PACKAGE_V1 =
-            "com.linkedpipes.etl.executor.api.v1";
+    private static final String LP_PACKAGE_V1 = "com.linkedpipes.etl.executor.api.v1";
 
-    private static final String LP_PACKAGE_V2 =
-            "com.linkedpipes.etl.plugin.api.v2";
+    private static final String LP_PACKAGE_V2 = "com.linkedpipes.etl.plugin.api.v2";
 
     private static final String LP = ""
             + LP_PACKAGE_V1 + ";version=\"0.0.0\","
@@ -69,11 +66,5 @@ class OsgiPackageList {
             // Version 2 API.
             + LP_PACKAGE_V2 + ";version=\"0.0.0\"";
 
-    public static final String EXPORT_PACKAGE_LIST = ""
-            + JAVAX + ","
-            + SLF4J + ","
-            + LOGBACK + ","
-            + LOG4J + ","
-            + LP;
-
+    public static final String EXPORT_PACKAGE_LIST = "" + JAVAX + "," + SLF4J + "," + LOGBACK + "," + LOG4J + "," + LP;
 }

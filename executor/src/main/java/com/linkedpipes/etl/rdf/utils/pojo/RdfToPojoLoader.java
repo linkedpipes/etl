@@ -1,8 +1,7 @@
 package com.linkedpipes.etl.rdf.utils.pojo;
 
-import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,15 +13,12 @@ public class RdfToPojoLoader {
         this.source = source;
     }
 
-    public void loadResource(String resource, String graph, Loadable entity)
-            throws RdfUtilsException {
+    public void loadResource(String resource, String graph, Loadable entity) throws RdfUtilsException {
         Map<Loadable, String> newEntities = new HashMap<>();
 
         entity.resource(resource);
         source.triples(resource, graph, triple -> {
-            Loadable newEntity = entity.load(
-                    triple.getPredicate(),
-                    triple.getObject());
+            Loadable newEntity = entity.load(triple.getPredicate(), triple.getObject());
             if (newEntity != null) {
                 newEntities.put(newEntity, triple.getObject().asString());
             }
@@ -33,13 +29,11 @@ public class RdfToPojoLoader {
         }
     }
 
-    public void loadResourceByReflection(String resource, String graph,
-            Object entity, DescriptorFactory descriptorFactory)
+    public void loadResourceByReflection(
+            String resource, String graph, Object entity, DescriptorFactory descriptorFactory)
             throws RdfUtilsException {
-        ReflectionLoader entityWrap =
-                new ReflectionLoader(descriptorFactory, entity);
+        ReflectionLoader entityWrap = new ReflectionLoader(descriptorFactory, entity);
         entityWrap.initialize();
         loadResource(resource, graph, entityWrap);
     }
-
 }

@@ -6,19 +6,18 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.plugin.library.rdf.RdfAdapter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.DCAT;
+import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.util.Repositories;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class DatasetMetadata implements Component, SequentialExecution {
 
@@ -73,26 +72,34 @@ public class DatasetMetadata implements Component, SequentialExecution {
 
         if (!isBlank(configuration.getContactPoint())) {
             final IRI contant = valueFactory.createIRI(configuration.getDatasetURI() + "/contactPoint");
-            statements.add(valueFactory.createStatement(contant, RDF.TYPE, DatasetMetadataVocabulary.VCARD_VCARD_CLASS));
-            statements.add(valueFactory.createStatement(contant, DatasetMetadataVocabulary.VCARD_HAS_EMAIL,
+            statements.add(
+                    valueFactory.createStatement(contant, RDF.TYPE, DatasetMetadataVocabulary.VCARD_VCARD_CLASS));
+            statements.add(valueFactory.createStatement(
+                    contant,
+                    DatasetMetadataVocabulary.VCARD_HAS_EMAIL,
                     valueFactory.createLiteral(configuration.getContactPoint())));
-            statements.add(valueFactory.createStatement(dataset, DatasetMetadataVocabulary.DCAT_CONTACT_POINT, contant));
+            statements.add(
+                    valueFactory.createStatement(dataset, DatasetMetadataVocabulary.DCAT_CONTACT_POINT, contant));
         }
 
         if (!isBlank(configuration.getContactPointName())) {
             final IRI contact = valueFactory.createIRI(configuration.getDatasetURI() + "/contactPoint");
-            statements.add(valueFactory.createStatement(contact, RDF.TYPE, DatasetMetadataVocabulary.VCARD_VCARD_CLASS));
-            statements.add(valueFactory.createStatement(contact, DatasetMetadataVocabulary.VCARD_FN,
+            statements.add(
+                    valueFactory.createStatement(contact, RDF.TYPE, DatasetMetadataVocabulary.VCARD_VCARD_CLASS));
+            statements.add(valueFactory.createStatement(
+                    contact,
+                    DatasetMetadataVocabulary.VCARD_FN,
                     valueFactory.createLiteral(configuration.getContactPointName())));
-            statements.add(valueFactory.createStatement(dataset, DatasetMetadataVocabulary.DCAT_CONTACT_POINT, contact));
+            statements.add(
+                    valueFactory.createStatement(dataset, DatasetMetadataVocabulary.DCAT_CONTACT_POINT, contact));
         }
 
         if (!isBlank(configuration.getPeriodicity())) {
-            final IRI periodicity = valueFactory.createIRI("http://linked.opendata.cz/resource/accrualPeriodicity/"
-                    + configuration.getPeriodicity());
+            final IRI periodicity = valueFactory.createIRI(
+                    "http://linked.opendata.cz/resource/accrualPeriodicity/" + configuration.getPeriodicity());
             statements.add(valueFactory.createStatement(periodicity, RDF.TYPE, DCTERMS.FREQUENCY));
-            statements.add(valueFactory.createStatement(periodicity, DCTERMS.TITLE,
-                    valueFactory.createLiteral(configuration.getPeriodicity())));
+            statements.add(valueFactory.createStatement(
+                    periodicity, DCTERMS.TITLE, valueFactory.createLiteral(configuration.getPeriodicity())));
             statements.add(valueFactory.createStatement(dataset, DCTERMS.ACCRUAL_PERIODICITY, periodicity));
         }
 
@@ -101,13 +108,17 @@ public class DatasetMetadata implements Component, SequentialExecution {
         if (configuration.isUseTemporal()) {
             final IRI temporal = valueFactory.createIRI(configuration.getDatasetURI() + "/temporal");
             statements.add(valueFactory.createStatement(temporal, RDF.TYPE, DCTERMS.PERIOD_OF_TIME));
-            statements.add(valueFactory.createStatement(temporal, DatasetMetadataVocabulary.SCHEMA_STARTDATE,
+            statements.add(valueFactory.createStatement(
+                    temporal,
+                    DatasetMetadataVocabulary.SCHEMA_STARTDATE,
                     RdfAdapter.asYearMonthDay(configuration.getTemporalStart())));
             if (configuration.isUseNowTemporalEnd()) {
-                statements.add(valueFactory.createStatement(temporal, DatasetMetadataVocabulary.SCHEMA_ENDDATE,
-                        RdfAdapter.asYearMonthDay(new Date())));
+                statements.add(valueFactory.createStatement(
+                        temporal, DatasetMetadataVocabulary.SCHEMA_ENDDATE, RdfAdapter.asYearMonthDay(new Date())));
             } else {
-                statements.add(valueFactory.createStatement(temporal, DatasetMetadataVocabulary.SCHEMA_ENDDATE,
+                statements.add(valueFactory.createStatement(
+                        temporal,
+                        DatasetMetadataVocabulary.SCHEMA_ENDDATE,
                         RdfAdapter.asYearMonthDay(configuration.getTemporalEnd())));
             }
             statements.add(valueFactory.createStatement(dataset, DCTERMS.TEMPORAL, temporal));
@@ -125,8 +136,8 @@ public class DatasetMetadata implements Component, SequentialExecution {
             final IRI publisher = valueFactory.createIRI(configuration.getPublisherURI());
             statements.add(valueFactory.createStatement(publisher, RDF.TYPE, FOAF.AGENT));
             if (!isBlank(configuration.getPublisherName())) {
-                statements.add(valueFactory.createStatement(publisher, FOAF.NAME, 
-                                  valueFactory.createLiteral(configuration.getPublisherName())));
+                statements.add(valueFactory.createStatement(
+                        publisher, FOAF.NAME, valueFactory.createLiteral(configuration.getPublisherName())));
             }
             statements.add(valueFactory.createStatement(dataset, DCTERMS.PUBLISHER, publisher));
         }
@@ -139,7 +150,6 @@ public class DatasetMetadata implements Component, SequentialExecution {
             addValue(DCTERMS.SOURCE, valueFactory.createIRI(source));
         });
 
-
         configuration.getThemes().forEach((themeUri) -> {
             final IRI theme = valueFactory.createIRI(themeUri);
             statements.add(valueFactory.createStatement(theme, RDF.TYPE, SKOS.CONCEPT));
@@ -150,7 +160,6 @@ public class DatasetMetadata implements Component, SequentialExecution {
         Repositories.consume(outputRdf.getRepository(), (RepositoryConnection connection) -> {
             connection.add(statements, outputRdf.getWriteGraph());
         });
-
     }
 
     /**
@@ -165,7 +174,7 @@ public class DatasetMetadata implements Component, SequentialExecution {
             return;
         }
         final Value object;
-        if (language == null)  {
+        if (language == null) {
             object = valueFactory.createLiteral(value);
         } else {
             object = valueFactory.createLiteral(value, language);
@@ -180,5 +189,4 @@ public class DatasetMetadata implements Component, SequentialExecution {
     private static boolean isBlank(String string) {
         return string == null || string.isEmpty();
     }
-
 }

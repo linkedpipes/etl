@@ -15,11 +15,9 @@ public class JsonOutputConfiguration implements OutputConfiguration {
      */
     public Type datatype;
 
-    public JsonOutputConfiguration() {
-    }
+    public JsonOutputConfiguration() {}
 
     public JsonOutputConfiguration(Type datatype) {
         this.datatype = datatype;
     }
-
 }

@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint.select;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +34,7 @@ public class SparqlEndpointSelectConfiguration {
     @RdfToPojo.Property(iri = SparqlEndpointSelectVocabulary.HAS_PASSWORD)
     private String password;
 
-    public SparqlEndpointSelectConfiguration() {
-    }
+    public SparqlEndpointSelectConfiguration() {}
 
     public String getQuery() {
         return query;
@@ -93,5 +91,4 @@ public class SparqlEndpointSelectConfiguration {
     public void setPassword(String password) {
         this.password = password;
     }
-
 }

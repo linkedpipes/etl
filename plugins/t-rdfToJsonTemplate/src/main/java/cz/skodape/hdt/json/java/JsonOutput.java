@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.skodape.hdt.core.OperationFailed;
 import cz.skodape.hdt.core.Output;
 import cz.skodape.hdt.model.OutputConfiguration;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Locale;
@@ -15,7 +14,6 @@ public class JsonOutput implements Output {
     private static class State {
 
         public boolean writeSeparator = false;
-
     }
 
     private final Writer writer;
@@ -127,8 +125,7 @@ public class JsonOutput implements Output {
     }
 
     @Override
-    public void writeValue(OutputConfiguration configuration, String value)
-            throws IOException {
+    public void writeValue(OutputConfiguration configuration, String value) throws IOException {
         this.writeSeparator();
         this.writeIndentation();
         this.writeKey();
@@ -147,9 +144,7 @@ public class JsonOutput implements Output {
                 this.writeNumber(value);
                 break;
             default:
-                throw new IOException(
-                        "Unknown JSON output type: "
-                                + jsonConfiguration.datatype);
+                throw new IOException("Unknown JSON output type: " + jsonConfiguration.datatype);
         }
     }
 

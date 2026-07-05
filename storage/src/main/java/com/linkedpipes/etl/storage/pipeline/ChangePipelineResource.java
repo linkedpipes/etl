@@ -9,14 +9,13 @@ import com.linkedpipes.etl.library.pipeline.model.PipelineVertex;
 import com.linkedpipes.etl.library.template.configuration.ConfigurationFacade;
 import com.linkedpipes.etl.library.template.plugin.model.PluginTemplate;
 import com.linkedpipes.etl.storage.StorageException;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 /**
  * Change pipeline and all related resources.
@@ -27,7 +26,6 @@ public class ChangePipelineResource {
     public interface PluginTemplateSource {
 
         PluginTemplate apply(Resource resource) throws StorageException;
-
     }
 
     private final Function<Resource, Resource> templateMapping;
@@ -35,14 +33,12 @@ public class ChangePipelineResource {
     private final PluginTemplateSource referenceTemplateSource;
 
     public ChangePipelineResource(
-            Function<Resource, Resource> templateMapping,
-            PluginTemplateSource referenceTemplateSource) {
+            Function<Resource, Resource> templateMapping, PluginTemplateSource referenceTemplateSource) {
         this.templateMapping = templateMapping;
         this.referenceTemplateSource = referenceTemplateSource;
     }
 
-    public Pipeline localize(Pipeline pipeline, Resource resource)
-            throws StorageException {
+    public Pipeline localize(Pipeline pipeline, Resource resource) throws StorageException {
 
         PipelineExecutionProfile remoteProfile = pipeline.executionProfile();
         PipelineExecutionProfile profile = new PipelineExecutionProfile(
@@ -60,25 +56,29 @@ public class ChangePipelineResource {
             components.add(updateComponent(component, resource));
         }
 
-        List<PipelineDataFlow> dataFlows = pipeline.dataFlows()
-                .stream().map(item -> updateDataFlow(item, resource))
+        List<PipelineDataFlow> dataFlows = pipeline.dataFlows().stream()
+                .map(item -> updateDataFlow(item, resource))
                 .toList();
 
-        List<PipelineControlFlow> controlFlows = pipeline.controlFlows()
-                .stream().map(item -> updateControlFlow(item, resource))
+        List<PipelineControlFlow> controlFlows = pipeline.controlFlows().stream()
+                .map(item -> updateControlFlow(item, resource))
                 .toList();
 
         return new Pipeline(
                 resource,
-                pipeline.created(), LocalDateTime.now(),
-                pipeline.label(), pipeline.version(), pipeline.note(),
+                pipeline.created(),
+                LocalDateTime.now(),
+                pipeline.label(),
+                pipeline.version(),
+                pipeline.note(),
                 pipeline.tags(),
-                profile, components, dataFlows, controlFlows);
+                profile,
+                components,
+                dataFlows,
+                controlFlows);
     }
 
-    private PipelineComponent updateComponent(
-            PipelineComponent remote, Resource pipeline)
-            throws StorageException {
+    private PipelineComponent updateComponent(PipelineComponent remote, Resource pipeline) throws StorageException {
         Resource local = updateResource(remote.resource(), pipeline);
         Resource template = templateMapping.apply(remote.template());
         if (template == null) {
@@ -91,8 +91,12 @@ public class ChangePipelineResource {
         }
         return new PipelineComponent(
                 local,
-                remote.label(), remote.description(), remote.note(),
-                remote.color(), remote.x(), remote.y(),
+                remote.label(),
+                remote.description(),
+                remote.note(),
+                remote.color(),
+                remote.x(),
+                remote.y(),
                 template,
                 remote.disabled(),
                 ConfigurationFacade.localizeConfiguration(
@@ -105,15 +109,13 @@ public class ChangePipelineResource {
     private Resource updateResource(Resource resource, Resource pipeline) {
         if (resource instanceof IRI) {
             String suffix = getUrlSuffix(resource);
-            return SimpleValueFactory.getInstance().createIRI(
-                    pipeline + suffix);
+            return SimpleValueFactory.getInstance().createIRI(pipeline + suffix);
         } else {
             return resource;
         }
     }
 
-    private PipelineDataFlow updateDataFlow(
-            PipelineDataFlow remote, Resource pipeline) {
+    private PipelineDataFlow updateDataFlow(PipelineDataFlow remote, Resource pipeline) {
         Resource local = updateResource(remote.resource(), pipeline);
         return new PipelineDataFlow(
                 local,
@@ -124,19 +126,15 @@ public class ChangePipelineResource {
                 updateVertices(remote.vertices(), pipeline));
     }
 
-    private List<PipelineVertex> updateVertices(
-            List<PipelineVertex> remote, Resource pipeline) {
+    private List<PipelineVertex> updateVertices(List<PipelineVertex> remote, Resource pipeline) {
         List<PipelineVertex> result = new ArrayList<>(remote.size());
         for (PipelineVertex item : remote) {
-            result.add(new PipelineVertex(
-                    updateResource(item.resource(), pipeline),
-                    item.order(), item.x(), item.y()));
+            result.add(new PipelineVertex(updateResource(item.resource(), pipeline), item.order(), item.x(), item.y()));
         }
         return result;
     }
 
-    private PipelineControlFlow updateControlFlow(
-            PipelineControlFlow remote, Resource pipeline) {
+    private PipelineControlFlow updateControlFlow(PipelineControlFlow remote, Resource pipeline) {
         Resource local = updateResource(remote.resource(), pipeline);
         return new PipelineControlFlow(
                 local,
@@ -149,5 +147,4 @@ public class ChangePipelineResource {
         String content = resource.stringValue();
         return content.substring(content.lastIndexOf("/") + 1);
     }
-
 }

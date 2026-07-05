@@ -4,7 +4,6 @@ import com.linkedpipes.etl.dataunit.core.files.WritableFilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -45,13 +44,11 @@ public final class TextHolder implements Component, SequentialExecution {
         }
     }
 
-    private void writeBytesToFile(File file, byte[] content)
-            throws LpException {
+    private void writeBytesToFile(File file, byte[] content) throws LpException {
         try {
             Files.write(file.toPath(), content);
         } catch (IOException ex) {
             throw new LpException("Can't write content to file.", ex);
         }
     }
-
 }

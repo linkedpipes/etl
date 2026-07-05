@@ -49,7 +49,6 @@ public class FilterSelector implements Selector {
         return null;
     }
 
-
     private boolean evaluate(Reference reference) throws OperationFailed {
         Selector selector = configuration.path.createSelector();
         selector.initialize(context, propertySource.source(reference));
@@ -59,21 +58,17 @@ public class FilterSelector implements Selector {
             case Equal:
                 return evaluateEqual(selector);
             default:
-                throw new OperationFailed(
-                        "Unknown condition type: "
-                                + configuration.condition);
+                throw new OperationFailed("Unknown condition type: " + configuration.condition);
         }
     }
 
-    private boolean evaluateContain(ReferenceSource source)
-            throws OperationFailed {
+    private boolean evaluateContain(ReferenceSource source) throws OperationFailed {
         Reference next;
         while ((next = source.next()) != null) {
             if (!next.isPrimitiveReference()) {
                 continue;
             }
-            PrimitiveReference primitiveReference =
-                    (PrimitiveReference) next;
+            PrimitiveReference primitiveReference = (PrimitiveReference) next;
             String value = primitiveReference.getValue();
             if (configuration.value.equals(value)) {
                 return true;
@@ -82,8 +77,7 @@ public class FilterSelector implements Selector {
         return false;
     }
 
-    private boolean evaluateEqual(ReferenceSource source)
-            throws OperationFailed {
+    private boolean evaluateEqual(ReferenceSource source) throws OperationFailed {
         Reference first = source.next();
         if (first == null) {
             return false;
@@ -98,5 +92,4 @@ public class FilterSelector implements Selector {
         }
         return source.next() == null;
     }
-
 }

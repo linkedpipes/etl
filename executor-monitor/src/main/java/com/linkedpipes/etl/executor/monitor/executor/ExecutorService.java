@@ -4,6 +4,11 @@ import com.linkedpipes.etl.executor.monitor.ConfigurationHolder;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionStatus;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,17 +16,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class ExecutorService {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(ExecutorService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExecutorService.class);
 
     private final ExecutionSource executions;
 
@@ -120,12 +118,10 @@ public class ExecutorService {
         }
     }
 
-    public void cancelExecution(Execution execution, String userRequest)
-            throws MonitorException {
+    public void cancelExecution(Execution execution, String userRequest) throws MonitorException {
         Executor executor = getExecutor(execution);
         if (executor == null) {
-            throw new MonitorException(
-                    "Can't find executor for: {}", execution.getIri());
+            throw new MonitorException("Can't find executor for: {}", execution.getIri());
         }
         this.restClient.cancel(executor, userRequest);
     }
@@ -139,5 +135,4 @@ public class ExecutorService {
         }
         return null;
     }
-
 }

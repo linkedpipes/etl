@@ -7,18 +7,15 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OVERVIEW;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionStatus;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class OverviewFactory {
 
-    private static final String DATETIME_TYPE =
-            "http://www.w3.org/2001/XMLSchema#dateTime";
+    private static final String DATETIME_TYPE = "http://www.w3.org/2001/XMLSchema#dateTime";
 
-    private final DateFormat dateFormat = new
-            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
     public JsonNode createDeleted(Execution execution, Date date) {
         ObjectMapper mapper = new ObjectMapper();
@@ -35,7 +32,7 @@ public class OverviewFactory {
         statusNode.put("@id", ExecutionStatus.DELETED.asStr());
         rootNode.set("status", statusNode);
 
-        String lastChange =  dateFormat.format(date);
+        String lastChange = dateFormat.format(date);
         rootNode.put("lastChange", lastChange);
 
         return rootNode;
@@ -100,5 +97,4 @@ public class OverviewFactory {
 
         return contextNode;
     }
-
 }

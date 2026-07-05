@@ -15,16 +15,15 @@ import com.linkedpipes.etl.storage.template.TemplateEvents;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
 import com.linkedpipes.etl.storage.template.TemplateRepository;
 import com.linkedpipes.etl.storage.template.repository.TemplateRepositoryFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 /**
  * Represent main service that wraps all storage functionality.
@@ -32,8 +31,7 @@ import java.util.List;
 @Service
 public class StorageService {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(StorageService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StorageService.class);
 
     private final PipelineEvents pipelineEvents = new PipelineEvents();
 
@@ -102,49 +100,37 @@ public class StorageService {
             templates.addAll(javaPlugin.templates());
         }
 
-        TemplateRepositoryFactory factory =
-                new TemplateRepositoryFactory(templates);
+        TemplateRepositoryFactory factory = new TemplateRepositoryFactory(templates);
 
         File directory = configuration.getStorageDirectory();
         templateRepository = factory.create(directory);
     }
 
     private void initializeTemplateFacade() throws StorageException {
-        pluginTemplateService = new PluginTemplateService(
-                templateEvents, templateRepository);
+        pluginTemplateService = new PluginTemplateService(templateEvents, templateRepository);
         pluginTemplateService.initialize();
         //
-        referenceTemplateService = new ReferenceTemplateService(
-                templateEvents, templateRepository);
+        referenceTemplateService = new ReferenceTemplateService(templateEvents, templateRepository);
         referenceTemplateService.initialize();
         //
-        templateFacade = new TemplateFacade(
-                configuration,
-                referenceTemplateService,
-                pluginTemplateService,
-                templateRepository);
+        templateFacade =
+                new TemplateFacade(configuration, referenceTemplateService, pluginTemplateService, templateRepository);
     }
 
     private void initializePipelineRepository() throws StorageException {
         PipelineRepositoryFactory factory = new PipelineRepositoryFactory();
-        File directory = new File(
-                configuration.getStorageDirectory(), "pipelines");
+        File directory = new File(configuration.getStorageDirectory(), "pipelines");
         if (!directory.exists() && !directory.mkdirs()) {
             LOG.error("Can't create pipeline directory '{}'.", directory);
         }
-        pipelineRepository = factory.create(
-                directory, () -> templateFacade.getTemplateToPluginMap());
+        pipelineRepository = factory.create(directory, () -> templateFacade.getTemplateToPluginMap());
     }
 
     private void initializePipelineFacade() throws StorageException {
-        pipelineService = new PipelineService(
-                pipelineEvents, pipelineRepository, templateFacade);
+        pipelineService = new PipelineService(pipelineEvents, pipelineRepository, templateFacade);
         pipelineService.initialize();
 
-        pipelineFacade = new PipelineFacade(
-                configuration,
-                pipelineService,
-                pipelineRepository);
+        pipelineFacade = new PipelineFacade(configuration, pipelineService, pipelineRepository);
     }
 
     public AssistantService getAssistantService() {
@@ -166,5 +152,4 @@ public class StorageService {
     public ConfigurationHolder getConfiguration() {
         return configuration;
     }
-
 }

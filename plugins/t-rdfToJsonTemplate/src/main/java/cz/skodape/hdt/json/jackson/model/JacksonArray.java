@@ -1,7 +1,6 @@
 package cz.skodape.hdt.json.jackson.model;
 
 import cz.skodape.hdt.core.ArrayReference;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -50,5 +49,4 @@ public class JacksonArray extends JacksonReference implements ArrayReference {
     public boolean isPrimitiveReference() {
         return false;
     }
-
 }

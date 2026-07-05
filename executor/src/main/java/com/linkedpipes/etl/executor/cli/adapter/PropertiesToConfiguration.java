@@ -2,7 +2,6 @@ package com.linkedpipes.etl.executor.cli.adapter;
 
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.cli.Configuration;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,39 +16,26 @@ public class PropertiesToConfiguration {
 
     private final Properties properties;
 
-    public static Configuration updateConfiguration(
-            Configuration defaults, File file)
-            throws ExecutorException {
-        PropertiesToConfiguration instance = new PropertiesToConfiguration(
-                loadProperties(file));
+    public static Configuration updateConfiguration(Configuration defaults, File file) throws ExecutorException {
+        PropertiesToConfiguration instance = new PropertiesToConfiguration(loadProperties(file));
         //
         Configuration next = new Configuration();
-        next.httpPort = instance.getInteger(
-                "executor.webserver.port");
-        next.dataDirectory = instance.getString(
-                "executor.execution.working_directory");
-        next.logDirectory  = instance.getString(
-                "executor.log.directory");
-        next.logLevel = instance.getString(
-                "executor.log.core.level");
-        next.osgiWorkingDirectory = instance.getString(
-                "executor.osgi.working.directory");
-        next.osgiLibrariesDirectory = instance.getString(
-                "executor.osgi.lib.directory");
-        next.pluginsDirectory = instance.getString(
-                "storage.jars.directory");
-        next.bannedPluginIriPatterns = instance.getList(
-                "executor.banned_jar_iri_patterns");
+        next.httpPort = instance.getInteger("executor.webserver.port");
+        next.dataDirectory = instance.getString("executor.execution.working_directory");
+        next.logDirectory = instance.getString("executor.log.directory");
+        next.logLevel = instance.getString("executor.log.core.level");
+        next.osgiWorkingDirectory = instance.getString("executor.osgi.working.directory");
+        next.osgiLibrariesDirectory = instance.getString("executor.osgi.lib.directory");
+        next.pluginsDirectory = instance.getString("storage.jars.directory");
+        next.bannedPluginIriPatterns = instance.getList("executor.banned_jar_iri_patterns");
 
         return defaults.merge(next);
     }
 
-    private static Properties loadProperties(File file)
-            throws ExecutorException {
+    private static Properties loadProperties(File file) throws ExecutorException {
         Properties properties = new Properties();
         try (var stream = new FileInputStream(file);
-             var reader = new InputStreamReader(stream,
-                     StandardCharsets.UTF_8)) {
+                var reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
             properties.load(reader);
         } catch (IOException ex) {
             throw new ExecutorException("Can't load configuration file.", ex);
@@ -65,8 +51,7 @@ public class PropertiesToConfiguration {
         try {
             return properties.getProperty(name);
         } catch (RuntimeException ex) {
-            throw new ExecutorException(
-                    "Invalid configuration property: '{}'", name, ex);
+            throw new ExecutorException("Invalid configuration property: '{}'", name, ex);
         }
     }
 
@@ -78,8 +63,7 @@ public class PropertiesToConfiguration {
         try {
             return Integer.parseInt(value);
         } catch (Exception ex) {
-            throw new ExecutorException(
-                    "Invalid configuration property: '{}'", name);
+            throw new ExecutorException("Invalid configuration property: '{}'", name);
         }
     }
 
@@ -96,5 +80,4 @@ public class PropertiesToConfiguration {
         value = value.substring(1, value.length() - 1);
         return Arrays.asList(value.split("\",\""));
     }
-
 }

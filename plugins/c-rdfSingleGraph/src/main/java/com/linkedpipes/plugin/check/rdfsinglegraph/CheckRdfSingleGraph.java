@@ -25,8 +25,7 @@ public class CheckRdfSingleGraph implements Component, SequentialExecution {
         Model expectedModel = createModel(expected);
         Model actualModel = createModel(actual);
         if (!Models.isomorphic(expectedModel, actualModel)) {
-            throw new LpException(
-                    "Expected and Actual inputs are not isomorphic.");
+            throw new LpException("Expected and Actual inputs are not isomorphic.");
         }
     }
 
@@ -42,13 +41,10 @@ public class CheckRdfSingleGraph implements Component, SequentialExecution {
             var statements = connection.getStatements(null, null, null, graph);
             for (Statement statement : statements) {
                 var statementWithoutGraph = valueFactory.createStatement(
-                        statement.getSubject(),
-                        statement.getPredicate(),
-                        statement.getObject());
+                        statement.getSubject(), statement.getPredicate(), statement.getObject());
                 model.add(statementWithoutGraph);
             }
         });
         return model;
     }
-
 }

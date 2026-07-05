@@ -2,7 +2,6 @@ package com.linkedpipes.etl.executor.api.v1.rdf.pojo;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
-
 import java.lang.reflect.Field;
 
 class ReflectionLoader implements Loadable {
@@ -18,7 +17,6 @@ class ReflectionLoader implements Loadable {
         this.descriptor = new Descriptor(object.getClass());
     }
 
-
     @Override
     public void resource(String resource) throws RdfException {
         Field field = descriptor.getFieldForResource();
@@ -29,8 +27,7 @@ class ReflectionLoader implements Loadable {
     }
 
     @Override
-    public Loadable load(String predicate, RdfValue value)
-            throws RdfException {
+    public Loadable load(String predicate, RdfValue value) throws RdfException {
         Field field = descriptor.getFieldForPredicate(predicate);
         if (field == null) {
             return null;
@@ -43,5 +40,4 @@ class ReflectionLoader implements Loadable {
             return loader;
         }
     }
-
 }

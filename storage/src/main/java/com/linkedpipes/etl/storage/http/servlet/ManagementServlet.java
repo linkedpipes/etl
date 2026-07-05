@@ -1,6 +1,8 @@
 package com.linkedpipes.etl.storage.http.servlet;
 
 import com.linkedpipes.etl.storage.StorageService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,9 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * This API should not be exposed to public as it provides service and
@@ -27,20 +26,15 @@ public class ManagementServlet {
         this.service = new ManagementServletService(storageService);
     }
 
-    @RequestMapping(
-            value = "/export",
-            method = RequestMethod.GET)
+    @RequestMapping(value = "/export", method = RequestMethod.GET)
     public void export(
-            @RequestParam(name = "templates")
-                    String exportTemplatesFilter,
-            @RequestParam(name = "pipelines")
-                    String exportPipelinesFilter,
-            @RequestParam(name = "removePrivateConfig", defaultValue = "false")
-                    boolean removePrivateConfig,
-            @RequestParam(name = "exportType",
-                    defaultValue = ManagementServletService.EXPORT_TYPE_FILE)
+            @RequestParam(name = "templates") String exportTemplatesFilter,
+            @RequestParam(name = "pipelines") String exportPipelinesFilter,
+            @RequestParam(name = "removePrivateConfig", defaultValue = "false") boolean removePrivateConfig,
+            @RequestParam(name = "exportType", defaultValue = ManagementServletService.EXPORT_TYPE_FILE)
                     String exportType,
-            HttpServletRequest request, HttpServletResponse response) {
+            HttpServletRequest request,
+            HttpServletResponse response) {
         ServletUtilities.wrap(request, response, () -> {
             service.handleExport(
                     exportTemplatesFilter, exportPipelinesFilter,
@@ -53,16 +47,12 @@ public class ManagementServlet {
      * Import content and return list of imported objects, pipelines
      * and templates.
      */
-    @RequestMapping(
-            value = "/import",
-            method = RequestMethod.POST,
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(value = "/import", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void importContent(
-            @RequestParam(value = "content")
-                    MultipartFile content,
-            @RequestParam(value = "options")
-                    MultipartFile options,
-            HttpServletRequest request, HttpServletResponse response) {
+            @RequestParam(value = "content") MultipartFile content,
+            @RequestParam(value = "options") MultipartFile options,
+            HttpServletRequest request,
+            HttpServletResponse response) {
         ServletUtilities.wrap(request, response, () -> {
             service.handleImport(content, options, request, response);
         });
@@ -76,42 +66,30 @@ public class ManagementServlet {
      *
      * Returned pipeline may contain definitions of used templates.
      */
-    @RequestMapping(
-            value = "localize",
-            method = RequestMethod.POST,
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(value = "localize", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void localizeContent(
-            @RequestParam(value = "content")
-                    MultipartFile content,
-            @RequestParam(value = "options")
-                    MultipartFile options,
-            @RequestParam(name = "templates", defaultValue = "false")
-                    boolean includeTemplates,
-            HttpServletRequest request, HttpServletResponse response) {
+            @RequestParam(value = "content") MultipartFile content,
+            @RequestParam(value = "options") MultipartFile options,
+            @RequestParam(name = "templates", defaultValue = "false") boolean includeTemplates,
+            HttpServletRequest request,
+            HttpServletResponse response) {
         ServletUtilities.wrap(request, response, () -> {
-            service.handleLocalize(
-                    content, options, includeTemplates, request, response);
+            service.handleLocalize(content, options, includeTemplates, request, response);
         });
     }
 
     /**
      * Reload data from secondary/external memory.
      */
-    @RequestMapping(
-            value = "/reload",
-            method = RequestMethod.POST)
-    public void reload(
-            HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/reload", method = RequestMethod.POST)
+    public void reload(HttpServletRequest request, HttpServletResponse response) {
         ServletUtilities.wrap(request, response, () -> {
             service.handleReload(request, response);
         });
     }
 
-    @RequestMapping(
-            value = "/assistant",
-            method = RequestMethod.GET)
-    public void getDesignInformation(
-            HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/assistant", method = RequestMethod.GET)
+    public void getDesignInformation(HttpServletRequest request, HttpServletResponse response) {
         ServletUtilities.wrap(request, response, () -> {
             service.handleGetDesignInformation(request, response);
         });
@@ -120,16 +98,12 @@ public class ManagementServlet {
     /**
      * This should be removed after unpacker is moved to executor.
      */
-    @RequestMapping(
-            value = "/unpack",
-            method = RequestMethod.POST,
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(value = "/unpack", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void unpackPipeline(
-            @RequestParam(value = "pipeline")
-                    MultipartFile pipeline,
-            @RequestParam(value = "options", required = false)
-                    MultipartFile options,
-            HttpServletRequest request, HttpServletResponse response) {
+            @RequestParam(value = "pipeline") MultipartFile pipeline,
+            @RequestParam(value = "options", required = false) MultipartFile options,
+            HttpServletRequest request,
+            HttpServletResponse response) {
         ServletUtilities.wrap(request, response, () -> {
             service.handleUnpack(pipeline, options, request, response);
         });

@@ -28,8 +28,7 @@ public class GraphStorePurgerConfiguration {
     @RdfToPojo.Property(iri = GraphStorePurgerVocabulary.HAS_REPOSITORY)
     private RepositoryType repository = RepositoryType.VIRTUOSO;
 
-    public GraphStorePurgerConfiguration() {
-    }
+    public GraphStorePurgerConfiguration() {}
 
     public String getEndpoint() {
         return endpoint;
@@ -70,5 +69,4 @@ public class GraphStorePurgerConfiguration {
     public void setRepository(RepositoryType repository) {
         this.repository = repository;
     }
-
 }

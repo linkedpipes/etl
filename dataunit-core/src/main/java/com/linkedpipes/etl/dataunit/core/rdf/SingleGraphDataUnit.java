@@ -13,5 +13,4 @@ public interface SingleGraphDataUnit extends Rdf4jDataUnit {
     IRI getReadGraph();
 
     RdfSource asRdfSource();
-
 }

@@ -11,9 +11,7 @@ import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 
 class GraphSize {
 
-    public static long getGraphSize(
-            CloseableHttpClient httpClient, String endpoint, String graph)
-            throws LpException {
+    public static long getGraphSize(CloseableHttpClient httpClient, String endpoint, String graph) throws LpException {
         SPARQLRepository repository = new SPARQLRepository(endpoint);
         repository.setHttpClient(httpClient);
         repository.init();
@@ -21,11 +19,10 @@ class GraphSize {
         long size;
         try (RepositoryConnection connection = repository.getConnection()) {
             String query = getQuery(graph);
-            TupleQueryResult result = connection.prepareTupleQuery(
-                    QueryLanguage.SPARQL, query).evaluate();
+            TupleQueryResult result =
+                    connection.prepareTupleQuery(QueryLanguage.SPARQL, query).evaluate();
             if (!result.hasNext()) {
-                throw new LpException(
-                        "Remote query for size does not return any value.");
+                throw new LpException("Remote query for size does not return any value.");
             }
             Binding binding = result.next().getBinding("count");
             size = ((Literal) binding.getValue()).longValue();
@@ -39,9 +36,7 @@ class GraphSize {
         if (graph == null) {
             return "SELECT (count(*) as ?count) WHERE { ?s ?p ?o }";
         } else {
-            return "SELECT (count(*) as ?count) WHERE { "
-                    + "GRAPH <" + graph + "> { ?s ?p ?o } }";
+            return "SELECT (count(*) as ?count) WHERE { " + "GRAPH <" + graph + "> { ?s ?p ?o } }";
         }
     }
-
 }

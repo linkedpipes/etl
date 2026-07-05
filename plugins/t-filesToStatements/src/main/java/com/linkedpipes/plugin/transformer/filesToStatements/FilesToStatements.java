@@ -7,15 +7,14 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class FilesToStatements implements Component, SequentialExecution {
 
@@ -43,11 +42,9 @@ public final class FilesToStatements implements Component, SequentialExecution {
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
         final IRI predicate;
         try {
-            predicate = valueFactory.createIRI(
-                    configuration.getPredicate());
+            predicate = valueFactory.createIRI(configuration.getPredicate());
         } catch (Throwable t) {
-            throw new LpException("Invalid predicate: {}",
-                    FilesToStatementsVocabulary.PREDICATE, t);
+            throw new LpException("Invalid predicate: {}", FilesToStatementsVocabulary.PREDICATE, t);
         }
         //
         progressReport.start(inputFiles.size() + 1);
@@ -62,10 +59,7 @@ public final class FilesToStatements implements Component, SequentialExecution {
             // Add to output.
             final IRI outputGraph = outputRdf.createGraph();
             statements.add(valueFactory.createStatement(
-                    valueFactory.createBNode(),
-                    predicate,
-                    valueFactory.createLiteral(content),
-                    outputGraph));
+                    valueFactory.createBNode(), predicate, valueFactory.createLiteral(content), outputGraph));
             // Add to the repository.
             if (statements.size() >= BUFFER_SIZE) {
                 addStatements(statements);
@@ -86,5 +80,4 @@ public final class FilesToStatements implements Component, SequentialExecution {
         });
         statements.clear();
     }
-
 }

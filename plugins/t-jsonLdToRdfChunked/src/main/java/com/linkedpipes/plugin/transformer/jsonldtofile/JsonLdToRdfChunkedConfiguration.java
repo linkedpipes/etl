@@ -17,9 +17,7 @@ public class JsonLdToRdfChunkedConfiguration {
     @RdfToPojo.Property(iri = JsonLdToRdfChunkedVocabulary.HAS_FILE_PREDICATE)
     private String filePredicate;
 
-    public JsonLdToRdfChunkedConfiguration() {
-
-    }
+    public JsonLdToRdfChunkedConfiguration() {}
 
     public int getFilesPerChunk() {
         return filesPerChunk;
@@ -52,5 +50,4 @@ public class JsonLdToRdfChunkedConfiguration {
     public void setFilePredicate(String filePredicate) {
         this.filePredicate = filePredicate;
     }
-
 }

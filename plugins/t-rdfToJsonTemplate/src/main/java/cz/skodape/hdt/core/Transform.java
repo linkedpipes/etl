@@ -6,11 +6,10 @@ import cz.skodape.hdt.model.ObjectTransformation;
 import cz.skodape.hdt.model.PrimitiveTransformation;
 import cz.skodape.hdt.model.SelectorConfiguration;
 import cz.skodape.hdt.model.TransformationFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.Stack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Transform {
 
@@ -52,7 +51,6 @@ public class Transform {
             this.definition = definition;
             this.type = StepType.Primitive;
         }
-
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(Transform.class);
@@ -71,10 +69,7 @@ public class Transform {
     protected final Stack<Step> path = new Stack<>();
 
     public Transform(
-            TransformationFile definition,
-            SelectorContext context,
-            Output output,
-            TransformErrorHandler errorHandler) {
+            TransformationFile definition, SelectorContext context, Output output, TransformErrorHandler errorHandler) {
         this.definition = definition;
         this.context = context;
         this.output = output;
@@ -107,23 +102,19 @@ public class Transform {
      * it. As a result we have special limitations and functions to deal with
      * roots.
      */
-    protected void transformRoot(
-            BaseTransformation definition, ReferenceSource source)
+    protected void transformRoot(BaseTransformation definition, ReferenceSource source)
             throws OperationFailed, IOException {
         ReferenceSource filteredSource = applySelectors(definition, source);
         if (definition instanceof ArrayTransformation) {
-            transformRootArray(
-                    (ArrayTransformation) definition, filteredSource);
+            transformRootArray((ArrayTransformation) definition, filteredSource);
         } else if (definition instanceof ObjectTransformation) {
-            transformRootObject(
-                    (ObjectTransformation) definition, filteredSource);
+            transformRootObject((ObjectTransformation) definition, filteredSource);
         } else {
             errorHandler.onInvalidRoot();
         }
     }
 
-    protected void transformRootArray(
-            ArrayTransformation arrayDefinition, ReferenceSource source)
+    protected void transformRootArray(ArrayTransformation arrayDefinition, ReferenceSource source)
             throws OperationFailed, IOException {
         output.openNextArray();
         Reference next;
@@ -143,8 +134,7 @@ public class Transform {
      * We can utilize only one Resource for object root. We allow the root
      * object to consists of more object.
      */
-    protected void transformRootObject(
-            ObjectTransformation objectDefinition, ReferenceSource source)
+    protected void transformRootObject(ObjectTransformation objectDefinition, ReferenceSource source)
             throws OperationFailed, IOException {
         output.openNextObject();
         Reference next;
@@ -157,24 +147,20 @@ public class Transform {
         output.closeLastObject();
     }
 
-    protected void transform(
-            BaseTransformation definition, ReferenceSource source)
+    protected void transform(BaseTransformation definition, ReferenceSource source)
             throws OperationFailed, IOException {
         if (definition instanceof ArrayTransformation) {
-            ArrayTransformation arrayDefinition =
-                    (ArrayTransformation) definition;
+            ArrayTransformation arrayDefinition = (ArrayTransformation) definition;
             path.add(new Step(arrayDefinition));
             transformArray(arrayDefinition, source);
             path.pop();
         } else if (definition instanceof ObjectTransformation) {
-            ObjectTransformation objectDefinition =
-                    (ObjectTransformation) definition;
+            ObjectTransformation objectDefinition = (ObjectTransformation) definition;
             path.add(new Step(objectDefinition));
             transformObject(objectDefinition, source);
             path.pop();
         } else if (definition instanceof PrimitiveTransformation) {
-            PrimitiveTransformation primitiveDefinition =
-                    (PrimitiveTransformation) definition;
+            PrimitiveTransformation primitiveDefinition = (PrimitiveTransformation) definition;
             path.add(new Step(primitiveDefinition));
             transformPrimitive(primitiveDefinition, source);
             path.pop();
@@ -183,8 +169,7 @@ public class Transform {
         }
     }
 
-    protected void transformArray(
-            ArrayTransformation definition, ReferenceSource source)
+    protected void transformArray(ArrayTransformation definition, ReferenceSource source)
             throws OperationFailed, IOException {
         ReferenceSource filteredSource = applySelectors(definition, source);
         output.openNextArray();
@@ -199,8 +184,7 @@ public class Transform {
         output.closeLastArray();
     }
 
-    private ReferenceSource applySelectors(
-            BaseTransformation definition, ReferenceSource source)
+    private ReferenceSource applySelectors(BaseTransformation definition, ReferenceSource source)
             throws OperationFailed {
         ReferenceSource result = source;
         for (SelectorConfiguration configuration : definition.selectors) {
@@ -211,8 +195,7 @@ public class Transform {
         return result;
     }
 
-    protected void transformObject(
-            ObjectTransformation definition, ReferenceSource source)
+    protected void transformObject(ObjectTransformation definition, ReferenceSource source)
             throws OperationFailed, IOException {
         ReferenceSource filteredSource = applySelectors(definition, source);
         output.openNextObject();
@@ -223,8 +206,7 @@ public class Transform {
         output.closeLastObject();
     }
 
-    protected void transformPrimitive(
-            PrimitiveTransformation definition, ReferenceSource source)
+    protected void transformPrimitive(PrimitiveTransformation definition, ReferenceSource source)
             throws OperationFailed, IOException {
         String value = getValueForPrimitive(definition, source);
         if (value == null) {
@@ -233,8 +215,7 @@ public class Transform {
         output.writeValue(definition.outputConfiguration, value);
     }
 
-    protected String getValueForPrimitive(
-            PrimitiveTransformation definition, ReferenceSource source)
+    protected String getValueForPrimitive(PrimitiveTransformation definition, ReferenceSource source)
             throws OperationFailed {
         if (definition.constantValue != null) {
             return definition.constantValue;
@@ -264,5 +245,4 @@ public class Transform {
         }
         LOG.info("Closing sources ... done");
     }
-
 }

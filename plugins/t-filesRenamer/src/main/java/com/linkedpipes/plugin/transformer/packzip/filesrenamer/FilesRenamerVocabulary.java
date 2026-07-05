@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.packzip.filesrenamer;
 
 final class FilesRenamerVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-filesRenamer#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-filesRenamer#";
 
     public static final String CONFIGURATION = PREFIX + "Configuration";
 
@@ -11,7 +10,5 @@ final class FilesRenamerVocabulary {
 
     public static final String HAS_REPLACE_WITH = PREFIX + "replaceWith";
 
-    private FilesRenamerVocabulary() {
-    }
-
+    private FilesRenamerVocabulary() {}
 }

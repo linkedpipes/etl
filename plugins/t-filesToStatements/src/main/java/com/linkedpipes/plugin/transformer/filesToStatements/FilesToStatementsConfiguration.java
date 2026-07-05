@@ -8,8 +8,7 @@ public class FilesToStatementsConfiguration {
     @RdfToPojo.Property(iri = FilesToStatementsVocabulary.PREDICATE)
     private String predicate;
 
-    public FilesToStatementsConfiguration() {
-    }
+    public FilesToStatementsConfiguration() {}
 
     public String getPredicate() {
         return predicate;
@@ -18,5 +17,4 @@ public class FilesToStatementsConfiguration {
     public void setPredicate(String predicate) {
         this.predicate = predicate;
     }
-
 }

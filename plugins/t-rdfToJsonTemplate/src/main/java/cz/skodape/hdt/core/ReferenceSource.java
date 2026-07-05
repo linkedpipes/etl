@@ -14,5 +14,4 @@ public interface ReferenceSource {
      * @return Null if there is no other object.
      */
     Reference next() throws OperationFailed;
-
 }

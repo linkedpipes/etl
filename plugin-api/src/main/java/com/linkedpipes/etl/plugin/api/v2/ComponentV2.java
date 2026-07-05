@@ -18,7 +18,5 @@ public interface ComponentV2 {
     @interface IRI {
 
         String value();
-
     }
-
 }

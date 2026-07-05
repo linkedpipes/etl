@@ -2,7 +2,6 @@ package cz.skodape.hdt.json.jackson.model;
 
 import com.fasterxml.jackson.databind.node.ValueNode;
 import cz.skodape.hdt.core.ObjectReference;
-
 import java.util.List;
 
 /**
@@ -10,8 +9,7 @@ import java.util.List;
  * to expand this into object with @type and @value, array of primitives.
  * That is why this is an object.
  */
-public class JacksonValueWrap
-        extends JacksonReference implements ObjectReference {
+public class JacksonValueWrap extends JacksonReference implements ObjectReference {
 
     private final ValueNode node;
 
@@ -43,5 +41,4 @@ public class JacksonValueWrap
     public boolean isPrimitiveReference() {
         return false;
     }
-
 }

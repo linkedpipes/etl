@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.dataunit.core.files;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-
 import java.io.File;
 
 public interface WritableFilesDataUnit {
@@ -17,5 +16,4 @@ public interface WritableFilesDataUnit {
      * Return write root directory.
      */
     File getWriteDirectory();
-
 }

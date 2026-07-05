@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.jsontojsonld;
 
 public final class JsonToJsonLdVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-jsonToJsonLd#";
 
     public static final String CONFIGURATION = PREFIX + "Configuration";
 
@@ -19,7 +18,5 @@ public final class JsonToJsonLdVocabulary {
 
     public static final String HAS_FILE_PREDICATE = PREFIX + "filePredicate";
 
-    private JsonToJsonLdVocabulary() {
-    }
-
+    private JsonToJsonLdVocabulary() {}
 }

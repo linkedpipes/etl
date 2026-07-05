@@ -8,5 +8,4 @@ import com.linkedpipes.etl.library.template.plugin.model.PluginTemplate;
 public interface PluginHolder {
 
     PluginTemplate template();
-
 }

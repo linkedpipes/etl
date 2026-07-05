@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.extractor.ftpfiles;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,8 +16,7 @@ public class FtpFilesConfiguration {
         @RdfToPojo.Property(iri = FtpFilesVocabulary.HAS_NAME)
         private String fileName;
 
-        public Reference() {
-        }
+        public Reference() {}
 
         public String getUri() {
             return uri;
@@ -35,7 +33,6 @@ public class FtpFilesConfiguration {
         public void setFileName(String fileName) {
             this.fileName = fileName;
         }
-
     }
 
     @RdfToPojo.Property(iri = FtpFilesVocabulary.HAS_REFERENCE)
@@ -50,15 +47,13 @@ public class FtpFilesConfiguration {
     @RdfToPojo.Property(iri = FtpFilesVocabulary.HAS_KEEP_ALIVE_CONTROL)
     private int keepAliveControl = 5000;
 
-    public FtpFilesConfiguration() {
-    }
+    public FtpFilesConfiguration() {}
 
     public List<Reference> getReferences() {
         return references;
     }
 
-    public void setReferences(
-            List<Reference> references) {
+    public void setReferences(List<Reference> references) {
         this.references = references;
     }
 
@@ -85,5 +80,4 @@ public class FtpFilesConfiguration {
     public void setKeepAliveControl(int keepAliveControl) {
         this.keepAliveControl = keepAliveControl;
     }
-
 }

@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import cz.skodape.hdt.model.SelectorConfiguration;
 import cz.skodape.hdt.model.TransformationFileAdapter;
 
-public class IdentitySelectorAdapter
-        implements TransformationFileAdapter.SelectorConfigurationAdapter {
+public class IdentitySelectorAdapter implements TransformationFileAdapter.SelectorConfigurationAdapter {
 
     private static final String TYPE = "Identity";
 
@@ -17,5 +16,4 @@ public class IdentitySelectorAdapter
         }
         return null;
     }
-
 }

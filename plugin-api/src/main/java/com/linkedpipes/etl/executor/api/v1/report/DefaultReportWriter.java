@@ -3,19 +3,16 @@ package com.linkedpipes.etl.executor.api.v1.report;
 import com.linkedpipes.etl.executor.api.v1.component.task.Task;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
-import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.RDF;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.XSD;
+import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 class DefaultReportWriter implements ReportWriter {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(DefaultReportWriter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultReportWriter.class);
 
     private final TripleWriter writer;
 
@@ -51,11 +48,9 @@ class DefaultReportWriter implements ReportWriter {
     }
 
     @Override
-    public synchronized void onTaskFailed(
-            Task task, Date start, Date end, Throwable throwable) {
+    public synchronized void onTaskFailed(Task task, Date start, Date end, Throwable throwable) {
         long downloadTime = end.getTime() - start.getTime();
-        LOG.error("Task '{}' failed in {} ms",
-                task.getIri(), downloadTime, throwable);
+        LOG.error("Task '{}' failed in {} ms", task.getIri(), downloadTime, throwable);
         String reportIri = getIriForReport(task);
         writeReportBasic(reportIri, start, end);
         writeTaskReference(reportIri, task);
@@ -91,8 +86,7 @@ class DefaultReportWriter implements ReportWriter {
         try {
             writer.flush();
         } catch (RdfException exception) {
-            LOG.error("Can't flush report.{} for task {}",
-                    reportIri, task.getIri());
+            LOG.error("Can't flush report.{} for task {}", reportIri, task.getIri());
         }
     }
 
@@ -105,5 +99,4 @@ class DefaultReportWriter implements ReportWriter {
     public String getIriForReport(Task task) {
         return task.deriveIri("report");
     }
-
 }

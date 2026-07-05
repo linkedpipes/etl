@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.rdf.entity;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-
 import java.util.List;
 
 /**
@@ -23,8 +22,7 @@ public interface MergeControl {
      * @param resource This values have been given
      * @param graph    Graph.
      */
-    void onReference(String resource, String graph)
-            throws RdfUtilsException;
+    void onReference(String resource, String graph) throws RdfUtilsException;
 
     /**
      * Called to decide what to do with a property.
@@ -33,5 +31,4 @@ public interface MergeControl {
      * @return Decision what to do with the property.
      */
     MergeType onProperty(String property) throws RdfUtilsException;
-
 }

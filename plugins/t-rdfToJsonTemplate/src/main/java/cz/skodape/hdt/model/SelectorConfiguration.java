@@ -8,5 +8,4 @@ public interface SelectorConfiguration {
      * Create and return instance of selector using this configuration.
      */
     Selector createSelector();
-
 }

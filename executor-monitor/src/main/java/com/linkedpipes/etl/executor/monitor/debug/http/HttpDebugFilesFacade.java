@@ -4,31 +4,28 @@ import com.linkedpipes.etl.executor.monitor.ConfigurationHolder;
 import com.linkedpipes.etl.executor.monitor.debug.DataUnit;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
 import com.linkedpipes.etl.executor.monitor.debug.DebugDataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class HttpDebugFilesFacade {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(HttpDebugFilesFacade.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HttpDebugFilesFacade.class);
 
     private final ConfigurationHolder configuration;
 
     private final DebugDataSource dataSource;
 
     @Autowired
-    public HttpDebugFilesFacade(
-            ConfigurationHolder configuration, DebugDataSource dataSource) {
+    public HttpDebugFilesFacade(ConfigurationHolder configuration, DebugDataSource dataSource) {
         this.configuration = configuration;
         this.dataSource = dataSource;
     }
@@ -46,8 +43,7 @@ public class HttpDebugFilesFacade {
         return resolveDebugData(Arrays.asList(path), debugData);
     }
 
-    private Optional<DebugEntry> resolveDebugData(
-            List<String> path, DebugData debugData) {
+    private Optional<DebugEntry> resolveDebugData(List<String> path, DebugData debugData) {
         if (path.size() == 1) {
             return Optional.of(new ExecutionRootEntry(debugData));
         }
@@ -60,11 +56,9 @@ public class HttpDebugFilesFacade {
         return resolveDataUnit(path, dataUnit);
     }
 
-    private Optional<DebugEntry> resolveDataUnit(
-            List<String> path, DataUnit dataUnit) {
+    private Optional<DebugEntry> resolveDataUnit(List<String> path, DataUnit dataUnit) {
         if (path.size() == 2) {
-            return Optional.of(new DataUnitRootEntry(
-                    dataUnit, this::preparePublicPath));
+            return Optional.of(new DataUnitRootEntry(dataUnit, this::preparePublicPath));
         }
         // The same file can be in multiple data units.
         List<DebugEntry> entriesFound = new ArrayList<>(2);
@@ -74,12 +68,9 @@ public class HttpDebugFilesFacade {
                 continue;
             }
             if (resolved.isDirectory()) {
-                entriesFound.add(new DirectoryEntry(
-                        resolved, file.getName(), this::preparePublicPath));
+                entriesFound.add(new DirectoryEntry(resolved, file.getName(), this::preparePublicPath));
             } else {
-                entriesFound.add(new FileContentEntry(
-                        dataUnit, resolved, file.getName(),
-                        preparePublicPath(resolved)));
+                entriesFound.add(new FileContentEntry(dataUnit, resolved, file.getName(), preparePublicPath(resolved)));
             }
         }
         if (entriesFound.size() == 0) {
@@ -87,13 +78,11 @@ public class HttpDebugFilesFacade {
         } else if (entriesFound.size() == 1) {
             return Optional.of(entriesFound.get(0));
         } else {
-            return Optional.of(new AmbiguousEntry(
-                    entriesFound, this::preparePublicPath));
+            return Optional.of(new AmbiguousEntry(entriesFound, this::preparePublicPath));
         }
     }
 
-    private File resolvePath(
-            List<String> path, int pathIndex, File currentFile) {
+    private File resolvePath(List<String> path, int pathIndex, File currentFile) {
         if (path.size() == pathIndex) {
             return currentFile;
         }
@@ -112,8 +101,7 @@ public class HttpDebugFilesFacade {
         }
         try {
             String filePath = file.getCanonicalPath();
-            String workingPath =
-                    configuration.getRawWorkingDirectory().getCanonicalPath();
+            String workingPath = configuration.getRawWorkingDirectory().getCanonicalPath();
             String relativePath = filePath.substring(workingPath.length());
             return urlPrefix + relativePath.replace(File.separator, "/");
         } catch (IOException ex) {
@@ -121,5 +109,4 @@ public class HttpDebugFilesFacade {
             return null;
         }
     }
-
 }

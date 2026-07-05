@@ -11,8 +11,7 @@ public class RequestHeader {
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_VALUE)
     private String value;
 
-    public RequestHeader() {
-    }
+    public RequestHeader() {}
 
     public String getKey() {
         return key;
@@ -29,5 +28,4 @@ public class RequestHeader {
     public void setValue(String value) {
         this.value = value;
     }
-
 }

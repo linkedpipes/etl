@@ -50,5 +50,4 @@ class Connection implements Loadable {
     public String getTargetBinding() {
         return targetBinding;
     }
-
 }

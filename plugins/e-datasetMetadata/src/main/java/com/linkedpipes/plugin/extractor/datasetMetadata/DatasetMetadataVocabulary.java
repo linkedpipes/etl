@@ -54,5 +54,4 @@ public final class DatasetMetadataVocabulary {
         SCHEMA_ENDDATE = valueFactory.createIRI(SCHEMA + "endDate");
         SCHEMA_STARTDATE = valueFactory.createIRI(SCHEMA + "startDate");
     }
-
 }

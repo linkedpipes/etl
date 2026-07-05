@@ -26,5 +26,4 @@ class MdcKeyFilter extends Filter<ILoggingEvent> {
             return FilterReply.DENY;
         }
     }
-
 }

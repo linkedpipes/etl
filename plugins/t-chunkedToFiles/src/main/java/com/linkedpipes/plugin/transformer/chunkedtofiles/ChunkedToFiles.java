@@ -7,14 +7,6 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.RDFParser;
-import org.eclipse.rdf4j.rio.RDFWriter;
-import org.eclipse.rdf4j.rio.Rio;
-import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,6 +17,13 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 
 public class ChunkedToFiles implements Component, SequentialExecution {
 
@@ -59,17 +58,13 @@ public class ChunkedToFiles implements Component, SequentialExecution {
     }
 
     private void initializeFromConfiguration() throws LpException {
-        Optional<RDFFormat> format = Rio.getParserFormatForMIMEType(
-                configuration.getFileType());
+        Optional<RDFFormat> format = Rio.getParserFormatForMIMEType(configuration.getFileType());
         if (!format.isPresent()) {
-            throw new LpException(
-                    "Can't determine output file type: {}",
-                    configuration.getFileType());
+            throw new LpException("Can't determine output file type: {}", configuration.getFileType());
         }
         outputFormat = format.get();
         loadNamespaces();
     }
-
 
     private void loadNamespaces() throws LpException {
         if (configuration.getPrefixTurtle() == null) {
@@ -86,8 +81,7 @@ public class ChunkedToFiles implements Component, SequentialExecution {
             });
             parser.parse(reader, "http://localhost");
         } catch (IOException ex) {
-            throw new LpException(
-                    "Can't parse TTL with prefixes.", ex);
+            throw new LpException("Can't parse TTL with prefixes.", ex);
         }
     }
 
@@ -103,16 +97,14 @@ public class ChunkedToFiles implements Component, SequentialExecution {
     private void convert(ChunkedTriples.Chunk chunk) throws LpException {
         File outputFile = createOutputFile();
         try (FileOutputStream outStream = new FileOutputStream(outputFile);
-             OutputStreamWriter outWriter = new OutputStreamWriter(
-                     outStream, Charset.forName(FILE_ENCODE))) {
+                OutputStreamWriter outWriter = new OutputStreamWriter(outStream, Charset.forName(FILE_ENCODE))) {
             writeChunk(chunk, outWriter);
         } catch (IOException | RuntimeException ex) {
             throw new LpException("Can't write data.", ex);
         }
     }
 
-    private void writeChunk(ChunkedTriples.Chunk chunk,
-            OutputStreamWriter streamWriter) throws LpException {
+    private void writeChunk(ChunkedTriples.Chunk chunk, OutputStreamWriter streamWriter) throws LpException {
         RDFWriter rdfWriter = createWriter(streamWriter);
         rdfWriter.startRDF();
         addNamespaces(rdfWriter);
@@ -145,9 +137,7 @@ public class ChunkedToFiles implements Component, SequentialExecution {
     }
 
     private File createOutputFile() throws LpException {
-        String fileName = ++outputCounter + "." +
-                outputFormat.getDefaultFileExtension();
+        String fileName = ++outputCounter + "." + outputFormat.getDefaultFileExtension();
         return outputFiles.createFile(fileName);
     }
-
 }

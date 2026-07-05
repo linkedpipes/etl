@@ -3,6 +3,12 @@ package cz.skodape.hdt.rdf.rdf4j;
 import cz.skodape.hdt.core.OperationFailed;
 import cz.skodape.hdt.core.Reference;
 import cz.skodape.hdt.core.ReferenceSource;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -12,19 +18,11 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 /**
  * The graph of the root source entity is kept in sync with the loaded model,
  * i.e. only data from a single graph are loaded at a time.
  */
-public class Rdf4jChunkedSource
-        extends Rdf4jSource implements ReferenceSource {
+public class Rdf4jChunkedSource extends Rdf4jSource implements ReferenceSource {
 
     private static class State {
 
@@ -38,11 +36,9 @@ public class Rdf4jChunkedSource
         Resource graph = null;
 
         int rootsIndex = 0;
-
     }
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(Rdf4jChunkedSource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Rdf4jChunkedSource.class);
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
@@ -61,8 +57,7 @@ public class Rdf4jChunkedSource
 
     private Thread producerThread;
 
-    public Rdf4jChunkedSource(
-            Rdf4jChunkedSourceConfiguration configuration) {
+    public Rdf4jChunkedSource(Rdf4jChunkedSourceConfiguration configuration) {
         this.configuration = configuration;
     }
 
@@ -90,8 +85,7 @@ public class Rdf4jChunkedSource
     }
 
     @Override
-    protected List<Value> property(
-            Resource graph, Resource resource, String property) {
+    protected List<Value> property(Resource graph, Resource resource, String property) {
         if (current == null) {
             return Collections.emptyList();
         }
@@ -114,8 +108,7 @@ public class Rdf4jChunkedSource
     }
 
     @Override
-    protected List<Resource> reverseProperty(
-            Resource graph, Value value, String property) {
+    protected List<Resource> reverseProperty(Resource graph, Value value, String property) {
         if (current == null) {
             return Collections.emptyList();
         }
@@ -167,8 +160,7 @@ public class Rdf4jChunkedSource
             return;
         }
         while (true) {
-            Rdf4jGraphProducer.Container container =
-                    gatStatementsFromProducer();
+            Rdf4jGraphProducer.Container container = gatStatementsFromProducer();
             if (container == null || container.statements == null) {
                 producerIsEmpty = true;
                 return;
@@ -177,8 +169,10 @@ public class Rdf4jChunkedSource
             newState.statements = container.statements;
             newState.roots = collectRoots(container.statements);
             newState.graph = container.graph;
-            LOG.debug("New next state with {} roots in {} statements.",
-                    newState.roots.size(), newState.statements.size());
+            LOG.debug(
+                    "New next state with {} roots in {} statements.",
+                    newState.roots.size(),
+                    newState.statements.size());
             if (newState.roots.size() == 0) {
                 continue;
             }
@@ -198,13 +192,9 @@ public class Rdf4jChunkedSource
 
     protected List<Reference> collectRoots(List<Statement> statements) {
         Set<ResourceInGraph> subjects = new HashSet<>();
-        statements.stream()
-                .map(ResourceInGraph::new)
-                .forEach(subjects::add);
+        statements.stream().map(ResourceInGraph::new).forEach(subjects::add);
         return subjects.stream()
                 .map(item -> (Reference) this.wrap(item.graph, item.resource))
                 .collect(Collectors.toList());
-
     }
-
 }

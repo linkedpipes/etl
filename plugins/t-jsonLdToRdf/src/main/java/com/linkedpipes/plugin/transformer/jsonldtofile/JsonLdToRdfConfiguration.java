@@ -11,9 +11,7 @@ public class JsonLdToRdfConfiguration {
     @RdfToPojo.Property(iri = JsonLdToRdfVocabulary.HAS_SKIP_ON_FAILURE)
     private boolean skipOnFailure = false;
 
-    public JsonLdToRdfConfiguration() {
-
-    }
+    public JsonLdToRdfConfiguration() {}
 
     public int getCommitSize() {
         return commitSize;
@@ -30,5 +28,4 @@ public class JsonLdToRdfConfiguration {
     public void setSkipOnFailure(boolean skipOnFailure) {
         this.skipOnFailure = skipOnFailure;
     }
-
 }

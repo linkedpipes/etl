@@ -17,8 +17,7 @@ public class SparqlConstructConfiguration {
     @RdfToPojo.Property(iri = SparqlConstructVocabulary.HAS_SKIP_ON_FAILURE)
     private boolean skipOnFailure = false;
 
-    public SparqlConstructConfiguration() {
-    }
+    public SparqlConstructConfiguration() {}
 
     public String getQuery() {
         return query;
@@ -51,5 +50,4 @@ public class SparqlConstructConfiguration {
     public void setSkipOnFailure(boolean skipOnFailure) {
         this.skipOnFailure = skipOnFailure;
     }
-
 }

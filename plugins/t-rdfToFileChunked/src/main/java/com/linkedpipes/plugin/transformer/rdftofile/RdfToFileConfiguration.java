@@ -17,8 +17,7 @@ public class RdfToFileConfiguration {
     @RdfToPojo.Property(iri = RdfToFileVocabulary.HAS_PREFIXES)
     private String prefixes;
 
-    public RdfToFileConfiguration() {
-    }
+    public RdfToFileConfiguration() {}
 
     public String getFileName() {
         return fileName;

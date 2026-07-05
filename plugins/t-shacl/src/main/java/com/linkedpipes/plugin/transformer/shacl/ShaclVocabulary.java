@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.shacl;
 
 final class ShaclVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-shacl#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-shacl#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -11,7 +10,5 @@ final class ShaclVocabulary {
 
     public static final String HAS_FAIL_ON_ERROR = PREFIX + "failOnError";
 
-    private ShaclVocabulary() {
-    }
-
+    private ShaclVocabulary() {}
 }

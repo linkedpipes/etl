@@ -22,5 +22,4 @@ class DefaultEntry implements FilesDataUnit.Entry {
     public String getFileName() {
         return this.root.toPath().relativize(this.file.toPath()).toString();
     }
-
 }

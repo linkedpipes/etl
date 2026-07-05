@@ -22,12 +22,11 @@ import org.eclipse.rdf4j.model.ValueFactory;
  */
 public class RdfDiffToEvents implements Component, SequentialExecution {
 
-    static final String DIFF_NS =
-            "http://etl.linkedpipes.com/ontology/rdf-diff#";
+    static final String DIFF_NS = "http://etl.linkedpipes.com/ontology/rdf-diff#";
     static final String DIFF_EVENT_TYPE = DIFF_NS + "diffEventType";
-    static final String CREATE_TYPE    = DIFF_NS + "Create";
-    static final String UPDATE_TYPE    = DIFF_NS + "Update";
-    static final String DELETE_TYPE    = DIFF_NS + "Delete";
+    static final String CREATE_TYPE = DIFF_NS + "Create";
+    static final String UPDATE_TYPE = DIFF_NS + "Update";
+    static final String DELETE_TYPE = DIFF_NS + "Delete";
 
     @Component.InputPort(iri = "LeftRdf")
     public SingleGraphDataUnit leftRdf;
@@ -47,12 +46,12 @@ public class RdfDiffToEvents implements Component, SequentialExecution {
                     ValueFactory vf = outConn.getValueFactory();
 
                     IRI eventTypePred = vf.createIRI(DIFF_EVENT_TYPE);
-                    IRI createIri    = vf.createIRI(CREATE_TYPE);
-                    IRI updateIri    = vf.createIRI(UPDATE_TYPE);
-                    IRI deleteIri    = vf.createIRI(DELETE_TYPE);
+                    IRI createIri = vf.createIRI(CREATE_TYPE);
+                    IRI updateIri = vf.createIRI(UPDATE_TYPE);
+                    IRI deleteIri = vf.createIRI(DELETE_TYPE);
 
                     RdfDiffIterator iter = new RdfDiffIterator(
-                            leftConn,  leftRdf.getReadGraph(),
+                            leftConn, leftRdf.getReadGraph(),
                             rightConn, rightRdf.getReadGraph());
 
                     while (iter.hasNext()) {
@@ -62,12 +61,13 @@ public class RdfDiffToEvents implements Component, SequentialExecution {
                         }
 
                         IRI subject = event.getSubject();
-                        IRI typeIri = switch (event.getType()) {
-                            case CREATE -> createIri;
-                            case UPDATE -> updateIri;
-                            case DELETE -> deleteIri;
-                            case NOOP   -> throw new IllegalStateException();
-                        };
+                        IRI typeIri =
+                                switch (event.getType()) {
+                                    case CREATE -> createIri;
+                                    case UPDATE -> updateIri;
+                                    case DELETE -> deleteIri;
+                                    case NOOP -> throw new IllegalStateException();
+                                };
 
                         // Write the event-type marker on the subject.
                         outConn.add(subject, eventTypePred, typeIri, outGraph);

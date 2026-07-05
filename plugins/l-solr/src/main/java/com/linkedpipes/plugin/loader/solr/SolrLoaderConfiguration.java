@@ -23,8 +23,7 @@ public class SolrLoaderConfiguration {
     @RdfToPojo.Property(iri = SolrLoaderVocabulary.HAS_PASSWORD)
     private String password;
 
-    public SolrLoaderConfiguration() {
-    }
+    public SolrLoaderConfiguration() {}
 
     public String getServer() {
         return server;
@@ -73,5 +72,4 @@ public class SolrLoaderConfiguration {
     public void setPassword(String password) {
         this.password = password;
     }
-
 }

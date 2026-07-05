@@ -26,9 +26,6 @@ import cz.skodape.hdt.selector.filter.FilterSelectorAdapter;
 import cz.skodape.hdt.selector.identity.IdentitySelectorAdapter;
 import cz.skodape.hdt.selector.once.OnceSelectorAdapter;
 import cz.skodape.hdt.selector.path.PathSelectorAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,11 +33,12 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RdfToJsonTemplate implements Component, SequentialExecution {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(RdfToJsonTemplate.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RdfToJsonTemplate.class);
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
@@ -60,11 +58,9 @@ public class RdfToJsonTemplate implements Component, SequentialExecution {
         TransformationFile definition = parseDefinition();
         for (FilesDataUnit.Entry entry : inputFiles) {
             SelectorContext context = createContext(definition, entry.toFile());
-            File outputFile = outputFiles.createFile(
-                    entry.getFileName() + ".json");
+            File outputFile = outputFiles.createFile(entry.getFileName() + ".json");
             try (FileOutputStream stream = new FileOutputStream(outputFile)) {
-                PrintWriter writer = new PrintWriter(
-                        stream, true, StandardCharsets.UTF_8);
+                PrintWriter writer = new PrintWriter(stream, true, StandardCharsets.UTF_8);
                 Output output = new JsonOutput(writer, true);
                 createTransform(definition, context, output).apply();
             } catch (IOException | OperationFailed ex) {
@@ -101,30 +97,23 @@ public class RdfToJsonTemplate implements Component, SequentialExecution {
         return adapter;
     }
 
-    protected SelectorContext createContext(
-            TransformationFile definition, File inputFile) throws LpException {
+    protected SelectorContext createContext(TransformationFile definition, File inputFile) throws LpException {
         Map<String, PropertySource> sources = new HashMap<>();
         for (var entry : definition.sources.entrySet()) {
-            SourceConfiguration sourceConfiguration =
-                    updateSources(entry.getValue(), inputFile);
+            SourceConfiguration sourceConfiguration = updateSources(entry.getValue(), inputFile);
             sources.put(entry.getKey(), sourceConfiguration.createSource());
         }
-        return new SelectorContext(
-                sources, sources.get(definition.propertySource));
+        return new SelectorContext(sources, sources.get(definition.propertySource));
     }
 
-    protected SourceConfiguration updateSources(
-            SourceConfiguration sourceConfiguration, File inputFile)
+    protected SourceConfiguration updateSources(SourceConfiguration sourceConfiguration, File inputFile)
             throws LpException {
         if (sourceConfiguration instanceof Rdf4jChunkedSourceConfiguration) {
-            Rdf4jChunkedSourceConfiguration config =
-                    (Rdf4jChunkedSourceConfiguration) sourceConfiguration;
+            Rdf4jChunkedSourceConfiguration config = (Rdf4jChunkedSourceConfiguration) sourceConfiguration;
             config.file = inputFile;
             return config;
-        } else if (
-                sourceConfiguration instanceof Rdf4jMemorySourceConfiguration) {
-            Rdf4jMemorySourceConfiguration config =
-                    (Rdf4jMemorySourceConfiguration) sourceConfiguration;
+        } else if (sourceConfiguration instanceof Rdf4jMemorySourceConfiguration) {
+            Rdf4jMemorySourceConfiguration config = (Rdf4jMemorySourceConfiguration) sourceConfiguration;
             config.file = inputFile;
             return config;
         } else {
@@ -132,16 +121,9 @@ public class RdfToJsonTemplate implements Component, SequentialExecution {
         }
     }
 
-    protected Transform createTransform(
-            TransformationFile definition,
-            SelectorContext context,
-            Output output
-    ) {
+    protected Transform createTransform(TransformationFile definition, SelectorContext context, Output output) {
         ConfigurableErrorHandler handler = new ConfigurableErrorHandler();
-        handler.setIgnoreMultiplePrimitives(
-                configuration.isIgnoreMultiplePrimitives());
-        return new Transform(
-                definition, context, output, handler);
+        handler.setIgnoreMultiplePrimitives(configuration.isIgnoreMultiplePrimitives());
+        return new Transform(definition, context, output, handler);
     }
-
 }

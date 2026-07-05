@@ -1,9 +1,8 @@
 package com.linkedpipes.etl.executor.monitor;
 
 import com.linkedpipes.etl.executor.monitor.cli.Configuration;
-import org.springframework.stereotype.Service;
-
 import java.io.File;
+import org.springframework.stereotype.Service;
 
 /**
  * Wrap the configuration, as we do not provide direct access for services.
@@ -22,8 +21,7 @@ public class ConfigurationHolder {
     }
 
     public File getWorkingDirectory() {
-        return new File(
-                configuration.dataDirectory + File.separator + "data");
+        return new File(configuration.dataDirectory + File.separator + "data");
     }
 
     public Integer getWebServerPort() {
@@ -81,5 +79,4 @@ public class ConfigurationHolder {
     public Integer getHistoryHourLimit() {
         return configuration.historyHourLimit;
     }
-
 }

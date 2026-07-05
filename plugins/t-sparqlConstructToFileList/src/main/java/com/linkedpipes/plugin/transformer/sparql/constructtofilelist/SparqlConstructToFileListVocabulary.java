@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.sparql.constructtofilelist;
 
 public final class SparqlConstructToFileListVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-sparqlConstructToFileList#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-sparqlConstructToFileList#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -23,10 +22,7 @@ public final class SparqlConstructToFileListVocabulary {
 
     public static final String HAS_DEDUPLICATION = PREFIX + "deduplication";
 
-    public static final String HAS_PREFIX_TTL  = PREFIX + "prefixTurtle";
+    public static final String HAS_PREFIX_TTL = PREFIX + "prefixTurtle";
 
-    private SparqlConstructToFileListVocabulary() {
-
-    }
-
+    private SparqlConstructToFileListVocabulary() {}
 }

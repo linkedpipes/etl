@@ -5,6 +5,7 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.sql.SQLException;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.Update;
 import org.eclipse.rdf4j.repository.Repository;
@@ -13,8 +14,6 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import virtuoso.rdf4j.driver.VirtuosoRepository;
-
-import java.sql.SQLException;
 
 public final class Virtuoso implements Component, SequentialExecution {
 
@@ -46,14 +45,11 @@ public final class Virtuoso implements Component, SequentialExecution {
 
     private void createRepository() throws LpException {
         repository = new VirtuosoRepository(
-                configuration.getVirtuosoUrl(),
-                configuration.getUsername(),
-                configuration.getPassword());
+                configuration.getVirtuosoUrl(), configuration.getUsername(), configuration.getPassword());
         try {
             repository.init();
         } catch (RepositoryException ex) {
-            throw new LpException(
-                    "Can't connect to Virtuoso repository.", ex);
+            throw new LpException("Can't connect to Virtuoso repository.", ex);
         }
     }
 
@@ -82,7 +78,7 @@ public final class Virtuoso implements Component, SequentialExecution {
             checkpoint();
         }
         // Update index
-        switch(configuration.getFulltextIndexUpdate()) {
+        switch (configuration.getFulltextIndexUpdate()) {
             case VirtuosoVocabulary.REBUILD_INDEX:
                 LOG.info("Rebuilding fulltext index.");
                 sqlExecutor.rebuildFulltextIndex();
@@ -94,8 +90,7 @@ public final class Virtuoso implements Component, SequentialExecution {
             case "":
                 break;
             default:
-                LOG.warn("Unknown option for fulltext index update \"{}\".",
-                        configuration.getFulltextIndexUpdate());
+                LOG.warn("Unknown option for fulltext index update \"{}\".", configuration.getFulltextIndexUpdate());
                 break;
         }
         progressReport.done();
@@ -116,18 +111,14 @@ public final class Virtuoso implements Component, SequentialExecution {
     }
 
     private void fillLoadList() throws LpException {
-        sqlExecutor.insertLoadRecord(
-                configuration.getLoadFileName(),
-                configuration.getTargetGraph());
+        sqlExecutor.insertLoadRecord(configuration.getLoadFileName(), configuration.getTargetGraph());
     }
 
     private void clearDestinationGraph() {
         LOG.debug("clearDestinationGraph ... ");
         final RepositoryConnection connection = repository.getConnection();
         try {
-            Update update = connection.prepareUpdate(
-                    QueryLanguage.SPARQL,
-                    getClearQuery());
+            Update update = connection.prepareUpdate(QueryLanguage.SPARQL, getClearQuery());
             update.execute();
         } finally {
             LOG.debug("clearDestinationGraph ... done");
@@ -140,9 +131,7 @@ public final class Virtuoso implements Component, SequentialExecution {
     }
 
     private String getClearQuery() {
-        return "DEFINE sql:log-enable 3 CLEAR GRAPH <" +
-                configuration.getTargetGraph() +
-                ">";
+        return "DEFINE sql:log-enable 3 CLEAR GRAPH <" + configuration.getTargetGraph() + ">";
     }
 
     private int getFilesToLoadCount() throws LpException {
@@ -152,8 +141,7 @@ public final class Virtuoso implements Component, SequentialExecution {
     }
 
     private void runLoaders(int filesToLoad) throws LpException {
-        MultiThreadLoader loader = new MultiThreadLoader(
-                sqlExecutor, configuration, progressReport);
+        MultiThreadLoader loader = new MultiThreadLoader(sqlExecutor, configuration, progressReport);
         loader.loadData(filesToLoad);
     }
 
@@ -166,5 +154,4 @@ public final class Virtuoso implements Component, SequentialExecution {
     private void clearLoadList() throws LpException {
         sqlExecutor.clearLoadList();
     }
-
 }

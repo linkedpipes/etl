@@ -2,8 +2,6 @@ package com.linkedpipes.plugin.http.request.main;
 
 import com.linkedpipes.etl.executor.api.v1.component.task.Task;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-import com.linkedpipes.plugin.http.request.main.HttpRequestVocabulary;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -82,7 +80,6 @@ public class HttpRequestTask implements Task {
         public void setFileReference(String fileReference) {
             this.fileReference = fileReference;
         }
-
     }
 
     @RdfToPojo.Resource
@@ -158,8 +155,7 @@ public class HttpRequestTask implements Task {
         return headers;
     }
 
-    public void setHeaders(
-            List<Header> headers) {
+    public void setHeaders(List<Header> headers) {
         this.headers = headers;
     }
 
@@ -219,5 +215,4 @@ public class HttpRequestTask implements Task {
     public void setHasUtf8Redirect(Boolean hasUtf8Redirect) {
         this.hasUtf8Redirect = hasUtf8Redirect;
     }
-
 }

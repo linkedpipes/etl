@@ -4,21 +4,19 @@ import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.cli.adapter.EnvironmentToConfiguration;
 import com.linkedpipes.etl.executor.monitor.cli.adapter.PropertiesToConfiguration;
 import com.linkedpipes.etl.executor.monitor.cli.adapter.RdfToConfiguration;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.Rio;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.Rio;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConfigurationLoader {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ConfigurationLoader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationLoader.class);
 
     private Configuration configuration;
 
@@ -60,14 +58,12 @@ public class ConfigurationLoader {
         String fileName = file.getName().toLowerCase();
         if (fileName.endsWith(".properties")) {
             LOG.warn("Properties configuration files are deprecated.");
-            configuration = PropertiesToConfiguration
-                    .updateConfiguration(configuration, file);
+            configuration = PropertiesToConfiguration.updateConfiguration(configuration, file);
             return;
         }
         Optional<RDFFormat> format = Rio.getParserFormatForFileName(fileName);
         if (format.isPresent()) {
-            configuration = RdfToConfiguration
-                    .updateConfiguration(configuration, file, format.get());
+            configuration = RdfToConfiguration.updateConfiguration(configuration, file, format.get());
             return;
         }
         throw new MonitorException("Unknown configuration file type.");
@@ -82,12 +78,10 @@ public class ConfigurationLoader {
     }
 
     private void loadFromEnvironment() throws MonitorException {
-        configuration = EnvironmentToConfiguration
-                .updateConfiguration(configuration);
+        configuration = EnvironmentToConfiguration.updateConfiguration(configuration);
     }
 
     public Configuration getConfiguration() {
         return configuration;
     }
-
 }

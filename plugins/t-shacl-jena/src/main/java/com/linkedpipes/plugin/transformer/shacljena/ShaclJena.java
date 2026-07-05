@@ -6,6 +6,11 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -16,12 +21,6 @@ import org.apache.jena.shacl.Shapes;
 import org.apache.jena.shacl.ValidationReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class ShaclJena implements Component, SequentialExecution {
 
@@ -67,23 +66,18 @@ public final class ShaclJena implements Component, SequentialExecution {
     private List<Shapes> loadShapes() {
         List<Shapes> result = new ArrayList<>();
         for (FilesDataUnit.Entry fileEntry : shapesFiles) {
-            Graph content = RDFDataMgr.loadGraph(
-                    fileEntry.toFile().getAbsolutePath());
+            Graph content = RDFDataMgr.loadGraph(fileEntry.toFile().getAbsolutePath());
             result.add(Shapes.parse(content));
         }
         return result;
     }
 
-    private void validateDataWithShape(
-            FilesDataUnit.Entry fileEntry, Shapes shape) {
-        Graph content = RDFDataMgr.loadGraph(
-                fileEntry.toFile().getAbsolutePath());
+    private void validateDataWithShape(FilesDataUnit.Entry fileEntry, Shapes shape) {
+        Graph content = RDFDataMgr.loadGraph(fileEntry.toFile().getAbsolutePath());
         ValidationReport report = ShaclValidator.get().validate(shape, content);
         outputModel.add(report.getModel());
         if (!report.conforms()) {
-            LOG.info(
-                    "File '{}' does not conform to shape.",
-                    fileEntry.getFileName());
+            LOG.info("File '{}' does not conform to shape.", fileEntry.getFileName());
             this.shapeFailed = true;
         }
     }
@@ -114,5 +108,4 @@ public final class ShaclJena implements Component, SequentialExecution {
             throw new LpException("Data does not conform to the shapes.");
         }
     }
-
 }

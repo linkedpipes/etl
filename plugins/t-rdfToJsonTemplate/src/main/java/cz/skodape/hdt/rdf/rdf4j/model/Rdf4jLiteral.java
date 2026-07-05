@@ -42,5 +42,4 @@ public class Rdf4jLiteral implements Rdf4jReference, ObjectReference {
     public boolean isPrimitiveReference() {
         return false;
     }
-
 }

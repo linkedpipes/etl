@@ -38,8 +38,7 @@ public class VirtuosoConfiguration {
     @RdfToPojo.Property(iri = VirtuosoVocabulary.FULLTEXT_INDEX)
     private String fulltextIndexUpdate = "";
 
-    public VirtuosoConfiguration() {
-    }
+    public VirtuosoConfiguration() {}
 
     public String getVirtuosoUrl() {
         return virtuosoUrl;
@@ -128,5 +127,4 @@ public class VirtuosoConfiguration {
     public void setFulltextIndexUpdate(String fulltextIndexUpdate) {
         this.fulltextIndexUpdate = fulltextIndexUpdate;
     }
-
 }

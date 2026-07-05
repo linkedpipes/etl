@@ -1,11 +1,10 @@
 package com.linkedpipes.etl.executor.monitor.debug;
 
 import com.linkedpipes.etl.executor.monitor.TestUtils;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DataUnitTest {
 
@@ -27,16 +26,10 @@ public class DataUnitTest {
         Assertions.assertEquals(2, dataUnit.getDebugDirectories().size());
         List<File> directories = dataUnit.getDebugDirectories();
         Assertions.assertEquals(
-                new File(directory, "valid-info"
-                        + File.separator + ".."
-                        + File.separator + "data"),
+                new File(directory, "valid-info" + File.separator + ".." + File.separator + "data"),
                 directories.get(0));
         Assertions.assertEquals(
-                new File(directory, "valid-info"
-                        + File.separator + "."
-                        + File.separator + "path"),
-                directories.get(1));
-
+                new File(directory, "valid-info" + File.separator + "." + File.separator + "path"), directories.get(1));
     }
 
     @Test
@@ -48,5 +41,4 @@ public class DataUnitTest {
         //
         Assertions.assertEquals(0, dataUnit.getDebugDirectories().size());
     }
-
 }

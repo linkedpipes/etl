@@ -6,7 +6,6 @@ import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +21,7 @@ public class RdfSourceWrap implements RdfSource {
     }
 
     @Override
-    public void statements(String subject, StatementHandler handler)
-            throws RdfException {
+    public void statements(String subject, StatementHandler handler) throws RdfException {
         try {
             source.triples(subject, graph, (triple) -> {
                 RdfValueWrap value = new RdfValueWrap(triple.getObject());
@@ -35,8 +33,7 @@ public class RdfSourceWrap implements RdfSource {
     }
 
     @Override
-    public List<RdfValue> getPropertyValues(String subject, String predicate)
-            throws RdfException {
+    public List<RdfValue> getPropertyValues(String subject, String predicate) throws RdfException {
         List<RdfValue> result = new ArrayList<>();
         try {
             source.triples(subject, graph, (triple) -> {
@@ -65,5 +62,4 @@ public class RdfSourceWrap implements RdfSource {
         }
         return result;
     }
-
 }

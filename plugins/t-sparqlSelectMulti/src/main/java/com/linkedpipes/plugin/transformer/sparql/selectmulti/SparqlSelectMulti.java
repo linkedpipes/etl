@@ -5,6 +5,12 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.LinkedList;
+import java.util.List;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.QueryLanguage;
@@ -16,17 +22,9 @@ import org.eclipse.rdf4j.query.resultio.text.csv.SPARQLResultsCSVWriterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.LinkedList;
-import java.util.List;
-
 public final class SparqlSelectMulti implements Component, SequentialExecution {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(SparqlSelectMulti.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SparqlSelectMulti.class);
 
     /**
      * Used to store configuration of the component.
@@ -44,7 +42,6 @@ public final class SparqlSelectMulti implements Component, SequentialExecution {
             this.query = query;
             this.fileName = fileName;
         }
-
     }
 
     @Component.InputPort(iri = "InputRdf")
@@ -61,8 +58,7 @@ public final class SparqlSelectMulti implements Component, SequentialExecution {
         final List<Configuration> configurations = new LinkedList<>();
         // Load configurations.
         configurationRdf.execute((connection) -> {
-            final TupleQuery query = connection.prepareTupleQuery(
-                    QueryLanguage.SPARQL, getConfigurationQuery());
+            final TupleQuery query = connection.prepareTupleQuery(QueryLanguage.SPARQL, getConfigurationQuery());
             final TupleQueryResult results = query.evaluate();
             while (results.hasNext()) {
                 final BindingSet binding = results.next();
@@ -74,31 +70,24 @@ public final class SparqlSelectMulti implements Component, SequentialExecution {
         });
         // Transform.
         for (Configuration configuration : configurations) {
-            if (configuration.fileName == null
-                    || configuration.fileName.isEmpty()) {
-                throw new LpException("Missing property: {} on {}",
-                        SparqlSelectMultiVocabulary.HAS_FILE_NAME,
-                        configuration.iri);
+            if (configuration.fileName == null || configuration.fileName.isEmpty()) {
+                throw new LpException(
+                        "Missing property: {} on {}", SparqlSelectMultiVocabulary.HAS_FILE_NAME, configuration.iri);
             }
             transform(configuration.query, configuration.fileName);
         }
     }
 
-    private void transform(String queryString, String outputFileName)
-            throws LpException {
+    private void transform(String queryString, String outputFileName) throws LpException {
         final IRI inputGraph = inputRdf.getReadGraph();
         final File outputFile = outputFiles.createFile(outputFileName);
         LOG.info("\n{}\n    -> {}", queryString, outputFileName);
-        final SPARQLResultsCSVWriterFactory writerFactory =
-                new SPARQLResultsCSVWriterFactory();
+        final SPARQLResultsCSVWriterFactory writerFactory = new SPARQLResultsCSVWriterFactory();
         // Create output file and write the result.
         inputRdf.execute((connection) -> {
-            try (final OutputStream outputStream
-                         = new FileOutputStream(outputFile)) {
-                final TupleQueryResultWriter resultWriter
-                        = writerFactory.getWriter(outputStream);
-                final TupleQuery query = connection.prepareTupleQuery(
-                        QueryLanguage.SPARQL, queryString);
+            try (final OutputStream outputStream = new FileOutputStream(outputFile)) {
+                final TupleQueryResultWriter resultWriter = writerFactory.getWriter(outputStream);
+                final TupleQuery query = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
                 final SimpleDataset dataset = new SimpleDataset();
                 dataset.addDefaultGraph(inputGraph);
                 // We need to add this else we can not use
@@ -113,9 +102,8 @@ public final class SparqlSelectMulti implements Component, SequentialExecution {
     }
 
     private String getConfigurationQuery() {
-        return "SELECT DISTINCT ?s ?query ?fileName" +
-                " FROM <" + configurationRdf.getReadGraph() + "> " +
-                " WHERE {\n"
+        return "SELECT DISTINCT ?s ?query ?fileName" + " FROM <"
+                + configurationRdf.getReadGraph() + "> " + " WHERE {\n"
                 + "  ?s a <" + SparqlSelectMultiVocabulary.CONFIG
                 + "> ;\n"
                 + "    <" + SparqlSelectMultiVocabulary.HAS_FILE_NAME
@@ -124,5 +112,4 @@ public final class SparqlSelectMulti implements Component, SequentialExecution {
                 + "> ?query .\n"
                 + "}";
     }
-
 }

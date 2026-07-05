@@ -3,7 +3,6 @@ package com.linkedpipes.etl.executor.execution.model;
 import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.pipeline.model.Port;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,5 +31,4 @@ public class ExecutionComponent {
     public List<DataUnit> getDataUnits() {
         return this.dataUnits;
     }
-
 }

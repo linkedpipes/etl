@@ -26,8 +26,7 @@ public class SparqlEndpointLoaderConfiguration {
     @RdfToPojo.Property(iri = SparqlEndpointLoaderVocabulary.HAS_COMMIT_SIZE)
     private int commitSize = 100000;
 
-    public SparqlEndpointLoaderConfiguration() {
-    }
+    public SparqlEndpointLoaderConfiguration() {}
 
     public String getEndpoint() {
         return endpoint;

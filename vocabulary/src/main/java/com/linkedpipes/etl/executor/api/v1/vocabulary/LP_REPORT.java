@@ -2,8 +2,7 @@ package com.linkedpipes.etl.executor.api.v1.vocabulary;
 
 public final class LP_REPORT {
 
-    public static final String PREFIX =
-            "https://vocabulary.etl.linkedpipes.com/report/";
+    public static final String PREFIX = "https://vocabulary.etl.linkedpipes.com/report/";
 
     public static final String REPORT = PREFIX + "Report";
 
@@ -28,5 +27,4 @@ public final class LP_REPORT {
     public static final String SUCCESS = PREFIX + "Success";
 
     public static final String FAILED = PREFIX + "Failed";
-
 }

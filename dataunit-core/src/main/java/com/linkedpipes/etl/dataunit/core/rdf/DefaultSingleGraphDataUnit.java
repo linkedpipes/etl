@@ -6,6 +6,13 @@ import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Statement;
@@ -18,27 +25,15 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
-        implements SingleGraphDataUnit, WritableSingleGraphDataUnit,
-        RuntimeConfiguration {
+        implements SingleGraphDataUnit, WritableSingleGraphDataUnit, RuntimeConfiguration {
 
-    private static final String COPY_QUERY
-            = "INSERT {?s ?p ?o} WHERE {?s ?p ?o}";
+    private static final String COPY_QUERY = "INSERT {?s ?p ?o} WHERE {?s ?p ?o}";
 
     private IRI graph;
 
     public DefaultSingleGraphDataUnit(
-            DataUnitConfiguration configuration,
-            RepositoryManager manager,
-            Collection<String> sources) {
+            DataUnitConfiguration configuration, RepositoryManager manager, Collection<String> sources) {
         super(configuration, sources, manager);
     }
 
@@ -67,8 +62,7 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
         super.initialize(directory);
         List<File> directories = loadDataDirectories(directory);
         if (directories.size() != 1) {
-            throw new LpException("Invalid number of directories {} in {}",
-                    directories.size(), directory);
+            throw new LpException("Invalid number of directories {} in {}", directories.size(), directory);
         }
         File dataDirectory = directories.get(0);
         this.graph = VF.createIRI(this.configuration.getResource());
@@ -76,8 +70,7 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
     }
 
     @Override
-    public void initialize(
-            Map<String, ManageableDataUnit> dataUnits) throws LpException {
+    public void initialize(Map<String, ManageableDataUnit> dataUnits) throws LpException {
         super.initialize(dataUnits);
         if (this.sources.size() == 1) {
             String sourceIri = this.sources.iterator().next();
@@ -93,10 +86,10 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
         if (!(dataUnit instanceof DefaultSingleGraphDataUnit)) {
             throw new LpException(
                     "Can't merge with source data unit: {} of type {}",
-                    getIri(), dataUnit.getClass().getSimpleName());
+                    getIri(),
+                    dataUnit.getClass().getSimpleName());
         }
-        DefaultSingleGraphDataUnit source =
-                (DefaultSingleGraphDataUnit) dataUnit;
+        DefaultSingleGraphDataUnit source = (DefaultSingleGraphDataUnit) dataUnit;
         this.graph = source.graph;
     }
 
@@ -116,8 +109,7 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
     @Override
     public void write(TripleWriter writer) throws LpException {
         execute((connection) -> {
-            RepositoryResult<Statement> statements =
-                    connection.getStatements(null, null, null, graph);
+            RepositoryResult<Statement> statements = connection.getStatements(null, null, null, graph);
             while (statements.hasNext()) {
                 writeStatement(statements.next(), writer);
             }
@@ -131,7 +123,8 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
         } else {
             throw new LpException(
                     "Can't merge with source data unit: {} of type {}",
-                    getIri(), dataUnit.getClass().getSimpleName());
+                    getIri(),
+                    dataUnit.getClass().getSimpleName());
         }
     }
 
@@ -141,8 +134,7 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
         }
         try {
             execute((connection) -> {
-                Update update = connection.prepareUpdate(
-                        QueryLanguage.SPARQL, COPY_QUERY);
+                Update update = connection.prepareUpdate(QueryLanguage.SPARQL, COPY_QUERY);
                 SimpleDataset dataset = new SimpleDataset();
                 dataset.addDefaultGraph(source.getReadGraph());
                 dataset.setDefaultInsertGraph(graph);
@@ -150,13 +142,11 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
                 update.execute();
             });
         } catch (LpException ex) {
-            throw new LpException(
-                    "Can't merge with: {}", source.getIri(), ex);
+            throw new LpException("Can't merge with: {}", source.getIri(), ex);
         }
     }
 
-    private void writeStatement(
-            Statement statement, TripleWriter writer) throws LpException {
+    private void writeStatement(Statement statement, TripleWriter writer) throws LpException {
         String subject = statement.getSubject().stringValue();
         String predicate = statement.getPredicate().stringValue();
         Value object = statement.getObject();
@@ -178,7 +168,8 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
                         literal.getDatatype().stringValue());
             }
         } else {
-            throw new LpException("Invalid statement: {} {} {}",
+            throw new LpException(
+                    "Invalid statement: {} {} {}",
                     statement.getSubject(),
                     statement.getPredicate(),
                     statement.getObject());
@@ -202,15 +193,10 @@ class DefaultSingleGraphDataUnit extends BaseRdf4jDataUnit
         execute((connection) -> {
             try {
                 connection.add(
-                        new File(dataDirectory, "data.ttl"),
-                        "http://localhost/base/",
-                        RDFFormat.TURTLE, this.graph);
+                        new File(dataDirectory, "data.ttl"), "http://localhost/base/", RDFFormat.TURTLE, this.graph);
             } catch (IOException ex) {
-                throw new LpException(
-                        "Can't load data file for {} from {}",
-                        getIri(), dataDirectory);
+                throw new LpException("Can't load data file for {} from {}", getIri(), dataDirectory);
             }
         });
     }
-
 }

@@ -5,6 +5,4 @@ import cz.skodape.hdt.core.Reference;
 /**
  * Base class for RDF references.
  */
-public interface Rdf4jReference extends Reference {
-    
-}
+public interface Rdf4jReference extends Reference {}

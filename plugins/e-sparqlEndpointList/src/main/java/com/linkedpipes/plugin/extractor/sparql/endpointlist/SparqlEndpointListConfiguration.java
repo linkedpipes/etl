@@ -1,6 +1,5 @@
 package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 
-import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 
 @RdfToPojo.Type(iri = SparqlEndpointListVocabulary.CONFIG)
@@ -21,12 +20,10 @@ public class SparqlEndpointListConfiguration {
     @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_COMMIT_SIZE)
     private int commitSize = 0;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointListVocabulary.HAS_USE_TOLERANT_REPOSITORY)
+    @RdfToPojo.Property(iri = SparqlEndpointListVocabulary.HAS_USE_TOLERANT_REPOSITORY)
     private boolean useTolerantRepository = false;
 
-    public SparqlEndpointListConfiguration() {
-    }
+    public SparqlEndpointListConfiguration() {}
 
     public int getThreadsNumber() {
         return threadsNumber;
@@ -75,5 +72,4 @@ public class SparqlEndpointListConfiguration {
     public void setUseTolerantRepository(boolean useTolerantRepository) {
         this.useTolerantRepository = useTolerantRepository;
     }
-
 }

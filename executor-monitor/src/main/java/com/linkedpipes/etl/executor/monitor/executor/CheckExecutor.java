@@ -4,18 +4,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-
 @Service
 class CheckExecutor {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(CheckExecutor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CheckExecutor.class);
 
     private final ExecutorEventListener listener;
 
@@ -26,10 +24,7 @@ class CheckExecutor {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    public CheckExecutor(
-            ExecutorEventListener listener,
-            ExecutorRestClient restClient,
-            ExecutionSource executions) {
+    public CheckExecutor(ExecutorEventListener listener, ExecutorRestClient restClient, ExecutionSource executions) {
         this.listener = listener;
         this.restClient = restClient;
         this.executions = executions;
@@ -54,22 +49,19 @@ class CheckExecutor {
         try {
             overview = toJson(response);
         } catch (MonitorException ex) {
-            LOG.error("Invalid response from executor: {}\n{}",
-                    executor.getAddress(), response, ex);
+            LOG.error("Invalid response from executor: {}\n{}", executor.getAddress(), response, ex);
             return;
         }
         Execution execution;
         try {
             execution = getExecution(executor, overview);
         } catch (MonitorException ex) {
-            LOG.error("Can't get execution for: {}\n{}",
-                    executor.getAddress(), response, ex);
+            LOG.error("Can't get execution for: {}\n{}", executor.getAddress(), response, ex);
             return;
         }
         reportExecutorHasExecution(executor, execution);
         if (execution == null) {
-            LOG.error("Executor ({}) is running unknown execution.\n{}",
-                    executor.getAddress(), response);
+            LOG.error("Executor ({}) is running unknown execution.\n{}", executor.getAddress(), response);
             return;
         }
         updateFromOverview(execution, overview);
@@ -100,8 +92,7 @@ class CheckExecutor {
         }
     }
 
-    private Execution getExecution(Executor executor, JsonNode overview)
-            throws MonitorException {
+    private Execution getExecution(Executor executor, JsonNode overview) throws MonitorException {
         Execution execution = executions.getExecution(executor);
         if (execution == null) {
             return executions.getExecution(overview);
@@ -109,14 +100,11 @@ class CheckExecutor {
         return execution;
     }
 
-    private void reportExecutorHasExecution(
-            Executor executor, Execution execution) {
+    private void reportExecutorHasExecution(Executor executor, Execution execution) {
         listener.onExecutorHasExecution(execution, executor);
     }
 
-    private void updateFromOverview(
-            Execution execution, JsonNode overview) {
+    private void updateFromOverview(Execution execution, JsonNode overview) {
         listener.onOverview(execution, overview);
     }
-
 }

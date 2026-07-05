@@ -107,7 +107,5 @@ public final class DcatAp11DatasetVocabulary {
         XSD_INTEGER = valueFactory.createIRI(XSD + "integer");
     }
 
-    private DcatAp11DatasetVocabulary() {
-    }
-
+    private DcatAp11DatasetVocabulary() {}
 }

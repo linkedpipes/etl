@@ -2,19 +2,17 @@ package com.linkedpipes.plugin.transformer.tabularuv.column;
 
 import com.linkedpipes.plugin.transformer.tabularuv.Utils;
 import com.linkedpipes.plugin.transformer.tabularuv.parser.ParseFailed;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.ValueFactory;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.ValueFactory;
 
 public abstract class ValueGeneratorReplace implements ValueGenerator {
 
     private interface Token {
 
         String process(List<Object> row);
-
     }
 
     /**
@@ -32,7 +30,6 @@ public abstract class ValueGeneratorReplace implements ValueGenerator {
         public String process(List<Object> row) {
             return string;
         }
-
     }
 
     /**
@@ -59,7 +56,6 @@ public abstract class ValueGeneratorReplace implements ValueGenerator {
                 return value;
             }
         }
-
     }
 
     /**
@@ -81,7 +77,6 @@ public abstract class ValueGeneratorReplace implements ValueGenerator {
                 return Utils.convertStringToIRIPart(replaced);
             }
         }
-
     }
 
     /**
@@ -110,8 +105,7 @@ public abstract class ValueGeneratorReplace implements ValueGenerator {
     }
 
     @Override
-    public void compile(Map<String, Integer> nameToIndex,
-            ValueFactory valueFactory) throws ParseFailed {
+    public void compile(Map<String, Integer> nameToIndex, ValueFactory valueFactory) throws ParseFailed {
         tokens.clear();
         // parse inner pattern
         String toParse = template;
@@ -140,8 +134,7 @@ public abstract class ValueGeneratorReplace implements ValueGenerator {
                 // } --> name
                 String name = toParse.substring(0, right);
                 // revert escaping
-                name = name.replaceAll("\\\\\\{", "\\{").
-                        replaceAll("\\\\}", "\\}");
+                name = name.replaceAll("\\\\\\{", "\\{").replaceAll("\\\\}", "\\}");
 
                 toParse = toParse.substring(right + 1);
                 //
@@ -224,32 +217,30 @@ public abstract class ValueGeneratorReplace implements ValueGenerator {
      * @param template
      * @return
      */
-    public static ValueGeneratorReplace create(IRI uri, String template)
-            throws ParseFailed {
+    public static ValueGeneratorReplace create(IRI uri, String template) throws ParseFailed {
         if (template.startsWith("\"")) {
             // string
             if (template.contains("\"@")) {
                 // language tag
-                return new ValueGeneratorString(uri,
+                return new ValueGeneratorString(
+                        uri,
                         template.substring(1, template.lastIndexOf("\"@")),
                         template.substring(template.lastIndexOf("\"@") + 2));
             }
             if (template.contains("\"^^")) {
                 // type
-                return new ValueGeneratorTyped(uri,
+                return new ValueGeneratorTyped(
+                        uri,
                         template.substring(1, template.lastIndexOf("\"^^")),
                         template.substring(template.lastIndexOf("\"^^") + 3));
             }
             // string without nothing
-            return new ValueGeneratorString(uri,
-                    template.substring(1, template.length() - 1), null);
+            return new ValueGeneratorString(uri, template.substring(1, template.length() - 1), null);
         }
         if (template.startsWith("<")) {
             // uri
-            return new ValueGeneratorUri(uri,
-                    template.substring(1, template.length() - 1));
+            return new ValueGeneratorUri(uri, template.substring(1, template.length() - 1));
         }
         throw new ParseFailed("Can't parse tempalte: " + template);
     }
-
 }

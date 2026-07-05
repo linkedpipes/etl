@@ -15,10 +15,7 @@ public class DebugData {
 
     private final Map<String, DataUnit> dataUnits;
 
-    public DebugData(
-            String executionId,
-            File executionDirectory,
-            Map<String, DataUnit> dataUnits) {
+    public DebugData(String executionId, File executionDirectory, Map<String, DataUnit> dataUnits) {
         this.executionId = executionId;
         this.executionDirectory = executionDirectory;
         this.dataUnits = dataUnits;
@@ -35,5 +32,4 @@ public class DebugData {
     public Map<String, DataUnit> getDataUnits() {
         return Collections.unmodifiableMap(dataUnits);
     }
-
 }

@@ -3,7 +3,6 @@ package com.linkedpipes.etl.executor.monitor.debug.http;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -64,8 +63,13 @@ class ResponseContent {
         }
 
         public Entry(
-                String type, String name, String path, String source,
-                Long size, String mimeType, String publicDataPath) {
+                String type,
+                String name,
+                String path,
+                String source,
+                Long size,
+                String mimeType,
+                String publicDataPath) {
             this.type = type;
             this.name = name;
             this.path = path;
@@ -74,7 +78,6 @@ class ResponseContent {
             this.mimeType = mimeType;
             this.publicDataPath = publicDataPath;
         }
-
     }
 
     @SuppressFBWarnings
@@ -84,7 +87,7 @@ class ResponseContent {
 
         /**
          * Used for directories.
-          */
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public Long count;
 
@@ -103,10 +106,9 @@ class ResponseContent {
         /**
          * Used for file type.
          * Path that can be used to access data.
-          */
+         */
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public String publicDataPath;
-
     }
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -122,5 +124,4 @@ class ResponseContent {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(this);
     }
-
 }

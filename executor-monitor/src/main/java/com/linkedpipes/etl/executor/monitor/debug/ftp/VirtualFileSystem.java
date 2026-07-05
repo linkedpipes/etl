@@ -4,18 +4,17 @@ import com.linkedpipes.etl.executor.monitor.debug.DataUnit;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringTokenizer;
 import org.apache.ftpserver.ftplet.FileSystemView;
 import org.apache.ftpserver.ftplet.FtpFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * Virtual file system.
@@ -24,8 +23,7 @@ import java.util.StringTokenizer;
 @Service
 public class VirtualFileSystem {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(VirtualFileSystem.class);
+    private static final Logger LOG = LoggerFactory.getLogger(VirtualFileSystem.class);
 
     /**
      * Represent a home path.
@@ -47,8 +45,7 @@ public class VirtualFileSystem {
 
         private final DataUnit dataUnit;
 
-        private Path(String ftpPath, boolean synthetic, File path,
-                     DebugData execution, DataUnit dataUnit) {
+        private Path(String ftpPath, boolean synthetic, File path, DebugData execution, DataUnit dataUnit) {
             this.ftpPath = ftpPath;
             this.synthetic = synthetic;
             this.path = path;
@@ -78,7 +75,6 @@ public class VirtualFileSystem {
         File getFile() {
             return path;
         }
-
     }
 
     private class RootDirectory extends AbstractFtpDirectory {
@@ -95,8 +91,7 @@ public class VirtualFileSystem {
             final List<FtpFile> result = new ArrayList<>();
             for (Execution execution : executions.getExecutions()) {
                 if (execution.getDebugData() != null) {
-                    result.add(new ExecutionDirectory(execution.getDebugData(),
-                            ftpPath + "/" + execution.getId()));
+                    result.add(new ExecutionDirectory(execution.getDebugData(), ftpPath + "/" + execution.getId()));
                 }
             }
             return result;
@@ -120,10 +115,8 @@ public class VirtualFileSystem {
         @Override
         public List<FtpFile> listFiles() {
             List<FtpFile> result = new ArrayList<>();
-            for (DataUnit dataUnit
-                    : execution.getDataUnits().values()) {
-                result.add(new DataUnitDirectory(execution, dataUnit,
-                        ftpPath + "/" + dataUnit.getName()));
+            for (DataUnit dataUnit : execution.getDataUnits().values()) {
+                result.add(new DataUnitDirectory(execution, dataUnit, ftpPath + "/" + dataUnit.getName()));
             }
             return result;
         }
@@ -132,15 +125,13 @@ public class VirtualFileSystem {
         public Object getPhysicalFile() {
             return null;
         }
-
     }
 
     private class DataUnitDirectory extends AbstractFtpDirectory {
 
         private final DataUnit dataUnit;
 
-        DataUnitDirectory(DebugData debugData, DataUnit dataUnit,
-                          String ftpPath) {
+        DataUnitDirectory(DebugData debugData, DataUnit dataUnit, String ftpPath) {
             super(ftpPath);
             this.dataUnit = dataUnit;
             // We need the execution directory, but if we use data
@@ -148,19 +139,15 @@ public class VirtualFileSystem {
             // {@link #executions} as it has not been yet loaded.
             if (debugData.getExecutionId().equals(dataUnit.getExecutionId())) {
                 // We use data from this execution.
-                dataUnit.updateDebugDirectories(
-                        debugData.getExecutionDirectory());
+                dataUnit.updateDebugDirectories(debugData.getExecutionDirectory());
             } else {
-                final Execution execution = executions.getExecutionById(
-                        dataUnit.getExecutionId());
+                final Execution execution = executions.getExecutionById(dataUnit.getExecutionId());
                 if (execution == null) {
-                    LOG.warn("Missing referenced execution: {}",
-                            dataUnit.getExecutionId());
+                    LOG.warn("Missing referenced execution: {}", dataUnit.getExecutionId());
                 } else {
                     // Load directories.
                     dataUnit.updateDebugDirectories(execution.getDirectory());
                 }
-
             }
         }
 
@@ -174,8 +161,7 @@ public class VirtualFileSystem {
                     continue;
                 }
                 for (File file : files) {
-                    result.add(new ReadonlyFtpFile(
-                            ftpPath + "/" + file.getName(), file));
+                    result.add(new ReadonlyFtpFile(ftpPath + "/" + file.getName(), file));
                 }
             }
             return result;
@@ -185,11 +171,9 @@ public class VirtualFileSystem {
         public Object getPhysicalFile() {
             return null;
         }
-
     }
 
-    public VirtualFileSystem() {
-    }
+    public VirtualFileSystem() {}
 
     /**
      * Return ciew of the virtual FTP file system.
@@ -216,18 +200,15 @@ public class VirtualFileSystem {
             return null;
         }
         if (parsedPath.isEmpty()) {
-            return new Path(ftpPath, true, null, execution.getDebugData(),
-                    null);
+            return new Path(ftpPath, true, null, execution.getDebugData(), null);
         }
         // Search for data unit.
-        DataUnit dataUnit = execution.getDebugData().getDataUnits().get(
-                parsedPath.removeFirst());
+        DataUnit dataUnit = execution.getDebugData().getDataUnits().get(parsedPath.removeFirst());
         if (dataUnit == null) {
             return null;
         }
         if (parsedPath.isEmpty()) {
-            return new Path(ftpPath, true, null, execution.getDebugData(),
-                    dataUnit);
+            return new Path(ftpPath, true, null, execution.getDebugData(), dataUnit);
         }
         // The execution can be change here.
         if (dataUnit.isMapped()) {
@@ -269,8 +250,7 @@ public class VirtualFileSystem {
             } else if (path.dataUnit == null) {
                 return new ExecutionDirectory(path.execution, path.ftpPath);
             } else {
-                return new DataUnitDirectory(path.execution, path.dataUnit,
-                        path.ftpPath);
+                return new DataUnitDirectory(path.execution, path.dataUnit, path.ftpPath);
             }
         } else {
             return new ReadonlyFtpFile(path.ftpPath, path.path);
@@ -315,5 +295,4 @@ public class VirtualFileSystem {
         });
         return path.toString();
     }
-
 }

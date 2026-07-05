@@ -7,6 +7,7 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.plugin.library.rdf.RdfAdapter;
 import com.linkedpipes.plugin.extractor.dcatAp11Distribution.DcatAp11DistributionConfig.LocalizedString;
+import java.util.*;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
@@ -23,8 +24,6 @@ import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.util.Repositories;
-
-import java.util.*;
 
 public class DcatAp11Distribution implements Component, SequentialExecution {
 
@@ -51,8 +50,8 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
         String datasetIRI;
 
         if (configuration.getGetDatasetIRIFromInput() != null && configuration.getGetDatasetIRIFromInput()) {
-            datasetIRI = querySingleResult("SELECT ?d WHERE "
-                    + "{?d a <" + DcatAp11DistributionVocabulary.DCAT_DATASET_CLASS + ">}", "d");
+            datasetIRI = querySingleResult(
+                    "SELECT ?d WHERE " + "{?d a <" + DcatAp11DistributionVocabulary.DCAT_DATASET_CLASS + ">}", "d");
             if (isBlank(datasetIRI)) {
                 throw new LpException("Missing dataset in the input data.");
             }
@@ -72,8 +71,8 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
 
         IRI distribution = valueFactory.createIRI(distributionIRI);
 
-    	// Mandatory
-    	addIRI(dataset, RDF.TYPE, DcatAp11DistributionVocabulary.DCAT_DATASET_CLASS);
+        // Mandatory
+        addIRI(dataset, RDF.TYPE, DcatAp11DistributionVocabulary.DCAT_DATASET_CLASS);
         addIRI(distribution, RDF.TYPE, DcatAp11DistributionVocabulary.DCAT_DISTRIBUTION_CLASS);
         addIRI(dataset, DcatAp11DistributionVocabulary.DCAT_DISTRIBUTION, distribution);
 
@@ -94,27 +93,42 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
         if (!isBlank(configuration.getLicenseIRI())) {
             addIRI(distribution, DCTERMS.LICENSE, configuration.getLicenseIRI());
             addIRI(valueFactory.createIRI(configuration.getLicenseIRI()), RDF.TYPE, DCTERMS.LICENSE_DOCUMENT);
-            addIRI(valueFactory.createIRI(configuration.getLicenseIRI()), DCTERMS.TYPE, configuration.getLicenseTypeIRI());
+            addIRI(
+                    valueFactory.createIRI(configuration.getLicenseIRI()),
+                    DCTERMS.TYPE,
+                    configuration.getLicenseTypeIRI());
             addIRI(valueFactory.createIRI(configuration.getLicenseTypeIRI()), RDF.TYPE, SKOS.CONCEPT);
         }
 
         // Optional
 
         if (configuration.getByteSize() != null) {
-            addValue(distribution, DcatAp11DistributionVocabulary.DCAT_BYTESIZE, valueFactory.createLiteral(configuration.getByteSize().toString(), DcatAp11DistributionVocabulary.XSD_DECIMAL));
+            addValue(
+                    distribution,
+                    DcatAp11DistributionVocabulary.DCAT_BYTESIZE,
+                    valueFactory.createLiteral(
+                            configuration.getByteSize().toString(), DcatAp11DistributionVocabulary.XSD_DECIMAL));
         }
         if (!isBlank(configuration.getChecksum())) {
             IRI checksumIRI = valueFactory.createIRI(distributionIRI + "/checksum");
             addIRI(distribution, DcatAp11DistributionVocabulary.SPDX_CHECKSUM, checksumIRI);
             addIRI(checksumIRI, RDF.TYPE, DcatAp11DistributionVocabulary.SPDX_CHECKSUM_CLASS);
-            addValue(checksumIRI, DcatAp11DistributionVocabulary.SPDX_CHECKSUM_VALUE, valueFactory.createLiteral(configuration.getChecksum(), DcatAp11DistributionVocabulary.XSD_HEXBINARY));
-            addIRI(checksumIRI, DcatAp11DistributionVocabulary.SPDX_ALGORITHM, DcatAp11DistributionVocabulary.SPDX_SHA1);
+            addValue(
+                    checksumIRI,
+                    DcatAp11DistributionVocabulary.SPDX_CHECKSUM_VALUE,
+                    valueFactory.createLiteral(
+                            configuration.getChecksum(), DcatAp11DistributionVocabulary.XSD_HEXBINARY));
+            addIRI(
+                    checksumIRI,
+                    DcatAp11DistributionVocabulary.SPDX_ALGORITHM,
+                    DcatAp11DistributionVocabulary.SPDX_SHA1);
         }
 
         addIRIs(distribution, FOAF.PAGE, configuration.getDocumentationIRIs());
         addIRIs(distribution, DcatAp11DistributionVocabulary.DCAT_DOWNLOADURL, configuration.getDownloadURLs());
         if (configuration.getLanguagesFromDataset() != null && configuration.getLanguagesFromDataset()) {
-            List<Map<String, Value>> result = executeSelectQuery("SELECT ?language WHERE {<" + datasetIRI + "> <" + DCTERMS.LANGUAGE + "> ?language . }");
+            List<Map<String, Value>> result = executeSelectQuery(
+                    "SELECT ?language WHERE {<" + datasetIRI + "> <" + DCTERMS.LANGUAGE + "> ?language . }");
             for (Map<String, Value> map : result) {
                 IRI language = valueFactory.createIRI(map.get("language").stringValue());
                 addIRI(distribution, DCTERMS.LANGUAGE, language);
@@ -122,8 +136,7 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
             }
         } else {
             addIRIs(distribution, DCTERMS.LANGUAGE, configuration.getLanguages());
-            for (String language : configuration.getLanguages())
-            {
+            for (String language : configuration.getLanguages()) {
                 addIRI(valueFactory.createIRI(language), RDF.TYPE, DCTERMS.LINGUISTIC_SYSTEM);
             }
         }
@@ -131,19 +144,24 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
         addIRIs(distribution, DCTERMS.CONFORMS_TO, configuration.getConformsToIRIs());
 
         if (!isBlank(configuration.getMediaType())) {
-            IRI mediaType = valueFactory.createIRI("http://www.iana.org/assignments/media-types/" + configuration.getMediaType());
+            IRI mediaType = valueFactory.createIRI(
+                    "http://www.iana.org/assignments/media-types/" + configuration.getMediaType());
             addIRI(distribution, DcatAp11DistributionVocabulary.DCAT_MEDIATYPE, mediaType);
             addIRI(mediaType, RDF.TYPE, DCTERMS.MEDIA_TYPE_OR_EXTENT);
         }
 
         if (configuration.getIssuedFromDataset() != null && configuration.getIssuedFromDataset()) {
-            var issued = querySingleResult("SELECT ?issued WHERE {<" + datasetIRI + "> <" + DCTERMS.ISSUED + "> ?issued }", "issued");
+            var issued = querySingleResult(
+                    "SELECT ?issued WHERE {<" + datasetIRI + "> <" + DCTERMS.ISSUED + "> ?issued }", "issued");
             if (isBlank(issued)) {
                 throw new LpException("Missing release date property in the input data.");
             }
-            addValue(distribution, DCTERMS.ISSUED, valueFactory.createLiteral(issued, DcatAp11DistributionVocabulary.XSD_DATE));
+            addValue(
+                    distribution,
+                    DCTERMS.ISSUED,
+                    valueFactory.createLiteral(issued, DcatAp11DistributionVocabulary.XSD_DATE));
         } else if (configuration.getIssued() != null) {
-            addValue(distribution, DCTERMS.ISSUED,RdfAdapter.asYearMonthDay(configuration.getIssued()));
+            addValue(distribution, DCTERMS.ISSUED, RdfAdapter.asYearMonthDay(configuration.getIssued()));
         }
 
         if (!isBlank(configuration.getRightsIRI())) {
@@ -160,14 +178,15 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
 
         String modified;
         if (configuration.getModifiedFromDataset() != null && configuration.getModifiedFromDataset()) {
-            modified = querySingleResult("SELECT ?modified WHERE {<" + datasetIRI + "> <" + DCTERMS.MODIFIED + "> ?modified }", "modified");
+            modified = querySingleResult(
+                    "SELECT ?modified WHERE {<" + datasetIRI + "> <" + DCTERMS.MODIFIED + "> ?modified }", "modified");
             if (!isBlank(modified)) {
-                addValue(distribution, DCTERMS.MODIFIED,
-                        valueFactory.createLiteral(modified,
-                                DcatAp11DistributionVocabulary.XSD_DATE));
+                addValue(
+                        distribution,
+                        DCTERMS.MODIFIED,
+                        valueFactory.createLiteral(modified, DcatAp11DistributionVocabulary.XSD_DATE));
             }
-        }
-        else if (configuration.getModified() != null) {
+        } else if (configuration.getModified() != null) {
             if (configuration.getModifiedNow() != null && configuration.getModifiedNow()) {
                 addValue(distribution, DCTERMS.MODIFIED, RdfAdapter.asYearMonthDay(new Date()));
             } else {
@@ -187,16 +206,20 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
             addIRI(temporal, RDF.TYPE, DCTERMS.PERIOD_OF_TIME);
             addIRI(distribution, DCTERMS.TEMPORAL, temporal);
             if (configuration.getTemporalStart() != null) {
-                addValue(temporal, DcatAp11DistributionVocabulary.SCHEMA_STARTDATE,
+                addValue(
+                        temporal,
+                        DcatAp11DistributionVocabulary.SCHEMA_STARTDATE,
                         RdfAdapter.asYearMonthDay(configuration.getTemporalStart()));
             }
             if (configuration.getTemporalEnd() != null) {
-                addValue(temporal, DcatAp11DistributionVocabulary.SCHEMA_ENDDATE,
+                addValue(
+                        temporal,
+                        DcatAp11DistributionVocabulary.SCHEMA_ENDDATE,
                         RdfAdapter.asYearMonthDay((configuration.getTemporalEnd())));
             }
         }
 
-        //StatDCAT-AP draft 4
+        // StatDCAT-AP draft 4
         if (!isBlank(configuration.getDistributionTypeIRI())) {
             addIRI(distribution, DCTERMS.TYPE, configuration.getDistributionTypeIRI());
             addIRI(valueFactory.createIRI(configuration.getDistributionTypeIRI()), RDF.TYPE, SKOS.CONCEPT);
@@ -206,35 +229,35 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
         Repositories.consume(outputRdf.getRepository(), (RepositoryConnection connection) -> {
             connection.add(statements, outputRdf.getWriteGraph());
         });
-
     }
 
     private void addLocalizedString(IRI subject, IRI predicate, List<LocalizedString> strings) {
         for (LocalizedString s : strings) {
-        	statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createLiteral(s.getValue(), s.getLanguage())));
+            statements.add(valueFactory.createStatement(
+                    subject, predicate, valueFactory.createLiteral(s.getValue(), s.getLanguage())));
         }
     }
 
     private void addIRIs(IRI subject, IRI predicate, List<String> IRIs) {
         for (String s : IRIs) {
-        	statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createIRI(s)));
+            statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createIRI(s)));
         }
     }
 
     private void addValue(IRI subject, IRI predicate, Value value) {
-    	if (value != null) {
+        if (value != null) {
             statements.add(valueFactory.createStatement(subject, predicate, value));
         }
     }
 
     private void addIRI(IRI subject, IRI predicate, String stringIRI) {
-    	if (!isBlank(stringIRI)) {
+        if (!isBlank(stringIRI)) {
             statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createIRI(stringIRI)));
         }
     }
-    
+
     private void addIRI(IRI subject, IRI predicate, IRI object) {
-    	statements.add(valueFactory.createStatement(subject, predicate, object));
+        statements.add(valueFactory.createStatement(subject, predicate, object));
     }
 
     private static boolean isBlank(String string) {
@@ -248,7 +271,7 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
      * @param bindingName Name of property to return.
      * @return
      */
-    private String querySingleResult(final String queryAsString, String bindingName) throws LpException{
+    private String querySingleResult(final String queryAsString, String bindingName) throws LpException {
         return inputDataset.execute((connection) -> {
             final TupleQuery preparedQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
             final SimpleDataset dataset = new SimpleDataset();
@@ -289,5 +312,4 @@ public class DcatAp11Distribution implements Component, SequentialExecution {
             return output;
         });
     }
-
 }

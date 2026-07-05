@@ -9,5 +9,4 @@ public @interface SuppressFBWarnings {
     String[] value() default {};
 
     String justification() default "";
-
 }

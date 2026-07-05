@@ -5,5 +5,4 @@ public class ImportTemplateOptions {
     public boolean importNewTemplates = true;
 
     public boolean updateExistingTemplates = false;
-
 }

@@ -6,7 +6,6 @@ import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,8 +52,7 @@ public class Port implements Loadable {
     }
 
     @Override
-    public Loadable load(String predicate, BackendRdfValue object)
-            throws RdfUtilsException {
+    public Loadable load(String predicate, BackendRdfValue object) throws RdfUtilsException {
         switch (predicate) {
             case RDF.TYPE:
                 types.add(object.asString());
@@ -72,5 +70,4 @@ public class Port implements Loadable {
                 return null;
         }
     }
-
 }

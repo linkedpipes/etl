@@ -2,11 +2,6 @@ package com.linkedpipes.plugin.transformer.xslt;
 
 import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import net.sf.saxon.s9api.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.io.StringReader;
 import java.util.LinkedList;
@@ -14,6 +9,10 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
+import javax.xml.transform.stream.StreamSource;
+import net.sf.saxon.s9api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class XsltWorker implements Callable<Object> {
 
@@ -45,7 +44,6 @@ class XsltWorker implements Callable<Object> {
         public File output;
 
         public final List<Parameter> parameter = new LinkedList<>();
-
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(XsltWorker.class);
@@ -64,10 +62,13 @@ class XsltWorker implements Callable<Object> {
 
     private ProgressReport progressReport;
 
-    public XsltWorker(ConcurrentLinkedQueue<Payload> workQueue,
+    public XsltWorker(
+            ConcurrentLinkedQueue<Payload> workQueue,
             ConcurrentLinkedQueue<Exception> exceptions,
-            AtomicInteger counter, boolean isSkipOnError,
-            long workSize, ProgressReport progressReport) {
+            AtomicInteger counter,
+            boolean isSkipOnError,
+            long workSize,
+            ProgressReport progressReport) {
         this.workQueue = workQueue;
         this.exceptions = exceptions;
         this.counter = counter;
@@ -81,8 +82,7 @@ class XsltWorker implements Callable<Object> {
         processor.registerExtensionFunction(UUIDGenerator.getInstance());
 
         final XsltCompiler compiler = processor.newXsltCompiler();
-        final XsltExecutable executable = compiler.compile(new StreamSource(
-                new StringReader(template)));
+        final XsltExecutable executable = compiler.compile(new StreamSource(new StringReader(template)));
         transformer = executable.load();
     }
 
@@ -97,13 +97,10 @@ class XsltWorker implements Callable<Object> {
             // Prepare parameters.
             transformer.clearParameters();
             for (Parameter parameter : payload.parameter) {
-                transformer.setParameter(new QName(parameter.key),
-                        new XdmAtomicValue(parameter.value));
+                transformer.setParameter(new QName(parameter.key), new XdmAtomicValue(parameter.value));
             }
             //
-            LOG.debug("Transforming: {}/{} : {}",
-                    counter.getAndIncrement(), workSize,
-                    payload.entry.getFileName());
+            LOG.debug("Transforming: {}/{} : {}", counter.getAndIncrement(), workSize, payload.entry.getFileName());
             boolean deleteFile = false;
             final Serializer output = new Serializer(payload.output);
             try {
@@ -111,8 +108,7 @@ class XsltWorker implements Callable<Object> {
                 transformer.setDestination(output);
                 transformer.transform();
             } catch (SaxonApiException ex) {
-                LOG.error("Can't transform file: {}",
-                        payload.entry.getFileName(), ex);
+                LOG.error("Can't transform file: {}", payload.entry.getFileName(), ex);
                 exceptions.add(ex);
                 deleteFile = true;
             } finally {
@@ -139,5 +135,4 @@ class XsltWorker implements Callable<Object> {
         }
         return null;
     }
-
 }

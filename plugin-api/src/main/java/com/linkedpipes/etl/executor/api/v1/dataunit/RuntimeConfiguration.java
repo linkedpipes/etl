@@ -12,5 +12,4 @@ public interface RuntimeConfiguration {
      * Write the content of a runtime configuration.
      */
     void write(TripleWriter writer) throws LpException;
-
 }

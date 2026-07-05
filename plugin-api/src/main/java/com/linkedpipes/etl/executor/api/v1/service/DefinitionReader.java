@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1.service;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-
 import java.util.Collection;
 
 /**
@@ -10,5 +9,4 @@ import java.util.Collection;
 public interface DefinitionReader {
 
     Collection<String> getProperties(String property) throws LpException;
-
 }

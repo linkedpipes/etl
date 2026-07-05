@@ -1,11 +1,10 @@
 package com.linkedpipes.plugin.transformer.bingtranslator;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Collect values in the TranslatedText element.
@@ -22,8 +21,7 @@ public class SaxResponseHandler extends DefaultHandler {
     private final StringBuilder translatedText = new StringBuilder();
 
     @Override
-    public void startElement(String uri, String localName, String qName,
-            Attributes attributes) {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
         elementName = qName;
         if ("TranslatedText".equals(elementName)) {
             translatedText.setLength(0);
@@ -33,8 +31,7 @@ public class SaxResponseHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) {
         if ("TranslatedText".equals(elementName)) {
-            values.add(StringEscapeUtils.unescapeXml(
-                    translatedText.toString()));
+            values.add(StringEscapeUtils.unescapeXml(translatedText.toString()));
         }
         elementName = "";
     }

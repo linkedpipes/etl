@@ -3,15 +3,14 @@ package com.linkedpipes.etl.dataunit.core.rdf;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 class Rdf4jTripleWriter implements TripleWriter {
 
@@ -35,10 +34,7 @@ class Rdf4jTripleWriter implements TripleWriter {
 
     private void add(String subject, String predicate, Value value) {
         statements.add(valueFactory.createStatement(
-                valueFactory.createIRI(subject),
-                valueFactory.createIRI(predicate),
-                value
-        ));
+                valueFactory.createIRI(subject), valueFactory.createIRI(predicate), value));
     }
 
     @Override
@@ -47,8 +43,7 @@ class Rdf4jTripleWriter implements TripleWriter {
     }
 
     @Override
-    public void string(
-            String subject, String predicate, String object, String lang) {
+    public void string(String subject, String predicate, String object, String lang) {
         add(subject, predicate, valueFactory.createLiteral(object, lang));
     }
 
@@ -58,10 +53,8 @@ class Rdf4jTripleWriter implements TripleWriter {
     }
 
     @Override
-    public void typed(
-            String subject, String predicate, String object, String type) {
-        Value value = valueFactory.createLiteral(
-                object, valueFactory.createIRI(type));
+    public void typed(String subject, String predicate, String object, String type) {
+        Value value = valueFactory.createLiteral(object, valueFactory.createIRI(type));
         add(subject, predicate, value);
     }
 
@@ -76,5 +69,4 @@ class Rdf4jTripleWriter implements TripleWriter {
         }
         statements.clear();
     }
-
 }

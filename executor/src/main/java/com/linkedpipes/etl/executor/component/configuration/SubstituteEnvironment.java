@@ -2,17 +2,16 @@ package com.linkedpipes.etl.executor.component.configuration;
 
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.rdf.entity.EntityReference;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.rdf4j.Rdf4jSource;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import java.util.*;
+import java.util.stream.Collectors;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 class SubstituteEnvironment {
 
@@ -25,18 +24,14 @@ class SubstituteEnvironment {
         public List<Value> values = new ArrayList<>();
 
         public List<Value> substitutions = new ArrayList<>();
-
     }
 
     public static EntityReference substitute(
-            Map<String, String> env,
-            Rdf4jSource referenceSource, EntityReference reference,
-            String configurationType)
+            Map<String, String> env, Rdf4jSource referenceSource, EntityReference reference, String configurationType)
             throws RdfUtilsException, ExecutorException {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
-        List<Statement> statements = collectStatements(
-                referenceSource, reference.getGraph());
+        List<Statement> statements = collectStatements(referenceSource, reference.getGraph());
 
         // We start by collecting predicates for substitution.
         // We use convention that the substitution predicate is the predicate + "Substitution";
@@ -63,9 +58,8 @@ class SubstituteEnvironment {
             // Substitution time.
             var subject = statement.getSubject();
             var nextObject = substitute(env, statement.getObject().stringValue());
-            nextStatements.add(valueFactory.createStatement(
-                    subject, originalPredicate,
-                    valueFactory.createLiteral(nextObject)));
+            nextStatements.add(
+                    valueFactory.createStatement(subject, originalPredicate, valueFactory.createLiteral(nextObject)));
             // We store the original the substitution to be ignored.
             var predicateBlackList = substituted.computeIfAbsent(subject, key -> new HashSet<>(4));
             predicateBlackList.add(predicate);
@@ -87,20 +81,17 @@ class SubstituteEnvironment {
 
         // At the last step we just store the statements in a new store
         // using a new graph.
-        IRI nextGraph = valueFactory.createIRI(
-                reference.getGraph() + "/substituted");
+        IRI nextGraph = valueFactory.createIRI(reference.getGraph() + "/substituted");
         Rdf4jSource nextSource = Rdf4jSource.createInMemory();
         addStatements(nextStatements, nextGraph, nextSource);
 
-        return new EntityReference(
-                reference.getResource(), nextGraph.stringValue(), nextSource);
+        return new EntityReference(reference.getResource(), nextGraph.stringValue(), nextSource);
     }
 
     /**
      * @return All controlled predicates for given configuration type.
      */
-    private static Set<IRI> collectPredicates(
-            Rdf4jSource referenceSource, String configurationType)
+    private static Set<IRI> collectPredicates(Rdf4jSource referenceSource, String configurationType)
             throws RdfUtilsException {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
         DefaultControl control = new DefaultControl();
@@ -114,27 +105,22 @@ class SubstituteEnvironment {
     /**
      * @return All statements in given graph.
      */
-    private static List<Statement> collectStatements
-            (Rdf4jSource source, String graph) {
+    private static List<Statement> collectStatements(Rdf4jSource source, String graph) {
         List<Statement> result = new ArrayList<>();
         IRI graphIri = SimpleValueFactory.getInstance().createIRI(graph);
         try (var connection = source.getRepository().getConnection()) {
-            connection.getStatements(null, null, null, graphIri)
-                    .iterator()
-                    .forEachRemaining(result::add);
+            connection.getStatements(null, null, null, graphIri).iterator().forEachRemaining(result::add);
         }
         return result;
     }
 
-    private static void addStatements(
-            List<Statement> statements, IRI graph, Rdf4jSource target) {
+    private static void addStatements(List<Statement> statements, IRI graph, Rdf4jSource target) {
         try (var connection = target.getRepository().getConnection()) {
             connection.add(statements, graph);
         }
     }
 
-    static String substitute(Map<String, String> env, String value)
-            throws ExecutorException {
+    static String substitute(Map<String, String> env, String value) throws ExecutorException {
         StringBuilder result = new StringBuilder();
         StringBuilder token = new StringBuilder();
         boolean readingToken = false;
@@ -159,20 +145,15 @@ class SubstituteEnvironment {
         return result.toString();
     }
 
-    private static String resolveEnvironment(
-            Map<String, String> env, String name) throws ExecutorException {
+    private static String resolveEnvironment(Map<String, String> env, String name) throws ExecutorException {
         if (!name.startsWith("LP_ETL_")) {
             throw new ExecutorException(
-                    "Environment property '{}' for substitution must starts" +
-                            " with LP_ETL_.", name);
+                    "Environment property '{}' for substitution must starts" + " with LP_ETL_.", name);
         }
         String result = env.get(name);
         if (result == null) {
-            throw new ExecutorException(
-                    "Missing environment property '{}' for substitution",
-                    name);
+            throw new ExecutorException("Missing environment property '{}' for substitution", name);
         }
         return result;
     }
-
 }

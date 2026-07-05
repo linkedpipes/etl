@@ -2,16 +2,15 @@ package com.linkedpipes.etl.executor.component.configuration;
 
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
-import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.pipeline.model.ConfigurationDescription;
-import com.linkedpipes.etl.rdf.utils.RdfUtils;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.rdf.entity.EntityMerger;
 import com.linkedpipes.etl.executor.rdf.entity.EntityReference;
+import com.linkedpipes.etl.rdf.rdf4j.Rdf4jSource;
+import com.linkedpipes.etl.rdf.utils.RdfUtils;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
 import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
-import com.linkedpipes.etl.rdf.rdf4j.Rdf4jSource;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,29 +47,25 @@ public class Configuration {
      * @param pipeline      Pipeline with definitions.
      */
     public static void prepareConfiguration(
-            String iri, PipelineComponent component,
-            BackendRdfSource runtimeSource, String runtimeGraph,
-            BackendTripleWriter writer, Pipeline pipeline)
+            String iri,
+            PipelineComponent component,
+            BackendRdfSource runtimeSource,
+            String runtimeGraph,
+            BackendTripleWriter writer,
+            Pipeline pipeline)
             throws ExecutorException {
         List<EntityReference> references = new ArrayList<>();
-        ConfigurationDescription description =
-                component.getConfigurationDescription();
+        ConfigurationDescription description = component.getConfigurationDescription();
         Rdf4jSource pipelineSource = pipeline.getSource();
         String configurationType = description.getDescribedType();
 
         // Get reference for configuration in the pipeline.
         Optional<EntityReference> componentConfiguration =
-                loadConfigurationReference(
-                        pipelineSource,
-                        component.getConfigurationGraph(),
-                        configurationType);
+                loadConfigurationReference(pipelineSource, component.getConfigurationGraph(), configurationType);
         try {
             if (componentConfiguration.isPresent()) {
                 references.add(SubstituteEnvironment.substitute(
-                        System.getenv(),
-                        pipelineSource,
-                        componentConfiguration.get(),
-                        configurationType));
+                        System.getenv(), pipelineSource, componentConfiguration.get(), configurationType));
             }
         } catch (RdfUtilsException ex) {
             throw new ExecutorException("Can't update configuration.", ex);
@@ -79,34 +74,27 @@ public class Configuration {
         // Get reference for configuration in
         if (runtimeSource != null && runtimeGraph != null) {
             Optional<EntityReference> runtimeConfiguration =
-                    loadConfigurationReference(
-                            runtimeSource,
-                            runtimeGraph,
-                            configurationType);
+                    loadConfigurationReference(runtimeSource, runtimeGraph, configurationType);
             runtimeConfiguration.ifPresent(references::add);
         }
 
         // Merge.
         try {
-            (new EntityMerger(new DefaultControlFactory(pipelineSource)))
-                    .merge(references, iri, writer);
+            (new EntityMerger(new DefaultControlFactory(pipelineSource))).merge(references, iri, writer);
         } catch (RdfUtilsException ex) {
             throw new ExecutorException("Can't merge data.", ex);
         }
     }
 
     private static Optional<EntityReference> loadConfigurationReference(
-            BackendRdfSource source, String graph, String configurationType)
-            throws ExecutorException {
+            BackendRdfSource source, String graph, String configurationType) throws ExecutorException {
         String query = queryForTypes(configurationType, graph);
         String resource;
         try {
-            resource = RdfUtils.sparqlSelectSingleOptional(
-                    source, query, "resource");
+            resource = RdfUtils.sparqlSelectSingleOptional(source, query, "resource");
         } catch (RdfUtilsException ex) {
             throw new ExecutorException(
-                    "Can't get configuration object of type {} in {}",
-                    configurationType, graph, ex);
+                    "Can't get configuration object of type {} in {}", configurationType, graph, ex);
         }
         if (resource == null) {
             return Optional.empty();
@@ -115,10 +103,6 @@ public class Configuration {
     }
 
     private static String queryForTypes(String type, String graph) {
-        return "SELECT ?resource WHERE { GRAPH <" + graph + "> {\n"
-                + "   ?resource a <" + type + ">\n"
-                + "} }";
+        return "SELECT ?resource WHERE { GRAPH <" + graph + "> {\n" + "   ?resource a <" + type + ">\n" + "} }";
     }
-
-
 }

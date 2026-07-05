@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,19 +46,16 @@ public class SparqlEndpointChunkedConfiguration {
     @RdfToPojo.Property(iri = SparqlEndpointChunkedVocabulary.HAS_PASSWORD)
     private String password;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointChunkedVocabulary.HAS_USE_TOLERANT_REPOSITORY)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedVocabulary.HAS_USE_TOLERANT_REPOSITORY)
     private boolean useTolerantRepository = false;
 
     @RdfToPojo.Property(iri = SparqlEndpointChunkedVocabulary.HAS_AS_LITERALS)
     private List<String> asLiterals = new ArrayList<>();
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointChunkedVocabulary.HAS_HANDLE_INVALID)
+    @RdfToPojo.Property(iri = SparqlEndpointChunkedVocabulary.HAS_HANDLE_INVALID)
     private boolean handleInvalid = false;
 
-    public SparqlEndpointChunkedConfiguration() {
-    }
+    public SparqlEndpointChunkedConfiguration() {}
 
     public String getQuery() {
         return query;
@@ -164,5 +160,4 @@ public class SparqlEndpointChunkedConfiguration {
     public void setHandleInvalid(boolean handleInvalid) {
         this.handleInvalid = handleInvalid;
     }
-
 }

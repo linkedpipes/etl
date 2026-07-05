@@ -35,5 +35,4 @@ public abstract class Template implements Loadable {
     }
 
     public abstract String getConfigGraph();
-
 }

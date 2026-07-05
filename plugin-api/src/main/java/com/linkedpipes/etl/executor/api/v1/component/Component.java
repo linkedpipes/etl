@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1.component;
 
 import com.linkedpipes.etl.executor.api.v1.event.Event;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -24,20 +23,15 @@ public interface Component {
          * Return true if component execution was cancelled.
          */
         boolean isCancelled();
-
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    @interface Inject {
-
-    }
+    @interface Inject {}
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    @interface Configuration {
-
-    }
+    @interface Configuration {}
 
     /**
      * Mark data unit as an component input.
@@ -47,7 +41,6 @@ public interface Component {
     @interface InputPort {
 
         String iri();
-
     }
 
     /**
@@ -58,7 +51,6 @@ public interface Component {
     @interface OutputPort {
 
         String iri();
-
     }
 
     /**
@@ -68,8 +60,5 @@ public interface Component {
      */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    @interface ContainsConfiguration {
-
-    }
-
+    @interface ContainsConfiguration {}
 }

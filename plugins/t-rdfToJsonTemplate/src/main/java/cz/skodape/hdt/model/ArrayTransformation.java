@@ -9,5 +9,4 @@ import java.util.List;
 public class ArrayTransformation extends BaseTransformation {
 
     public List<BaseTransformation> items = new ArrayList<>();
-
 }

@@ -43,5 +43,4 @@ public class TaskExecutionConfiguration {
      * a specific task.
      */
     public long waitAfterFailedTaskMs = 0;
-
 }

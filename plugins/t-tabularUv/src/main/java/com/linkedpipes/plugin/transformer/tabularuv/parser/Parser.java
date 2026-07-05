@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabularuv.parser;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-
 import java.io.File;
 
 public interface Parser {
@@ -12,5 +11,4 @@ public interface Parser {
      * @param inFile
      */
     void parse(File inFile) throws LpException, ParseFailed;
-
 }

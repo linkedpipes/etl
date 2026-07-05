@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.http.request.main;
 
 public final class HttpRequestVocabulary {
 
-    private static final String PREFIX =
-            "http://plugins.linkedpipes.com/ontology/x-httpRequest#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/x-httpRequest#";
 
     public static final String CONFIGURATION = PREFIX + "Configuration";
 
@@ -17,8 +16,7 @@ public final class HttpRequestVocabulary {
 
     public static final String HAS_METHOD = PREFIX + "method";
 
-    public static final String HAS_POST_CONTENT_AS_BODY =
-            PREFIX + "postContentAsBody";
+    public static final String HAS_POST_CONTENT_AS_BODY = PREFIX + "postContentAsBody";
 
     public static final String HAS_HEADER = PREFIX + "header";
 
@@ -44,8 +42,7 @@ public final class HttpRequestVocabulary {
 
     public static final String HAS_GROUP = PREFIX + "group";
 
-    public static final String HAS_THREADS_PER_GROUP =
-            PREFIX + "threadsPerGroup";
+    public static final String HAS_THREADS_PER_GROUP = PREFIX + "threadsPerGroup";
 
     public static final String HAS_RESPONSE_REPORT = PREFIX + "response";
 
@@ -56,5 +53,4 @@ public final class HttpRequestVocabulary {
     public static final String HAS_TIME_OUT = PREFIX + "timeout";
 
     public static final String HAS_UTF8_REDIRECT = PREFIX + "utf8Redirect";
-
 }

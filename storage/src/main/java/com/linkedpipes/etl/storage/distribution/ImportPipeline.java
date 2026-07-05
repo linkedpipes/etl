@@ -11,13 +11,12 @@ import com.linkedpipes.etl.storage.pipeline.ChangePipelineResource;
 import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
 import com.linkedpipes.etl.storage.template.PluginTemplateFacade;
 import com.linkedpipes.etl.storage.template.ReferenceTemplateFacade;
-import org.eclipse.rdf4j.model.Resource;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.eclipse.rdf4j.model.Resource;
 
 /**
  * We assume all templates has already been imported from the pipeline.
@@ -64,7 +63,6 @@ public class ImportPipeline {
         public boolean stored() {
             return stored;
         }
-
     }
 
     private final PluginTemplateFacade pluginFacade;
@@ -88,21 +86,17 @@ public class ImportPipeline {
         this.templateRemoteToLocal = templateRemoteToLocal;
     }
 
-    public void loadFromStatements(StatementsSelector statements)
-            throws StorageException {
+    public void loadFromStatements(StatementsSelector statements) throws StorageException {
         PipelineLoader loader = new PipelineLoader(prepareTemplateToPlugin());
         loader.loadAndMigrate(statements);
-        loader.getContainers().stream()
-                .map(Container::new)
-                .forEach(containers::add);
+        loader.getContainers().stream().map(Container::new).forEach(containers::add);
     }
 
     /**
      * Given mapping is from remote templates to local templates.
      * This change it to remote templates to plugins.
      */
-    private Map<Resource, Resource> prepareTemplateToPlugin()
-            throws StorageException {
+    private Map<Resource, Resource> prepareTemplateToPlugin() throws StorageException {
         Map<Resource, Resource> result = new HashMap<>();
         for (var entry : templateRemoteToLocal.entrySet()) {
             if (pluginFacade.isPluginTemplate(entry.getValue())) {
@@ -110,8 +104,7 @@ public class ImportPipeline {
                 result.put(entry.getKey(), entry.getValue());
                 continue;
             }
-            ReferenceTemplate local = referenceFacade.getReferenceTemplate(
-                    entry.getValue());
+            ReferenceTemplate local = referenceFacade.getReferenceTemplate(entry.getValue());
             if (local == null) {
                 // Use available mapping.
                 result.put(entry.getKey(), entry.getValue());
@@ -127,12 +120,9 @@ public class ImportPipeline {
      * Perform import operation with a single pipeline, fail if
      * multiple pipelines are given.
      */
-    public Pipeline importPipeline(ImportPipelineOptions options)
-            throws StorageException {
+    public Pipeline importPipeline(ImportPipelineOptions options) throws StorageException {
         if (containers.size() != 1) {
-            throw new StorageException(
-                    "Invalid number of pipelines '{}'.",
-                    containers.size());
+            throw new StorageException("Invalid number of pipelines '{}'.", containers.size());
         }
         importPipelines(List.of(options));
         Container container = containers.get(0);
@@ -146,14 +136,12 @@ public class ImportPipeline {
      * Return successfully imported pipelines.
      */
     public void importPipelines(List<ImportPipelineOptions> importOptions) {
-        Map<Resource, ImportPipelineOptions> optionsMap =
-                buildOptionsMap(importOptions);
+        Map<Resource, ImportPipelineOptions> optionsMap = buildOptionsMap(importOptions);
         for (Container container : containers) {
             if (container.loadedPipeline == null) {
                 continue;
             }
-            ImportPipelineOptions option = optionsMap.get(
-                    container.loadedPipeline.resource());
+            ImportPipelineOptions option = optionsMap.get(container.loadedPipeline.resource());
             try {
                 importPipeline(container, option);
             } catch (StorageException ex) {
@@ -162,8 +150,7 @@ public class ImportPipeline {
         }
     }
 
-    private Map<Resource, ImportPipelineOptions> buildOptionsMap(
-            List<ImportPipelineOptions> options) {
+    private Map<Resource, ImportPipelineOptions> buildOptionsMap(List<ImportPipelineOptions> options) {
         Map<Resource, ImportPipelineOptions> result = new HashMap<>();
         if (options.size() == 1 && options.get(0).pipeline == null) {
             // If only one configuration is given, replicate it
@@ -186,21 +173,16 @@ public class ImportPipeline {
         return result;
     }
 
-    private void importPipeline(
-            Container container, ImportPipelineOptions option)
-            throws StorageException {
-        Resource resource = prepareLocalResource(
-                container.loadedPipeline, option);
-        container.localPipeline = updatePipeline(
-                container.loadedPipeline, resource, option.targetLabel);
+    private void importPipeline(Container container, ImportPipelineOptions option) throws StorageException {
+        Resource resource = prepareLocalResource(container.loadedPipeline, option);
+        container.localPipeline = updatePipeline(container.loadedPipeline, resource, option.targetLabel);
         if (option.storePipeline) {
             pipelineFacade.storePipeline(container.localPipeline);
             container.stored = true;
         }
     }
 
-    private Resource prepareLocalResource(
-            Pipeline pipeline, ImportPipelineOptions options) {
+    private Resource prepareLocalResource(Pipeline pipeline, ImportPipelineOptions options) {
         if (options.targetResource != null) {
             return options.targetResource;
         } else if (options.keepPipelineUrl) {
@@ -213,27 +195,29 @@ public class ImportPipeline {
         }
     }
 
-    private Pipeline updatePipeline(
-            Pipeline remote, Resource resource, String label)
-            throws StorageException {
+    private Pipeline updatePipeline(Pipeline remote, Resource resource, String label) throws StorageException {
         if (label == null) {
             return updatePipeline(remote, resource);
         }
-        return updatePipeline(new Pipeline(
-                remote.resource(),
-                remote.created(), remote.lastUpdate(),
-                label, remote.version(), remote.note(),
-                remote.tags(), remote.executionProfile(),
-                remote.components(), remote.dataFlows(),
-                remote.controlFlows()), resource);
+        return updatePipeline(
+                new Pipeline(
+                        remote.resource(),
+                        remote.created(),
+                        remote.lastUpdate(),
+                        label,
+                        remote.version(),
+                        remote.note(),
+                        remote.tags(),
+                        remote.executionProfile(),
+                        remote.components(),
+                        remote.dataFlows(),
+                        remote.controlFlows()),
+                resource);
     }
 
-    private Pipeline updatePipeline(
-            Pipeline pipeline, Resource resource) throws StorageException {
-        ChangePipelineResource worker = new ChangePipelineResource(
-                templateRemoteToLocal::get,
-                referenceFacade::findPluginTemplate
-        );
+    private Pipeline updatePipeline(Pipeline pipeline, Resource resource) throws StorageException {
+        ChangePipelineResource worker =
+                new ChangePipelineResource(templateRemoteToLocal::get, referenceFacade::findPluginTemplate);
         return worker.localize(pipeline, resource);
     }
 
@@ -245,5 +229,4 @@ public class ImportPipeline {
     public List<Container> getContainers() {
         return Collections.unmodifiableList(containers);
     }
-
 }

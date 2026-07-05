@@ -20,18 +20,16 @@ import com.linkedpipes.etl.unpacker.model.executor.ExecutorMetadata;
 import com.linkedpipes.etl.unpacker.model.executor.ExecutorPipeline;
 import com.linkedpipes.etl.unpacker.model.executor.ExecutorPort;
 import com.linkedpipes.etl.unpacker.model.executor.ExecutorProfile;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import org.eclipse.rdf4j.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 public class DesignerToExecutor {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(DesignerToExecutor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DesignerToExecutor.class);
 
     private DesignerPipeline source;
 
@@ -45,16 +43,13 @@ public class DesignerToExecutor {
 
     private final ExecutionSource executionSource;
 
-    public DesignerToExecutor(
-            TemplateSource templateSource,
-            ExecutionSource executionSource) {
+    public DesignerToExecutor(TemplateSource templateSource, ExecutionSource executionSource) {
         this.jarTemplateExpander = new TemplateExpander(templateSource);
         this.executionSource = executionSource;
     }
 
-    public void transform(
-            DesignerPipeline pipeline, GraphCollection graphs,
-            UnpackOptions options) throws StorageException {
+    public void transform(DesignerPipeline pipeline, GraphCollection graphs, UnpackOptions options)
+            throws StorageException {
         this.source = pipeline;
         this.graphs = graphs;
         this.target = new ExecutorPipeline(getExecutionIri(options));
@@ -99,8 +94,7 @@ public class DesignerToExecutor {
         }
     }
 
-    private ExecutorConnection convertConnection(
-            DesignerConnection srcConnection) {
+    private ExecutorConnection convertConnection(DesignerConnection srcConnection) {
         ExecutorConnection newConnection = new ExecutorConnection();
 
         newConnection.setIri(srcConnection.getIri());
@@ -126,8 +120,7 @@ public class DesignerToExecutor {
         metadata.setDeleteWorkingData(options.isDeleteWorkingDirectory());
         metadata.setSaveDebugData(options.isSaveDebugData());
         metadata.setLog(options.getLogPolicy(), options.getLogLevel());
-        target.getExecutorMetadata()
-                .setExecutionType(getExecutionType(options));
+        target.getExecutorMetadata().setExecutionType(getExecutionType(options));
     }
 
     private String getExecutionType(UnpackOptions options) {
@@ -146,10 +139,8 @@ public class DesignerToExecutor {
         }
     }
 
-    private void computeExecutionFlow(UnpackOptions options)
-            throws StorageException {
-        ExecutionFlow flowComputer = new ExecutionFlow(
-                source, target, runAfter, options);
+    private void computeExecutionFlow(UnpackOptions options) throws StorageException {
+        ExecutionFlow flowComputer = new ExecutionFlow(source, target, runAfter, options);
         flowComputer.computeExecutionTypeAndOrder();
     }
 
@@ -162,35 +153,29 @@ public class DesignerToExecutor {
     }
 
     private void setPortMapping(UnpackOptions options) throws StorageException {
-        for (UnpackOptions.ExecutionMapping executionMapping
-                : options.getExecutionMapping()) {
+        for (UnpackOptions.ExecutionMapping executionMapping : options.getExecutionMapping()) {
             Execution execution = getExecution(executionMapping.getExecution());
             mapExecution(execution, executionMapping);
         }
     }
 
-    private Execution getExecution(String iri)
-            throws StorageException {
+    private Execution getExecution(String iri) throws StorageException {
         Collection<Statement> statements = executionSource.getExecution(iri);
         return ModelLoader.loadExecution(Statements.wrap(statements));
     }
 
-    private void mapExecution(
-            Execution execution,
-            UnpackOptions.ExecutionMapping executionMapping) {
-        for (UnpackOptions.ComponentMapping mapping
-                : executionMapping.getMappings()) {
+    private void mapExecution(Execution execution, UnpackOptions.ExecutionMapping executionMapping) {
+        for (UnpackOptions.ComponentMapping mapping : executionMapping.getMappings()) {
             mapComponent(execution, mapping, executionMapping);
         }
     }
 
     private void mapComponent(
-            Execution execution, UnpackOptions.ComponentMapping mapping,
+            Execution execution,
+            UnpackOptions.ComponentMapping mapping,
             UnpackOptions.ExecutionMapping executionMapping) {
-        ExecutionComponent sourceComponent =
-                execution.getComponent(mapping.getSource());
-        ExecutorComponent targetComponent =
-                target.getComponent(mapping.getTarget());
+        ExecutionComponent sourceComponent = execution.getComponent(mapping.getSource());
+        ExecutorComponent targetComponent = target.getComponent(mapping.getTarget());
         targetComponent.setExecutionType(LP_EXEC.TYPE_MAPPED);
 
         if (sourceComponent.getExecution() != null) {
@@ -207,23 +192,21 @@ public class DesignerToExecutor {
     }
 
     private void mapPort(
-            ExecutionComponent sourceComponent, ExecutorPort targetPort,
+            ExecutionComponent sourceComponent,
+            ExecutorPort targetPort,
             UnpackOptions.ExecutionMapping executionMapping) {
-        ExecutionPort sourcePort = sourceComponent.getPortByBinding(
-                targetPort.getBinding());
+        ExecutionPort sourcePort = sourceComponent.getPortByBinding(targetPort.getBinding());
         if (sourcePort == null) {
             logMissingPort(sourceComponent, targetPort);
         } else {
-            targetPort.setDataSource(
-                    createDataSource(sourcePort, executionMapping));
+            targetPort.setDataSource(createDataSource(sourcePort, executionMapping));
         }
     }
 
-    private void logMissingPort(
-            ExecutionComponent sourceComponent,
-            ExecutorPort targetPort) {
+    private void logMissingPort(ExecutionComponent sourceComponent, ExecutorPort targetPort) {
         // TODO Add to a report.
-        LOG.error("Source port is null for component '{}' port '{}':'{}'. "
+        LOG.error(
+                "Source port is null for component '{}' port '{}':'{}'. "
                         + " This can happen when a new port is added.",
                 sourceComponent.getIri(),
                 targetPort.getIri(),
@@ -231,37 +214,29 @@ public class DesignerToExecutor {
     }
 
     private ExecutorDataSource createDataSource(
-            ExecutionPort sourcePort,
-            UnpackOptions.ExecutionMapping executionMapping) {
+            ExecutionPort sourcePort, UnpackOptions.ExecutionMapping executionMapping) {
         if (sourcePort.getDataPath() == null) {
             throw new RuntimeException("Missing debug data!");
         }
         if (sourcePort.getExecution() == null) {
-            return new ExecutorDataSource(sourcePort.getDataPath(),
-                    executionMapping.getExecution());
+            return new ExecutorDataSource(sourcePort.getDataPath(), executionMapping.getExecution());
         } else {
             // We load data from another execution.
-            return new ExecutorDataSource(sourcePort.getLoadPath(),
-                    sourcePort.getExecution());
+            return new ExecutorDataSource(sourcePort.getLoadPath(), sourcePort.getExecution());
         }
-
     }
 
     /**
      * Update components that should resume their executions.
      */
     private void setResumeComponents(UnpackOptions options) {
-        for (UnpackOptions.ExecutionMapping executionMapping :
-                options.getExecutionMapping()) {
-            for (UnpackOptions.ComponentMapping mapping :
-                    executionMapping.getResumes()) {
-                ExecutorComponent targetComponent =
-                        target.getComponent(mapping.getTarget());
+        for (UnpackOptions.ExecutionMapping executionMapping : options.getExecutionMapping()) {
+            for (UnpackOptions.ComponentMapping mapping : executionMapping.getResumes()) {
+                ExecutorComponent targetComponent = target.getComponent(mapping.getTarget());
                 // We need to map this component from the last execution,
                 // unlike in case of mapping, where the data can be
                 // from some previous executions.
-                targetComponent.setExecution(
-                        executionMapping.getExecution());
+                targetComponent.setExecution(executionMapping.getExecution());
             }
         }
     }
@@ -282,8 +257,7 @@ public class DesignerToExecutor {
 
     private boolean componentActive(String componentIri) {
         String type = target.getComponent(componentIri).getExecutionType();
-        return LP_EXEC.TYPE_EXECUTE.equals(type)
-                || LP_EXEC.TYPE_MAPPED.equals(type);
+        return LP_EXEC.TYPE_EXECUTE.equals(type) || LP_EXEC.TYPE_MAPPED.equals(type);
     }
 
     private void computeDataUnitGroups() {
@@ -294,5 +268,4 @@ public class DesignerToExecutor {
     public ExecutorPipeline getTarget() {
         return target;
     }
-
 }

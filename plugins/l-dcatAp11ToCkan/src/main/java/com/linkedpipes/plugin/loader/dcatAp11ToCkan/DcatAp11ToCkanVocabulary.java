@@ -103,5 +103,4 @@ public class DcatAp11ToCkanVocabulary {
         PROFILES_CKAN = valueFactory.createIRI(PROFILES + "CKAN");
         PROFILES_NKOD = valueFactory.createIRI(PROFILES + "CZ-NKOD");
     }
-
 }

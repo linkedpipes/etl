@@ -47,8 +47,7 @@ class NamedData {
      * @param elements
      * @param subject
      */
-    public NamedData(String name, Elements elements, IRI subject,
-            IRI parentSubject, IRI hasPredicate) {
+    public NamedData(String name, Elements elements, IRI subject, IRI parentSubject, IRI hasPredicate) {
         this.name = name;
         this.elements = elements;
         this.subject = subject;
@@ -65,8 +64,7 @@ class NamedData {
      * @param action
      * @param elements
      */
-    public NamedData(NamedData source,
-            HtmlCssUvConfiguration.Action action, Elements elements) {
+    public NamedData(NamedData source, HtmlCssUvConfiguration.Action action, Elements elements) {
         this.name = action.getOutputName();
         this.elements = elements;
         this.subject = source.subject;
@@ -83,14 +81,12 @@ class NamedData {
      * @param subjectClass If null then parent value is used.
      * @param hasPredicate If null, then subject stay on same level.
      */
-    public NamedData(NamedData source,
-            HtmlCssUvConfiguration.Action action, IRI subject,
-            IRI subjectClass, IRI hasPredicate) {
+    public NamedData(
+            NamedData source, HtmlCssUvConfiguration.Action action, IRI subject, IRI subjectClass, IRI hasPredicate) {
         this.name = action.getOutputName();
         this.elements = source.elements;
         this.subject = subject == null ? source.subject : subject;
-        this.subjectClass =
-                subjectClass == null ? source.subjectClass : subjectClass;
+        this.subjectClass = subjectClass == null ? source.subjectClass : subjectClass;
         this.value = source.value;
         if (hasPredicate == null) {
             // Same level.
@@ -110,8 +106,7 @@ class NamedData {
      * @param action
      * @param value
      */
-    public NamedData(NamedData source, HtmlCssUvConfiguration.Action action,
-            String value) {
+    public NamedData(NamedData source, HtmlCssUvConfiguration.Action action, String value) {
         this.name = action.getOutputName();
         this.elements = null;
         this.subject = source.subject;
@@ -120,5 +115,4 @@ class NamedData {
         this.parentSubject = source.parentSubject;
         this.hasPredicate = source.hasPredicate;
     }
-
 }

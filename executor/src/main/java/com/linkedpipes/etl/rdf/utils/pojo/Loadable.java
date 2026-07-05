@@ -1,7 +1,7 @@
 package com.linkedpipes.etl.rdf.utils.pojo;
 
-import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 
 public interface Loadable {
 
@@ -9,7 +9,5 @@ public interface Loadable {
         // No operation here.
     }
 
-    Loadable load(String predicate, BackendRdfValue value)
-            throws RdfUtilsException;
-
+    Loadable load(String predicate, BackendRdfValue value) throws RdfUtilsException;
 }

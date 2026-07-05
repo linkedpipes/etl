@@ -9,5 +9,4 @@ public class ValidationTest {
     public void verifyConfigurationDescription() throws Exception {
         (new TestConfigurationDescription()).test(DatasetMetadataConfig.class);
     }
-
 }

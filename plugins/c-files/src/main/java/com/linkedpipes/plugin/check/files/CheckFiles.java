@@ -4,7 +4,6 @@ import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -35,41 +34,34 @@ public class CheckFiles implements Component, SequentialExecution {
         return result;
     }
 
-    private void compareFilesMap(Map<String, File> expected,
-            Map<String, File> actual) throws LpException {
+    private void compareFilesMap(Map<String, File> expected, Map<String, File> actual) throws LpException {
         checkSameSize(expected.size(), actual.size());
         for (Map.Entry<String, File> entry : expected.entrySet()) {
             if (!actual.containsKey(entry.getKey())) {
-                throw new LpException("Missing file: {}",
-                        entry.getKey());
+                throw new LpException("Missing file: {}", entry.getKey());
             }
             if (!filesAreSame(entry.getValue(), actual.get(entry.getKey()))) {
-                throw new LpException("Files are not same: {}",
-                        entry.getKey());
+                throw new LpException("Files are not same: {}", entry.getKey());
             }
         }
     }
 
-    private void checkSameSize(int expectedSize, int actualSize)
-            throws LpException {
+    private void checkSameSize(int expectedSize, int actualSize) throws LpException {
         if (expectedSize != actualSize) {
-            throw new LpException("Invalid size: {} {}",
-                    expectedSize, actualSize);
+            throw new LpException("Invalid size: {} {}", expectedSize, actualSize);
         }
     }
 
-    private boolean filesAreSame(File expected, File actual)
-            throws LpException {
+    private boolean filesAreSame(File expected, File actual) throws LpException {
         try (InputStream expectedStream = new FileInputStream(expected);
-             InputStream actualStream = new FileInputStream(actual)) {
+                InputStream actualStream = new FileInputStream(actual)) {
             return streamsAreSame(expectedStream, actualStream);
         } catch (IOException ex) {
             throw new LpException("Can't read files.", ex);
         }
     }
 
-    private boolean streamsAreSame(InputStream expected, InputStream actual)
-            throws IOException {
+    private boolean streamsAreSame(InputStream expected, InputStream actual) throws IOException {
         int expectedValue;
         while ((expectedValue = expected.read()) != -1) {
             int actualValue = actual.read();
@@ -79,5 +71,4 @@ public class CheckFiles implements Component, SequentialExecution {
         }
         return actual.read() == -1;
     }
-
 }

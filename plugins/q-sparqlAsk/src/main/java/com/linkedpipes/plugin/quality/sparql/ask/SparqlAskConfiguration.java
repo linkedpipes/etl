@@ -15,8 +15,7 @@ public class SparqlAskConfiguration {
     @RdfToPojo.Property(iri = SparqlAskVocabulary.HAS_FAIL_ON_TRUE)
     private boolean failOnTrue;
 
-    public SparqlAskConfiguration() {
-    }
+    public SparqlAskConfiguration() {}
 
     public String getQuery() {
         return query;
@@ -33,5 +32,4 @@ public class SparqlAskConfiguration {
     public void setFailOnTrue(boolean failOnTrue) {
         this.failOnTrue = failOnTrue;
     }
-
 }

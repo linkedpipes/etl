@@ -7,7 +7,6 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -35,18 +34,15 @@ public final class PackZip implements Component, SequentialExecution {
 
     @Override
     public void execute() throws LpException {
-        if (configuration.getFileName() == null
-                || configuration.getFileName().isEmpty()) {
-            throw new LpException("Missing property: {}",
-                    PackZipVocabulary.HAS_FILE_NAME);
+        if (configuration.getFileName() == null || configuration.getFileName().isEmpty()) {
+            throw new LpException("Missing property: {}", PackZipVocabulary.HAS_FILE_NAME);
         }
         //
-        final File zipFile = output.createFile(
-                configuration.getFileName());
+        final File zipFile = output.createFile(configuration.getFileName());
         final byte[] buffer = new byte[8196];
         progressReport.start(input.size());
         try (FileOutputStream fos = new FileOutputStream(zipFile);
-             ZipOutputStream zos = new ZipOutputStream(fos)) {
+                ZipOutputStream zos = new ZipOutputStream(fos)) {
             for (FilesDataUnit.Entry entry : input) {
                 addZipEntry(zos, buffer, entry);
                 progressReport.entryProcessed();
@@ -64,8 +60,7 @@ public final class PackZip implements Component, SequentialExecution {
      * @param buffer
      * @param entry
      */
-    private void addZipEntry(ZipOutputStream zos, byte[] buffer,
-            final FilesDataUnit.Entry entry) throws LpException {
+    private void addZipEntry(ZipOutputStream zos, byte[] buffer, final FilesDataUnit.Entry entry) throws LpException {
         // Add to the zip file.
         final File sourceFile = entry.toFile();
         try (FileInputStream in = new FileInputStream(sourceFile)) {
@@ -80,5 +75,4 @@ public final class PackZip implements Component, SequentialExecution {
             throw new LpException("", ex);
         }
     }
-
 }

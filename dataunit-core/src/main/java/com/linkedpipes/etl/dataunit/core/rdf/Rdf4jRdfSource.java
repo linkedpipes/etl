@@ -4,6 +4,8 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
+import java.util.ArrayList;
+import java.util.List;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
@@ -11,9 +13,6 @@ import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.repository.RepositoryResult;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * We use graph provided in the constructor.
@@ -32,13 +31,11 @@ class Rdf4jRdfSource implements RdfSource {
     }
 
     @Override
-    public void statements(String subject, StatementHandler handler)
-            throws RdfException {
+    public void statements(String subject, StatementHandler handler) throws RdfException {
         IRI iri = valueFactory.createIRI(subject);
         try {
             dataUnit.execute((connection -> {
-                RepositoryResult<Statement> result = connection.getStatements(
-                        iri, null, null, graph);
+                RepositoryResult<Statement> result = connection.getStatements(iri, null, null, graph);
                 handleResult(result, handler);
             }));
         } catch (LpException ex) {
@@ -46,27 +43,21 @@ class Rdf4jRdfSource implements RdfSource {
         }
     }
 
-    private void handleResult(
-            RepositoryResult<Statement> result,
-            StatementHandler handler) throws RdfException {
+    private void handleResult(RepositoryResult<Statement> result, StatementHandler handler) throws RdfException {
         while (result.hasNext()) {
             Statement statement = result.next();
-            handler.accept(statement.getPredicate().stringValue(),
-                    new Rdf4jValueWrap(statement.getObject())
-            );
+            handler.accept(statement.getPredicate().stringValue(), new Rdf4jValueWrap(statement.getObject()));
         }
     }
 
     @Override
-    public List<RdfValue> getPropertyValues(String subject, String predicate)
-            throws RdfException {
+    public List<RdfValue> getPropertyValues(String subject, String predicate) throws RdfException {
         IRI s = valueFactory.createIRI(subject);
         IRI p = valueFactory.createIRI(predicate);
         List<RdfValue> result = new ArrayList<>();
         try {
             dataUnit.execute((connection -> {
-                RepositoryResult<Statement> statements =
-                        connection.getStatements(s, p, null, graph);
+                RepositoryResult<Statement> statements = connection.getStatements(s, p, null, graph);
                 while (statements.hasNext()) {
                     Value value = statements.next().getObject();
                     result.add(new Rdf4jValueWrap(value));
@@ -84,9 +75,7 @@ class Rdf4jRdfSource implements RdfSource {
         List<String> result = new ArrayList<>();
         try {
             this.dataUnit.execute((connection -> {
-                RepositoryResult<Statement> statements =
-                        connection.getStatements(
-                                null, RDF.TYPE, typeIri, graph);
+                RepositoryResult<Statement> statements = connection.getStatements(null, RDF.TYPE, typeIri, graph);
                 while (statements.hasNext()) {
                     result.add(statements.next().getSubject().stringValue());
                 }
@@ -96,5 +85,4 @@ class Rdf4jRdfSource implements RdfSource {
         }
         return result;
     }
-
 }

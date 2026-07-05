@@ -22,5 +22,4 @@ class TaskWrap<T extends Task> {
     public TaskWrap(T task) {
         this.task = task;
     }
-
 }

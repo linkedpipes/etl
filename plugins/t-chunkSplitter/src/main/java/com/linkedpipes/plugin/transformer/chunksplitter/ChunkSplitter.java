@@ -8,17 +8,15 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.RDF;
+import java.util.*;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
-
 public final class ChunkSplitter implements Component, SequentialExecution {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ChunkSplitter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChunkSplitter.class);
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
@@ -44,8 +42,7 @@ public final class ChunkSplitter implements Component, SequentialExecution {
     /**
      * For given subject store all objects that point towards it.
      */
-    private final Map<Resource, List<Resource>> reverseResourceMap
-            = new HashMap<>();
+    private final Map<Resource, List<Resource>> reverseResourceMap = new HashMap<>();
 
     @Override
     public void execute() throws LpException {
@@ -62,19 +59,16 @@ public final class ChunkSplitter implements Component, SequentialExecution {
         LOG.info("Splitting chunk to entities ...");
         createEntityMap(statements);
         LOG.info("Collecting output resources ...");
-        List<Resource> baseResourcesForChunks =
-                getResourcesOfType(configuration.getType());
+        List<Resource> baseResourcesForChunks = getResourcesOfType(configuration.getType());
         if (configuration.getIncomingLevelDepth() > 0) {
             LOG.info("Creating reverse map ...");
             createReverseMap(statements, baseResourcesForChunks);
         }
-        LOG.info("Creating output for {} resources",
-                baseResourcesForChunks.size());
+        LOG.info("Creating output for {} resources", baseResourcesForChunks.size());
         for (Resource resource : baseResourcesForChunks) {
             createChunk(resource);
         }
-        LOG.info("Chunk has been split to {} new chunks",
-                baseResourcesForChunks.size());
+        LOG.info("Chunk has been split to {} new chunks", baseResourcesForChunks.size());
     }
 
     private void createEntityMap(Collection<Statement> statements) {
@@ -106,35 +100,29 @@ public final class ChunkSplitter implements Component, SequentialExecution {
         return output;
     }
 
-    private void createReverseMap(Collection<Statement> statements,
-            List<Resource> baseResources) {
+    private void createReverseMap(Collection<Statement> statements, List<Resource> baseResources) {
         // If only one level is used we can build optimized reverse index.
         if (configuration.getIncomingLevelDepth() == 1) {
             createReverseMapLimitedResources(statements, baseResources);
         } else {
             createReverseMapAllResources(statements);
         }
-
     }
 
-    private void createReverseMapLimitedResources(
-            Collection<Statement> statements, List<Resource> baseResources) {
+    private void createReverseMapLimitedResources(Collection<Statement> statements, List<Resource> baseResources) {
         reverseResourceMap.clear();
         for (Statement statement : statements) {
             if (baseResources.contains(statement.getObject())) {
-                addReverseResource(statement.getSubject(),
-                        (Resource) statement.getObject());
+                addReverseResource(statement.getSubject(), (Resource) statement.getObject());
             }
         }
     }
 
-    private void createReverseMapAllResources(
-            Collection<Statement> statements) {
+    private void createReverseMapAllResources(Collection<Statement> statements) {
         reverseResourceMap.clear();
         for (Statement statement : statements) {
             if (statement.getObject() instanceof Resource) {
-                addReverseResource(statement.getSubject(),
-                        (Resource) statement.getObject());
+                addReverseResource(statement.getSubject(), (Resource) statement.getObject());
             }
         }
     }
@@ -169,8 +157,7 @@ public final class ChunkSplitter implements Component, SequentialExecution {
                     .forEach(r -> resourcesToAdd.push((Resource) r));
         }
         // Add reverse tree.
-        output.addAll(getStatementsForReverseResources(
-                resource, addedResources));
+        output.addAll(getStatementsForReverseResources(resource, addedResources));
         outputRdf.submit(output);
     }
 
@@ -178,14 +165,12 @@ public final class ChunkSplitter implements Component, SequentialExecution {
         return entities.getOrDefault(resource, Collections.EMPTY_LIST);
     }
 
-    private List<Statement> getStatementsForReverseResources(Resource resource,
-            List<Resource> addedResources) {
+    private List<Statement> getStatementsForReverseResources(Resource resource, List<Resource> addedResources) {
         if (configuration.getIncomingLevelDepth() == 0) {
             return Collections.EMPTY_LIST;
         }
         Set<Resource> resourcesInReverseTree = new HashSet<>();
-        collectReverseResources(resource, resourcesInReverseTree,
-                configuration.getIncomingLevelDepth());
+        collectReverseResources(resource, resourcesInReverseTree, configuration.getIncomingLevelDepth());
         resourcesInReverseTree.remove(resource);
         List<Statement> statements = new ArrayList<>();
         for (Resource item : resourcesInReverseTree) {
@@ -198,8 +183,7 @@ public final class ChunkSplitter implements Component, SequentialExecution {
         return statements;
     }
 
-    private void collectReverseResources(Resource resource,
-            Set<Resource> collector, int levelsToAdd) {
+    private void collectReverseResources(Resource resource, Set<Resource> collector, int levelsToAdd) {
         if (levelsToAdd < 0) {
             return;
         }
@@ -214,5 +198,4 @@ public final class ChunkSplitter implements Component, SequentialExecution {
             collectReverseResources(item, collector, levelsToAdd - 1);
         }
     }
-
 }

@@ -5,20 +5,18 @@ import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.ColumnType;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.NamedCell_V1;
 import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdf;
 import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdfConfigurator;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-
 public class ParserXls implements Parser {
 
-    private static final Logger LOG = LoggerFactory.getLogger(
-            ParserXlsConfig.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ParserXlsConfig.class);
 
     /**
      * Name of column where sheet name is stored.
@@ -47,9 +45,9 @@ public class ParserXls implements Parser {
         // get sheet to process
         final List<Integer> toProcess = new LinkedList<>();
         for (Integer index = 0; index < wb.getNumberOfSheets(); ++index) {
-            if (config.sheetName == null || config.sheetName.isEmpty()
-                    ||
-                    config.sheetName.compareTo(wb.getSheetName(index)) == 0) {
+            if (config.sheetName == null
+                    || config.sheetName.isEmpty()
+                    || config.sheetName.compareTo(wb.getSheetName(index)) == 0) {
                 // add
                 toProcess.add(index);
             }
@@ -66,11 +64,9 @@ public class ParserXls implements Parser {
      * @param wb
      * @param sheetIndex
      */
-    public void parseSheet(Workbook wb, Integer sheetIndex)
-            throws ParseFailed, LpException {
+    public void parseSheet(Workbook wb, Integer sheetIndex) throws ParseFailed, LpException {
 
-        LOG.debug("parseSheet({}, {})", wb.getSheetName(sheetIndex),
-                sheetIndex);
+        LOG.debug("parseSheet({}, {})", wb.getSheetName(sheetIndex), sheetIndex);
 
         // for every row
         final Sheet sheet = wb.getSheetAt(sheetIndex);
@@ -92,15 +88,16 @@ public class ParserXls implements Parser {
             final int columnStart = row.getFirstCellNum();
             final int columnEnd = row.getLastCellNum();
             columnNames = new ArrayList<>(columnEnd);
-            for (int columnIndex = columnStart; columnIndex < columnEnd;
-                    columnIndex++) {
+            for (int columnIndex = columnStart; columnIndex < columnEnd; columnIndex++) {
                 final Cell cell = row.getCell(columnIndex);
                 if (cell == null) {
                     // The cell is missing, this happen for example if
                     // document is exported from gdocs. We just log and use
                     // 'null' as cell value.
-                    LOG.info("Header cell is null ({}, {}) on '{}'!",
-                            startRow - 1, columnIndex,
+                    LOG.info(
+                            "Header cell is null ({}, {}) on '{}'!",
+                            startRow - 1,
+                            columnIndex,
                             wb.getSheetName(sheetIndex));
                     columnNames.add(null);
                 } else {
@@ -119,8 +116,7 @@ public class ParserXls implements Parser {
                         break;
                     }
                 }
-                LOG.info("Removal of nulls changed header size from {} to {}",
-                        initialSize, columnNames.size());
+                LOG.info("Removal of nulls changed header size from {} to {}", initialSize, columnNames.size());
             } else {
                 LOG.debug("Header size {}", columnNames.size());
             }
@@ -137,13 +133,11 @@ public class ParserXls implements Parser {
         for (NamedCell_V1 namedCell : config.namedCells) {
             final Row row = sheet.getRow(namedCell.getRowNumber() - 1);
             if (row == null) {
-                throw new ParseFailed("Row for named cell is null! ("
-                        + namedCell.getName() + ")");
+                throw new ParseFailed("Row for named cell is null! (" + namedCell.getName() + ")");
             }
             final Cell cell = row.getCell(namedCell.getColumnNumber() - 1);
             if (cell == null) {
-                throw new ParseFailed("Cell for named cell is null! ("
-                        + namedCell.getName() + ")");
+                throw new ParseFailed("Cell for named cell is null! (" + namedCell.getName() + ")");
             }
             // get value and add to namedCells
             final String value = getCellValue(cell);
@@ -176,8 +170,7 @@ public class ParserXls implements Parser {
         }
 
         int skippedLinesCounter = 0;
-        for (Integer rowNumPerFile = startRow; rowNumPerFile < dataEndAtRow;
-                ++rowNumber, ++rowNumPerFile) {
+        for (Integer rowNumPerFile = startRow; rowNumPerFile < dataEndAtRow; ++rowNumber, ++rowNumPerFile) {
             // skip till data
             if (rowNumPerFile < config.numberOfStartLinesToIgnore) {
                 continue;
@@ -194,13 +187,11 @@ public class ParserXls implements Parser {
             if (!headerGenerated) {
                 headerGenerated = true;
                 // use row data to generate types
-                final List<ColumnType> types
-                        = new ArrayList<>(columnEnd + namedCells.size());
+                final List<ColumnType> types = new ArrayList<>(columnEnd + namedCells.size());
                 // If the first column is empty then getFirstCellNum()
                 // return ondec of first column with data. But we want col1
                 // to always start at the first column.
-                for (int columnIndex = 0; columnIndex < columnEnd;
-                        columnIndex++) {
+                for (int columnIndex = 0; columnIndex < columnEnd; columnIndex++) {
                     final Cell cell = row.getCell(columnIndex);
                     if (cell == null) {
                         types.add(null);
@@ -211,16 +202,14 @@ public class ParserXls implements Parser {
                 // Till now column name can be only set in this method
                 // if header is presented.
                 if (columnNames == null) {
-                    LOG.info("Generating column names from: {} to: {}",
-                            columnStart, columnEnd);
+                    LOG.info("Generating column names from: {} to: {}", columnStart, columnEnd);
                     columnNames = new ArrayList<>(columnEnd);
                     // Generate column names, first column is col1. We start
                     // from 0 as we always want start with left most column.
                     // See comment before types generation for more info.
                     int columnIndex = 0;
                     for (int i = 0; i < columnEnd; i++) {
-                        columnNames
-                                .add("col" + Integer.toString(++columnIndex));
+                        columnNames.add("col" + Integer.toString(++columnIndex));
                     }
                     tableHeaderSize = columnNames.size();
                 } else {
@@ -237,12 +226,10 @@ public class ParserXls implements Parser {
                 columnNames.add(SHEET_COLUMN_NAME);
                 types.add(ColumnType.String);
                 // configure
-                TableToRdfConfigurator.configure(tableToRdf, columnNames,
-                        (List) types, startRow);
+                TableToRdfConfigurator.configure(tableToRdf, columnNames, (List) types, startRow);
             }
             // Prepare row.
-            final List<String> parsedRow
-                    = new ArrayList<>(columnEnd + namedCells.size());
+            final List<String> parsedRow = new ArrayList<>(columnEnd + namedCells.size());
             // parse columns
             for (int columnIndex = 0; columnIndex < columnEnd; columnIndex++) {
                 final Cell cell = row.getCell(columnIndex);
@@ -336,8 +323,7 @@ public class ParserXls implements Parser {
                 throw new IllegalArgumentException("Wrong cell type: "
                         + cell.getCellType()
                         + " on row: " + Integer.toString(cell.getRowIndex())
-                        + " column: " +
-                        Integer.toString(cell.getColumnIndex()));
+                        + " column: " + Integer.toString(cell.getColumnIndex()));
             case Cell.CELL_TYPE_NUMERIC:
                 return parseNumericCell(cell);
             case Cell.CELL_TYPE_STRING:
@@ -346,8 +332,7 @@ public class ParserXls implements Parser {
                 throw new IllegalArgumentException("Unknown cell type: "
                         + cell.getCellType()
                         + " on row: " + Integer.toString(cell.getRowIndex())
-                        + " column: " +
-                        Integer.toString(cell.getColumnIndex()));
+                        + " column: " + Integer.toString(cell.getColumnIndex()));
         }
     }
 
@@ -357,16 +342,13 @@ public class ParserXls implements Parser {
             //  https://poi.apache.org/faq.html#faq-N1008D FAQ 8
             if (HSSFDateUtil.isCellDateFormatted(cell)) {
                 final Calendar cal = new GregorianCalendar();
-                cal.setTime(HSSFDateUtil.getJavaDate(
-                        cell.getNumericCellValue()));
+                cal.setTime(HSSFDateUtil.getJavaDate(cell.getNumericCellValue()));
                 final StringBuilder dateStr = new StringBuilder(10);
                 dateStr.append(cal.get(Calendar.YEAR));
                 dateStr.append("-");
-                dateStr.append(String.format("%02d",
-                        cal.get(Calendar.MONTH) + 1));
+                dateStr.append(String.format("%02d", cal.get(Calendar.MONTH) + 1));
                 dateStr.append("-");
-                dateStr.append(String.format("%02d",
-                        cal.get(Calendar.DAY_OF_MONTH)));
+                dateStr.append(String.format("%02d", cal.get(Calendar.DAY_OF_MONTH)));
                 return dateStr.toString();
             }
             //
@@ -407,15 +389,12 @@ public class ParserXls implements Parser {
             case Cell.CELL_TYPE_ERROR:
                 throw new IllegalArgumentException("Cell type is error.");
             case Cell.CELL_TYPE_FORMULA:
-                throw new IllegalArgumentException(
-                        "The cell contains a formula: " +
-                                cell.getCellFormula());
+                throw new IllegalArgumentException("The cell contains a formula: " + cell.getCellFormula());
             case Cell.CELL_TYPE_NUMERIC:
                 if (DateUtil.isCellDateFormatted(cell)) {
                     return ColumnType.Date;
                 } else {
-                    final String value = (new Double(
-                            cell.getNumericCellValue())).toString();
+                    final String value = (new Double(cell.getNumericCellValue())).toString();
                     try {
                         Integer.parseInt(value);
                     } catch (NumberFormatException ex) {
@@ -429,5 +408,4 @@ public class ParserXls implements Parser {
                 throw new IllegalArgumentException("Unknown cell type.");
         }
     }
-
 }

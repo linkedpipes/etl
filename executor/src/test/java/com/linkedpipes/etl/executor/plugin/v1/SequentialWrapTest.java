@@ -9,15 +9,14 @@ import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
 import com.linkedpipes.etl.executor.api.v1.service.WorkingDirectory;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 public class SequentialWrapTest {
 
@@ -41,7 +40,6 @@ public class SequentialWrapTest {
         public void execute(Component.Context context) {
             executed = true;
         }
-
     }
 
     @Test
@@ -49,11 +47,9 @@ public class SequentialWrapTest {
         RdfSource rdfSource = Mockito.mock(RdfSource.class);
         File path = new File(File.createTempFile("lp-test-", ""), "working");
 
-
         RdfValue pathValue = Mockito.mock(RdfValue.class);
         Mockito.when(pathValue.asString()).thenReturn(path.toURI().toString());
-        Mockito.when(rdfSource.getPropertyValues(
-                "http://component", LP.HAS_WORKING_DIRECTORY))
+        Mockito.when(rdfSource.getPropertyValues("http://component", LP.HAS_WORKING_DIRECTORY))
                 .thenReturn(Arrays.asList(pathValue));
 
         Map<String, DataUnit> dataUnits = new HashMap<>();
@@ -64,8 +60,7 @@ public class SequentialWrapTest {
         Mockito.when(output.getBinding()).thenReturn("http://dataUnit/output");
         dataUnits.put("http://dataUnit/output", output);
         TestComponent component = new TestComponent();
-        PluginV1Instance wrap = new PluginV1Instance(
-                component, "http://component", rdfSource);
+        PluginV1Instance wrap = new PluginV1Instance(component, "http://component", rdfSource);
         //
         wrap.initialize(dataUnits, null);
         Assertions.assertNotNull(component.input);
@@ -73,8 +68,7 @@ public class SequentialWrapTest {
         Assertions.assertEquals(output, component.output);
         Assertions.assertNotNull(component.progressReport);
         Assertions.assertNotNull(component.workingDirectory);
-        Assertions.assertEquals(path.getAbsolutePath(),
-                component.workingDirectory.getAbsolutePath());
+        Assertions.assertEquals(path.getAbsolutePath(), component.workingDirectory.getAbsolutePath());
         //
         Assertions.assertFalse(component.executed);
         wrap.execute(null);
@@ -82,5 +76,4 @@ public class SequentialWrapTest {
         //
         path.delete();
     }
-
 }

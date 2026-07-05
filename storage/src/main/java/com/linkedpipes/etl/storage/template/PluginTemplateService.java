@@ -2,25 +2,21 @@ package com.linkedpipes.etl.storage.template;
 
 import com.linkedpipes.etl.library.template.plugin.model.PluginTemplate;
 import com.linkedpipes.etl.storage.StorageException;
+import java.util.HashSet;
+import java.util.Set;
 import org.eclipse.rdf4j.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class PluginTemplateService {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(PluginTemplateService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PluginTemplateService.class);
 
     private final TemplateEvents templateEvents;
 
     private final TemplateRepository repository;
 
-    public PluginTemplateService(
-            TemplateEvents templateEvents,
-            TemplateRepository repository) {
+    public PluginTemplateService(TemplateEvents templateEvents, TemplateRepository repository) {
         this.templateEvents = templateEvents;
         this.repository = repository;
     }
@@ -39,8 +35,7 @@ public class PluginTemplateService {
             templateEvents.onPluginTemplateLoaded(template);
             ++pluginCounter;
         }
-        LOG.info("Initializing plugin service ... done with {} templates",
-                pluginCounter);
+        LOG.info("Initializing plugin service ... done with {} templates", pluginCounter);
     }
 
     public Set<PluginTemplate> getPluginTemplates() throws StorageException {
@@ -50,5 +45,4 @@ public class PluginTemplateService {
         }
         return result;
     }
-
 }

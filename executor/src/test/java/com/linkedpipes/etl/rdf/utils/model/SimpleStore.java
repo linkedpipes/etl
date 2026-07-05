@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.rdf.utils.model;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-
 import java.util.List;
 
 public class SimpleStore implements BackendRdfSource {
@@ -18,8 +17,7 @@ public class SimpleStore implements BackendRdfSource {
     }
 
     @Override
-    public void triples(String graph, TripleHandler handler)
-            throws RdfUtilsException {
+    public void triples(String graph, TripleHandler handler) throws RdfUtilsException {
         for (RdfTriple triple : triples) {
             try {
                 handler.handle(triple);
@@ -30,8 +28,7 @@ public class SimpleStore implements BackendRdfSource {
     }
 
     @Override
-    public void triples(String resource, String graph, TripleHandler handler)
-            throws RdfUtilsException {
+    public void triples(String resource, String graph, TripleHandler handler) throws RdfUtilsException {
         for (RdfTriple triple : triples) {
             if (!triple.getSubject().equals(resource)) {
                 continue;

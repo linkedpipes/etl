@@ -3,6 +3,7 @@ package com.linkedpipes.plugin.transformer.rdftofile;
 import com.github.jsonldjava.core.JsonLdConsts;
 import com.github.jsonldjava.core.JsonLdError;
 import com.github.jsonldjava.core.RDFDataset;
+import java.util.Set;
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
@@ -14,8 +15,6 @@ import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
-
-import java.util.Set;
 
 /**
  * Based on org.eclipse.rdf4j.rio.jsonld.JSONLDInternalRDFParser;
@@ -52,13 +51,9 @@ class JSONLDInternalRDFParser implements com.github.jsonldjava.core.RDFParser {
             }
 
             result.addQuad(
-                    subject, predicate, value, datatype,
-                    literal.getLanguage().orElse(null),
-                    graphName);
+                    subject, predicate, value, datatype, literal.getLanguage().orElse(null), graphName);
         } else {
-            result.addQuad(
-                    subject, predicate, getResourceValue((Resource) object),
-                    graphName);
+            result.addQuad(subject, predicate, getResourceValue((Resource) object), graphName);
         }
     }
 
@@ -72,8 +67,7 @@ class JSONLDInternalRDFParser implements com.github.jsonldjava.core.RDFParser {
         }
 
         throw new IllegalStateException(
-                "Did not recognise resource type: "
-                        + subject.getClass().getName());
+                "Did not recognise resource type: " + subject.getClass().getName());
     }
 
     @Override
@@ -83,8 +77,7 @@ class JSONLDInternalRDFParser implements com.github.jsonldjava.core.RDFParser {
             handleStatement(result, (Statement) input);
         } else if (input instanceof Model) {
             if (input instanceof NamespaceAware) {
-                final Set<Namespace> namespaces =
-                        ((NamespaceAware) input).getNamespaces();
+                final Set<Namespace> namespaces = ((NamespaceAware) input).getNamespaces();
                 for (final Namespace nextNs : namespaces) {
                     result.setNamespace(nextNs.getName(), nextNs.getPrefix());
                 }
@@ -96,6 +89,4 @@ class JSONLDInternalRDFParser implements com.github.jsonldjava.core.RDFParser {
         }
         return result;
     }
-
 }
-

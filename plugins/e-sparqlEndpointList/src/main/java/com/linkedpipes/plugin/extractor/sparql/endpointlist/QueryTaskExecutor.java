@@ -2,7 +2,11 @@ package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
-import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.net.IDN;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -22,12 +26,6 @@ import org.eclipse.rdf4j.rio.RDFHandler;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 
-import java.net.IDN;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 class QueryTaskExecutor implements TaskConsumer<QueryTask> {
 
     private final SparqlEndpointListConfiguration configuration;
@@ -38,16 +36,13 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
 
     private final RDFHandler rdfHandler;
 
-    public QueryTaskExecutor(
-            SparqlEndpointListConfiguration configuration,
-            StatementsConsumer consumer) {
+    public QueryTaskExecutor(SparqlEndpointListConfiguration configuration, StatementsConsumer consumer) {
         this.configuration = configuration;
         this.consumer = consumer;
         this.rdfHandler = createRdfHandler(configuration);
     }
 
-    private RDFHandler createRdfHandler(
-            SparqlEndpointListConfiguration configuration) {
+    private RDFHandler createRdfHandler(SparqlEndpointListConfiguration configuration) {
         int commitSize = configuration.getCommitSize();
         RDFHandler handler;
         if (commitSize == 0) {
@@ -64,8 +59,7 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
     private RDFHandler handlerCommitAtEnd() {
         return new AbstractRDFHandler() {
             @Override
-            public void handleStatement(Statement st)
-                    throws RDFHandlerException {
+            public void handleStatement(Statement st) throws RDFHandlerException {
                 statements.add(st);
             }
 
@@ -79,8 +73,7 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
     private RDFHandler handlerCommitAfterSize(int size) {
         return new AbstractRDFHandler() {
             @Override
-            public void handleStatement(Statement st)
-                    throws RDFHandlerException {
+            public void handleStatement(Statement st) throws RDFHandlerException {
                 statements.add(st);
                 if (statements.size() >= size) {
                     commitStatementsToConsumer();
@@ -154,33 +147,26 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
         if (task.isUseAuthentication()) {
             provider.setCredentials(
                     new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
-                    new UsernamePasswordCredentials(
-                            task.getUsername(),
-                            task.getPassword()));
+                    new UsernamePasswordCredentials(task.getUsername(), task.getPassword()));
         }
-        return HttpClients.custom()
-                .setDefaultCredentialsProvider(provider).build();
+        return HttpClients.custom().setDefaultCredentialsProvider(provider).build();
     }
 
-    private void executeQuery(
-            QueryTask task, Repository repository) {
+    private void executeQuery(QueryTask task, Repository repository) {
         try (RepositoryConnection connection = repository.getConnection()) {
             GraphQuery preparedQuery = createQuery(task, connection);
             preparedQuery.evaluate(this.rdfHandler);
         }
     }
 
-    private GraphQuery createQuery(
-            QueryTask task, RepositoryConnection connection) {
-        GraphQuery query = connection.prepareGraphQuery(
-                QueryLanguage.SPARQL, task.getQuery());
+    private GraphQuery createQuery(QueryTask task, RepositoryConnection connection) {
+        GraphQuery query = connection.prepareGraphQuery(QueryLanguage.SPARQL, task.getQuery());
         setGraphsToQuery(task, query);
         query.setMaxExecutionTime(configuration.getExecutionTimeLimit());
         return query;
     }
 
-    private void setGraphsToQuery(
-            QueryTask task, GraphQuery preparedQuery) {
+    private void setGraphsToQuery(QueryTask task, GraphQuery preparedQuery) {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
         SimpleDataset dataset = new SimpleDataset();
         for (String iri : task.getDefaultGraphs()) {
@@ -188,5 +174,4 @@ class QueryTaskExecutor implements TaskConsumer<QueryTask> {
         }
         preparedQuery.setDataset(dataset);
     }
-
 }

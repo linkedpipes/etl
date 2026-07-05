@@ -17,17 +17,14 @@ class MultipartConnection extends Connection {
 
     private final PrintWriter writer;
 
-    public MultipartConnection(HttpURLConnection connection)
-            throws IOException {
+    public MultipartConnection(HttpURLConnection connection) throws IOException {
         super(connection);
         this.boundary = "=----------------------" + System.currentTimeMillis();
 
         initializeConnection();
 
         outputStream = connection.getOutputStream();
-        writer = new PrintWriter(
-                new OutputStreamWriter(outputStream, "UTF-8"),
-                true);
+        writer = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"), true);
     }
 
     private void initializeConnection() {
@@ -39,16 +36,14 @@ class MultipartConnection extends Connection {
         // large data, otherwise HttpURLConnection tries to store all
         // the data to calculate length (for header).
         connection.setChunkedStreamingMode(0);
-        connection.setRequestProperty("Content-Type",
-                "multipart/form-data; boundary=" + boundary);
+        connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
     }
 
     private void writeBoundary() {
         writer.append("--" + boundary).append(EOL);
     }
 
-    public void addStream(
-            String name, String fileName, Consumer<OutputStream> content) {
+    public void addStream(String name, String fileName, Consumer<OutputStream> content) {
         writeBoundary();
         writeFileHeader(name, fileName);
         writer.flush();
@@ -58,8 +53,7 @@ class MultipartConnection extends Connection {
     }
 
     private void writeFileHeader(String name, String fileName) {
-        writer.append("Content-Disposition: form-data; name=\"" + name
-                + "\"; filename=\"" + fileName + "\"");
+        writer.append("Content-Disposition: form-data; name=\"" + name + "\"; filename=\"" + fileName + "\"");
         writer.append(EOL);
         writer.append("Content-Type: application/octet-stream");
         writer.append(EOL);
@@ -79,5 +73,4 @@ class MultipartConnection extends Connection {
         writer.append("--" + boundary + "--").append(EOL);
         writer.flush();
     }
-
 }

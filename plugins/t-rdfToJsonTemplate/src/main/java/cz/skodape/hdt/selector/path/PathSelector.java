@@ -17,13 +17,10 @@ class PathSelector implements Selector {
     }
 
     @Override
-    public void initialize(
-            SelectorContext context, ReferenceSource input)
-            throws OperationFailed {
+    public void initialize(SelectorContext context, ReferenceSource input) throws OperationFailed {
         this.input = input;
         for (PathSelectorConfiguration.Path step : this.configuration.path) {
-            this.input = new PathStepSelector(
-                    context.defaultSource, step, this.input);
+            this.input = new PathStepSelector(context.defaultSource, step, this.input);
         }
     }
 
@@ -38,5 +35,4 @@ class PathSelector implements Selector {
     public Reference next() throws OperationFailed {
         return this.input.next();
     }
-
 }

@@ -3,11 +3,6 @@ package com.linkedpipes.etl.dataunit.core.rdf;
 import com.linkedpipes.etl.dataunit.core.DataUnitConfiguration;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.RDFWriter;
-import org.eclipse.rdf4j.rio.Rio;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,18 +12,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
 
-class DefaultGraphListDataUnit extends BaseRdf4jDataUnit
-        implements GraphListDataUnit, WritableGraphListDataUnit {
+class DefaultGraphListDataUnit extends BaseRdf4jDataUnit implements GraphListDataUnit, WritableGraphListDataUnit {
 
     private String graphPrefix;
 
     private final List<IRI> graphs = new LinkedList<>();
 
     public DefaultGraphListDataUnit(
-            DataUnitConfiguration configuration,
-            RepositoryManager manager,
-            Collection<String> sources) {
+            DataUnitConfiguration configuration, RepositoryManager manager, Collection<String> sources) {
         super(configuration, sources, manager);
         this.graphPrefix = configuration.getResource();
     }
@@ -50,16 +46,14 @@ class DefaultGraphListDataUnit extends BaseRdf4jDataUnit
         super.initialize(directory);
         List<File> directories = loadDataDirectories(directory);
         if (directories.size() != 1) {
-            throw new LpException("Invalid number of directories {} in {}",
-                    directories.size(), directory);
+            throw new LpException("Invalid number of directories {} in {}", directories.size(), directory);
         }
         File dataDirectory = directories.get(0);
         loadContent(dataDirectory);
     }
 
     @Override
-    public void initialize(Map<String, ManageableDataUnit> dataUnits)
-            throws LpException {
+    public void initialize(Map<String, ManageableDataUnit> dataUnits) throws LpException {
         super.initialize(dataUnits);
         initializeFromSource(dataUnits);
     }
@@ -80,13 +74,13 @@ class DefaultGraphListDataUnit extends BaseRdf4jDataUnit
     @Override
     protected void merge(ManageableDataUnit dataUnit) throws LpException {
         if (dataUnit instanceof DefaultGraphListDataUnit) {
-            DefaultGraphListDataUnit source =
-                    (DefaultGraphListDataUnit) dataUnit;
+            DefaultGraphListDataUnit source = (DefaultGraphListDataUnit) dataUnit;
             this.graphs.addAll(source.getReadGraphs());
         } else {
             throw new LpException(
                     "Can't merge with source data unit: {} of type {}",
-                    getIri(), dataUnit.getClass().getSimpleName());
+                    getIri(),
+                    dataUnit.getClass().getSimpleName());
         }
     }
 
@@ -102,9 +96,8 @@ class DefaultGraphListDataUnit extends BaseRdf4jDataUnit
             }
         });
         File graphFile = new File(dataDirectory, "graph.json");
-        List<String> graphAsStr = this.graphs.stream()
-                .map(iri -> iri.stringValue())
-                .collect(Collectors.toList());
+        List<String> graphAsStr =
+                this.graphs.stream().map(iri -> iri.stringValue()).collect(Collectors.toList());
         saveCollectionAsJson(graphFile, graphAsStr);
     }
 
@@ -112,17 +105,14 @@ class DefaultGraphListDataUnit extends BaseRdf4jDataUnit
         File dataFile = new File(dataDirectory, "data.trig");
         execute((connection) -> {
             try {
-                connection.add(
-                        dataFile, "http://localhost/base/", RDFFormat.TRIG);
+                connection.add(dataFile, "http://localhost/base/", RDFFormat.TRIG);
             } catch (IOException ex) {
                 throw new LpException("Can't load data file");
             }
         });
         File graphFile = new File(dataDirectory, "graph.json");
-        this.graphs.addAll(loadCollectionFromJson(graphFile, String.class)
-                .stream()
+        this.graphs.addAll(loadCollectionFromJson(graphFile, String.class).stream()
                 .map(str -> VF.createIRI(str))
                 .collect(Collectors.toList()));
     }
-
 }

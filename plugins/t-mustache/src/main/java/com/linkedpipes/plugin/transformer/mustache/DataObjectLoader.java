@@ -1,6 +1,14 @@
 package com.linkedpipes.plugin.transformer.mustache;
 
 import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
@@ -11,15 +19,6 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryResult;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 class DataObjectLoader {
 
@@ -86,8 +85,7 @@ class DataObjectLoader {
 
     protected void parseStatements() {
         try (RepositoryConnection connection = repository.getConnection()) {
-            try (RepositoryResult<Statement> statements
-                         = connection.getStatements(null, null, null, graph)) {
+            try (RepositoryResult<Statement> statements = connection.getStatements(null, null, null, graph)) {
                 while (statements.hasNext()) {
                     parseStatement(statements.next());
                 }
@@ -165,8 +163,7 @@ class DataObjectLoader {
         return result;
     }
 
-    protected Map<String, Object> buildNonEmptyObject(
-            Resource resource, Map<IRI, List<Value>> objectData) {
+    protected Map<String, Object> buildNonEmptyObject(Resource resource, Map<IRI, List<Value>> objectData) {
         if (buildCache.containsKey(resource)) {
             return buildCache.get(resource);
         }
@@ -205,7 +202,8 @@ class DataObjectLoader {
                     } else {
                         return transformValue(value);
                     }
-                }).collect(Collectors.toList());
+                })
+                .collect(Collectors.toList());
         if (transformed.size() == 1) {
             return transformed.get(0);
         } else {
@@ -261,8 +259,7 @@ class DataObjectLoader {
     /**
      * For maps we just need to search all properties recursively.
      */
-    protected Map<String, Object> addFirstFlagsForMap(
-            Set<Object> visited, Map<String, Object> map) {
+    protected Map<String, Object> addFirstFlagsForMap(Set<Object> visited, Map<String, Object> map) {
         Object identifier = map.get("@id");
         if (visited.contains(identifier)) {
             return map;
@@ -281,8 +278,7 @@ class DataObjectLoader {
         return map;
     }
 
-    protected List<Object> addFirstFlagsForList(
-            Set<Object> visited, List<Object> list) {
+    protected List<Object> addFirstFlagsForList(Set<Object> visited, List<Object> list) {
         if (list.isEmpty()) {
             return list;
         }
@@ -308,5 +304,4 @@ class DataObjectLoader {
         result.put(MustacheVocabulary.HAS_IS_FIRST, value);
         return result;
     }
-
 }

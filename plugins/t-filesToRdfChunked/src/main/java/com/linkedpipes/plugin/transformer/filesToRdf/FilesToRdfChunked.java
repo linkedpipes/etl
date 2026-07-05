@@ -7,17 +7,15 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.chunk.ChunkExecution;
 import com.linkedpipes.etl.executor.api.v1.component.chunk.ChunkTransformer;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.Rio;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.Rio;
 
-public final class FilesToRdfChunked
-        extends ChunkExecution<FilesContainer, Collection<Statement>>
+public final class FilesToRdfChunked extends ChunkExecution<FilesContainer, Collection<Statement>>
         implements Component {
 
     @Component.ContainsConfiguration
@@ -48,9 +46,8 @@ public final class FilesToRdfChunked
 
             @Override
             public FilesContainer next() {
-                List<FilesDataUnit.Entry> files =
-                        new ArrayList<>(filesPerChunk);
-                for (int counter = 0; counter < filesPerChunk ; ++counter) {
+                List<FilesDataUnit.Entry> files = new ArrayList<>(filesPerChunk);
+                for (int counter = 0; counter < filesPerChunk; ++counter) {
                     if (!source.hasNext()) {
                         break;
                     }
@@ -61,7 +58,6 @@ public final class FilesToRdfChunked
                 }
                 return new FilesContainer(files);
             }
-
         };
     }
 
@@ -78,12 +74,10 @@ public final class FilesToRdfChunked
     }
 
     @Override
-    protected ChunkTransformer<FilesContainer, Collection<Statement>>
-    createExecutor() {
+    protected ChunkTransformer<FilesContainer, Collection<Statement>> createExecutor() {
         RDFFormat defaultFormat = getDefaultFormat();
         String blankNodePrefix = Integer.toString(executorCounter++);
-        return new FilesToRdfChunkedTransformer(
-                this, configuration, defaultFormat, blankNodePrefix);
+        return new FilesToRdfChunkedTransformer(this, configuration, defaultFormat, blankNodePrefix);
     }
 
     private RDFFormat getDefaultFormat() {
@@ -91,8 +85,7 @@ public final class FilesToRdfChunked
         if (mimeType == null || mimeType.isEmpty()) {
             return null;
         }
-        return Rio.getParserFormatForMIMEType(
-                configuration.getMimeType()).get();
+        return Rio.getParserFormatForMIMEType(configuration.getMimeType()).get();
     }
 
     @Override
@@ -101,10 +94,8 @@ public final class FilesToRdfChunked
     }
 
     @Override
-    protected void submitInternal(Collection<Statement> statements)
-            throws LpException {
+    protected void submitInternal(Collection<Statement> statements) throws LpException {
         outputRdf.submit(statements);
         statements.clear();
     }
-
 }

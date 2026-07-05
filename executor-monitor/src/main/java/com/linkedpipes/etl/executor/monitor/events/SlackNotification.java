@@ -2,20 +2,18 @@ package com.linkedpipes.etl.executor.monitor.events;
 
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionStatus;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-
 class SlackNotification implements EventListener {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(SlackNotification.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SlackNotification.class);
 
     private final String localPublicUrl;
 
@@ -23,10 +21,7 @@ class SlackNotification implements EventListener {
 
     private final String slackForError;
 
-    public SlackNotification(
-            String slackForFinished,
-            String slackForError,
-            String localPublicUrl) {
+    public SlackNotification(String slackForFinished, String slackForError, String localPublicUrl) {
         LOG.info("Using Slack notifications.");
         this.slackForFinished = slackForFinished;
         this.slackForError = slackForError;
@@ -34,8 +29,7 @@ class SlackNotification implements EventListener {
     }
 
     @Override
-    public void onExecutionStatusDidChange(
-            Execution execution, ExecutionStatus oldStatus) {
+    public void onExecutionStatusDidChange(Execution execution, ExecutionStatus oldStatus) {
         switch (execution.getStatus()) {
             case DANGLING:
                 onExecutionDangling(execution);
@@ -47,9 +41,7 @@ class SlackNotification implements EventListener {
 
     private void onExecutionDangling(Execution execution) {
         String message = createMessage(
-                "Pipeline lost executor.",
-                "#f44242",
-                getPipelineName(execution), getOpenExecutionUrl(execution));
+                "Pipeline lost executor.", "#f44242", getPipelineName(execution), getOpenExecutionUrl(execution));
         sendMessage(message, slackForError);
     }
 
@@ -65,10 +57,7 @@ class SlackNotification implements EventListener {
         }
     }
 
-    private String createMessage(
-            String message, String color,
-            String pipelineName,
-            String attachmentOpenLink) {
+    private String createMessage(String message, String color, String pipelineName, String attachmentOpenLink) {
         StringBuilder builder = new StringBuilder();
         builder.append("{\"attachments\": [ {");
 
@@ -114,14 +103,11 @@ class SlackNotification implements EventListener {
         }
         try {
             URL url = new URL(slackUrl);
-            HttpURLConnection connection =
-                    (HttpURLConnection) url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
-            connection.addRequestProperty(
-                    "Content-Type", "application/json");
-            connection.setRequestProperty(
-                    "Content-Length", Integer.toString(message.length()));
+            connection.addRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Content-Length", Integer.toString(message.length()));
             connection.getOutputStream().write(message.getBytes("UTF8"));
             // Get response code - also make the connection happen.
             int responseCode = connection.getResponseCode();
@@ -150,26 +136,19 @@ class SlackNotification implements EventListener {
 
     private void onExecutionFinished(Execution execution) {
         String message = createMessage(
-                "Pipeline execution finished.",
-                "#2b8727",
-                getPipelineName(execution), getOpenExecutionUrl(execution));
+                "Pipeline execution finished.", "#2b8727", getPipelineName(execution), getOpenExecutionUrl(execution));
         sendMessage(message, slackForFinished);
     }
 
     private void onExecutionFailed(Execution execution) {
         String message = createMessage(
-                "Pipeline execution failed.",
-                "#f44242",
-                getPipelineName(execution), getOpenExecutionUrl(execution));
+                "Pipeline execution failed.", "#f44242", getPipelineName(execution), getOpenExecutionUrl(execution));
         sendMessage(message, slackForError);
     }
 
     private void onExecutionCancelled(Execution execution) {
         String message = createMessage(
-                "Pipeline execution cancelled.",
-                "#dd9a3b",
-                getPipelineName(execution), getOpenExecutionUrl(execution));
+                "Pipeline execution cancelled.", "#dd9a3b", getPipelineName(execution), getOpenExecutionUrl(execution));
         sendMessage(message, slackForError);
     }
-
 }

@@ -6,6 +6,12 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+import java.util.Optional;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -13,13 +19,6 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFHandler;
 import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
-import java.util.Optional;
 
 public final class RdfToFile implements Component, SequentialExecution {
 
@@ -55,11 +54,9 @@ public final class RdfToFile implements Component, SequentialExecution {
     }
 
     private void prepareOutputFormat() throws LpException {
-        Optional<RDFFormat> rdfFormat = Rio.getParserFormatForMIMEType(
-                configuration.getFileType());
+        Optional<RDFFormat> rdfFormat = Rio.getParserFormatForMIMEType(configuration.getFileType());
         if (!rdfFormat.isPresent()) {
-            throw new LpException("Invalid output file type: {}",
-                    configuration.getFileName());
+            throw new LpException("Invalid output file type: {}", configuration.getFileName());
         }
         outputFormat = rdfFormat.get();
     }
@@ -71,8 +68,7 @@ public final class RdfToFile implements Component, SequentialExecution {
     private void export(RepositoryConnection connection) throws LpException {
         reportStart(connection);
         try (FileOutputStream outStream = new FileOutputStream(outputFile);
-             OutputStreamWriter outWriter = new OutputStreamWriter(
-                     outStream, Charset.forName(FILE_ENCODE))) {
+                OutputStreamWriter outWriter = new OutputStreamWriter(outStream, Charset.forName(FILE_ENCODE))) {
             RDFHandler writer = createWriter(outWriter);
             connection.export(writer, inputRdf.getReadGraph());
         } catch (IOException ex) {
@@ -110,8 +106,6 @@ public final class RdfToFile implements Component, SequentialExecution {
         if (graph == null || graph.isEmpty() || graph.isBlank()) {
             return null;
         }
-        return SimpleValueFactory.getInstance().createIRI(
-                configuration.getGraphUri());
+        return SimpleValueFactory.getInstance().createIRI(configuration.getGraphUri());
     }
-
 }

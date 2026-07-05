@@ -2,8 +2,6 @@ package com.linkedpipes.etl.executor.api.v1.report;
 
 import com.linkedpipes.etl.executor.api.v1.component.task.Task;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
-import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-
 import java.util.Date;
 
 public interface ReportWriter {
@@ -19,5 +17,4 @@ public interface ReportWriter {
     static ReportWriter create(TripleWriter writer) {
         return new DefaultReportWriter(writer);
     }
-
 }

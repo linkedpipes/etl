@@ -6,6 +6,11 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
@@ -25,16 +30,9 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-
 public class GraphStorePurger implements Component, SequentialExecution {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(GraphStorePurger.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GraphStorePurger.class);
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
@@ -63,8 +61,7 @@ public class GraphStorePurger implements Component, SequentialExecution {
 
     private void loadTasks() throws LpException {
         RdfSource source = taskRdf.asRdfSource();
-        List<String> resources = source.getByType(
-                GraphStorePurgerVocabulary.TASK);
+        List<String> resources = source.getByType(GraphStorePurgerVocabulary.TASK);
         graphsToPurge = new ArrayList<>(resources.size());
         for (String resource : resources) {
             GraphsToPurge item = new GraphsToPurge();
@@ -95,8 +92,8 @@ public class GraphStorePurger implements Component, SequentialExecution {
 
     private void createHttpClient() {
         if (configuration.isUseAuthentication()) {
-            final RequestConfig requestConfig = RequestConfig.custom()
-                    .setAuthenticationEnabled(true).build();
+            final RequestConfig requestConfig =
+                    RequestConfig.custom().setAuthenticationEnabled(true).build();
             this.httpClient = HttpClients.custom()
                     .setDefaultRequestConfig(requestConfig)
                     .setDefaultCredentialsProvider(createCredentialsProvider())
@@ -107,13 +104,10 @@ public class GraphStorePurger implements Component, SequentialExecution {
     }
 
     private CredentialsProvider createCredentialsProvider() {
-        CredentialsProvider credentialsProvider =
-                new BasicCredentialsProvider();
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(
                 new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
-                new UsernamePasswordCredentials(
-                        configuration.getUsername(),
-                        configuration.getPassword()));
+                new UsernamePasswordCredentials(configuration.getUsername(), configuration.getPassword()));
         return credentialsProvider;
     }
 
@@ -124,19 +118,15 @@ public class GraphStorePurger implements Component, SequentialExecution {
      * can be too big - it would look like a failure to us
      * (as Virtuoso just close the connection before reading all the data).
      */
-    private void requestForPreemptiveAuthentication(
-            HttpClientContext context) {
-        final HttpEntityEnclosingRequestBase emptyRequest
-                = new HttpPut(configuration.getEndpoint());
-        try (CloseableHttpResponse response
-                     = this.httpClient.execute(emptyRequest, context)) {
+    private void requestForPreemptiveAuthentication(HttpClientContext context) {
+        final HttpEntityEnclosingRequestBase emptyRequest = new HttpPut(configuration.getEndpoint());
+        try (CloseableHttpResponse response = this.httpClient.execute(emptyRequest, context)) {
         } catch (Exception ex) {
             LOG.info("Exception during first empty request.", ex);
         }
     }
 
-    private void deleteGraph(
-            HttpClientContext context,String graph) throws LpException {
+    private void deleteGraph(HttpClientContext context, String graph) throws LpException {
         switch (configuration.getRepository()) {
             default:
             case DEFAULT:
@@ -148,36 +138,29 @@ public class GraphStorePurger implements Component, SequentialExecution {
         }
     }
 
-    private void deleteGraphDefault(
-            HttpClientContext context,String graph) throws LpException {
+    private void deleteGraphDefault(HttpClientContext context, String graph) throws LpException {
         String url = configuration.getEndpoint() + "?graph=";
         url += URLEncoder.encode(graph, StandardCharsets.UTF_8);
         executeHttpDelete(context, url);
     }
 
-    private void executeHttpDelete(
-            HttpClientContext context, String url) throws LpException {
+    private void executeHttpDelete(HttpClientContext context, String url) throws LpException {
         HttpDelete httpMethod = new HttpDelete(url);
         try {
             executeHttpRequest(context, httpMethod);
         } catch (LpException ex) {
-            throw new LpException("Delete request failed on: {}",
-                    url, ex);
+            throw new LpException("Delete request failed on: {}", url, ex);
         }
     }
 
-    private void deleteGraphVirtuoso(
-            HttpClientContext context,String graph) throws LpException {
+    private void deleteGraphVirtuoso(HttpClientContext context, String graph) throws LpException {
         String url = configuration.getEndpoint() + "?graph-uri=";
         url += URLEncoder.encode(graph, StandardCharsets.UTF_8);
         executeHttpDelete(context, url);
     }
 
-    private void executeHttpRequest(
-            HttpClientContext context,
-            HttpDelete httpMethod) throws LpException {
-        try (CloseableHttpResponse response
-                     = this.httpClient.execute(httpMethod, context)) {
+    private void executeHttpRequest(HttpClientContext context, HttpDelete httpMethod) throws LpException {
+        try (CloseableHttpResponse response = this.httpClient.execute(httpMethod, context)) {
             checkResponse(response);
         } catch (IOException | ParseException ex) {
             throw new LpException("Can't execute request.", ex);
@@ -188,16 +171,15 @@ public class GraphStorePurger implements Component, SequentialExecution {
         try {
             HttpEntity entity = response.getEntity();
             if (entity == null) {
-                LOG.debug("Status line: {}",response.getStatusLine());
+                LOG.debug("Status line: {}", response.getStatusLine());
             } else {
-                LOG.debug("Status line: {} \n  Entity: {}",
-                        response.getStatusLine(),
-                        EntityUtils.toString(entity));
+                LOG.debug("Status line: {} \n  Entity: {}", response.getStatusLine(), EntityUtils.toString(entity));
             }
         } catch (IOException ex) {
             LOG.error("Can't read response.", ex);
         }
-        LOG.info("Response code: {} phrase: {}",
+        LOG.info(
+                "Response code: {} phrase: {}",
                 response.getStatusLine().getStatusCode(),
                 response.getStatusLine().getReasonPhrase());
         final int statusCode = response.getStatusLine().getStatusCode();
@@ -208,9 +190,7 @@ public class GraphStorePurger implements Component, SequentialExecution {
         }
         if (statusCode >= 400) {
             throw new LpException(
-                    "Invalid response: {}",
-                    response.getStatusLine().getReasonPhrase());
+                    "Invalid response: {}", response.getStatusLine().getReasonPhrase());
         }
     }
-
 }

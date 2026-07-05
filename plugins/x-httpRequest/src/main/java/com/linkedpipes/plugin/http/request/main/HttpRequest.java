@@ -12,7 +12,6 @@ import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfigura
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +45,7 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
     protected TaskExecutionConfiguration getExecutionConfiguration() {
         TaskExecutionConfiguration result = new TaskExecutionConfiguration();
         result.numberOfThreads = configuration.getThreadsNumber();
-        result.numberOfThreadsPerGroup =  configuration.getThreadsPerGroup();
+        result.numberOfThreadsPerGroup = configuration.getThreadsPerGroup();
         result.skipFailedTasks = configuration.isSkipOnError();
         return result;
     }
@@ -54,9 +53,8 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
     @Override
     protected List<HttpRequestTask> loadTasks() throws LpException {
         RdfSource source = taskRdf.asRdfSource();
-        List<String> resources = source.getByType(
-                HttpRequestVocabulary.TASK);
-        List<HttpRequestTask>  result = new ArrayList<>(resources.size());
+        List<String> resources = source.getByType(HttpRequestVocabulary.TASK);
+        List<HttpRequestTask> result = new ArrayList<>(resources.size());
         for (String resource : resources) {
             HttpRequestTask task = new HttpRequestTask();
             RdfToPojoLoader.loadByReflection(source, resource, task);
@@ -66,7 +64,7 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
         return result;
     }
 
-    private void propagateConfigurationToTask(List<HttpRequestTask>  tasks) {
+    private void propagateConfigurationToTask(List<HttpRequestTask> tasks) {
         for (HttpRequestTask task : tasks) {
             if (task.isFollowRedirect() == null) {
                 task.setFollowRedirect(configuration.isFollowRedirect());
@@ -88,10 +86,7 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
     @Override
     protected TaskConsumer<HttpRequestTask> createConsumer() {
         return new TaskExecutor(
-                outputFiles,
-                new StatementsConsumer(reportRdf),
-                inputFilesMap,
-                configuration.isEncodeUrl());
+                outputFiles, new StatementsConsumer(reportRdf), inputFilesMap, configuration.isEncodeUrl());
     }
 
     @Override
@@ -106,5 +101,4 @@ public final class HttpRequest extends TaskExecution<HttpRequestTask> {
             inputFilesMap.put(entry.getFileName(), entry.toFile());
         }
     }
-
 }

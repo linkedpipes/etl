@@ -1,10 +1,9 @@
 package com.linkedpipes.plugin.transformer.tabularuv.column;
 
+import java.util.List;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
-
-import java.util.List;
 
 public class ValueGeneratorUri extends ValueGeneratorReplace {
 
@@ -21,5 +20,4 @@ public class ValueGeneratorUri extends ValueGeneratorReplace {
         // the replace thing is done as a part of ValueGeneratorReplace
         return valueFactory.createIRI(rawResult);
     }
-
 }

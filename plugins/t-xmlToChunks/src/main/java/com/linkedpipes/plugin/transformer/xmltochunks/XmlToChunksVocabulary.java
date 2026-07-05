@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.xmltochunks;
 
 public class XmlToChunksVocabulary {
 
-    private static final String PREFIX =
-            "http://plugins.linkedpipes.com/ontology/t-xmlToChunks#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-xmlToChunks#";
 
     public static final String CONFIG_CLASS = PREFIX + "Configuration";
 
@@ -16,5 +15,4 @@ public class XmlToChunksVocabulary {
     public static final String HAS_PREFIX = PREFIX + "prefix";
 
     public static final String HAS_LOCAL = PREFIX + "local";
-
 }

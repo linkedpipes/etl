@@ -12,8 +12,7 @@ class Dimension {
 
     private DimensionBox sub;
 
-    Dimension(int order, String description, String constant,
-            int xMin, int xMax, int yMin, int yMax) {
+    Dimension(int order, String description, String constant, int xMin, int xMax, int yMin, int yMax) {
         this.order = order;
         this.description = description;
         this.constant = constant;
@@ -30,8 +29,8 @@ class Dimension {
 
     @Override
     public String toString() {
-        return String.format("D%02d", order) + " (" + description + " # "
-                + constant + " @ [" + xMin + "," + yMin + "])";
+        return String.format("D%02d", order) + " (" + description + " # " + constant + " @ [" + xMin + "," + yMin
+                + "])";
     }
 
     public int getOrder() {
@@ -69,5 +68,4 @@ class Dimension {
     public int getyMin() {
         return yMin;
     }
-
 }

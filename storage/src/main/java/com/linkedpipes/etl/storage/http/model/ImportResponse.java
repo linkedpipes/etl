@@ -2,15 +2,11 @@ package com.linkedpipes.etl.storage.http.model;
 
 import com.linkedpipes.etl.storage.distribution.ImportPipeline;
 import com.linkedpipes.etl.storage.distribution.ImportTemplate;
-import org.eclipse.rdf4j.model.Resource;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.rdf4j.model.Resource;
 
-public record ImportResponse(
-        List<Pipeline> pipelines,
-        List<ReferenceTemplate> referenceTemplates
-) {
+public record ImportResponse(List<Pipeline> pipelines, List<ReferenceTemplate> referenceTemplates) {
 
     public record Pipeline(
             /*
@@ -36,10 +32,7 @@ public record ImportResponse(
             /*
              * True if pipeline was saved.
              */
-            boolean stored
-    ) {
-
-    }
+            boolean stored) {}
 
     public record ReferenceTemplate(
             /*
@@ -69,26 +62,21 @@ public record ImportResponse(
             /*
              * Stored as existing, i.e. template update.
              */
-            boolean storedAsExisting
-    ) {
+            boolean storedAsExisting) {
 
         public boolean stored() {
             return storedAsNew || storedAsExisting;
         }
-
     }
 
-    public static ImportResponse create(
-            ImportTemplate importTemplate, ImportPipeline importPipeline) {
+    public static ImportResponse create(ImportTemplate importTemplate, ImportPipeline importPipeline) {
         List<ReferenceTemplate> templates = new ArrayList<>();
-        for (ImportTemplate.Container container :
-                importTemplate.getContainers()) {
+        for (ImportTemplate.Container container : importTemplate.getContainers()) {
             Resource localResource;
             if (container.local() != null) {
                 localResource = container.local().resource();
             } else {
-                localResource = importTemplate.getRemoteToLocal().get(
-                        container.raw().resource);
+                localResource = importTemplate.getRemoteToLocal().get(container.raw().resource);
             }
             templates.add(new ReferenceTemplate(
                     container.raw().resource,
@@ -100,8 +88,7 @@ public record ImportResponse(
                     container.storedAsExisting()));
         }
         List<Pipeline> pipelines = new ArrayList<>();
-        for (ImportPipeline.Container container :
-                importPipeline.getContainers()) {
+        for (ImportPipeline.Container container : importPipeline.getContainers()) {
             Resource localResource = null;
             if (container.local() != null) {
                 localResource = container.local().resource();
@@ -116,5 +103,4 @@ public record ImportResponse(
         }
         return new ImportResponse(pipelines, templates);
     }
-
 }

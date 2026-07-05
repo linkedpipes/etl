@@ -2,8 +2,8 @@ package com.linkedpipes.plugin.extractor.sparql.endpoint.select;
 
 final class SparqlEndpointSelectScrollableCursorVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#";
+    private static final String PREFIX =
+            "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelectScrollableCursor#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -27,7 +27,5 @@ final class SparqlEndpointSelectScrollableCursorVocabulary {
 
     public static final String HAS_PASSWORD = PREFIX + "password";
 
-    private SparqlEndpointSelectScrollableCursorVocabulary() {
-    }
-
+    private SparqlEndpointSelectScrollableCursorVocabulary() {}
 }

@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.jenatdbloader;
 
 final class JenaTdbLoaderVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-jenaTdbLoader#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-jenaTdbLoader#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -11,7 +10,5 @@ final class JenaTdbLoaderVocabulary {
 
     public static final String HAS_LOADER = PREFIX + "loader";
 
-    private JenaTdbLoaderVocabulary() {
-    }
-
+    private JenaTdbLoaderVocabulary() {}
 }

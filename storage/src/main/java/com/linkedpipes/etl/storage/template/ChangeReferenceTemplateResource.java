@@ -7,14 +7,17 @@ import org.eclipse.rdf4j.model.Resource;
 
 public class ChangeReferenceTemplateResource {
 
-    public ReferenceTemplate localize(
-            PluginTemplate plugin,
-            ReferenceTemplate reference,
-            Resource resource) {
+    public ReferenceTemplate localize(PluginTemplate plugin, ReferenceTemplate reference, Resource resource) {
         return new ReferenceTemplate(
-                resource, reference.version(), reference.template(),
-                reference.plugin(), reference.label(), reference.description(),
-                reference.note(), reference.color(), reference.tags(),
+                resource,
+                reference.version(),
+                reference.template(),
+                reference.plugin(),
+                reference.label(),
+                reference.description(),
+                reference.note(),
+                reference.color(),
+                reference.tags(),
                 reference.knownAs(),
                 ConfigurationFacade.localizeConfiguration(
                         plugin.configurationDescription(),
@@ -22,5 +25,4 @@ public class ChangeReferenceTemplateResource {
                         resource),
                 ConfigurationFacade.configurationGraph(resource));
     }
-
 }

@@ -1,12 +1,11 @@
 package com.linkedpipes.etl.executor.monitor.debug.http;
 
 import com.linkedpipes.etl.executor.monitor.debug.DataUnit;
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
+import org.apache.commons.io.FileUtils;
 
 public class FileContentEntry extends DebugEntry {
 
@@ -18,8 +17,7 @@ public class FileContentEntry extends DebugEntry {
 
     final String publicPath;
 
-    FileContentEntry(DataUnit dataUnit, File file, String source,
-                     String publicPath) {
+    FileContentEntry(DataUnit dataUnit, File file, String source, String publicPath) {
         this.dataUnit = dataUnit;
         this.file = file;
         this.source = source;
@@ -27,9 +25,7 @@ public class FileContentEntry extends DebugEntry {
     }
 
     @Override
-    public DebugEntry prepareData(
-            String nameFilter, String sourceFilter, long offset, long limit)
-            throws IOException {
+    public DebugEntry prepareData(String nameFilter, String sourceFilter, long offset, long limit) throws IOException {
         ResponseContent content = new ResponseContent(Collections.emptyList());
         content.metadata.type = ResponseContent.TYPE_FILE;
         content.metadata.size = getFileSize();
@@ -57,7 +53,7 @@ public class FileContentEntry extends DebugEntry {
         if (extensionIndex == -1) {
             return "text/plain; charset=utf-8";
         }
-        String extension =  fileName.substring(extensionIndex);
+        String extension = fileName.substring(extensionIndex);
         String mimeType;
         switch (extension) {
             case ".txt":
@@ -99,5 +95,4 @@ public class FileContentEntry extends DebugEntry {
         }
         return mimeType + "; charset=utf-8";
     }
-
 }

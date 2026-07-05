@@ -9,7 +9,6 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-
 import java.io.*;
 import java.util.List;
 
@@ -54,14 +53,12 @@ public final class MustacheComponent implements Component, SequentialExecution {
     }
 
     private Mustache createMustache() {
-        String template = MustacheTemplatePrefixExpander.expand(
-                configuration.getTemplate());
+        String template = MustacheTemplatePrefixExpander.expand(configuration.getTemplate());
         MustacheFactory mustacheFactory = new DefaultMustacheFactory();
         return mustacheFactory.compile(new StringReader(template), "template");
     }
 
-    private void outputData(Mustache mustache, List<ObjectDataHolder> data)
-            throws LpException {
+    private void outputData(Mustache mustache, List<ObjectDataHolder> data) throws LpException {
         progressReport.start(data.size());
         for (ObjectDataHolder object : data) {
             if (object.data == null) {
@@ -69,8 +66,7 @@ public final class MustacheComponent implements Component, SequentialExecution {
             }
             String fileName = getFileName(object);
             File outputFile = output.createFile(fileName);
-            try (OutputStreamWriter outputStream = new OutputStreamWriter(
-                    new FileOutputStream(outputFile), "UTF8")) {
+            try (OutputStreamWriter outputStream = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF8")) {
                 mustache.execute(outputStream, object.data).flush();
             } catch (IOException ex) {
                 throw new LpException("Can't write output file.", ex);
@@ -88,5 +84,4 @@ public final class MustacheComponent implements Component, SequentialExecution {
             return "output_" + fileNameCounter;
         }
     }
-
 }

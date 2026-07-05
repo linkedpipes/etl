@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.shacljena;
 
 final class ShaclJenaVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-shaclJena#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-shaclJena#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -11,7 +10,5 @@ final class ShaclJenaVocabulary {
 
     public static final String HAS_OUTPUT_SHAPES = PREFIX + "outputShapes";
 
-    private ShaclJenaVocabulary() {
-    }
-
+    private ShaclJenaVocabulary() {}
 }

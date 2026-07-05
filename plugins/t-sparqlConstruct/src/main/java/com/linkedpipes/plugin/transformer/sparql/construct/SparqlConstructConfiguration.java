@@ -8,8 +8,7 @@ public class SparqlConstructConfiguration {
     @RdfToPojo.Property(iri = SparqlConstructVocabulary.HAS_QUERY)
     private String query = "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o }";
 
-    public SparqlConstructConfiguration() {
-    }
+    public SparqlConstructConfiguration() {}
 
     public String getQuery() {
         return query;
@@ -18,5 +17,4 @@ public class SparqlConstructConfiguration {
     public void setQuery(String query) {
         this.query = query;
     }
-
 }

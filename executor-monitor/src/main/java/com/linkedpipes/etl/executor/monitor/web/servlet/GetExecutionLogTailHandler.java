@@ -1,22 +1,18 @@
 package com.linkedpipes.etl.executor.monitor.web.servlet;
 
-import org.apache.commons.io.input.ReversedLinesFileReader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import org.apache.commons.io.input.ReversedLinesFileReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GetExecutionLogTailHandler {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(GetExecutionLogTailHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GetExecutionLogTailHandler.class);
 
-    public void handle(
-            HttpServletResponse response, File logFile, int count)
-            throws IOException {
+    public void handle(HttpServletResponse response, File logFile, int count) throws IOException {
         String[] lines = this.readLogTail(logFile, count);
         this.writeLinesToResponse(lines, response);
     }
@@ -42,9 +38,7 @@ public class GetExecutionLogTailHandler {
         return lines;
     }
 
-    private void writeLinesToResponse(
-            String[] lines, HttpServletResponse response)
-            throws IOException {
+    private void writeLinesToResponse(String[] lines, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/plain");
         response.setStatus(HttpServletResponse.SC_OK);
@@ -57,5 +51,4 @@ public class GetExecutionLogTailHandler {
         }
         writer.flush();
     }
-
 }

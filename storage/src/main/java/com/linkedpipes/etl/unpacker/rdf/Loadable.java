@@ -1,13 +1,12 @@
 package com.linkedpipes.etl.unpacker.rdf;
 
 import com.linkedpipes.etl.library.rdf.StatementsSelector;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.Value;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 
 public interface Loadable {
 
@@ -17,9 +16,7 @@ public interface Loadable {
 
     Loadable load(String predicate, Value value);
 
-    static void load(
-            StatementsSelector statements,
-            Loadable target, Resource resource) {
+    static void load(StatementsSelector statements, Loadable target, Resource resource) {
         Map<Loadable, Resource> entities = new HashMap<>();
         Stack<Loadable> queue = new Stack<>();
         entities.put(target, resource);
@@ -30,9 +27,7 @@ public interface Loadable {
             next.resource(subject.stringValue());
             for (Statement statement : statements.withSubject(subject)) {
                 Value value = statement.getObject();
-                Loadable newEntity = next.load(
-                        statement.getPredicate().stringValue(),
-                        value);
+                Loadable newEntity = next.load(statement.getPredicate().stringValue(), value);
                 if (newEntity == null) {
                     continue;
                 } else if (entities.containsKey(newEntity)) {
@@ -44,5 +39,4 @@ public interface Loadable {
             }
         }
     }
-
 }

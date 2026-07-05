@@ -2,13 +2,11 @@ package com.linkedpipes.plugin.transformer.filehasher;
 
 public final class FileHasherVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-filehash#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-filehash#";
 
     static final String HAS_FILE_NAME = PREFIX + "fileName";
 
-    private static final String SPDX
-            = "http://spdx.org/rdf/terms#";
+    private static final String SPDX = "http://spdx.org/rdf/terms#";
 
     static final String CHECKSUM = SPDX + "Checksum";
 
@@ -20,7 +18,5 @@ public final class FileHasherVocabulary {
 
     static final String SHA1 = SPDX + "checksumAlgorithm_sha1";
 
-    private FileHasherVocabulary() {
-    }
-
+    private FileHasherVocabulary() {}
 }

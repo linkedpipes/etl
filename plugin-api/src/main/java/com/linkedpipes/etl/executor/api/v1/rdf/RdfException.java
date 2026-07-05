@@ -7,5 +7,4 @@ public class RdfException extends LpException {
     public RdfException(String messages, Object... args) {
         super(messages, args);
     }
-
 }

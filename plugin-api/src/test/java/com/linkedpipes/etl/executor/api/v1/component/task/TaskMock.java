@@ -1,6 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1.component.task;
 
-class TaskMock implements Task{
+class TaskMock implements Task {
 
     final String iri;
 
@@ -29,7 +29,4 @@ class TaskMock implements Task{
     public String getGroup() {
         return group;
     }
-
 }
-
-

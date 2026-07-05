@@ -8,5 +8,5 @@ class InvalidTemplate extends Exception {
     InvalidTemplate(String message) {
         super(message);
     }
-
-};
+}
+;

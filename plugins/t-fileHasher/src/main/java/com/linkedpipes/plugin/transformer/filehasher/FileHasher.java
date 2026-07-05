@@ -5,17 +5,16 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 public class FileHasher implements Component, SequentialExecution {
 
@@ -30,8 +29,7 @@ public class FileHasher implements Component, SequentialExecution {
     @Override
     public void execute() throws LpException {
         final ValueFactory vf = SimpleValueFactory.getInstance();
-        final IRI typeHexBinary = vf.createIRI(
-                "http://www.w3.org/2001/XMLSchema#hexBinary");
+        final IRI typeHexBinary = vf.createIRI("http://www.w3.org/2001/XMLSchema#hexBinary");
         for (FilesDataUnit.Entry entry : inputFiles) {
             // Compute checksum.
             final String checkSum;
@@ -48,26 +46,31 @@ public class FileHasher implements Component, SequentialExecution {
                 final Resource checkSumNode = vf.createBNode();
                 connection.begin();
                 // Root object.
-                connection.add(vf.createStatement(root,
-                        vf.createIRI(FileHasherVocabulary.HAS_FILE_NAME),
-                        vf.createLiteral(entry.getFileName())
-                ), outputRdf.getWriteGraph());
-                connection.add(vf.createStatement(root,
-                        vf.createIRI(FileHasherVocabulary.HAS_CHECKSUM),
-                        checkSumNode), outputRdf.getWriteGraph());
+                connection.add(
+                        vf.createStatement(
+                                root,
+                                vf.createIRI(FileHasherVocabulary.HAS_FILE_NAME),
+                                vf.createLiteral(entry.getFileName())),
+                        outputRdf.getWriteGraph());
+                connection.add(
+                        vf.createStatement(root, vf.createIRI(FileHasherVocabulary.HAS_CHECKSUM), checkSumNode),
+                        outputRdf.getWriteGraph());
                 // Checksum object.
-                connection.add(vf.createStatement(checkSumNode,
-                        RDF.TYPE,
-                        vf.createIRI(FileHasherVocabulary.CHECKSUM)
-                ), outputRdf.getWriteGraph());
-                connection.add(vf.createStatement(checkSumNode,
-                        vf.createIRI(FileHasherVocabulary.HAS_ALGORITHM),
-                        vf.createIRI(FileHasherVocabulary.SHA1)
-                ), outputRdf.getWriteGraph());
-                connection.add(vf.createStatement(checkSumNode,
-                        vf.createIRI(FileHasherVocabulary.HAS_CHECKSUM_VALUE),
-                        vf.createLiteral(checkSum, typeHexBinary)
-                ), outputRdf.getWriteGraph());
+                connection.add(
+                        vf.createStatement(checkSumNode, RDF.TYPE, vf.createIRI(FileHasherVocabulary.CHECKSUM)),
+                        outputRdf.getWriteGraph());
+                connection.add(
+                        vf.createStatement(
+                                checkSumNode,
+                                vf.createIRI(FileHasherVocabulary.HAS_ALGORITHM),
+                                vf.createIRI(FileHasherVocabulary.SHA1)),
+                        outputRdf.getWriteGraph());
+                connection.add(
+                        vf.createStatement(
+                                checkSumNode,
+                                vf.createIRI(FileHasherVocabulary.HAS_CHECKSUM_VALUE),
+                                vf.createLiteral(checkSum, typeHexBinary)),
+                        outputRdf.getWriteGraph());
                 connection.commit();
             });
         }
@@ -80,8 +83,7 @@ public class FileHasher implements Component, SequentialExecution {
      * @param file
      * @return
      */
-    protected String computeChecksum(File file)
-            throws NoSuchAlgorithmException, IOException {
+    protected String computeChecksum(File file) throws NoSuchAlgorithmException, IOException {
         final MessageDigest sha1 = MessageDigest.getInstance("SHA1");
         try (FileInputStream stream = new FileInputStream(file)) {
             final byte[] data = new byte[BUFFER_SIZE];
@@ -93,11 +95,10 @@ public class FileHasher implements Component, SequentialExecution {
             final byte[] hashBytes = sha1.digest();
             final StringBuffer hashString = new StringBuffer();
             for (int i = 0; i < hashBytes.length; i++) {
-                hashString.append(Integer.toString(
-                        (hashBytes[i] & 0xff) + 0x100, 16).substring(1));
+                hashString.append(
+                        Integer.toString((hashBytes[i] & 0xff) + 0x100, 16).substring(1));
             }
             return hashString.toString();
         }
     }
-
 }

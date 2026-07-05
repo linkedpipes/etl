@@ -5,13 +5,12 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import java.io.File;
+import java.io.IOException;
 import org.rdfhdt.hdt.exceptions.ParserException;
 import org.rdfhdt.hdt.hdt.HDT;
 import org.rdfhdt.hdt.hdt.HDTManager;
 import org.rdfhdt.hdt.options.HDTSpecification;
-
-import java.io.File;
-import java.io.IOException;
 
 public final class RdfToHdt implements Component, SequentialExecution {
 
@@ -50,11 +49,7 @@ public final class RdfToHdt implements Component, SequentialExecution {
 
     private HDT createHdt() throws LpException {
         try (HdtTripleIterator iterator = new HdtTripleIterator(inputRdf)) {
-            return HDTManager.generateHDT(
-                    iterator,
-                    configuration.getBaseIri(),
-                    new HDTSpecification(),
-                    null);
+            return HDTManager.generateHDT(iterator, configuration.getBaseIri(), new HDTSpecification(), null);
         } catch (IOException | ParserException ex) {
             throw new LpException("Can't convert RDF to HDT.", ex);
         }
@@ -68,5 +63,4 @@ public final class RdfToHdt implements Component, SequentialExecution {
             throw new LpException("Can't save HDT.", ex);
         }
     }
-
 }

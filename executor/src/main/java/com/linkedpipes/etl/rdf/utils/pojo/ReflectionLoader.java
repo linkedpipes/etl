@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.rdf.utils.pojo;
 
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
-
 import java.lang.reflect.Field;
 
 class ReflectionLoader implements Loadable {
@@ -14,8 +13,7 @@ class ReflectionLoader implements Loadable {
 
     private final FieldLoader fieldLoader = new FieldLoader();
 
-    public ReflectionLoader(DescriptorFactory descriptorFactory,
-            Object object) {
+    public ReflectionLoader(DescriptorFactory descriptorFactory, Object object) {
         this.descriptorFactory = descriptorFactory;
         this.targetObject = object;
     }
@@ -23,8 +21,7 @@ class ReflectionLoader implements Loadable {
     public void initialize() throws LoaderException {
         this.descriptor = descriptorFactory.create(targetObject.getClass());
         if (this.descriptor == null) {
-            throw new LoaderException("Missing description for: {}",
-                    targetObject.getClass());
+            throw new LoaderException("Missing description for: {}", targetObject.getClass());
         }
     }
 
@@ -38,8 +35,7 @@ class ReflectionLoader implements Loadable {
     }
 
     @Override
-    public Loadable load(String predicate, BackendRdfValue value)
-            throws LoaderException {
+    public Loadable load(String predicate, BackendRdfValue value) throws LoaderException {
         Field field = descriptor.getFieldForPredicate(predicate);
         if (field == null) {
             return null;
@@ -48,8 +44,7 @@ class ReflectionLoader implements Loadable {
         if (newObject == null) {
             return null;
         } else {
-            ReflectionLoader loader = new ReflectionLoader(
-                    descriptorFactory, newObject);
+            ReflectionLoader loader = new ReflectionLoader(descriptorFactory, newObject);
             loader.initialize();
             return loader;
         }

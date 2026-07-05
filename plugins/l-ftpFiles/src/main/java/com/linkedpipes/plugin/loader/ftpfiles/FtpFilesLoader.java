@@ -6,6 +6,11 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
 import org.apache.commons.net.ProtocolCommandEvent;
 import org.apache.commons.net.ProtocolCommandListener;
 import org.apache.commons.net.ftp.FTP;
@@ -13,16 +18,9 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
-
 public class FtpFilesLoader implements Component, SequentialExecution {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(FtpFilesLoader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FtpFilesLoader.class);
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
@@ -57,15 +55,19 @@ public class FtpFilesLoader implements Component, SequentialExecution {
         ftpClient.addProtocolCommandListener(new ProtocolCommandListener() {
             @Override
             public void protocolCommandSent(ProtocolCommandEvent event) {
-                LOG.debug("command sent:\n\t{}\n\t{}\n\t{}",
-                        event.getCommand(), event.getMessage(),
+                LOG.debug(
+                        "command sent:\n\t{}\n\t{}\n\t{}",
+                        event.getCommand(),
+                        event.getMessage(),
                         event.getReplyCode());
             }
 
             @Override
             public void protocolReplyReceived(ProtocolCommandEvent event) {
-                LOG.debug("command received:\n\t{}\n\t{}\n\t{}",
-                        event.getCommand(), event.getMessage(),
+                LOG.debug(
+                        "command received:\n\t{}\n\t{}\n\t{}",
+                        event.getCommand(),
+                        event.getMessage(),
                         event.getReplyCode());
             }
         });
@@ -111,18 +113,17 @@ public class FtpFilesLoader implements Component, SequentialExecution {
         progressReport.done();
     }
 
-    private void uploadFile(File file, String remoteName)
-            throws IOException, LpException {
+    private void uploadFile(File file, String remoteName) throws IOException, LpException {
         String remoteFullName = getRemoteFullPath(remoteName);
         checkAndCreateDirectory(remoteFullName);
         try (InputStream inputStream = new FileInputStream(file)) {
             if (!ftpClient.storeFile(remoteFullName, inputStream)) {
                 throw new LpException(
                         "Can't upload file. Response code: {} message: {}",
-                        ftpClient.getReplyCode(), ftpClient.getReplyString());
+                        ftpClient.getReplyCode(),
+                        ftpClient.getReplyString());
             }
-            LOG.info("\t {} : {}",
-                    ftpClient.getReplyCode(), ftpClient.getReplyString());
+            LOG.info("\t {} : {}", ftpClient.getReplyCode(), ftpClient.getReplyString());
         }
     }
 
@@ -130,8 +131,7 @@ public class FtpFilesLoader implements Component, SequentialExecution {
         return "/" + configuration.getDirectory() + "/" + remoteName;
     }
 
-    private void checkAndCreateDirectory(String path)
-            throws IOException, LpException {
+    private void checkAndCreateDirectory(String path) throws IOException, LpException {
         // We use changeWorkingDirectory to check if a directory exists.
         final String[] splitPath = path.replace("\\", "/").split("/");
         String subPath = "/";
@@ -142,19 +142,16 @@ public class FtpFilesLoader implements Component, SequentialExecution {
             }
         }
         if (!ftpClient.changeWorkingDirectory(subPath)) {
-            throw new LpException(
-                    "Failed to create directories for: {}", subPath);
+            throw new LpException("Failed to create directories for: {}", subPath);
         }
         if (!ftpClient.changeWorkingDirectory("/")) {
-            throw new LpException(
-                    "Can't change working directory to root.");
+            throw new LpException("Can't change working directory to root.");
         }
     }
 
     private void createDirectory(String path) throws IOException, LpException {
         if (!ftpClient.makeDirectory(path)) {
-            throw new LpException(
-                    "Can't create directory: {}", path);
+            throw new LpException("Can't create directory: {}", path);
         }
     }
 
@@ -179,5 +176,4 @@ public class FtpFilesLoader implements Component, SequentialExecution {
             }
         }
     }
-
 }

@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 
 public final class SparqlEndpointListVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointList#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -25,8 +24,7 @@ public final class SparqlEndpointListVocabulary {
 
     public static final String HAS_GROUP = PREFIX + "group";
 
-    public static final String HAS_TASK_PER_GROUP =
-            PREFIX + "taskPerGroupLimit";
+    public static final String HAS_TASK_PER_GROUP = PREFIX + "taskPerGroupLimit";
 
     public static final String HAS_COMMIT_SIZE = PREFIX + "commitSize";
 
@@ -36,10 +34,7 @@ public final class SparqlEndpointListVocabulary {
 
     public static final String HAS_PASSWORD = PREFIX + "password";
 
-    public static final String HAS_USE_TOLERANT_REPOSITORY =
-            PREFIX + "useTolerantRepository";
+    public static final String HAS_USE_TOLERANT_REPOSITORY = PREFIX + "useTolerantRepository";
 
-    private SparqlEndpointListVocabulary() {
-    }
-
+    private SparqlEndpointListVocabulary() {}
 }

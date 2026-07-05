@@ -4,7 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 import com.linkedpipes.etl.model.vocabulary.SKOS;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -71,10 +70,8 @@ public class ExecutorComponent {
         for (String requirement : requirements) {
             builder.addIri(iri, LP_PIPELINE.HAS_REQUIREMENT, requirement);
         }
-        builder.addIri(iri, LP_PIPELINE.HAS_CONFIGURATION_GRAPH,
-                configGraph);
-        builder.addIri(iri, LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION,
-                configDescriptionGraph);
+        builder.addIri(iri, LP_PIPELINE.HAS_CONFIGURATION_GRAPH, configGraph);
+        builder.addIri(iri, LP_PIPELINE.HAS_CONFIGURATION_ENTITY_DESCRIPTION, configDescriptionGraph);
         for (ExecutorPort port : ports) {
             builder.addIri(iri, LP_PIPELINE.HAS_DATA_UNIT, port.getIri());
             port.write(builder);
@@ -159,5 +156,4 @@ public class ExecutorComponent {
     public void setExecution(String execution) {
         this.execution = execution;
     }
-
 }

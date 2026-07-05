@@ -9,5 +9,4 @@ public class ParseFailed extends Exception {
     public ParseFailed(String message, Throwable cause) {
         super(message, cause);
     }
-
 }

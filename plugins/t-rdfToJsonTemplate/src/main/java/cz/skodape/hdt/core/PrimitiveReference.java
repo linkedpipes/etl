@@ -8,5 +8,4 @@ package cz.skodape.hdt.core;
 public interface PrimitiveReference extends Reference {
 
     String getValue() throws OperationFailed;
-
 }

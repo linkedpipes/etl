@@ -8,8 +8,7 @@ public class FilesFilterConfiguration {
     @RdfToPojo.Property(iri = FilesFilterVocabulary.HAS_PATTERN)
     private String fileNamePattern = ".*";
 
-    public FilesFilterConfiguration() {
-    }
+    public FilesFilterConfiguration() {}
 
     public String getFileNamePattern() {
         return fileNamePattern;
@@ -18,5 +17,4 @@ public class FilesFilterConfiguration {
     public void setFileNamePattern(String fileNamePattern) {
         this.fileNamePattern = fileNamePattern;
     }
-
 }

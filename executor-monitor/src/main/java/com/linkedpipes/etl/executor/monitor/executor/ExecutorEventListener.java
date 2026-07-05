@@ -26,5 +26,4 @@ public interface ExecutorEventListener {
      * When an overview is available.
      */
     void onOverview(Execution execution, JsonNode overview);
-
 }

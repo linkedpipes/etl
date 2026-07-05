@@ -1,15 +1,13 @@
 package com.linkedpipes.etl.test;
 
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-
 class MockedProgressReport implements ProgressReport {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(MockedProgressReport.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MockedProgressReport.class);
 
     @Override
     public void start(long entriesToProcess) {
@@ -30,5 +28,4 @@ class MockedProgressReport implements ProgressReport {
     public void done() {
         LOG.info("Progress: done");
     }
-
 }

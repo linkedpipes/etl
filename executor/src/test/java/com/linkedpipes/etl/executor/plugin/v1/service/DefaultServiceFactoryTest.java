@@ -12,8 +12,7 @@ public class DefaultServiceFactoryTest {
     @Test
     public void progressReport() throws LpException {
         Component.Context context = Mockito.mock(Component.Context.class);
-        ProgressReport result = (ProgressReport) ServiceFactory.create(
-                ProgressReport.class, null, null, context);
+        ProgressReport result = (ProgressReport) ServiceFactory.create(ProgressReport.class, null, null, context);
         Assertions.assertNotNull(result);
         //
         result.start(2);
@@ -23,5 +22,4 @@ public class DefaultServiceFactoryTest {
         //
         Mockito.verify(context, Mockito.times(4)).sendMessage(Mockito.any());
     }
-
 }

@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.jsonldformat;
 
 public final class JsonLdFormatVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-jsonLdFormat#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-jsonLdFormat#";
 
     public static final String CONFIGURATION = PREFIX + "Configuration";
 
@@ -21,7 +20,5 @@ public final class JsonLdFormatVocabulary {
 
     public static final String FRAME = PREFIX + "Frame";
 
-    private JsonLdFormatVocabulary() {
-    }
-
+    private JsonLdFormatVocabulary() {}
 }

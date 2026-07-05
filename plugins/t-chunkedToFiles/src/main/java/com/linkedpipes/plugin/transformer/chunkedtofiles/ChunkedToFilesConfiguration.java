@@ -14,8 +14,7 @@ public class ChunkedToFilesConfiguration {
     @RdfToPojo.Property(iri = ChunkedToFilesVocabulary.HAS_PREFIX_TTL)
     private String prefixTurtle = "";
 
-    public ChunkedToFilesConfiguration() {
-    }
+    public ChunkedToFilesConfiguration() {}
 
     public String getFileType() {
         return fileType;
@@ -40,5 +39,4 @@ public class ChunkedToFilesConfiguration {
     public void setPrefixTurtle(String prefixTurtle) {
         this.prefixTurtle = prefixTurtle;
     }
-
 }

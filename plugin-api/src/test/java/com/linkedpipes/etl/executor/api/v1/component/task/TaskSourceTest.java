@@ -4,27 +4,24 @@ import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.event.Event;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TaskSourceTest {
 
     @Test
     public void allTasksPass() {
-        TaskExecutionConfiguration configuration =
-                new TaskExecutionConfiguration();
+        TaskExecutionConfiguration configuration = new TaskExecutionConfiguration();
         List<TaskMock> tasks = new ArrayList<>();
         tasks.add(new TaskMock("1", "A"));
         tasks.add(new TaskMock("2", "A"));
         tasks.add(new TaskMock("3", "A"));
-        TaskSource<TaskMock> source = new TaskSource<>(
-                noActionContext(), noActionProgressReport(),
-                noActionReport(), configuration, tasks);
+        TaskSource<TaskMock> source =
+                new TaskSource<>(noActionContext(), noActionProgressReport(), noActionReport(), configuration, tasks);
 
         TaskMock first = source.getTaskWrap();
         Assertions.assertNotNull(first);
@@ -92,8 +89,7 @@ public class TaskSourceTest {
             }
 
             @Override
-            public void onTaskFailed(
-                    Task task, Date start, Date end, Throwable throwable) {
+            public void onTaskFailed(Task task, Date start, Date end, Throwable throwable) {
                 // No action.
             }
 
@@ -106,20 +102,17 @@ public class TaskSourceTest {
             public String getIriForReport(Task task) {
                 return task.getIri();
             }
-
         };
     }
 
     @Test
     public void failTask() {
-        TaskExecutionConfiguration configuration =
-                new TaskExecutionConfiguration();
+        TaskExecutionConfiguration configuration = new TaskExecutionConfiguration();
         List<TaskMock> tasks = new ArrayList<>();
         tasks.add(new TaskMock("1", "A"));
         tasks.add(new TaskMock("2", "A"));
-        TaskSource<TaskMock> source = new TaskSource<>(
-                noActionContext(), noActionProgressReport(),
-                noActionReport(), configuration, tasks);
+        TaskSource<TaskMock> source =
+                new TaskSource<>(noActionContext(), noActionProgressReport(), noActionReport(), configuration, tasks);
 
         source.onTaskFinished(source.getTaskWrap());
         source.onTaskFailed(source.getTaskWrap(), null);
@@ -130,14 +123,12 @@ public class TaskSourceTest {
 
     @Test
     public void retryTaskSuccess() {
-        TaskExecutionConfiguration configuration =
-                new TaskExecutionConfiguration();
+        TaskExecutionConfiguration configuration = new TaskExecutionConfiguration();
         configuration.numberOfRetries = 2;
         List<TaskMock> tasks = new ArrayList<>();
         tasks.add(new TaskMock("1", "A"));
-        TaskSource<TaskMock> source = new TaskSource<>(
-                noActionContext(), noActionProgressReport(),
-                noActionReport(), configuration, tasks);
+        TaskSource<TaskMock> source =
+                new TaskSource<>(noActionContext(), noActionProgressReport(), noActionReport(), configuration, tasks);
 
         source.onTaskFailed(source.getTaskWrap(), null);
         source.onTaskFailed(source.getTaskWrap(), null);
@@ -149,14 +140,12 @@ public class TaskSourceTest {
 
     @Test
     public void retryTaskFailed() {
-        TaskExecutionConfiguration configuration =
-                new TaskExecutionConfiguration();
+        TaskExecutionConfiguration configuration = new TaskExecutionConfiguration();
         configuration.numberOfRetries = 2;
         List<TaskMock> tasks = new ArrayList<>();
         tasks.add(new TaskMock("1", "A"));
-        TaskSource<TaskMock> source = new TaskSource<>(
-                noActionContext(), noActionProgressReport(),
-                noActionReport(), configuration, tasks);
+        TaskSource<TaskMock> source =
+                new TaskSource<>(noActionContext(), noActionProgressReport(), noActionReport(), configuration, tasks);
 
         source.onTaskFailed(source.getTaskWrap(), null);
         source.onTaskFailed(source.getTaskWrap(), null);
@@ -165,5 +154,4 @@ public class TaskSourceTest {
         Assertions.assertNull(source.getTaskWrap());
         Assertions.assertTrue(source.hasTaskExecutionFailed());
     }
-
 }

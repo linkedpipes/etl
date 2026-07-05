@@ -1,15 +1,6 @@
 package cz.skodape.hdt.rdf.rdf4j;
 
 import cz.skodape.hdt.core.OperationFailed;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.RDFHandler;
-import org.eclipse.rdf4j.rio.RDFParser;
-import org.eclipse.rdf4j.rio.Rio;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,6 +10,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.Rio;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class Rdf4jGraphProducer implements RDFHandler, Runnable {
 
@@ -33,19 +32,16 @@ class Rdf4jGraphProducer implements RDFHandler, Runnable {
             this.graph = graph;
         }
 
-        public static Container copyAndWrap(
-                List<Statement> statements, Resource graph) {
+        public static Container copyAndWrap(List<Statement> statements, Resource graph) {
             return new Container(new ArrayList<>(statements), graph);
         }
 
         public static Container deadPill() {
             return new Container(null, null);
         }
-
     }
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(Rdf4jGraphProducer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Rdf4jGraphProducer.class);
 
     private final File file;
 
@@ -63,8 +59,7 @@ class Rdf4jGraphProducer implements RDFHandler, Runnable {
     }
 
     protected RDFFormat getInputFileFormat() throws OperationFailed {
-        Optional<RDFFormat> format =
-                Rio.getParserFormatForFileName(file.getName());
+        Optional<RDFFormat> format = Rio.getParserFormatForFileName(file.getName());
         if (format.isEmpty()) {
             throw new OperationFailed("Can't determine file format.");
         }
@@ -137,5 +132,4 @@ class Rdf4jGraphProducer implements RDFHandler, Runnable {
     public BlockingQueue<Container> getQueue() {
         return queue;
     }
-
 }

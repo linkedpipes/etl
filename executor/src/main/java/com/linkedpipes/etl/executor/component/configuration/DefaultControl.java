@@ -8,9 +8,6 @@ import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,6 +15,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Control loading of RDF data into entities.
@@ -28,18 +27,11 @@ class DefaultControl implements MergeControl {
     /**
      * Represent a control of given property.
      */
-    public record PropertyControl (
-            String predicate,
-            String control
-    ) {
+    public record PropertyControl(String predicate, String control) {}
 
-    }
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultControl.class);
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(DefaultControl.class);
-
-    private static final List<String> ALWAYS_LOAD_PROPERTIES =
-            List.of(RDF.TYPE);
+    private static final List<String> ALWAYS_LOAD_PROPERTIES = List.of(RDF.TYPE);
 
     private List<PropertyControl> controlledPredicates;
 
@@ -49,22 +41,19 @@ class DefaultControl implements MergeControl {
      * For pair definitionGraph-resource store list of properties and their
      * merge type.
      */
-    private final Map<String, Map<String, MergeType>>
-            control = new HashMap<>();
+    private final Map<String, Map<String, MergeType>> control = new HashMap<>();
 
     /**
      * Store reference to current object as definitionGraph-resource.
      */
     private String currentKey;
 
-    public DefaultControl() {
-    }
+    public DefaultControl() {}
 
     /**
      * Load definition of entity of given type.
      */
-    public void loadDefinition(BackendRdfSource source, String type)
-            throws RdfUtilsException {
+    public void loadDefinition(BackendRdfSource source, String type) throws RdfUtilsException {
         // TODO Do not search for all graphs, ie. use definition from
         // given component.
         loadControlledProperties(source, type);
@@ -72,13 +61,11 @@ class DefaultControl implements MergeControl {
     }
 
     @Override
-    public void init(List<EntityReference> references)
-            throws RdfUtilsException {
+    public void init(List<EntityReference> references) throws RdfUtilsException {
         prepareControlObject(references);
         loadComplexProperties(references);
         // Load controlledPredicates from entities.
-        List<Map<String, Configuration.Status>> controlsInReferences =
-                new ArrayList<>(references.size());
+        List<Map<String, Configuration.Status>> controlsInReferences = new ArrayList<>(references.size());
         for (EntityReference ref : references) {
             controlsInReferences.add(loadControlInferDefaults(ref));
         }
@@ -93,8 +80,7 @@ class DefaultControl implements MergeControl {
             int forceFrom = -1;
             int lastLoad = -1;
             for (int i = 0; i < references.size(); ++i) {
-                Configuration.Status status =
-                        controlsInReferences.get(i).get(predicate);
+                Configuration.Status status = controlsInReferences.get(i).get(predicate);
                 // In every other case clear merge list.
                 if (status == Configuration.Status.FORCE) {
                     forceFrom = i;
@@ -102,8 +88,7 @@ class DefaultControl implements MergeControl {
                 } else if (status == Configuration.Status.INHERIT_AND_FORCE) {
                     forceFrom = i - 1;
                     break;
-                } else if (status == Configuration.Status.NONE
-                        || status == Configuration.Status.FORCED) {
+                } else if (status == Configuration.Status.NONE || status == Configuration.Status.FORCED) {
                     lastLoad = i;
                 }
             }
@@ -116,11 +101,9 @@ class DefaultControl implements MergeControl {
             } else {
                 LOG.info("Predicate: {}", predicate);
                 for (EntityReference ref : references) {
-                    LOG.info("\tref: {} {}", ref.getResource(),
-                            ref.getGraph());
+                    LOG.info("\tref: {} {}", ref.getResource(), ref.getGraph());
                 }
-                throw new RdfUtilsException("Can't determine loading "
-                        + "sequence: {} {}", forceFrom, lastLoad);
+                throw new RdfUtilsException("Can't determine loading " + "sequence: {} {}", forceFrom, lastLoad);
             }
             //
             int counter = 0;
@@ -137,12 +120,10 @@ class DefaultControl implements MergeControl {
     }
 
     @Override
-    public void onReference(String resource, String graph)
-            throws RdfUtilsException {
+    public void onReference(String resource, String graph) throws RdfUtilsException {
         currentKey = graph + "-" + resource;
         if (!control.containsKey(currentKey)) {
-            throw new RdfUtilsException("Missing reference to resource: {} {}",
-                    resource, graph);
+            throw new RdfUtilsException("Missing reference to resource: {} {}", resource, graph);
         }
     }
 
@@ -159,8 +140,7 @@ class DefaultControl implements MergeControl {
         }
     }
 
-    private void loadControlledProperties(
-            BackendRdfSource source, String type) throws RdfUtilsException {
+    private void loadControlledProperties(BackendRdfSource source, String type) throws RdfUtilsException {
         String query = "SELECT ?property ?control WHERE { \n"
                 + " GRAPH ?g {"
                 + "  ?entity a <" + LP_OBJECTS.DESCRIPTION + "> ;\n"
@@ -173,13 +153,11 @@ class DefaultControl implements MergeControl {
                 + "} }";
         controlledPredicates = new ArrayList<>();
         for (Map<String, String> item : RdfUtils.sparqlSelect(source, query)) {
-            controlledPredicates.add(new PropertyControl(item.get("property"),
-                    item.get("control")));
+            controlledPredicates.add(new PropertyControl(item.get("property"), item.get("control")));
         }
     }
 
-    private void loadComplexProperties(
-            BackendRdfSource source, String type) throws RdfUtilsException {
+    private void loadComplexProperties(BackendRdfSource source, String type) throws RdfUtilsException {
         String query = "SELECT ?property ?control WHERE { \n"
                 + " GRAPH ?g {"
                 + "  ?entity a <" + LP_OBJECTS.DESCRIPTION + "> ;\n"
@@ -200,8 +178,7 @@ class DefaultControl implements MergeControl {
      * Complex properties represent controlled object, that must be merged
      * per-property.
      */
-    private void loadComplexProperties(
-            List<EntityReference> references) {
+    private void loadComplexProperties(List<EntityReference> references) {
         for (EntityReference ref : references) {
             String key = ref.getGraph() + "-" + ref.getResource();
             for (String predicate : complexPredicates) {
@@ -218,10 +195,9 @@ class DefaultControl implements MergeControl {
         }
     }
 
-    private Map<String, Configuration.Status> loadControlInferDefaults(
-            EntityReference reference) throws RdfUtilsException {
-        final Map<String, Configuration.Status> controls =
-                loadControl(reference);
+    private Map<String, Configuration.Status> loadControlInferDefaults(EntityReference reference)
+            throws RdfUtilsException {
+        final Map<String, Configuration.Status> controls = loadControl(reference);
         // Not all properties must have control values set (invalid
         // configuration, runtime configuration, ... )m so for those
         // we use NONE as default.
@@ -235,16 +211,13 @@ class DefaultControl implements MergeControl {
         return controls;
     }
 
-    private Set<String> loadControlledExistingProperties(
-            EntityReference reference) throws RdfUtilsException {
+    private Set<String> loadControlledExistingProperties(EntityReference reference) throws RdfUtilsException {
         if (controlledPredicates.isEmpty()) {
             return new HashSet<>();
         }
         String query = buildLoadExistingControlledPropertiesQuery(
-                controlledPredicates, reference.getGraph(),
-                reference.getResource());
-        List<Map<String, String>> queryResult = RdfUtils.sparqlSelect(
-                reference.getSource(), query);
+                controlledPredicates, reference.getGraph(), reference.getResource());
+        List<Map<String, String>> queryResult = RdfUtils.sparqlSelect(reference.getSource(), query);
         Set<String> output = new HashSet<>();
         for (Map<String, String> entry : queryResult) {
             final String control = entry.get("property");
@@ -256,15 +229,12 @@ class DefaultControl implements MergeControl {
     /**
      * Load control value for each predicate.
      */
-    private Map<String, Configuration.Status> loadControl(
-            EntityReference reference) throws RdfUtilsException {
+    private Map<String, Configuration.Status> loadControl(EntityReference reference) throws RdfUtilsException {
         if (controlledPredicates.isEmpty()) {
             return new HashMap<>();
         }
-        String query = buildLoadControlsQuery(controlledPredicates,
-                reference.getGraph(), reference.getResource());
-        List<Map<String, String>> queryResult = RdfUtils.sparqlSelect(
-                reference.getSource(), query);
+        String query = buildLoadControlsQuery(controlledPredicates, reference.getGraph(), reference.getResource());
+        List<Map<String, String>> queryResult = RdfUtils.sparqlSelect(reference.getSource(), query);
         Map<String, Configuration.Status> output = new HashMap<>();
         for (Map<String, String> entry : queryResult) {
             String property = entry.get("property");
@@ -276,8 +246,7 @@ class DefaultControl implements MergeControl {
                     output.put(property, Configuration.Status.INHERIT);
                     break;
                 case LP_OBJECTS.INHERIT_AND_FORCE:
-                    output.put(property,
-                            Configuration.Status.INHERIT_AND_FORCE);
+                    output.put(property, Configuration.Status.INHERIT_AND_FORCE);
                     break;
                 case LP_OBJECTS.NONE:
                     output.put(property, Configuration.Status.NONE);
@@ -286,8 +255,7 @@ class DefaultControl implements MergeControl {
                     output.put(property, Configuration.Status.FORCED);
                     break;
                 default:
-                    throw new RdfUtilsException("Unsupported type: {}",
-                            entry.get("control"));
+                    throw new RdfUtilsException("Unsupported type: {}", entry.get("control"));
             }
         }
         return output;
@@ -297,8 +265,7 @@ class DefaultControl implements MergeControl {
      * Query for control values of all properties.
      */
     private static String buildLoadControlsQuery(
-            List<PropertyControl> controlDefinitions,
-            String graph, String resource) {
+            List<PropertyControl> controlDefinitions, String graph, String resource) {
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT ?property ?control WHERE { "
                 + "GRAPH <" + graph + "> {\n"
@@ -307,16 +274,18 @@ class DefaultControl implements MergeControl {
                 + "}\n"
                 + "VALUES( ?property ?controlPredicate ) {\n");
         for (PropertyControl item : controlDefinitions) {
-            builder.append("  ( <").append(item.predicate).append("> <")
-                    .append(item.control).append("> )\n");
+            builder.append("  ( <")
+                    .append(item.predicate)
+                    .append("> <")
+                    .append(item.control)
+                    .append("> )\n");
         }
         builder.append("} }");
         return builder.toString();
     }
 
     private static String buildLoadExistingControlledPropertiesQuery(
-            List<PropertyControl> controlDefinitions,
-            String graph, String resource) {
+            List<PropertyControl> controlDefinitions, String graph, String resource) {
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT ?property WHERE { "
                 + "GRAPH <" + graph + "> {\n"
@@ -335,4 +304,3 @@ class DefaultControl implements MergeControl {
         return Collections.unmodifiableList(controlledPredicates);
     }
 }
-

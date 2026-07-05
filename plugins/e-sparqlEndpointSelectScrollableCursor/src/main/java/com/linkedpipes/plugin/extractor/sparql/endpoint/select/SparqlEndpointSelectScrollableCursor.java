@@ -5,6 +5,12 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.IDN;
+import java.util.List;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -22,18 +28,10 @@ import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.IDN;
-import java.util.List;
-
 /**
  * Use scrollable cursors to execute SPARQL select.
  */
-public final class SparqlEndpointSelectScrollableCursor
-        implements Component, SequentialExecution {
+public final class SparqlEndpointSelectScrollableCursor implements Component, SequentialExecution {
 
     /**
      * Wrap that enable us to check if there were any results.
@@ -51,20 +49,17 @@ public final class SparqlEndpointSelectScrollableCursor
         }
 
         @Override
-        public void handleBoolean(boolean value)
-                throws QueryResultHandlerException {
+        public void handleBoolean(boolean value) throws QueryResultHandlerException {
             wrap.handleBoolean(value);
         }
 
         @Override
-        public void handleLinks(List<String> linkUrls)
-                throws QueryResultHandlerException {
+        public void handleLinks(List<String> linkUrls) throws QueryResultHandlerException {
             wrap.handleLinks(linkUrls);
         }
 
         @Override
-        public void startQueryResult(List<String> bindingNames)
-                throws TupleQueryResultHandlerException {
+        public void startQueryResult(List<String> bindingNames) throws TupleQueryResultHandlerException {
             if (!bindingHandled) {
                 wrap.startQueryResult(bindingNames);
                 bindingHandled = true;
@@ -79,8 +74,7 @@ public final class SparqlEndpointSelectScrollableCursor
         }
 
         @Override
-        public void handleSolution(BindingSet bindingSet)
-                throws TupleQueryResultHandlerException {
+        public void handleSolution(BindingSet bindingSet) throws TupleQueryResultHandlerException {
             wrap.handleSolution(bindingSet);
             solutionHandled = true;
         }
@@ -88,11 +82,9 @@ public final class SparqlEndpointSelectScrollableCursor
         public void handleEnd() throws TupleQueryResultHandlerException {
             wrap.endQueryResult();
         }
-
     }
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(SparqlEndpointSelectScrollableCursor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SparqlEndpointSelectScrollableCursor.class);
 
     @Component.InputPort(iri = "OutputFiles")
     public WritableFilesDataUnit outputFiles;
@@ -111,8 +103,7 @@ public final class SparqlEndpointSelectScrollableCursor
         repository.setHttpClient(getHttpClient());
         //
         LOG.info("Used query: {}", prepareQuery(0));
-        final File outputFile = outputFiles.createFile(
-                configuration.getFileName());
+        final File outputFile = outputFiles.createFile(configuration.getFileName());
         try (final OutputStream stream = new FileOutputStream(outputFile)) {
             final ResultHandlerWrap writer = createWriter(stream);
             //
@@ -147,8 +138,7 @@ public final class SparqlEndpointSelectScrollableCursor
     }
 
     protected static ResultHandlerWrap createWriter(OutputStream stream) {
-        final SPARQLResultsCSVWriterFactory writerFactory =
-                new SPARQLResultsCSVWriterFactory();
+        final SPARQLResultsCSVWriterFactory writerFactory = new SPARQLResultsCSVWriterFactory();
         return new ResultHandlerWrap(writerFactory.getWriter(stream));
     }
 
@@ -157,19 +147,15 @@ public final class SparqlEndpointSelectScrollableCursor
      * @param handler
      * @param offset
      */
-    protected void executeQuery(Repository repository,
-            TupleQueryResultHandler handler, int offset) throws LpException {
-        try (final RepositoryConnection connection =
-                     repository.getConnection()) {
+    protected void executeQuery(Repository repository, TupleQueryResultHandler handler, int offset) throws LpException {
+        try (final RepositoryConnection connection = repository.getConnection()) {
             //
-            final TupleQuery query = connection.prepareTupleQuery(
-                    QueryLanguage.SPARQL, prepareQuery(offset));
+            final TupleQuery query = connection.prepareTupleQuery(QueryLanguage.SPARQL, prepareQuery(offset));
             //
             final SimpleDataset dataset = new SimpleDataset();
             for (String iri : configuration.getDefaultGraphs()) {
                 if (!iri.isEmpty()) {
-                    dataset.addDefaultGraph(
-                            SimpleValueFactory.getInstance().createIRI(iri));
+                    dataset.addDefaultGraph(SimpleValueFactory.getInstance().createIRI(iri));
                 }
             }
             query.setDataset(dataset);
@@ -179,12 +165,12 @@ public final class SparqlEndpointSelectScrollableCursor
     }
 
     protected String prepareQuery(int offset) {
-        return configuration.getPrefixes() + "\n SELECT " +
-                configuration.getOuterSelect() + "\n WHERE { {" +
-                configuration.getInnerSelect() +
-                "\n} }" +
-                "\nLIMIT " + Integer.toString(configuration.getPageSize()) +
-                "\nOFFSET " + Integer.toString(offset);
+        return configuration.getPrefixes() + "\n SELECT " + configuration.getOuterSelect()
+                + "\n WHERE { {" + configuration.getInnerSelect()
+                + "\n} }"
+                + "\nLIMIT "
+                + Integer.toString(configuration.getPageSize()) + "\nOFFSET "
+                + Integer.toString(offset);
     }
 
     private CloseableHttpClient getHttpClient() {
@@ -192,12 +178,8 @@ public final class SparqlEndpointSelectScrollableCursor
         if (configuration.isUseAuthentication()) {
             provider.setCredentials(
                     new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
-                    new UsernamePasswordCredentials(
-                            configuration.getUsername(),
-                            configuration.getPassword()));
+                    new UsernamePasswordCredentials(configuration.getUsername(), configuration.getPassword()));
         }
-        return HttpClients.custom()
-                .setDefaultCredentialsProvider(provider).build();
+        return HttpClients.custom().setDefaultCredentialsProvider(provider).build();
     }
-
 }

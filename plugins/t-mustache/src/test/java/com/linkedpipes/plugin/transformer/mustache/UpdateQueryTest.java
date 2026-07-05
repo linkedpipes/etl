@@ -14,9 +14,7 @@ public class UpdateQueryTest {
                 + "{{!PREFIX local : <http://localhost/local/>}}\n"
                 + "{{:name}}\n"
                 + "{{local:name}}";
-        final String expected = "\n\n"
-                + "{{http://default/name}}\n"
-                + "{{http://localhost/local/name}}";
+        final String expected = "\n\n" + "{{http://default/name}}\n" + "{{http://localhost/local/name}}";
         Assertions.assertEquals(expected, MustacheTemplatePrefixExpander.expand(input));
     }
 
@@ -26,9 +24,7 @@ public class UpdateQueryTest {
                 + "PREFIX : <http://default/>}}\n"
                 + "{{:name}}\n"
                 + "{{local:name}}";
-        final String expected = "\n"
-                + "{{http://default/name}}\n"
-                + "{{http://localhost/local/name}}";
+        final String expected = "\n" + "{{http://default/name}}\n" + "{{http://localhost/local/name}}";
         Assertions.assertEquals(expected, MustacheTemplatePrefixExpander.expand(input));
     }
 
@@ -42,9 +38,7 @@ public class UpdateQueryTest {
                 + "}}\n"
                 + "{{:name}}\n"
                 + "{{local:name}}";
-        final String expected = "\n"
-                + "{{http://default/name}}\n"
-                + "{{http://localhost/local/name}}";
+        final String expected = "\n" + "{{http://default/name}}\n" + "{{http://localhost/local/name}}";
         Assertions.assertEquals(expected, MustacheTemplatePrefixExpander.expand(input));
     }
 
@@ -54,9 +48,7 @@ public class UpdateQueryTest {
                 + "PREFIX : <http://default/>}}\n"
                 + "{{:name}}\n"
                 + "{{local:name}}";
-        final String expected = "\n"
-                + "{{http://default/name}}\n"
-                + "{{http://localhost/local/name}}";
+        final String expected = "\n" + "{{http://default/name}}\n" + "{{http://localhost/local/name}}";
         Assertions.assertEquals(expected, MustacheTemplatePrefixExpander.expand(input));
     }
 
@@ -67,10 +59,7 @@ public class UpdateQueryTest {
                 + "{{:name}}\n"
                 + "{{local:name}}"
                 + "{{noPrefix}}";
-        final String expected = "  \n"
-                + "{{http://default/name}}\n"
-                + "{{http://localhost/local/name}}{{noPrefix}}";
+        final String expected = "  \n" + "{{http://default/name}}\n" + "{{http://localhost/local/name}}{{noPrefix}}";
         Assertions.assertEquals(expected, MustacheTemplatePrefixExpander.expand(input));
     }
-
 }

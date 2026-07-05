@@ -31,11 +31,8 @@ public class SingleGraphUnion implements Component, SequentialExecution {
         });
     }
 
-    private void copyData(
-            RepositoryConnection input,
-            RepositoryConnection output) {
-        var statements = input.getStatements(
-                null, null, null, inputRdf.getReadGraph());
+    private void copyData(RepositoryConnection input, RepositoryConnection output) {
+        var statements = input.getStatements(null, null, null, inputRdf.getReadGraph());
         output.add(statements, outputRdf.getWriteGraph());
     }
 
@@ -48,16 +45,11 @@ public class SingleGraphUnion implements Component, SequentialExecution {
         });
     }
 
-    private void addNamespaces(
-            RepositoryConnection input,
-            RepositoryConnection output) {
+    private void addNamespaces(RepositoryConnection input, RepositoryConnection output) {
         var namespaces = input.getNamespaces();
         while (namespaces.hasNext()) {
             Namespace namespace = namespaces.next();
-            output.setNamespace(
-                    namespace.getPrefix(),
-                    namespace.getName());
+            output.setNamespace(namespace.getPrefix(), namespace.getName());
         }
     }
-
 }

@@ -6,6 +6,11 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import org.apache.commons.net.ProtocolCommandEvent;
 import org.apache.commons.net.ProtocolCommandListener;
 import org.apache.commons.net.ftp.FTPClient;
@@ -13,41 +18,30 @@ import org.apache.commons.net.ftp.FTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 public class FtpFiles implements Component, SequentialExecution {
 
     class ProtocolLogger implements ProtocolCommandListener {
 
         @Override
         public void protocolCommandSent(ProtocolCommandEvent event) {
-            LOG.debug("sent: {}, {} -> {}", event.getCommand(),
-                    event.getMessage(), event.getReplyCode());
+            LOG.debug("sent: {}, {} -> {}", event.getCommand(), event.getMessage(), event.getReplyCode());
         }
 
         @Override
         public void protocolReplyReceived(ProtocolCommandEvent event) {
             if (isNegativeReply(event)) {
-                LOG.error("received: {} -> {}",
-                        event.getMessage(), event.getReplyCode());
+                LOG.error("received: {} -> {}", event.getMessage(), event.getReplyCode());
             } else {
-                LOG.debug("received: {} -> {}",
-                        event.getMessage(), event.getReplyCode());
+                LOG.debug("received: {} -> {}", event.getMessage(), event.getReplyCode());
             }
         }
 
         private boolean isNegativeReply(ProtocolCommandEvent event) {
             return event.getReplyCode() >= 400;
         }
-
     }
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(FtpFiles.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FtpFiles.class);
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
@@ -67,8 +61,7 @@ public class FtpFiles implements Component, SequentialExecution {
     @Override
     public void execute() throws LpException {
         progressReport.start(configuration.getReferences().size());
-        for (FtpFilesConfiguration.Reference reference
-                : configuration.getReferences()) {
+        for (FtpFilesConfiguration.Reference reference : configuration.getReferences()) {
             // Prepare URI and file.
             final URL url;
             try {
@@ -77,8 +70,7 @@ public class FtpFiles implements Component, SequentialExecution {
                 LOG.error("Wrong URI format: {}", reference.getUri(), ex);
                 continue;
             }
-            final File file = output.createFile(
-                    reference.getFileName());
+            final File file = output.createFile(reference.getFileName());
             // Download.
             try {
                 downloadFile(url, file);
@@ -90,8 +82,7 @@ public class FtpFiles implements Component, SequentialExecution {
         progressReport.done();
     }
 
-    private void downloadFile(URL sourceUri, File file)
-            throws IOException, LpException {
+    private void downloadFile(URL sourceUri, File file) throws IOException, LpException {
         final String host = sourceUri.getHost();
         final String filePath = sourceUri.getPath();
         LOG.debug("Host: {} Path: {} -> {}", host, filePath, file.getName());
@@ -124,8 +115,7 @@ public class FtpFiles implements Component, SequentialExecution {
         if (!client.login("anonymous", "")) {
             client.logout();
             client.disconnect();
-            throw new LpException(
-                    "Can't login as 'anonymous' with no password.");
+            throw new LpException("Can't login as 'anonymous' with no password.");
         }
         reply = client.getReplyCode();
         LOG.debug("Connect reply: {}, {}", reply, client.getReplyString());
@@ -152,8 +142,7 @@ public class FtpFiles implements Component, SequentialExecution {
         LOG.debug("Downloading ...");
         try (FileOutputStream output = new FileOutputStream(file)) {
             if (!client.retrieveFile("/" + filePath, output)) {
-                throw new LpException(
-                        "Failed to download file. See logs for more detail.");
+                throw new LpException("Failed to download file. See logs for more detail.");
             }
             LOG.debug("Downloading ... flush");
             output.flush();
@@ -163,5 +152,4 @@ public class FtpFiles implements Component, SequentialExecution {
         client.logout();
         client.disconnect();
     }
-
 }

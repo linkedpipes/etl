@@ -6,8 +6,7 @@ import java.util.List;
 /**
  * Simple implementation of reference source build on a list.
  */
-public class MemoryReferenceSource<T extends Reference>
-        implements ReferenceSource {
+public class MemoryReferenceSource<T extends Reference> implements ReferenceSource {
 
     protected int index = 0;
 
@@ -38,6 +37,4 @@ public class MemoryReferenceSource<T extends Reference>
         }
         return this.references.get(this.index++);
     }
-
 }
-

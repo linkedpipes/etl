@@ -8,8 +8,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ParserCsvConfig {
 
-    private static final Logger LOG = LoggerFactory.getLogger(
-            ParserCsvConfig.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ParserCsvConfig.class);
 
     final String quoteChar;
 
@@ -25,22 +24,24 @@ public class ParserCsvConfig {
 
     final boolean checkStaticRowCounter;
 
-    public ParserCsvConfig(String quoteChar, char delimiterChar,
-            String encoding, Integer numberOfStartLinesToIgnore,
-            Integer rowLimit, boolean hasHeader,
+    public ParserCsvConfig(
+            String quoteChar,
+            char delimiterChar,
+            String encoding,
+            Integer numberOfStartLinesToIgnore,
+            Integer rowLimit,
+            boolean hasHeader,
             boolean checkStaticRowCounter) {
         if (quoteChar == null) {
             this.quoteChar = "\"";
-            LOG.warn("Property quoteChar is not set, '{}' is used as default.",
-                    this.quoteChar);
+            LOG.warn("Property quoteChar is not set, '{}' is used as default.", this.quoteChar);
         } else {
             this.quoteChar = quoteChar;
         }
         this.delimiterChar = delimiterChar;
         if (encoding == null) {
             this.encoding = "UTF-8";
-            LOG.warn("Property encoding is not set, '{}' is used as default.",
-                    this.encoding);
+            LOG.warn("Property encoding is not set, '{}' is used as default.", this.encoding);
         } else {
             this.encoding = encoding;
         }
@@ -53,5 +54,4 @@ public class ParserCsvConfig {
         this.hasHeader = hasHeader;
         this.checkStaticRowCounter = checkStaticRowCounter;
     }
-
 }

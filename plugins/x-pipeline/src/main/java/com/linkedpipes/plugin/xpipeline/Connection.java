@@ -30,8 +30,7 @@ class Connection implements AutoCloseable {
     }
 
     @Override
-    public void close(){
+    public void close() {
         connection.disconnect();
     }
-
 }

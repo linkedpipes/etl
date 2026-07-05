@@ -11,8 +11,7 @@ public class TextHolderConfiguration {
     @RdfToPojo.Property(iri = TextHolderVocabulary.HAS_CONTENT)
     private String content = "";
 
-    public TextHolderConfiguration() {
-    }
+    public TextHolderConfiguration() {}
 
     public String getFileName() {
         return fileName;
@@ -29,5 +28,4 @@ public class TextHolderConfiguration {
     public void setContent(String content) {
         this.content = content;
     }
-
 }

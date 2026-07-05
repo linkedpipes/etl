@@ -7,9 +7,6 @@ import com.linkedpipes.etl.library.template.reference.adapter.ReferenceTemplateT
 import com.linkedpipes.etl.library.template.reference.model.ReferenceTemplate;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.rio.RDFFormat;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -22,6 +19,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.rio.RDFFormat;
 
 public class ExportContent {
 
@@ -29,11 +28,9 @@ public class ExportContent {
 
     public static final String TEMPLATES_DIRECTORY = "templates";
 
-    private final Map<Resource, Pipeline> pipelinesMap =
-            new HashMap<>();
+    private final Map<Resource, Pipeline> pipelinesMap = new HashMap<>();
 
-    private final Map<Resource, ReferenceTemplate> templatesMap =
-            new HashMap<>();
+    private final Map<Resource, ReferenceTemplate> templatesMap = new HashMap<>();
 
     private final ExportService exportService;
 
@@ -59,8 +56,7 @@ public class ExportContent {
         }
     }
 
-    public Statements exportStatements()
-            throws StorageException {
+    public Statements exportStatements() throws StorageException {
         List<Pipeline> pipelines = preparePipelinesForExport();
         List<ReferenceTemplate> templates = prepareTemplatesForExport();
         Statements result = Statements.arrayList();
@@ -73,8 +69,7 @@ public class ExportContent {
         return result;
     }
 
-    public List<Pipeline> preparePipelinesForExport()
-            throws StorageException {
+    public List<Pipeline> preparePipelinesForExport() throws StorageException {
         List<Pipeline> result = new ArrayList<>(pipelinesMap.size());
         for (Pipeline pipeline : pipelinesMap.values()) {
             if (removePrivateConfiguration) {
@@ -85,15 +80,13 @@ public class ExportContent {
         return result;
     }
 
-    public List<ReferenceTemplate> prepareTemplatesForExport()
-            throws StorageException {
+    public List<ReferenceTemplate> prepareTemplatesForExport() throws StorageException {
         Map<Resource, ReferenceTemplate> collected = new HashMap<>();
         for (ReferenceTemplate template : templatesMap.values()) {
             collected.put(template.resource(), template);
         }
         for (Pipeline pipeline : pipelinesMap.values()) {
-            for (ReferenceTemplate template :
-                    exportService.collectTemplates(pipeline)) {
+            for (ReferenceTemplate template : exportService.collectTemplates(pipeline)) {
                 if (collected.containsKey(template.resource())) {
                     continue;
                 }
@@ -118,8 +111,7 @@ public class ExportContent {
         List<Pipeline> pipelines = preparePipelinesForExport();
         List<ReferenceTemplate> templates = prepareTemplatesForExport();
         //
-        ZipOutputStream zip = new ZipOutputStream(
-                stream, StandardCharsets.UTF_8);
+        ZipOutputStream zip = new ZipOutputStream(stream, StandardCharsets.UTF_8);
         try {
             Set<String> pipelineNames = new HashSet<>();
             for (Pipeline pipeline : pipelines) {
@@ -145,27 +137,19 @@ public class ExportContent {
         }
     }
 
-    private void pipelineZipEntry(
-            ZipOutputStream zip, Pipeline pipeline, String name)
-            throws IOException {
+    private void pipelineZipEntry(ZipOutputStream zip, Pipeline pipeline, String name) throws IOException {
         Statements statements = PipelineToRdf.asRdf(pipeline);
-        ZipEntry entry = new ZipEntry(
-                PIPELINES_DIRECTORY + "/" + name + ".trig");
+        ZipEntry entry = new ZipEntry(PIPELINES_DIRECTORY + "/" + name + ".trig");
         zip.putNextEntry(entry);
         statements.file().writeToStream(zip, RDFFormat.TRIG);
         zip.closeEntry();
     }
 
-
-    private void templateZipEntry(
-            ZipOutputStream zip, ReferenceTemplate template, String name)
-            throws IOException {
+    private void templateZipEntry(ZipOutputStream zip, ReferenceTemplate template, String name) throws IOException {
         Statements statements = ReferenceTemplateToRdf.asRdf(template);
-        ZipEntry entry = new ZipEntry(
-                TEMPLATES_DIRECTORY + "/" + name + ".trig");
+        ZipEntry entry = new ZipEntry(TEMPLATES_DIRECTORY + "/" + name + ".trig");
         zip.putNextEntry(entry);
         statements.file().writeToStream(zip, RDFFormat.TRIG);
         zip.closeEntry();
     }
-
 }

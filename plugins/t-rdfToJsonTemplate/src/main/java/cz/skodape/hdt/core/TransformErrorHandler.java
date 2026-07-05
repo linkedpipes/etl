@@ -14,17 +14,14 @@ public class TransformErrorHandler {
         throw new OperationFailed("Reference must be PrimitiveReference.");
     }
 
-    public void onMultiplePrimitiveValues(
-            Reference head, Reference next, ReferenceSource source)
+    public void onMultiplePrimitiveValues(Reference head, Reference next, ReferenceSource source)
             throws OperationFailed {
         String message = multiplePrimitiveValuesMessage(head, next, source);
-        throw new OperationFailed(
-                "Multiple values detected for primitive: {}", message);
+        throw new OperationFailed("Multiple values detected for primitive: {}", message);
     }
 
-    protected String multiplePrimitiveValuesMessage(
-            Reference head, Reference next, ReferenceSource source
-    ) throws OperationFailed {
+    protected String multiplePrimitiveValuesMessage(Reference head, Reference next, ReferenceSource source)
+            throws OperationFailed {
         StringBuilder content = new StringBuilder();
         content.append("\n  ");
         content.append(head.asDebugString());
@@ -37,5 +34,4 @@ public class TransformErrorHandler {
         }
         return content.toString();
     }
-
 }

@@ -27,15 +27,6 @@ import com.linkedpipes.etl.storage.http.model.ImportResponse;
 import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
 import com.linkedpipes.etl.unpacker.UnpackerFacade;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.Rio;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.multipart.MultipartFile;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -50,6 +41,14 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.Rio;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
 
 class ManagementServletService {
 
@@ -70,11 +69,9 @@ class ManagementServletService {
         public void close() {
             // No action.
         }
-
     }
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ManagementServletService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ManagementServletService.class);
 
     private static final String EXPORT_FILTER_NONE = "NONE";
 
@@ -102,20 +99,19 @@ class ManagementServletService {
         this.pipelineFacade = storageService.getPipelineFacade();
         this.assistantService = storageService.getAssistantService();
         this.templateFacade = storageService.getTemplateFacade();
-        this.unpackerFacade = new UnpackerFacade(
-                storageService.getConfiguration(),
-                storageService.getTemplateFacade());
+        this.unpackerFacade = new UnpackerFacade(storageService.getConfiguration(), storageService.getTemplateFacade());
     }
 
     public void handleExport(
-            String exportTemplatesFilter, String exportPipelinesFilter,
-            boolean removePrivateConfig, String exportMode,
-            HttpServletRequest request, HttpServletResponse response)
+            String exportTemplatesFilter,
+            String exportPipelinesFilter,
+            boolean removePrivateConfig,
+            String exportMode,
+            HttpServletRequest request,
+            HttpServletResponse response)
             throws InvalidRequest, ServerError {
-        Predicate<Resource> pipelineFilter =
-                createFilter(exportPipelinesFilter);
-        Predicate<Resource> templateFilter =
-                createFilter(exportTemplatesFilter);
+        Predicate<Resource> pipelineFilter = createFilter(exportPipelinesFilter);
+        Predicate<Resource> templateFilter = createFilter(exportTemplatesFilter);
         ExportContent worker = new ExportContent(templateFacade);
         worker.setRemovePrivateConfiguration(removePrivateConfig);
         try {
@@ -131,25 +127,20 @@ class ManagementServletService {
                 exportFile(worker, request, response);
                 break;
             case EXPORT_TYPE_ZIP_WITH_IRI:
-                exportZip(worker,
-                        pipeline -> ResourceToString.asBase64Full(
-                                pipeline.resource()),
-                        template -> ResourceToString.asBase64Full(
-                                template.resource()),
-                        request, response);
+                exportZip(
+                        worker,
+                        pipeline -> ResourceToString.asBase64Full(pipeline.resource()),
+                        template -> ResourceToString.asBase64Full(template.resource()),
+                        request,
+                        response);
                 break;
             case EXPORT_TYPE_ZIP_WITH_LABELS:
-                exportZip(worker,
-                        Pipeline::label,
-                        ReferenceTemplate::label,
-                        request, response);
+                exportZip(worker, Pipeline::label, ReferenceTemplate::label, request, response);
                 break;
         }
     }
 
-    private void exportFile(
-            ExportContent worker,
-            HttpServletRequest request, HttpServletResponse response)
+    private void exportFile(ExportContent worker, HttpServletRequest request, HttpServletResponse response)
             throws ServerError {
         Statements statements;
         try {
@@ -164,7 +155,8 @@ class ManagementServletService {
             ExportContent worker,
             Function<Pipeline, String> namePipeline,
             Function<ReferenceTemplate, String> nameTemplate,
-            HttpServletRequest request, HttpServletResponse response)
+            HttpServletRequest request,
+            HttpServletResponse response)
             throws ServerError {
         response.setHeader("Content-Type", "application/zip");
         try (OutputStream stream = response.getOutputStream()) {
@@ -175,8 +167,7 @@ class ManagementServletService {
         response.setStatus(ServletUtilities.HTTP_OK);
     }
 
-    private Predicate<Resource> createFilter(String filter)
-            throws InvalidRequest {
+    private Predicate<Resource> createFilter(String filter) throws InvalidRequest {
         if (filter == null || EXPORT_FILTER_NONE.equals(filter.toUpperCase())) {
             return (iri) -> false;
         }
@@ -186,8 +177,7 @@ class ManagementServletService {
         return createFilterFromArray(filter);
     }
 
-    private Predicate<Resource> createFilterFromArray(String value)
-            throws InvalidRequest {
+    private Predicate<Resource> createFilterFromArray(String value) throws InvalidRequest {
         JsonNode root;
         try {
             root = mapper.readTree(value);
@@ -204,8 +194,7 @@ class ManagementServletService {
         return result::contains;
     }
 
-    private List<Pipeline> collectPipelines(Predicate<Resource> predicate)
-            throws StorageException {
+    private List<Pipeline> collectPipelines(Predicate<Resource> predicate) throws StorageException {
         List<Pipeline> result = new ArrayList<>();
         for (Resource resource : pipelineFacade.getPipelines()) {
             if (!predicate.test(resource)) {
@@ -217,11 +206,9 @@ class ManagementServletService {
         return result;
     }
 
-    private List<ReferenceTemplate> collectTemplates(
-            Predicate<Resource> predicate) throws StorageException {
+    private List<ReferenceTemplate> collectTemplates(Predicate<Resource> predicate) throws StorageException {
         List<ReferenceTemplate> result = new ArrayList<>();
-        for (ReferenceTemplate template :
-                templateFacade.getReferenceTemplates()) {
+        for (ReferenceTemplate template : templateFacade.getReferenceTemplates()) {
             if (!predicate.test(template.resource())) {
                 continue;
             }
@@ -231,8 +218,10 @@ class ManagementServletService {
     }
 
     public void handleImport(
-            MultipartFile contentFile, MultipartFile optionsFile,
-            HttpServletRequest request, HttpServletResponse response)
+            MultipartFile contentFile,
+            MultipartFile optionsFile,
+            HttpServletRequest request,
+            HttpServletResponse response)
             throws InvalidRequest, ServerError {
         Statements statements;
         if (ServletUtilities.CONTENT_ZIP.equals(contentFile.getContentType())) {
@@ -241,38 +230,32 @@ class ManagementServletService {
             statements = loadRdfContent(contentFile);
         }
         // Load user provided data.
-        List<ImportPipelineOptions> pipelineOptions
-                = loadImportPipelineOptions(optionsFile);
+        List<ImportPipelineOptions> pipelineOptions = loadImportPipelineOptions(optionsFile);
         // Import template.
-        ImportTemplate importTemplates =
-                importTemplates(optionsFile, statements);
+        ImportTemplate importTemplates = importTemplates(optionsFile, statements);
         // Import pipeline.
-        ImportPipeline importPipelines = new ImportPipeline(
-                templateFacade, templateFacade, pipelineFacade,
-                importTemplates.getRemoteToLocal());
+        ImportPipeline importPipelines =
+                new ImportPipeline(templateFacade, templateFacade, pipelineFacade, importTemplates.getRemoteToLocal());
         try {
             importPipelines.loadFromStatements(statements.selector());
             importPipelines.importPipelines(pipelineOptions);
         } catch (StorageException ex) {
             throw new ServerError("Can't import pipelines.", ex);
         }
-        Statements result = ImportResponseToRdf.asRdf(
-                ImportResponse.create(importTemplates, importPipelines));
+        Statements result = ImportResponseToRdf.asRdf(ImportResponse.create(importTemplates, importPipelines));
         ServletUtilities.sendResponse(request, response, result);
     }
 
-    public Statements loadZipContent(MultipartFile contentFile)
-            throws InvalidRequest {
+    public Statements loadZipContent(MultipartFile contentFile) throws InvalidRequest {
         Statements result = Statements.arrayList();
         try (InputStream stream = contentFile.getInputStream();
-             ZipInputStream zip = new ZipInputStream(stream)) {
+                ZipInputStream zip = new ZipInputStream(stream)) {
             ZipEntry entry;
             while ((entry = zip.getNextEntry()) != null) {
                 if (entry.isDirectory()) {
                     continue;
                 }
-                Optional<RDFFormat> format =
-                        Rio.getParserFormatForFileName(entry.getName());
+                Optional<RDFFormat> format = Rio.getParserFormatForFileName(entry.getName());
                 if (format.isEmpty()) {
                     // Ignore those that are not RDF.
                     continue;
@@ -287,36 +270,28 @@ class ManagementServletService {
         return result;
     }
 
-    public Statements loadRdfContent(MultipartFile contentFile)
-            throws InvalidRequest {
+    public Statements loadRdfContent(MultipartFile contentFile) throws InvalidRequest {
         return ServletUtilities.read(contentFile);
     }
 
-    private List<ImportPipelineOptions> loadImportPipelineOptions(
-            MultipartFile file) throws InvalidRequest {
+    private List<ImportPipelineOptions> loadImportPipelineOptions(MultipartFile file) throws InvalidRequest {
         Statements statements = ServletUtilities.read(file);
         return RdfToImportPipelineOptions.asImportPipelineOptions(statements);
     }
 
-    private ImportTemplateOptions loadImportTemplateOptions(
-            MultipartFile file) throws InvalidRequest {
+    private ImportTemplateOptions loadImportTemplateOptions(MultipartFile file) throws InvalidRequest {
         Statements statements = ServletUtilities.read(file);
-        List<ImportTemplateOptions> candidates =
-                RdfToImportTemplateOptions.asImportTemplateOptions(statements);
+        List<ImportTemplateOptions> candidates = RdfToImportTemplateOptions.asImportTemplateOptions(statements);
         if (candidates.size() == 1) {
             return candidates.get(0);
         }
-        throw new InvalidRequest(
-                "Expected one import options got '{}'.",
-                candidates.size());
+        throw new InvalidRequest("Expected one import options got '{}'.", candidates.size());
     }
 
-    private ImportTemplate importTemplates(
-            MultipartFile optionsFile, Statements statements)
+    private ImportTemplate importTemplates(MultipartFile optionsFile, Statements statements)
             throws InvalidRequest, ServerError {
         ImportTemplateOptions options = loadImportTemplateOptions(optionsFile);
-        ImportTemplate result = new ImportTemplate(
-                templateFacade, templateFacade);
+        ImportTemplate result = new ImportTemplate(templateFacade, templateFacade);
         try {
             result.loadFromStatements(statements.selector());
             result.importTemplates(options);
@@ -327,20 +302,19 @@ class ManagementServletService {
     }
 
     public void handleLocalize(
-            MultipartFile contentFile, MultipartFile optionsFile,
+            MultipartFile contentFile,
+            MultipartFile optionsFile,
             boolean includeTemplates,
-            HttpServletRequest request, HttpServletResponse response)
+            HttpServletRequest request,
+            HttpServletResponse response)
             throws InvalidRequest, ServerError {
         Statements statements = ServletUtilities.read(contentFile);
-        ImportPipelineOptions pipelineOptions =
-                loadImportPipelineOptionForLocalization(optionsFile);
+        ImportPipelineOptions pipelineOptions = loadImportPipelineOptionForLocalization(optionsFile);
         // Import template.
-        ImportTemplate importTemplate =
-                importTemplates(optionsFile, statements);
+        ImportTemplate importTemplate = importTemplates(optionsFile, statements);
         // Import pipeline.
-        ImportPipeline importWorker = new ImportPipeline(
-                templateFacade, templateFacade, pipelineFacade,
-                importTemplate.getRemoteToLocal());
+        ImportPipeline importWorker =
+                new ImportPipeline(templateFacade, templateFacade, pipelineFacade, importTemplate.getRemoteToLocal());
         Pipeline pipeline;
         try {
             importWorker.loadFromStatements(statements.selector());
@@ -353,8 +327,7 @@ class ManagementServletService {
         options.includeTemplate = includeTemplates;
         FullPipeline fullPipeline;
         try {
-            fullPipeline = (new ExportPipeline(templateFacade))
-                    .export(pipeline, options);
+            fullPipeline = (new ExportPipeline(templateFacade)).export(pipeline, options);
         } catch (StorageException ex) {
             throw new ServerError("Can't export pipeline.", ex);
         }
@@ -366,10 +339,9 @@ class ManagementServletService {
         ServletUtilities.sendResponse(request, response, result);
     }
 
-    private ImportPipelineOptions loadImportPipelineOptionForLocalization(
-            MultipartFile optionsFile) throws InvalidRequest {
-        List<ImportPipelineOptions> candidates =
-                loadImportPipelineOptions(optionsFile);
+    private ImportPipelineOptions loadImportPipelineOptionForLocalization(MultipartFile optionsFile)
+            throws InvalidRequest {
+        List<ImportPipelineOptions> candidates = loadImportPipelineOptions(optionsFile);
         ImportPipelineOptions result = new ImportPipelineOptions();
         result.storePipeline = false;
         if (candidates.isEmpty()) {
@@ -382,15 +354,12 @@ class ManagementServletService {
             result.keepPipelineSuffix = givenOptions.keepPipelineSuffix;
             result.targetResource = givenOptions.targetResource;
         } else {
-            throw new InvalidRequest(
-                    "One options object expected got '{}'.",
-                    candidates.size());
+            throw new InvalidRequest("One options object expected got '{}'.", candidates.size());
         }
         return result;
     }
 
-    public void handleReload(
-            HttpServletRequest request, HttpServletResponse response) {
+    public void handleReload(HttpServletRequest request, HttpServletResponse response) {
         boolean failed = false;
         try {
             templateFacade.reloadReferenceTemplates();
@@ -411,26 +380,24 @@ class ManagementServletService {
         }
     }
 
-    public void handleGetDesignInformation(
-            HttpServletRequest request, HttpServletResponse response) {
-        ServletUtilities.sendResponse(
-                request, response, assistantService.getDataAsStatements());
+    public void handleGetDesignInformation(HttpServletRequest request, HttpServletResponse response) {
+        ServletUtilities.sendResponse(request, response, assistantService.getDataAsStatements());
     }
 
     public void handleUnpack(
-            MultipartFile pipelineFile, MultipartFile optionsFile,
-            HttpServletRequest request, HttpServletResponse response)
+            MultipartFile pipelineFile,
+            MultipartFile optionsFile,
+            HttpServletRequest request,
+            HttpServletResponse response)
             throws InvalidRequest, ServerError {
         Statements pipelineStatements = ServletUtilities.read(pipelineFile);
         Statements optionsStatements = ServletUtilities.read(optionsFile);
         Statements result;
         try {
-            result = Statements.wrap(unpackerFacade.unpack(
-                    pipelineStatements, optionsStatements));
+            result = Statements.wrap(unpackerFacade.unpack(pipelineStatements, optionsStatements));
         } catch (StorageException ex) {
             throw new ServerError("Can't prepare pipeline for execution.", ex);
         }
         ServletUtilities.sendResponse(request, response, result);
     }
-
 }

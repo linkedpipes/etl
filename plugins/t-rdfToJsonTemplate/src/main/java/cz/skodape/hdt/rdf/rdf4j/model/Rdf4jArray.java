@@ -2,11 +2,10 @@ package cz.skodape.hdt.rdf.rdf4j.model;
 
 import cz.skodape.hdt.core.ArrayReference;
 import cz.skodape.hdt.core.Reference;
-import org.eclipse.rdf4j.model.Resource;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.eclipse.rdf4j.model.Resource;
 
 /**
  * Represents an array of {@link Rdf4jResource}s. Can be used to represent
@@ -39,9 +38,7 @@ public class Rdf4jArray implements Rdf4jReference, ArrayReference {
     @Override
     public String asDebugString() {
         return "RdfArray\n  - "
-                + this.references.stream()
-                .map(Reference::asDebugString)
-                .collect(Collectors.joining("\n  - "));
+                + this.references.stream().map(Reference::asDebugString).collect(Collectors.joining("\n  - "));
     }
 
     @Override
@@ -58,5 +55,4 @@ public class Rdf4jArray implements Rdf4jReference, ArrayReference {
     public boolean isPrimitiveReference() {
         return false;
     }
-
 }

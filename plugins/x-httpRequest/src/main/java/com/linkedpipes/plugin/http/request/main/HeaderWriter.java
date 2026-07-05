@@ -1,6 +1,9 @@
 package com.linkedpipes.plugin.http.request.main;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.eclipse.rdf4j.model.IRI;
@@ -8,10 +11,6 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class HeaderWriter {
 
@@ -27,16 +26,11 @@ public class HeaderWriter {
 
     static {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        headerObjectPredicate = valueFactory.createIRI(
-                HttpRequestVocabulary.HAS_HEADER_OBJECT);
-        namePredicate = valueFactory.createIRI(
-                HttpRequestVocabulary.HAS_NAME);
-        valuePredicate = valueFactory.createIRI(
-                HttpRequestVocabulary.HAS_VALUE);
-        responseLinePredicate = valueFactory.createIRI(
-                HttpRequestVocabulary.HAS_RESPONSE_LINE);
-        reportResponsePredicate = valueFactory.createIRI(
-                HttpRequestVocabulary.HAS_RESPONSE_REPORT);
+        headerObjectPredicate = valueFactory.createIRI(HttpRequestVocabulary.HAS_HEADER_OBJECT);
+        namePredicate = valueFactory.createIRI(HttpRequestVocabulary.HAS_NAME);
+        valuePredicate = valueFactory.createIRI(HttpRequestVocabulary.HAS_VALUE);
+        responseLinePredicate = valueFactory.createIRI(HttpRequestVocabulary.HAS_RESPONSE_LINE);
+        reportResponsePredicate = valueFactory.createIRI(HttpRequestVocabulary.HAS_RESPONSE_REPORT);
     }
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
@@ -53,10 +47,7 @@ public class HeaderWriter {
 
     private int counter = 0;
 
-    public HeaderWriter(
-            StatementsConsumer writer,
-            HttpRequestTask task,
-            Resource reportResource) {
+    public HeaderWriter(StatementsConsumer writer, HttpRequestTask task, Resource reportResource) {
         this.writer = writer;
         this.task = task;
         this.reportResource = reportResource;
@@ -77,32 +68,22 @@ public class HeaderWriter {
     }
 
     private void addConnectionToReport() {
-        buffer.add(valueFactory.createStatement(
-                reportResource, reportResponsePredicate, responseResource));
+        buffer.add(valueFactory.createStatement(reportResource, reportResponsePredicate, responseResource));
     }
 
     private void reportResponseLine(StatusLine statusLine) {
         buffer.add(valueFactory.createStatement(
-                responseResource,
-                responseLinePredicate,
-                valueFactory.createLiteral(statusLine.getReasonPhrase())));
+                responseResource, responseLinePredicate, valueFactory.createLiteral(statusLine.getReasonPhrase())));
     }
 
     private void reportHeader(String header, String value) {
         Resource headerResource = createHeaderResource();
-        buffer.add(valueFactory.createStatement(
-                responseResource, headerObjectPredicate,
-                headerResource));
-        buffer.add(valueFactory.createStatement(
-                headerResource, namePredicate,
-                valueFactory.createLiteral(header)));
-        buffer.add(valueFactory.createStatement(
-                headerResource, valuePredicate,
-                valueFactory.createLiteral(value)));
+        buffer.add(valueFactory.createStatement(responseResource, headerObjectPredicate, headerResource));
+        buffer.add(valueFactory.createStatement(headerResource, namePredicate, valueFactory.createLiteral(header)));
+        buffer.add(valueFactory.createStatement(headerResource, valuePredicate, valueFactory.createLiteral(value)));
     }
 
     private IRI createHeaderResource() {
         return valueFactory.createIRI(task.deriveIri("header/") + ++counter);
     }
-
 }

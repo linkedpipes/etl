@@ -5,11 +5,10 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import org.apache.commons.io.FileUtils;
 
 public class FilesFromLocal implements Component, SequentialExecution {
 
@@ -27,10 +26,7 @@ public class FilesFromLocal implements Component, SequentialExecution {
     public void execute() throws LpException {
         final File source = new File(configuration.getPath());
         if (!source.exists()) {
-            throw new LpException(
-                    "Source directory does not exists: {}",
-                    configuration.getPath()
-            );
+            throw new LpException("Source directory does not exists: {}", configuration.getPath());
         }
         //
         if (source.isDirectory()) {
@@ -38,8 +34,7 @@ public class FilesFromLocal implements Component, SequentialExecution {
             final Path rootPath = source.toPath();
             final File[] files = source.listFiles();
             if (files == null) {
-                throw new LpException("Method listFiles return null. "
-                        + "Please check privileges.");
+                throw new LpException("Method listFiles return null. " + "Please check privileges.");
             }
             for (File file : files) {
                 final Path relativePath = rootPath.relativize(file.toPath());
@@ -68,5 +63,4 @@ public class FilesFromLocal implements Component, SequentialExecution {
             throw new LpException("Can't copy file.", ex);
         }
     }
-
 }

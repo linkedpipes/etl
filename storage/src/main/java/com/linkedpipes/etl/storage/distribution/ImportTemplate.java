@@ -11,14 +11,13 @@ import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.distribution.model.ImportTemplateOptions;
 import com.linkedpipes.etl.storage.template.PluginTemplateFacade;
 import com.linkedpipes.etl.storage.template.ReferenceTemplateFacade;
-import org.eclipse.rdf4j.model.Resource;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.eclipse.rdf4j.model.Resource;
 
 public class ImportTemplate {
 
@@ -71,7 +70,6 @@ public class ImportTemplate {
         public boolean storedAsNew() {
             return storedAsNew;
         }
-
     }
 
     private final PluginTemplateFacade pluginFacade;
@@ -82,32 +80,26 @@ public class ImportTemplate {
 
     private final Map<Resource, Resource> remoteToLocal = new HashMap<>();
 
-    public ImportTemplate(
-            PluginTemplateFacade pluginFacade,
-            ReferenceTemplateFacade referenceFacade) {
+    public ImportTemplate(PluginTemplateFacade pluginFacade, ReferenceTemplateFacade referenceFacade) {
         this.pluginFacade = pluginFacade;
         this.referenceFacade = referenceFacade;
     }
 
-    public void loadFromStatements(StatementsSelector statements)
-            throws StorageException {
+    public void loadFromStatements(StatementsSelector statements) throws StorageException {
         ReferenceTemplateLoader loader = new ReferenceTemplateLoader(
                 pluginFacade.getPluginTemplates().stream()
                         .map(PluginTemplate::resource)
                         .collect(Collectors.toSet()),
                 referenceFacade.getTemplateToPluginMap());
         loader.loadAndMigrate(statements);
-        loader.getContainers().stream()
-                .map(Container::new)
-                .forEach(containers::add);
+        loader.getContainers().stream().map(Container::new).forEach(containers::add);
     }
 
     /**
      * Called after {@link #loadFromStatements(StatementsSelector)}
      * to perform the import. Does not throw is a single template import fail.
      */
-    public void importTemplates(ImportTemplateOptions options)
-            throws StorageException {
+    public void importTemplates(ImportTemplateOptions options) throws StorageException {
         Map<Resource, Resource> knownMap = buildKnownMap();
         if (options.updateExistingTemplates) {
             updateExistingTemplates(knownMap);
@@ -123,8 +115,7 @@ public class ImportTemplate {
      */
     private Map<Resource, Resource> buildKnownMap() throws StorageException {
         Map<Resource, Resource> result = new HashMap<>();
-        for (ReferenceTemplate template :
-                referenceFacade.getReferenceTemplates()) {
+        for (ReferenceTemplate template : referenceFacade.getReferenceTemplates()) {
             result.put(template.resource(), template.resource());
             if (template.knownAs() != null) {
                 result.put(template.knownAs(), template.resource());
@@ -151,9 +142,7 @@ public class ImportTemplate {
         }
     }
 
-    private Resource getLocalResource(
-            Map<Resource, Resource> knownMap,
-            Container container) {
+    private Resource getLocalResource(Map<Resource, Resource> knownMap, Container container) {
         if (container.localTemplate != null) {
             return container.localTemplate.resource();
         }
@@ -171,18 +160,20 @@ public class ImportTemplate {
     /**
      * Given template localize it for given resources.
      */
-    private void updateExistingTemplate(Container container, Resource resource)
-            throws StorageException {
-        ReferenceTemplate local =
-                referenceFacade.getReferenceTemplate(resource);
-        PluginTemplate plugin =
-                pluginFacade.getPluginTemplate(local.plugin());
+    private void updateExistingTemplate(Container container, Resource resource) throws StorageException {
+        ReferenceTemplate local = referenceFacade.getReferenceTemplate(resource);
+        PluginTemplate plugin = pluginFacade.getPluginTemplate(local.plugin());
         ReferenceTemplate template = container.loadedTemplate;
         ReferenceTemplate nextTemplate = new ReferenceTemplate(
-                local.resource(), template.version(),
-                local.template(), local.plugin(),
-                template.label(), template.description(), template.note(),
-                template.color(), template.tags(),
+                local.resource(),
+                template.version(),
+                local.template(),
+                local.plugin(),
+                template.label(),
+                template.description(),
+                template.note(),
+                template.color(),
+                template.tags(),
                 local.knownAs(),
                 updateConfiguration(plugin, template.configuration(), resource),
                 local.configurationGraph());
@@ -191,11 +182,9 @@ public class ImportTemplate {
         container.storedAsExisting = true;
     }
 
-    private Statements updateConfiguration(
-            PluginTemplate plugin, Statements statements, Resource resource) {
+    private Statements updateConfiguration(PluginTemplate plugin, Statements statements, Resource resource) {
         return ConfigurationFacade.localizeConfiguration(
-                plugin.configurationDescription(),
-                statements.selector(), resource);
+                plugin.configurationDescription(), statements.selector(), resource);
     }
 
     private void importNewTemplates(Map<Resource, Resource> knownMap) {
@@ -229,9 +218,7 @@ public class ImportTemplate {
     /**
      * Import template and return local resource.
      */
-    private Resource importNewTemplate(
-            Map<Resource, Resource> knownMap,
-            Container container) throws StorageException {
+    private Resource importNewTemplate(Map<Resource, Resource> knownMap, Container container) throws StorageException {
         Resource localResource;
         ReferenceTemplate remote = container.loadedTemplate;
         if (pluginFacade.isPluginTemplate(remote.template())) {
@@ -248,14 +235,18 @@ public class ImportTemplate {
         if (remote.knownAs() == null) {
             knowAs = remote.resource();
         }
-        PluginTemplate plugin =
-                referenceFacade.findPluginTemplate(localResource);
+        PluginTemplate plugin = referenceFacade.findPluginTemplate(localResource);
         Resource local = referenceFacade.reserveReferenceResource();
         ReferenceTemplate nextTemplate = new ReferenceTemplate(
-                local, remote.version(),
-                localResource, remote.plugin(),
-                remote.label(), remote.description(), remote.note(),
-                remote.color(), remote.tags(),
+                local,
+                remote.version(),
+                localResource,
+                remote.plugin(),
+                remote.label(),
+                remote.description(),
+                remote.note(),
+                remote.color(),
+                remote.tags(),
                 knowAs,
                 updateConfiguration(plugin, remote.configuration(), local),
                 ConfigurationFacade.configurationGraph(local));
@@ -281,5 +272,4 @@ public class ImportTemplate {
     public List<Container> getContainers() {
         return Collections.unmodifiableList(containers);
     }
-
 }

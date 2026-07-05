@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.transformer.xmltochunks;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,8 +16,7 @@ public class XmlToChunksConfiguration {
         @RdfToPojo.Property(iri = XmlToChunksVocabulary.HAS_LOCAL)
         private String local;
 
-        public Reference() {
-        }
+        public Reference() {}
 
         public void setPrefix(String prefix) {
             this.prefix = prefix;
@@ -43,8 +41,7 @@ public class XmlToChunksConfiguration {
     @RdfToPojo.Property(iri = XmlToChunksVocabulary.HAS_REFERENCE)
     private List<Reference> references = new LinkedList<>();
 
-    public XmlToChunksConfiguration() {
-    }
+    public XmlToChunksConfiguration() {}
 
     public int getChunk_size() {
         return chunk_size;

@@ -14,8 +14,7 @@ public class FilesToRdfGraphConfiguration {
     @RdfToPojo.Property(iri = FilesToRdfGraphVocabulary.HAS_SKIP_ON_FAILURE)
     private boolean skipOnFailure = false;
 
-    public FilesToRdfGraphConfiguration() {
-    }
+    public FilesToRdfGraphConfiguration() {}
 
     public int getCommitSize() {
         return commitSize;

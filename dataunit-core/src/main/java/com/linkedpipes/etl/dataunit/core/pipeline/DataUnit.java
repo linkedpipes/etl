@@ -34,5 +34,4 @@ class DataUnit implements Loadable {
     public String getBinding() {
         return binding;
     }
-
 }

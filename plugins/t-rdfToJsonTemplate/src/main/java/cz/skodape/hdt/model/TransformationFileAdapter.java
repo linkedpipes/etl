@@ -2,7 +2,6 @@ package cz.skodape.hdt.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ public class TransformationFileAdapter {
          * Return null if the adapter can not read given content.
          */
         SourceConfiguration readJson(JsonNode root) throws IOException;
-
     }
 
     public interface SelectorConfigurationAdapter {
@@ -28,23 +26,18 @@ public class TransformationFileAdapter {
          * Return null if the adapter can not read given content.
          */
         SelectorConfiguration readJson(JsonNode root) throws IOException;
-
     }
 
     public interface OutputConfigurationAdapter {
 
         OutputConfiguration readJson(JsonNode root) throws IOException;
-
     }
 
-    private final List<SourceConfigurationAdapter> sourceAdapters =
-            new ArrayList<>();
+    private final List<SourceConfigurationAdapter> sourceAdapters = new ArrayList<>();
 
-    private final List<SelectorConfigurationAdapter> selectorAdapters =
-            new ArrayList<>();
+    private final List<SelectorConfigurationAdapter> selectorAdapters = new ArrayList<>();
 
-    private final List<OutputConfigurationAdapter> outputAdapters =
-            new ArrayList<>();
+    private final List<OutputConfigurationAdapter> outputAdapters = new ArrayList<>();
 
     /**
      * Used to monitor path.
@@ -82,8 +75,7 @@ public class TransformationFileAdapter {
         return mapper.readTree(url);
     }
 
-    protected Map<String, SourceConfiguration> readSources(JsonNode node)
-            throws IOException {
+    protected Map<String, SourceConfiguration> readSources(JsonNode node) throws IOException {
         path.push(node);
         var iterator = node.fields();
         Map<String, SourceConfiguration> result = new HashMap<>();
@@ -106,20 +98,16 @@ public class TransformationFileAdapter {
             }
             return configuration;
         }
-        throw new IOException(formatException(
-                "Can't recognize source definition.", node));
+        throw new IOException(formatException("Can't recognize source definition.", node));
     }
 
     protected String formatException(String message, JsonNode node) {
-        return message + " For : \n"
-                + node.asText() + "\nin:\n" + path.peek().asText();
+        return message + " For : \n" + node.asText() + "\nin:\n" + path.peek().asText();
     }
 
-    protected BaseTransformation readTransformation(JsonNode node)
-            throws IOException {
+    protected BaseTransformation readTransformation(JsonNode node) throws IOException {
         if (!node.has("type")) {
-            throw new IOException(formatException(
-                    "Missing type.", node));
+            throw new IOException(formatException("Missing type.", node));
         }
         String type = node.get("type").asText();
         BaseTransformation result;
@@ -140,14 +128,12 @@ public class TransformationFileAdapter {
                 path.pop();
                 break;
             default:
-                throw new IOException(formatException(
-                        "Invalid transformation type.", node));
+                throw new IOException(formatException("Invalid transformation type.", node));
         }
         return result;
     }
 
-    protected BaseTransformation readObjectTransformation(JsonNode node)
-            throws IOException {
+    protected BaseTransformation readObjectTransformation(JsonNode node) throws IOException {
         ObjectTransformation result = new ObjectTransformation();
         result.selectors = readSelectors(node.get("selectors"));
         var iterator = node.get("properties").fields();
@@ -160,8 +146,7 @@ public class TransformationFileAdapter {
         return result;
     }
 
-    protected List<SelectorConfiguration> readSelectors(JsonNode node)
-            throws IOException {
+    protected List<SelectorConfiguration> readSelectors(JsonNode node) throws IOException {
         var iterator = node.iterator();
         path.add(node);
         List<SelectorConfiguration> result = new ArrayList<>();
@@ -169,8 +154,7 @@ public class TransformationFileAdapter {
             JsonNode selectorNode = iterator.next();
             SelectorConfiguration value = readSelector(selectorNode);
             if (value == null) {
-                throw new IOException(formatException(
-                        "Can't read selector.", selectorNode));
+                throw new IOException(formatException("Can't read selector.", selectorNode));
             }
             result.add(value);
         }
@@ -178,8 +162,7 @@ public class TransformationFileAdapter {
         return result;
     }
 
-    protected SelectorConfiguration readSelector(JsonNode node)
-            throws IOException {
+    protected SelectorConfiguration readSelector(JsonNode node) throws IOException {
         for (SelectorConfigurationAdapter sourceAdapter : selectorAdapters) {
             var configuration = sourceAdapter.readJson(node);
             if (configuration == null) {
@@ -190,8 +173,7 @@ public class TransformationFileAdapter {
         return null;
     }
 
-    protected BaseTransformation readArrayTransformation(JsonNode node)
-            throws IOException {
+    protected BaseTransformation readArrayTransformation(JsonNode node) throws IOException {
         ArrayTransformation result = new ArrayTransformation();
         result.selectors = readSelectors(node.get("selectors"));
         for (JsonNode jsonNode : node.get("items")) {
@@ -200,8 +182,7 @@ public class TransformationFileAdapter {
         return result;
     }
 
-    protected BaseTransformation readPrimitiveTransformation(JsonNode node)
-            throws IOException {
+    protected BaseTransformation readPrimitiveTransformation(JsonNode node) throws IOException {
         PrimitiveTransformation result = new PrimitiveTransformation();
         result.selectors = readSelectors(node.get("selectors"));
         if (node.has("constant")) {
@@ -214,8 +195,7 @@ public class TransformationFileAdapter {
             JsonNode output = node.get("output");
             result.outputConfiguration = readOutput(node.get("output"));
             if (result.outputConfiguration == null) {
-                throw new IOException(formatException(
-                        "Can't recognize output definition.", output));
+                throw new IOException(formatException("Can't recognize output definition.", output));
             }
         }
         return result;
@@ -231,5 +211,4 @@ public class TransformationFileAdapter {
         }
         return null;
     }
-
 }

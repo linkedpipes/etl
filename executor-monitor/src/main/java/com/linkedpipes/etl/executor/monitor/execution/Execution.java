@@ -2,13 +2,12 @@ package com.linkedpipes.etl.executor.monitor.execution;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.linkedpipes.etl.executor.monitor.debug.DebugData;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Statement;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
 
 public class Execution {
 
@@ -195,5 +194,4 @@ public class Execution {
     void setLastOverviewChange(Date lastOverviewChange) {
         this.lastOverviewChange = lastOverviewChange;
     }
-
 }

@@ -4,7 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.rdf.model.TripleWriter;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.RDF;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.SKOS;
-
 import java.util.Date;
 
 /**
@@ -38,5 +37,4 @@ public abstract class AbstractEvent implements Event {
         }
         writer.date(iri, LP.HAS_CREATED, created);
     }
-
 }

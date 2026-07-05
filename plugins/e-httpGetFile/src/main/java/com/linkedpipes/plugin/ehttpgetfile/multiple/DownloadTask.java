@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.ehttpgetfile.multiple;
 
 import com.linkedpipes.etl.executor.api.v1.component.task.Task;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,8 +26,7 @@ public class DownloadTask implements Task {
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_GROUP)
     private String group = null;
 
-    public DownloadTask() {
-    }
+    public DownloadTask() {}
 
     @Override
     public String getIri() {
@@ -79,5 +77,4 @@ public class DownloadTask implements Task {
     public void setGroup(String group) {
         this.group = group;
     }
-
 }

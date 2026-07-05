@@ -32,5 +32,4 @@ class ExecutionProfile implements Loadable {
     public String getRdfRepositoryType() {
         return rdfRepositoryType;
     }
-
 }

@@ -9,23 +9,17 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 public class PipelineDesignToRdf {
 
-    private static final String TYPE =
-            "http://linkedpipes.com/ontology/PipelineInformation";
+    private static final String TYPE = "http://linkedpipes.com/ontology/PipelineInformation";
 
-    private static final String HAS_TAG =
-            "http://etl.linkedpipes.com/ontology/tag";
+    private static final String HAS_TAG = "http://etl.linkedpipes.com/ontology/tag";
 
-    private static final String HAS_TEMPLATE =
-            "http://etl.linkedpipes.com/ontology/followup";
+    private static final String HAS_TEMPLATE = "http://etl.linkedpipes.com/ontology/followup";
 
-    private static final String HAS_SOURCE =
-            "http://etl.linkedpipes.com/ontology/source";
+    private static final String HAS_SOURCE = "http://etl.linkedpipes.com/ontology/source";
 
-    private static final String HAS_TARGET =
-            "http://etl.linkedpipes.com/ontology/target";
+    private static final String HAS_TARGET = "http://etl.linkedpipes.com/ontology/target";
 
-    private static final String HAS_FREQUENCY =
-            "http://etl.linkedpipes.com/ontology/frequency";
+    private static final String HAS_FREQUENCY = "http://etl.linkedpipes.com/ontology/frequency";
 
     public static Statements asRdf(PipelineDesign info) {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
@@ -46,5 +40,4 @@ public class PipelineDesignToRdf {
         }
         return result;
     }
-
 }

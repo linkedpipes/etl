@@ -2,6 +2,12 @@ package com.linkedpipes.plugin.ehttpgetfile.multiple;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
@@ -10,17 +16,9 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-
 public class HttpRequestReport {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(HttpRequestReport.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HttpRequestReport.class);
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
@@ -48,20 +46,13 @@ public class HttpRequestReport {
 
     private final ReportWriter reportWriter;
 
-    public HttpRequestReport(
-            StatementsConsumer consumer, ReportWriter reportWriter) {
-        headerObjectPredicate = valueFactory.createIRI(
-                HttpGetFilesVocabulary.HAS_HEADER_OBJECT);
-        namePredicate = valueFactory.createIRI(
-                HttpGetFilesVocabulary.HAS_NAME);
-        valuePredicate = valueFactory.createIRI(
-                HttpGetFilesVocabulary.HAS_VALUE);
-        responseLinePredicate = valueFactory.createIRI(
-                HttpGetFilesVocabulary.HAS_RESPONSE_LINE);
-        responseReportPredicate = valueFactory.createIRI(
-                HttpGetFilesVocabulary.HAS_RESPONSE_REPORT);
-        errorPredicate = valueFactory.createIRI(
-                HttpGetFilesVocabulary.HAS_ERROR_MESSAGE);
+    public HttpRequestReport(StatementsConsumer consumer, ReportWriter reportWriter) {
+        headerObjectPredicate = valueFactory.createIRI(HttpGetFilesVocabulary.HAS_HEADER_OBJECT);
+        namePredicate = valueFactory.createIRI(HttpGetFilesVocabulary.HAS_NAME);
+        valuePredicate = valueFactory.createIRI(HttpGetFilesVocabulary.HAS_VALUE);
+        responseLinePredicate = valueFactory.createIRI(HttpGetFilesVocabulary.HAS_RESPONSE_LINE);
+        responseReportPredicate = valueFactory.createIRI(HttpGetFilesVocabulary.HAS_RESPONSE_REPORT);
+        errorPredicate = valueFactory.createIRI(HttpGetFilesVocabulary.HAS_ERROR_MESSAGE);
         this.consumer = consumer;
         this.reportWriter = reportWriter;
     }
@@ -70,8 +61,7 @@ public class HttpRequestReport {
         this.task = task;
     }
 
-    public void reportHeaderResponse(HttpURLConnection connection)
-            throws LpException {
+    public void reportHeaderResponse(HttpURLConnection connection) throws LpException {
         prepareForReporting(task);
         reportErrorLine(connection);
         reportResponseCode(connection);
@@ -94,8 +84,7 @@ public class HttpRequestReport {
         InputStream errStream = connection.getErrorStream();
         if (errStream != null) {
             try {
-                errorMessage = IOUtils.toString
-                        (errStream, StandardCharsets.UTF_8);
+                errorMessage = IOUtils.toString(errStream, StandardCharsets.UTF_8);
             } catch (Throwable ex) {
                 return;
             }
@@ -122,9 +111,7 @@ public class HttpRequestReport {
 
     private void addConnectionToReport() {
         statements.add(valueFactory.createStatement(
-                valueFactory.createIRI(reportWriter.getIriForReport(task)),
-                responseReportPredicate,
-                objectIri));
+                valueFactory.createIRI(reportWriter.getIriForReport(task)), responseReportPredicate, objectIri));
     }
 
     private void reportHeaders(String header, List<String> values) {
@@ -137,29 +124,22 @@ public class HttpRequestReport {
 
     private void reportAsResponseLine(List<String> values) {
         for (String value : values) {
-            statements.add(valueFactory.createStatement(
-                    objectIri, responseLinePredicate,
-                    valueFactory.createLiteral(value)));
+            statements.add(
+                    valueFactory.createStatement(objectIri, responseLinePredicate, valueFactory.createLiteral(value)));
         }
     }
 
     private void reportAsHeader(String header, List<String> values) {
         IRI headerIri = createHeaderIri();
-        statements.add(valueFactory.createStatement(
-                objectIri, headerObjectPredicate, headerIri));
-        statements.add(valueFactory.createStatement(
-                headerIri, namePredicate, valueFactory.createLiteral(header)));
+        statements.add(valueFactory.createStatement(objectIri, headerObjectPredicate, headerIri));
+        statements.add(valueFactory.createStatement(headerIri, namePredicate, valueFactory.createLiteral(header)));
         for (String value : values) {
-            statements.add(valueFactory.createStatement(
-                    headerIri, valuePredicate,
-                    valueFactory.createLiteral(value)));
+            statements.add(valueFactory.createStatement(headerIri, valuePredicate, valueFactory.createLiteral(value)));
             LOG.debug(" header: {} : {}", header, value);
         }
     }
 
     private IRI createHeaderIri() {
-        return valueFactory.createIRI(
-                reportWriter.getIriForReport(task) + "/header/" + ++counter);
+        return valueFactory.createIRI(reportWriter.getIriForReport(task) + "/header/" + ++counter);
     }
-
 }

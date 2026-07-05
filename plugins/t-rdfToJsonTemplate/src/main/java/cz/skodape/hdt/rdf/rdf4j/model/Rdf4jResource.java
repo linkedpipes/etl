@@ -44,5 +44,4 @@ public class Rdf4jResource implements Rdf4jReference, ObjectReference {
     public boolean isPrimitiveReference() {
         return false;
     }
-
 }

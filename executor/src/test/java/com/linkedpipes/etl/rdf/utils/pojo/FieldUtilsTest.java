@@ -1,10 +1,8 @@
 package com.linkedpipes.etl.rdf.utils.pojo;
 
-
+import java.lang.reflect.Field;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.lang.reflect.Field;
 
 public class FieldUtilsTest {
 
@@ -53,7 +51,7 @@ public class FieldUtilsTest {
         TestClass entity = new TestClass();
         entity.publicValue = "value";
         Field field = TestClass.class.getDeclaredField("publicValue");
-        String actualValue = (String)FieldUtils.getValue(entity, field);
+        String actualValue = (String) FieldUtils.getValue(entity, field);
         Assertions.assertEquals(entity.publicValue, actualValue);
     }
 
@@ -63,7 +61,7 @@ public class FieldUtilsTest {
         entity.setProtectedValue("value");
         Field field = TestClass.class.getDeclaredField("protectedValue");
         FieldUtils.getValue(entity, field);
-        String actualValue = (String)FieldUtils.getValue(entity, field);
+        String actualValue = (String) FieldUtils.getValue(entity, field);
         Assertions.assertEquals(entity.getProtectedValue(), actualValue);
     }
 
@@ -75,5 +73,4 @@ public class FieldUtilsTest {
             FieldUtils.getValue(entity, field);
         });
     }
-
 }

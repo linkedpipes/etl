@@ -44,6 +44,4 @@ public class DesignerRunAfter implements Loadable {
     public String getTargetComponent() {
         return targetComponent;
     }
-
 }
-

@@ -28,19 +28,16 @@ class AddContextStream extends InputStream {
 
     private int sourcesIndex;
 
-    public AddContextStream(Configuration configuration,
-            String fileName, InputStream stream) throws
-            UnsupportedEncodingException {
+    public AddContextStream(Configuration configuration, String fileName, InputStream stream)
+            throws UnsupportedEncodingException {
         final String headerAsString = buildHeader(configuration, fileName);
         final String encoding = configuration.encoding;
-        sources.add(new ByteArrayInputStream(
-                headerAsString.getBytes(encoding)));
+        sources.add(new ByteArrayInputStream(headerAsString.getBytes(encoding)));
         sources.add(stream);
         sources.add(new ByteArrayInputStream("}\n".getBytes(encoding)));
     }
 
-    private static String buildHeader(Configuration configuration,
-            String fileName) {
+    private static String buildHeader(Configuration configuration, String fileName) {
         StringBuilder header = new StringBuilder();
         header.append("{ \"@context\" : ");
         header.append(configuration.context);
@@ -86,5 +83,4 @@ class AddContextStream extends InputStream {
             source.close();
         }
     }
-
 }

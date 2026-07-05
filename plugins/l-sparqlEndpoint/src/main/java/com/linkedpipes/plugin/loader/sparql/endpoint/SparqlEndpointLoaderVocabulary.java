@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.loader.sparql.endpoint;
 
 final class SparqlEndpointLoaderVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/l-sparqlEndpoint#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -21,7 +20,5 @@ final class SparqlEndpointLoaderVocabulary {
 
     public static final String HAS_COMMIT_SIZE = PREFIX + "commitSize";
 
-    private SparqlEndpointLoaderVocabulary() {
-    }
-
+    private SparqlEndpointLoaderVocabulary() {}
 }

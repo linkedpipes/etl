@@ -18,9 +18,7 @@ class PathStepSelector implements ReferenceSource {
     private ReferenceSource nextSource = null;
 
     public PathStepSelector(
-            PropertySource propertySource,
-            PathSelectorConfiguration.Path step,
-            ReferenceSource inputSource) {
+            PropertySource propertySource, PathSelectorConfiguration.Path step, ReferenceSource inputSource) {
         this.propertySource = propertySource;
         this.step = step;
         this.inputSource = inputSource;
@@ -28,8 +26,7 @@ class PathStepSelector implements ReferenceSource {
 
     @Override
     public ReferenceSource split() throws OperationFailed {
-        PathStepSelector result = new PathStepSelector(
-                propertySource, step, inputSource.split());
+        PathStepSelector result = new PathStepSelector(propertySource, step, inputSource.split());
         if (nextSource != null) {
             result.nextSource = nextSource.split();
         }
@@ -57,11 +54,9 @@ class PathStepSelector implements ReferenceSource {
             ObjectReference objectReference = (ObjectReference) next;
             ArrayReference arrayReference;
             if (step.reverse) {
-                arrayReference = propertySource.reverseProperty(
-                        objectReference, step.predicate);
+                arrayReference = propertySource.reverseProperty(objectReference, step.predicate);
             } else {
-                arrayReference = propertySource.property(
-                        objectReference, step.predicate);
+                arrayReference = propertySource.property(objectReference, step.predicate);
             }
             nextSource = propertySource.source(arrayReference);
             Reference result = nextSource.next();
@@ -72,5 +67,4 @@ class PathStepSelector implements ReferenceSource {
         }
         return null;
     }
-
 }

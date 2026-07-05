@@ -14,5 +14,4 @@ public interface DataUnit {
      * IRI of the data unit in the pipeline model/configuration.
      */
     String getIri();
-
 }

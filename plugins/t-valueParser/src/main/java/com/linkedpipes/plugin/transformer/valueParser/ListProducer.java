@@ -16,12 +16,11 @@ class ListProducer extends DefaultProducer {
 
     private IRI orderPredicate;
 
-    public ListProducer(WritableSingleGraphDataUnit output,
-            String predicate, boolean transferType, boolean addOrdering) {
+    public ListProducer(
+            WritableSingleGraphDataUnit output, String predicate, boolean transferType, boolean addOrdering) {
         super(output, predicate, transferType);
         this.addOrdering = addOrdering;
-        this.orderPredicate = valueFactory.createIRI(
-                ValueParserVocabulary.HAS_ORDER);
+        this.orderPredicate = valueFactory.createIRI(ValueParserVocabulary.HAS_ORDER);
     }
 
     @Override
@@ -47,30 +46,23 @@ class ListProducer extends DefaultProducer {
     protected void addFirst(Value value) {
         lastResource = valueFactory.createBNode();
 
-        this.buffer.add(valueFactory.createStatement(
-                resource, predicate, lastResource));
+        this.buffer.add(valueFactory.createStatement(resource, predicate, lastResource));
 
-        this.buffer.add(valueFactory.createStatement(
-                lastResource, RDF.FIRST, value));
+        this.buffer.add(valueFactory.createStatement(lastResource, RDF.FIRST, value));
     }
 
     protected void addNext(Value value) {
         Resource nextResource = valueFactory.createBNode();
 
-        this.buffer.add(valueFactory.createStatement(
-                lastResource, RDF.REST, nextResource));
+        this.buffer.add(valueFactory.createStatement(lastResource, RDF.REST, nextResource));
 
-        this.buffer.add(valueFactory.createStatement(
-                nextResource, RDF.FIRST, value));
+        this.buffer.add(valueFactory.createStatement(nextResource, RDF.FIRST, value));
 
         lastResource = nextResource;
     }
 
     protected void addOrderingToLastResource() {
-        this.buffer.add(valueFactory.createStatement(
-                lastResource, orderPredicate,
-                valueFactory.createLiteral(++counter)));
+        this.buffer.add(
+                valueFactory.createStatement(lastResource, orderPredicate, valueFactory.createLiteral(++counter)));
     }
-
-
 }

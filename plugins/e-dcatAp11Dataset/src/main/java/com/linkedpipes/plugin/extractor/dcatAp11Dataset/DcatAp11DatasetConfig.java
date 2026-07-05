@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.extractor.dcatAp11Dataset;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.LanguageString;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,8 +67,7 @@ public class DcatAp11DatasetConfig {
 
     public static class LocalizedString extends LanguageString {
 
-        public LocalizedString() {
-        }
+        public LocalizedString() {}
 
         public LocalizedString(String value, String language) {
             super(value, language);
@@ -85,15 +83,13 @@ public class DcatAp11DatasetConfig {
     @RdfToPojo.Property(iri = DcatAp11DatasetVocabulary.MY + "descriptions")
     private List<LocalizedString> descriptions = new LinkedList<>();
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DatasetVocabulary.MY + "contactPointTypeIRI")
+    @RdfToPojo.Property(iri = DcatAp11DatasetVocabulary.MY + "contactPointTypeIRI")
     private String contactPointTypeIRI;
 
     @RdfToPojo.Property(iri = DcatAp11DatasetVocabulary.MY + "contactPointName")
     private String contactPointName;
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DatasetVocabulary.MY + "contactPointEmail")
+    @RdfToPojo.Property(iri = DcatAp11DatasetVocabulary.MY + "contactPointEmail")
     private String contactPointEmail;
 
     @RdfToPojo.Property(iri = DcatAp11DatasetVocabulary.MY + "keywords")
@@ -117,8 +113,7 @@ public class DcatAp11DatasetConfig {
     @RdfToPojo.Property(iri = DcatAp11DatasetVocabulary.MY + "languages")
     private List<String> languages = new LinkedList<>();
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DatasetVocabulary.MY + "accrualPeriodicityIRI")
+    @RdfToPojo.Property(iri = DcatAp11DatasetVocabulary.MY + "accrualPeriodicityIRI")
     private String accrualPeriodicityIRI;
 
     @RdfToPojo.Property(iri = DcatAp11DatasetVocabulary.MY + "issued")
@@ -139,8 +134,7 @@ public class DcatAp11DatasetConfig {
     @RdfToPojo.Property(iri = DcatAp11DatasetVocabulary.MY + "temporalEnd")
     private Date temporalEnd;
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DatasetVocabulary.MY + "documentationIRIs")
+    @RdfToPojo.Property(iri = DcatAp11DatasetVocabulary.MY + "documentationIRIs")
     private List<String> documentationIRIs = new LinkedList<>();
 
     @RdfToPojo.Property(iri = DcatAp11DatasetVocabulary.MY + "accessRightsIRI")
@@ -194,12 +188,10 @@ public class DcatAp11DatasetConfig {
     @RdfToPojo.Property(iri = DcatAp11DatasetVocabulary.MY + "numSeries")
     private Integer numSeries;
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DatasetVocabulary.MY + "qualityAnnotationIRIs")
+    @RdfToPojo.Property(iri = DcatAp11DatasetVocabulary.MY + "qualityAnnotationIRIs")
     private List<String> qualityAnnotationIRIs = new LinkedList<>();
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DatasetVocabulary.MY + "unitOfMeasurementIRIs")
+    @RdfToPojo.Property(iri = DcatAp11DatasetVocabulary.MY + "unitOfMeasurementIRIs")
     private List<String> unitOfMeasurementIRIs = new LinkedList<>();
 
     public String getDatasetIRI() {

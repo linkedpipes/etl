@@ -1,9 +1,8 @@
 package com.linkedpipes.etl.dataunit.core.rdf;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.util.Iterator;
+import org.apache.commons.io.FileUtils;
 
 public class ChunkIterator implements Iterator<ChunkedTriples.Chunk> {
 
@@ -34,12 +33,10 @@ public class ChunkIterator implements Iterator<ChunkedTriples.Chunk> {
         if (this.fileIterator != null && this.fileIterator.hasNext()) {
             this.nextChunk = new DefaultChunk(this.fileIterator.next());
         } else if (this.directoryIterator.hasNext()) {
-            this.fileIterator = FileUtils.iterateFiles(
-                    this.directoryIterator.next(), null, true);
+            this.fileIterator = FileUtils.iterateFiles(this.directoryIterator.next(), null, true);
             prepareNext();
         } else {
             this.nextChunk = null;
         }
     }
-
 }

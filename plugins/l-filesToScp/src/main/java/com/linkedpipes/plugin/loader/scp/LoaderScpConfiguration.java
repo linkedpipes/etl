@@ -29,8 +29,7 @@ public class LoaderScpConfiguration {
     @RdfToPojo.Property(iri = LoaderScpVocabulary.HAS_CONNECTION_TIME_OUT)
     private int connectionTimeOut = 0;
 
-    public LoaderScpConfiguration() {
-    }
+    public LoaderScpConfiguration() {}
 
     public String getUserName() {
         return userName;
@@ -95,5 +94,4 @@ public class LoaderScpConfiguration {
     public void setConnectionTimeOut(int connectionTimeOut) {
         this.connectionTimeOut = connectionTimeOut;
     }
-
 }

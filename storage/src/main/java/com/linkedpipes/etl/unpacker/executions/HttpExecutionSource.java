@@ -3,6 +3,12 @@ package com.linkedpipes.etl.unpacker.executions;
 import com.linkedpipes.etl.storage.ConfigurationHolder;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.unpacker.ExecutionSource;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
@@ -11,13 +17,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 
 public class HttpExecutionSource implements ExecutionSource {
 
@@ -29,8 +28,7 @@ public class HttpExecutionSource implements ExecutionSource {
         this.configuration = configuration;
     }
 
-    public Collection<Statement> getExecution(String iri)
-            throws StorageException {
+    public Collection<Statement> getExecution(String iri) throws StorageException {
         // Download and parse information about the execution.
         HttpClientBuilder builder = HttpClientBuilder.create();
         try (CloseableHttpClient client = builder.build()) {
@@ -52,21 +50,16 @@ public class HttpExecutionSource implements ExecutionSource {
                 + URLEncoder.encode(iri, StandardCharsets.UTF_8);
     }
 
-    private void checkResponse(HttpResponse response, String iri)
-            throws StorageException {
+    private void checkResponse(HttpResponse response, String iri) throws StorageException {
         int status = response.getStatusLine().getStatusCode();
-        if (status < HttpStatus.SC_OK
-                || status >= HttpStatus.SC_MULTIPLE_CHOICES) {
-            throw new StorageException(
-                    "Invalid response code: {} from {}", status, iri);
+        if (status < HttpStatus.SC_OK || status >= HttpStatus.SC_MULTIPLE_CHOICES) {
+            throw new StorageException("Invalid response code: {} from {}", status, iri);
         }
     }
 
-    private Collection<Statement> responseToRdf(HttpResponse response)
-            throws IOException {
+    private Collection<Statement> responseToRdf(HttpResponse response) throws IOException {
         try (InputStream stream = response.getEntity().getContent()) {
             return Rio.parse(stream, BASE_URL, RDFFormat.JSONLD);
         }
     }
-
 }

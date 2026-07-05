@@ -4,7 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -65,5 +64,4 @@ public class Connection implements Loadable {
     public boolean isDataConnection() {
         return types.contains(LP_PIPELINE.CONNECTION);
     }
-
 }

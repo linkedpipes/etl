@@ -29,5 +29,4 @@ public class LpException extends Exception {
     public String getMessage() {
         return MessageFormatter.arrayFormat(message, args).getMessage();
     }
-
 }

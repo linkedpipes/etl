@@ -12,8 +12,6 @@ import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfigura
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.RdfToPojoLoader;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
-import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,8 +64,7 @@ public final class SparqlEndpointChunkedList extends TaskExecution<QueryTask> {
     @Override
     protected List<QueryTask> loadTasks() throws LpException {
         RdfSource source = tasksRdf.asRdfSource();
-        List<String> resources = source.getByType(
-                SparqlEndpointChunkedListVocabulary.TASK);
+        List<String> resources = source.getByType(SparqlEndpointChunkedListVocabulary.TASK);
         List<QueryTask> result = new ArrayList<>(resources.size());
         for (String resource : resources) {
             QueryTask task = new QueryTask();
@@ -84,8 +81,7 @@ public final class SparqlEndpointChunkedList extends TaskExecution<QueryTask> {
 
     @Override
     protected TaskConsumer<QueryTask> createConsumer() {
-        return new QueryTaskExecutor(
-                this.configuration, this.consumer, this.inputFilesByName);
+        return new QueryTaskExecutor(this.configuration, this.consumer, this.inputFilesByName);
     }
 
     @Override
@@ -98,10 +94,9 @@ public final class SparqlEndpointChunkedList extends TaskExecution<QueryTask> {
     private void initializeInputFileMap() {
         this.inputFilesByName = new HashMap<>();
         for (FilesDataUnit.Entry entry : this.inputFiles) {
-            this.inputFilesByName.computeIfAbsent(entry.getFileName(),
-                    (name) -> new ArrayList<>(EXPECTED_FILES_WITH_SAME_NAME))
+            this.inputFilesByName
+                    .computeIfAbsent(entry.getFileName(), (name) -> new ArrayList<>(EXPECTED_FILES_WITH_SAME_NAME))
                     .add(entry.toFile());
         }
     }
-
 }

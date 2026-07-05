@@ -6,7 +6,6 @@ import com.linkedpipes.etl.executor.pipeline.model.ExecutionType;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import com.linkedpipes.etl.executor.pipeline.model.Port;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -88,22 +87,15 @@ public class ExecutionModel {
         if (source == null) {
             loadPath = null;
         } else {
-            loadPath = resourceManager.resolveExecutionPath(
-                    source.getExecution(),
-                    source.getDataPath()
-            );
+            loadPath = resourceManager.resolveExecutionPath(source.getExecution(), source.getDataPath());
         }
         if (pplPort.isSaveDebugData()) {
-            String debugVirtualPathSuffix =
-                    String.format("%03d", dataUnits.size());
-            File saveDirectory = resourceManager.getWorkingDirectory(
-                    "dataunit-" + debugVirtualPathSuffix);
+            String debugVirtualPathSuffix = String.format("%03d", dataUnits.size());
+            File saveDirectory = resourceManager.getWorkingDirectory("dataunit-" + debugVirtualPathSuffix);
             String relativeDataPath = resourceManager.relative(saveDirectory);
-            return new DataUnit(pplPort, debugVirtualPathSuffix,
-                    saveDirectory, loadPath, relativeDataPath);
+            return new DataUnit(pplPort, debugVirtualPathSuffix, saveDirectory, loadPath, relativeDataPath);
         } else {
             return new DataUnit(pplPort, loadPath);
         }
     }
-
 }

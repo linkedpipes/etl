@@ -5,7 +5,6 @@ import com.linkedpipes.etl.dataunit.core.rdf.ChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,5 +30,4 @@ public class ChunkedToTurtle implements Component, SequentialExecution {
             }
         }
     }
-
 }

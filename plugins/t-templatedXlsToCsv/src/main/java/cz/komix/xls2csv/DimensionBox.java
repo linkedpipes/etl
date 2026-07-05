@@ -8,8 +8,7 @@ import org.slf4j.LoggerFactory;
 
 class DimensionBox {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(DimensionBox.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DimensionBox.class);
 
     private final List<Dimension> box = new ArrayList<>();
 
@@ -89,8 +88,7 @@ class DimensionBox {
                 }
                 // ale jeste neni ve vysledku hledani, tak ji tam pridej
                 if (!found) {
-                    LOG.debug("Setting D-main : " + d + "("
-                            + d.getSub().box + ")");
+                    LOG.debug("Setting D-main : " + d + "(" + d.getSub().box + ")");
                     nalez.add(d);
                 }
             }
@@ -152,5 +150,4 @@ class DimensionBox {
     public List<Dimension> getBox() {
         return Collections.unmodifiableList(box);
     }
-
 }

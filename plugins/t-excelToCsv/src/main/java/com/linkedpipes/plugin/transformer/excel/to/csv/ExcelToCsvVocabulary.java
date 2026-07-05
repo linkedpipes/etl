@@ -5,8 +5,7 @@ package com.linkedpipes.plugin.transformer.excel.to.csv;
  */
 final class ExcelToCsvVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-excelToCsv#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-excelToCsv#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -42,7 +41,5 @@ final class ExcelToCsvVocabulary {
 
     public static final String HAS_EVAL_FORMULA = PREFIX + "evalFormula";
 
-    private ExcelToCsvVocabulary() {
-    }
-
+    private ExcelToCsvVocabulary() {}
 }

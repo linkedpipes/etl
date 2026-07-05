@@ -2,10 +2,9 @@ package com.linkedpipes.etl.unpacker.model.execution;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.unpacker.rdf.Loadable;
-import org.eclipse.rdf4j.model.Value;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.rdf4j.model.Value;
 
 public class ExecutionComponent implements Loadable {
 
@@ -51,5 +50,4 @@ public class ExecutionComponent implements Loadable {
     public String getExecution() {
         return execution;
     }
-
 }

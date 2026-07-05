@@ -9,15 +9,13 @@ import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 
-public class TestSingleGraphDataUnit
-        implements SingleGraphDataUnit, WritableSingleGraphDataUnit {
+public class TestSingleGraphDataUnit implements SingleGraphDataUnit, WritableSingleGraphDataUnit {
 
     private final IRI graph;
 
     private final Repository repository;
 
-    public TestSingleGraphDataUnit(IRI graph,
-            Repository repository) {
+    public TestSingleGraphDataUnit(IRI graph, Repository repository) {
         this.graph = graph;
         this.repository = repository;
     }
@@ -43,16 +41,14 @@ public class TestSingleGraphDataUnit
     }
 
     @Override
-    public void execute(RepositoryProcedure action)
-            throws LpException {
+    public void execute(RepositoryProcedure action) throws LpException {
         try (RepositoryConnection connection = repository.getConnection()) {
             action.accept(connection);
         }
     }
 
     @Override
-    public <T> T execute(RepositoryFunction<T> action)
-            throws LpException {
+    public <T> T execute(RepositoryFunction<T> action) throws LpException {
         try (RepositoryConnection connection = repository.getConnection()) {
             return action.accept(connection);
         }
@@ -67,5 +63,4 @@ public class TestSingleGraphDataUnit
     public Repository getRepository() {
         return repository;
     }
-
 }

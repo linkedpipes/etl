@@ -3,7 +3,6 @@ package com.linkedpipes.etl.unpacker.model.executor;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.library.rdf.StatementsBuilder;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,8 +22,7 @@ public class ExecutorPort {
 
     private Integer group = null;
 
-    public ExecutorPort() {
-    }
+    public ExecutorPort() {}
 
     public void setIri(String iri) {
         this.iri = iri;
@@ -92,5 +90,4 @@ public class ExecutorPort {
     public void setGroup(Integer group) {
         this.group = group;
     }
-
 }

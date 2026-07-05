@@ -16,8 +16,7 @@ import org.slf4j.LoggerFactory;
 
 public final class JsonLdToRdfChunked implements Component, SequentialExecution {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(JsonLdToRdfChunked.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JsonLdToRdfChunked.class);
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
@@ -48,7 +47,7 @@ public final class JsonLdToRdfChunked implements Component, SequentialExecution 
                 if (configuration.isSkipOnFailure()) {
                     LOG.error("Can't load file: {}", entry.getFileName());
                 } else {
-                    throw  ex;
+                    throw ex;
                 }
             }
             ++filesCounter;
@@ -63,9 +62,9 @@ public final class JsonLdToRdfChunked implements Component, SequentialExecution 
     }
 
     private void loadEntry(FilesDataUnit.Entry entry) throws LpException {
-        StreamProcessor streamProcessor = new StreamProcessor(
-                JsonLdParser.connect(FileAwareRdf4jSink.connect(collector)));
-        try  {
+        StreamProcessor streamProcessor =
+                new StreamProcessor(JsonLdParser.connect(FileAwareRdf4jSink.connect(collector)));
+        try {
             streamProcessor.process(entry.toFile());
         } catch (Exception ex) {
             handleLoadingException(entry.getFileName(), ex);
@@ -75,15 +74,12 @@ public final class JsonLdToRdfChunked implements Component, SequentialExecution 
             collector.add(valueFactory.createStatement(
                     valueFactory.createBNode(),
                     valueFactory.createIRI(configuration.getFilePredicate()),
-                    valueFactory.createLiteral(entry.getFileName())
-            ));
+                    valueFactory.createLiteral(entry.getFileName())));
         }
     }
 
-    private void handleLoadingException(String fileName, Exception ex)
-            throws LpException {
-        throw new LpException(
-                "Can't parse file: {}", fileName, ex);
+    private void handleLoadingException(String fileName, Exception ex) throws LpException {
+        throw new LpException("Can't parse file: {}", fileName, ex);
     }
 
     private void flushBuffer() throws LpException {
@@ -93,6 +89,4 @@ public final class JsonLdToRdfChunked implements Component, SequentialExecution 
         outputRdf.submit(collector.getStatements());
         collector.clear();
     }
-
-
 }

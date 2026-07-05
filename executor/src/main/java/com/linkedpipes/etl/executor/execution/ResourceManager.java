@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.execution;
 
 import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
-
 import java.io.File;
 
 public class ResourceManager {
@@ -51,8 +50,7 @@ public class ResourceManager {
      * Resolve relative path in given execution..
      */
     public File resolveExecutionPath(String execution, String path) {
-        String executionId = execution.substring(
-                execution.indexOf("executions/") + "executions/".length());
+        String executionId = execution.substring(execution.indexOf("executions/") + "executions/".length());
         return new File(root, executionId + "/" + path);
     }
 
@@ -127,5 +125,4 @@ public class ResourceManager {
     public String relative(File path) {
         return executionRoot.toPath().relativize(path.toPath()).toString();
     }
-
 }

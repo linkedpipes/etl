@@ -91,40 +91,25 @@ public class Configuration {
     public Configuration merge(Configuration other) {
         Configuration result = new Configuration();
 
-        result.httpPort = mergeProperty(
-                httpPort, other.httpPort);
-        result.dataDirectory = mergeProperty(
-                dataDirectory, other.dataDirectory);
-        result.logDirectory = mergeProperty(
-                logDirectory, other.logDirectory);
-        result.logLevel = mergeProperty(
-                logLevel, other.logLevel);
-        result.executorUrl = mergeProperty(
-                executorUrl, other.executorUrl);
-        result.baseUrl = mergeProperty(
-                baseUrl, other.baseUrl);
-        result.publicWorkingDataUrlPrefix = mergeProperty(
-                publicWorkingDataUrlPrefix, other.publicWorkingDataUrlPrefix);
+        result.httpPort = mergeProperty(httpPort, other.httpPort);
+        result.dataDirectory = mergeProperty(dataDirectory, other.dataDirectory);
+        result.logDirectory = mergeProperty(logDirectory, other.logDirectory);
+        result.logLevel = mergeProperty(logLevel, other.logLevel);
+        result.executorUrl = mergeProperty(executorUrl, other.executorUrl);
+        result.baseUrl = mergeProperty(baseUrl, other.baseUrl);
+        result.publicWorkingDataUrlPrefix = mergeProperty(publicWorkingDataUrlPrefix, other.publicWorkingDataUrlPrefix);
 
-        result.danglingRetryLimit = mergeProperty(
-                danglingRetryLimit, other.danglingRetryLimit);
+        result.danglingRetryLimit = mergeProperty(danglingRetryLimit, other.danglingRetryLimit);
 
-        result.historyLimit = mergeProperty(
-                historyLimit, other.historyLimit);
-        result.historyHourLimit = mergeProperty(
-                historyHourLimit, other.historyHourLimit);
+        result.historyLimit = mergeProperty(historyLimit, other.historyLimit);
+        result.historyHourLimit = mergeProperty(historyHourLimit, other.historyHourLimit);
 
-        result.slackFinishedWebhook = mergeProperty(
-                slackFinishedWebhook, other.slackFinishedWebhook);
-        result.slackErrorWebhook = mergeProperty(
-                slackErrorWebhook, other.slackErrorWebhook);
+        result.slackFinishedWebhook = mergeProperty(slackFinishedWebhook, other.slackFinishedWebhook);
+        result.slackErrorWebhook = mergeProperty(slackErrorWebhook, other.slackErrorWebhook);
 
-        result.ftpCommandPort = mergeProperty(
-                ftpCommandPort, other.ftpCommandPort);
-        result.ftpDataPortsStart = mergeProperty(
-                ftpDataPortsStart, other.ftpDataPortsStart);
-        result.ftpDataPortsEnd = mergeProperty(
-                ftpDataPortsEnd, other.ftpDataPortsEnd);
+        result.ftpCommandPort = mergeProperty(ftpCommandPort, other.ftpCommandPort);
+        result.ftpDataPortsStart = mergeProperty(ftpDataPortsStart, other.ftpDataPortsStart);
+        result.ftpDataPortsEnd = mergeProperty(ftpDataPortsEnd, other.ftpDataPortsEnd);
 
         return result;
     }
@@ -132,5 +117,4 @@ public class Configuration {
     private <T> T mergeProperty(T left, T right) {
         return right == null ? left : right;
     }
-
 }

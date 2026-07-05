@@ -1,8 +1,7 @@
 package com.linkedpipes.plugin.http.apache;
 
-import org.apache.http.client.methods.HttpRequestBase;
-
 import java.net.URI;
+import org.apache.http.client.methods.HttpRequestBase;
 
 class HttpMethod extends HttpRequestBase {
 
@@ -17,5 +16,4 @@ class HttpMethod extends HttpRequestBase {
     public String getMethod() {
         return method;
     }
-
 }

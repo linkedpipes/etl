@@ -1,14 +1,13 @@
 package com.linkedpipes.plugin.transformer.excel.to.csv;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
 
 class SheetConverter {
 
@@ -38,8 +37,7 @@ class SheetConverter {
         cellConverter.setEvaluator(evaluator);
     }
 
-    public void convert(Sheet sheet, PrintStream output) throws
-            LpException {
+    public void convert(Sheet sheet, PrintStream output) throws LpException {
         this.sheet = sheet;
         this.outputStream = output;
         //
@@ -63,15 +61,13 @@ class SheetConverter {
     }
 
     private void addStaticReferences() {
-        for (ExcelToCsvConfiguration.VirtualColumn cell
-                : configuration.getVirtualColumns()) {
+        for (ExcelToCsvConfiguration.VirtualColumn cell : configuration.getVirtualColumns()) {
             virtualColumns.add(getVirtualColumnValue(sheet, cell));
             virtualNames.add(cell.getName());
         }
     }
 
-    private String getVirtualColumnValue(Sheet sheet,
-                                         ExcelToCsvConfiguration.VirtualColumn virtualColumn) {
+    private String getVirtualColumnValue(Sheet sheet, ExcelToCsvConfiguration.VirtualColumn virtualColumn) {
         Row row = sheet.getRow(virtualColumn.getRow() - 1);
         if (row == null) {
             return "";
@@ -84,8 +80,7 @@ class SheetConverter {
         if (configuration.getRowsEnd() == -1) {
             return sheet.getLastRowNum();
         } else {
-            return Math.min(configuration.getRowsEnd(),
-                    sheet.getLastRowNum());
+            return Math.min(configuration.getRowsEnd(), sheet.getLastRowNum());
         }
     }
 
@@ -116,8 +111,7 @@ class SheetConverter {
 
     private void parseRegion(int rowsEnd, int columnsStart, int columnsCount) {
         boolean firstRow = true;
-        for (int rowIndex = configuration.getRowsStart(); rowIndex <= rowsEnd;
-             ++rowIndex) {
+        for (int rowIndex = configuration.getRowsStart(); rowIndex <= rowsEnd; ++rowIndex) {
             Row row = sheet.getRow(rowIndex);
             if (row == null && configuration.isSkipEmptyRows()) {
                 continue;
@@ -196,5 +190,4 @@ class SheetConverter {
             return value.replaceAll("\"", "\"\"");
         }
     }
-
 }

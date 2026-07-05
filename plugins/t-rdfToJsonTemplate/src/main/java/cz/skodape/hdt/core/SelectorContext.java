@@ -11,11 +11,8 @@ public class SelectorContext {
 
     public final PropertySource defaultSource;
 
-    public SelectorContext(
-            Map<String, PropertySource> sources,
-            PropertySource defaultSource) {
+    public SelectorContext(Map<String, PropertySource> sources, PropertySource defaultSource) {
         this.sources = sources;
         this.defaultSource = defaultSource;
     }
-
 }

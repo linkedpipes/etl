@@ -5,15 +5,14 @@ import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
 import com.linkedpipes.etl.rdf.utils.model.RdfTriple;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
+import java.util.ArrayList;
+import java.util.List;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.util.Repositories;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * TODO Add support for RdfValue implemented by Rdf4j.
@@ -39,10 +38,7 @@ class BufferedTripleWriter implements BackendTripleWriter {
     @Override
     public void iri(String subject, String predicate, String object) {
         buffer.add(valueFactory.createStatement(
-                valueFactory.createIRI(subject),
-                valueFactory.createIRI(predicate),
-                valueFactory.createIRI(object)
-        ));
+                valueFactory.createIRI(subject), valueFactory.createIRI(predicate), valueFactory.createIRI(object)));
     }
 
     @Override
@@ -50,13 +46,11 @@ class BufferedTripleWriter implements BackendTripleWriter {
         buffer.add(valueFactory.createStatement(
                 valueFactory.createIRI(subject),
                 valueFactory.createIRI(predicate),
-                valueFactory.createLiteral(object)
-        ));
+                valueFactory.createLiteral(object)));
     }
 
     @Override
-    public void string(
-            String subject, String predicate, String object, String language) {
+    public void string(String subject, String predicate, String object, String language) {
         Value value;
         if (language == null) {
             value = valueFactory.createLiteral(object);
@@ -64,31 +58,22 @@ class BufferedTripleWriter implements BackendTripleWriter {
             value = valueFactory.createLiteral(object, language);
         }
         buffer.add(valueFactory.createStatement(
-                valueFactory.createIRI(subject),
-                valueFactory.createIRI(predicate),
-                value
-        ));
+                valueFactory.createIRI(subject), valueFactory.createIRI(predicate), value));
     }
 
     @Override
-    public void typed(
-            String subject, String predicate, String object, String type) {
+    public void typed(String subject, String predicate, String object, String type) {
         buffer.add(valueFactory.createStatement(
                 valueFactory.createIRI(subject),
                 valueFactory.createIRI(predicate),
-                valueFactory.createLiteral(object,
-                        valueFactory.createIRI(type))
-        ));
+                valueFactory.createLiteral(object, valueFactory.createIRI(type))));
     }
 
     @Override
     public void add(String subject, String predicate, BackendRdfValue value) {
         Value rdf4jValue = asRdf4jValue(value);
         buffer.add(valueFactory.createStatement(
-                valueFactory.createIRI(subject),
-                valueFactory.createIRI(predicate),
-                rdf4jValue
-        ));
+                valueFactory.createIRI(subject), valueFactory.createIRI(predicate), rdf4jValue));
     }
 
     @Override
@@ -105,11 +90,9 @@ class BufferedTripleWriter implements BackendTripleWriter {
             return valueFactory.createLiteral(value.asString());
         }
         if (type.equals(XSD.LANG_STRING)) {
-            return valueFactory.createLiteral(value.asString(),
-                    value.getLanguage());
+            return valueFactory.createLiteral(value.asString(), value.getLanguage());
         }
-        return valueFactory.createLiteral(value.asString(),
-                valueFactory.createIRI(type));
+        return valueFactory.createLiteral(value.asString(), valueFactory.createIRI(type));
     }
 
     @Override
@@ -123,5 +106,4 @@ class BufferedTripleWriter implements BackendTripleWriter {
             throw new RdfUtilsException("Can't add triples to repository.");
         }
     }
-
 }

@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import cz.skodape.hdt.model.SelectorConfiguration;
 import cz.skodape.hdt.model.TransformationFileAdapter;
 
-public class OnceSelectorAdapter
-        implements TransformationFileAdapter.SelectorConfigurationAdapter {
+public class OnceSelectorAdapter implements TransformationFileAdapter.SelectorConfigurationAdapter {
 
     private static final String TYPE = "Once";
 

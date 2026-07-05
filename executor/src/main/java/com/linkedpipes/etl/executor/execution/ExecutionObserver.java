@@ -10,25 +10,22 @@ import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import com.linkedpipes.etl.library.rdf.Statements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ExecutionObserver {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ExecutionObserver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExecutionObserver.class);
 
     private final AtomicInteger messageCounter = new AtomicInteger();
 
@@ -44,21 +41,16 @@ public class ExecutionObserver {
 
     private final ExecutionInformation information;
 
-    private final Map<ExecutionComponent, ComponentMessageWriter>
-            componentMessages = new HashMap<>();
+    private final Map<ExecutionComponent, ComponentMessageWriter> componentMessages = new HashMap<>();
 
     public ExecutionObserver(ResourceManager resourceManager, String iri) {
         this.resourceManager = resourceManager;
         this.execution = new ExecutionModel(resourceManager, iri);
         this.status = new ExecutionStatusMonitor();
-        this.overview = new ExecutionOverview(
-                resourceManager.getExecutionRoot(), iri, status);
-        this.pipelineMessages = new ExecutionMessageWriter(
-                iri, this.messageCounter,
-                resourceManager.getPipelineMessageFile());
-        this.information = new ExecutionInformation(
-                this.status, this.execution,
-                resourceManager.getExecutionFile());
+        this.overview = new ExecutionOverview(resourceManager.getExecutionRoot(), iri, status);
+        this.pipelineMessages =
+                new ExecutionMessageWriter(iri, this.messageCounter, resourceManager.getPipelineMessageFile());
+        this.information = new ExecutionInformation(this.status, this.execution, resourceManager.getExecutionFile());
     }
 
     public ExecutionModel getModel() {
@@ -75,8 +67,7 @@ public class ExecutionObserver {
         File swap = new File(file + ".swp");
         try (OutputStream stream = new FileOutputStream(swap)) {
             objectMapper.writeValue(stream, overview.toJsonLd(objectMapper));
-            Files.move(swap.toPath(), file.toPath(),
-                    StandardCopyOption.REPLACE_EXISTING);
+            Files.move(swap.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ex) {
             LOG.error("Can't save execution overview.", ex);
         }
@@ -106,8 +97,7 @@ public class ExecutionObserver {
         this.writeOverviewToDisk();
     }
 
-    public void onCantLoadComponentJar(
-            PipelineComponent pplComponent, LpException ex) {
+    public void onCantLoadComponentJar(PipelineComponent pplComponent, LpException ex) {
         // This is special case as the component is not being executed.
         ExecutionComponent component = execution.getComponent(pplComponent);
         createComponentWriter(component);
@@ -124,9 +114,7 @@ public class ExecutionObserver {
 
     private void createComponentWriter(ExecutionComponent component) {
         ComponentMessageWriter writer = new ComponentMessageWriter(
-                this.execution.getIri(),
-                this.messageCounter,
-                this.resourceManager.getComponentMessageFile(component));
+                this.execution.getIri(), this.messageCounter, this.resourceManager.getComponentMessageFile(component));
         this.componentMessages.put(component, writer);
     }
 
@@ -138,14 +126,12 @@ public class ExecutionObserver {
         createComponentWriter(component);
     }
 
-    public void onAfterComponentExecution(
-            ExecutionComponent component) throws IOException {
+    public void onAfterComponentExecution(ExecutionComponent component) throws IOException {
         this.getComponentWriter(component).save();
         removeComponentWriter(component);
     }
 
-    private ComponentMessageWriter getComponentWriter(
-            ExecutionComponent component) {
+    private ComponentMessageWriter getComponentWriter(ExecutionComponent component) {
         return this.componentMessages.get(component);
     }
 
@@ -163,8 +149,7 @@ public class ExecutionObserver {
     }
 
     public void onMapComponentBegin(ExecutionComponent component) {
-        LOG.info("onMapComponentBegin : {}",
-                component.getIri());
+        LOG.info("onMapComponentBegin : {}", component.getIri());
         this.overview.onComponentBegin();
         this.information.onComponentBegin(component);
         this.getComponentWriter(component).onComponentBegin(component);
@@ -172,28 +157,23 @@ public class ExecutionObserver {
         this.writeComponentMessagesToDisk(component);
     }
 
-    public void onMapComponentFailed(
-            ExecutionComponent component, LpException exception) {
-        LOG.error("onMapComponentFailed : {}",
-                component.getIri(), exception);
-        this.getComponentWriter(component).onComponentFailed(
-                component, exception);
+    public void onMapComponentFailed(ExecutionComponent component, LpException exception) {
+        LOG.error("onMapComponentFailed : {}", component.getIri(), exception);
+        this.getComponentWriter(component).onComponentFailed(component, exception);
         this.status.onMapComponentFailed();
         this.information.onComponentFailed(component);
         this.writeInformationToDisk();
     }
 
     public void onMapComponentSuccessful(ExecutionComponent component) {
-        LOG.info("onMapComponentSuccessful : {}",
-                component.getIri());
+        LOG.info("onMapComponentSuccessful : {}", component.getIri());
         this.overview.onComponentMapped();
         this.information.onMapComponentSuccessful(component);
         this.writeInformationToDisk();
     }
 
     public void onExecuteComponentInitializing(ExecutionComponent component) {
-        LOG.info("onExecuteComponentInitializing : {}",
-                component.getIri());
+        LOG.info("onExecuteComponentInitializing : {}", component.getIri());
         this.overview.onComponentBegin();
         this.information.onComponentBegin(component);
         this.getComponentWriter(component).onComponentBegin(component);
@@ -201,22 +181,17 @@ public class ExecutionObserver {
         this.writeComponentMessagesToDisk(component);
     }
 
-    public void onExecuteComponentFailed(
-            ExecutionComponent component, LpException exception) {
-        LOG.error("onExecuteComponentFailed : {}",
-                component.getIri(), exception);
-        this.getComponentWriter(component).onComponentFailed(
-                component, exception);
+    public void onExecuteComponentFailed(ExecutionComponent component, LpException exception) {
+        LOG.error("onExecuteComponentFailed : {}", component.getIri(), exception);
+        this.getComponentWriter(component).onComponentFailed(component, exception);
         this.status.onExecuteComponentFailed();
         this.information.onComponentFailed(component);
         this.writeInformationToDisk();
         this.writeComponentMessagesToDisk(component);
     }
 
-    public void onExecuteComponentSuccessful(
-            ExecutionComponent component, boolean cancelled) {
-        LOG.info("onExecuteComponentSuccessful : {}",
-                component.getIri());
+    public void onExecuteComponentSuccessful(ExecutionComponent component, boolean cancelled) {
+        LOG.info("onExecuteComponentSuccessful : {}", component.getIri());
         this.getComponentWriter(component).onComponentEnd(component);
         this.overview.onComponentExecuted();
         this.information.onComponentEnd(component, cancelled);
@@ -224,34 +199,26 @@ public class ExecutionObserver {
         this.writeInformationToDisk();
     }
 
-    public void onExecuteComponentCantSaveDataUnit(
-            ExecutionComponent component, LpException exception) {
-        LOG.error("onExecuteComponentFailed : {}",
-                component.getIri(), exception);
+    public void onExecuteComponentCantSaveDataUnit(ExecutionComponent component, LpException exception) {
+        LOG.error("onExecuteComponentFailed : {}", component.getIri(), exception);
         this.status.onExecuteComponentCantSaveDataUnit();
         // TODO Add message.
     }
 
     public void onComponentUserCodeBegin(ExecutionComponent component) {
-        LOG.info("onComponentUserCodeBegin : {}",
-                component.getIri());
+        LOG.info("onComponentUserCodeBegin : {}", component.getIri());
     }
 
-    public void onComponentUserCodeFailed(
-            ExecutionComponent component, Throwable throwable) {
-        LOG.info("onComponentUserCodeFailed : {}",
-                component.getIri());
+    public void onComponentUserCodeFailed(ExecutionComponent component, Throwable throwable) {
+        LOG.info("onComponentUserCodeFailed : {}", component.getIri());
     }
 
     public void onComponentUserCodeSuccessful(ExecutionComponent component) {
-        LOG.info("onComponentUserCodeSuccessful : {}",
-                component.getIri());
+        LOG.info("onComponentUserCodeSuccessful : {}", component.getIri());
     }
 
-    public void onCantCreateComponentExecutor(
-            ExecutionComponent component, LpException exception) {
-        LOG.error("onCantCreateComponentExecutor : {}",
-                component.getIri(), exception);
+    public void onCantCreateComponentExecutor(ExecutionComponent component, LpException exception) {
+        LOG.error("onCantCreateComponentExecutor : {}", component.getIri(), exception);
         this.status.onCantCreateComponentExecutor();
         // TODO Add message.
     }
@@ -330,12 +297,10 @@ public class ExecutionObserver {
         // TODO Add message.
     }
 
-    public void onCantSaveComponentMessages(
-            ExecutionComponent component, Exception exception) {
+    public void onCantSaveComponentMessages(ExecutionComponent component, Exception exception) {
         LOG.error("onCantSaveComponentMessages", exception);
         this.status.onCantSaveComponentMessages();
     }
-
 
     public void onComponentsExecutionBegin() {
         this.status.onComponentsExecutionBegin();
@@ -357,8 +322,7 @@ public class ExecutionObserver {
         return pipelineMessages;
     }
 
-    public Statements getComponentMessages(ExecutionComponent component)
-            throws IOException {
+    public Statements getComponentMessages(ExecutionComponent component) throws IOException {
         ComponentMessageWriter writer = this.componentMessages.get(component);
         if (writer != null) {
             return writer.getStatements();
@@ -371,5 +335,4 @@ public class ExecutionObserver {
         statements.file().addAll(file);
         return statements;
     }
-
 }

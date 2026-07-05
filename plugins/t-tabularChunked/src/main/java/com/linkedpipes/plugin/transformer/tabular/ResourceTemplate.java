@@ -1,11 +1,10 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Used to create resources.
@@ -16,8 +15,7 @@ public class ResourceTemplate {
 
     public static final String ROW_NUMBER_COLUMN = "$ROW_NUMBER$";
 
-    protected static final ValueFactory VALUE_FACTORY
-            = SimpleValueFactory.getInstance();
+    protected static final ValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
 
     private final StringTemplate template;
 
@@ -36,8 +34,7 @@ public class ResourceTemplate {
         }
     }
 
-    public void initialize(String tableUri, List<String> header)
-            throws InvalidTemplate {
+    public void initialize(String tableUri, List<String> header) throws InvalidTemplate {
         lastRowNumber = -1;
         if (template != null) {
             List<String> extendedHeader = new ArrayList<>(header.size() + 1);
@@ -69,5 +66,4 @@ public class ResourceTemplate {
             return resource;
         }
     }
-
 }

@@ -2,19 +2,17 @@ package com.linkedpipes.plugin.transformer.tabular;
 
 import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 /**
  * Buffered output handler.
  */
 class RdfOutput {
 
-    private final static ValueFactory VALUE_FACTORY
-            = SimpleValueFactory.getInstance();
+    private static final ValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
 
     private final WritableChunkedTriples dataUnit;
 
@@ -50,8 +48,7 @@ class RdfOutput {
     }
 
     public void submit(Resource subject, IRI predicate, Value object) {
-        buffer.add(VALUE_FACTORY.createStatement(
-                subject, predicate, object));
+        buffer.add(VALUE_FACTORY.createStatement(subject, predicate, object));
     }
 
     private void flushBuffer() throws LpException {
@@ -60,5 +57,4 @@ class RdfOutput {
         }
         buffer.clear();
     }
-
 }

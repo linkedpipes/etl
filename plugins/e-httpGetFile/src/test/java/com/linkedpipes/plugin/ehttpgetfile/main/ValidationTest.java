@@ -7,8 +7,6 @@ public class ValidationTest {
 
     @Test
     public void verifyConfigurationDescription() throws Exception {
-        (new TestConfigurationDescription())
-                .test(HttpGetFileConfiguration.class, "main");
+        (new TestConfigurationDescription()).test(HttpGetFileConfiguration.class, "main");
     }
-
 }

@@ -6,7 +6,6 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,8 +45,7 @@ public final class CouchDbLoader implements Component, SequentialExecution {
     private void initializeCouchDb() {
         couchDb = new CouchDb(configuration.getUrl());
         if (configuration.isUseAuthentication()) {
-            couchDb.setCredentials(configuration.getUserName(),
-                    configuration.getPassword());
+            couchDb.setCredentials(configuration.getUserName(), configuration.getPassword());
         }
     }
 
@@ -100,5 +98,4 @@ public final class CouchDbLoader implements Component, SequentialExecution {
             progressReport.entryProcessed();
         }
     }
-
 }

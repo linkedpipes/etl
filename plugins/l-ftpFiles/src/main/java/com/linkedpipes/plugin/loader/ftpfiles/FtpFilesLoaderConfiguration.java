@@ -70,5 +70,4 @@ public class FtpFilesLoaderConfiguration {
     public void setRetryCount(int retryCount) {
         this.retryCount = retryCount;
     }
-
 }

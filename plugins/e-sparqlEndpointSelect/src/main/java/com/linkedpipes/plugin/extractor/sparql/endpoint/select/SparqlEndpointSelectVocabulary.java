@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.extractor.sparql.endpoint.select;
 
 final class SparqlEndpointSelectVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointSelect#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -21,7 +20,5 @@ final class SparqlEndpointSelectVocabulary {
 
     public static final String HAS_PASSWORD = PREFIX + "password";
 
-    private SparqlEndpointSelectVocabulary() {
-    }
-
+    private SparqlEndpointSelectVocabulary() {}
 }

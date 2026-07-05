@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1.rdf.model;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
-
 import java.util.Calendar;
 
 public interface RdfValue {
@@ -21,5 +20,4 @@ public interface RdfValue {
     Calendar asCalendar() throws RdfException;
 
     boolean isBlankNode();
-
 }

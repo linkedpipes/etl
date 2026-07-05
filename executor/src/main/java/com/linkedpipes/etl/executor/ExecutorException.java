@@ -10,5 +10,4 @@ public class ExecutorException extends LpException {
     public ExecutorException(String messages, Object... args) {
         super(messages, args);
     }
-
 }

@@ -1,10 +1,9 @@
 package com.linkedpipes.etl.executor;
 
 import com.linkedpipes.etl.executor.cli.Configuration;
-import org.springframework.stereotype.Service;
-
 import java.io.File;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 /**
  * Wrap the configuration, as we do not provide direct access for services.
@@ -37,5 +36,4 @@ public class ConfigurationHolder {
     public List<String> getBannedJarPatterns() {
         return configuration.bannedPluginIriPatterns;
     }
-
 }

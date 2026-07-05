@@ -30,8 +30,7 @@ public class ConfigurationDescription implements Loadable {
 
     void check() throws InvalidPipelineException {
         if (describedType == null) {
-            throw new InvalidPipelineException(
-                    "Missing configuration type: {}", iri);
+            throw new InvalidPipelineException("Missing configuration type: {}", iri);
         }
     }
 

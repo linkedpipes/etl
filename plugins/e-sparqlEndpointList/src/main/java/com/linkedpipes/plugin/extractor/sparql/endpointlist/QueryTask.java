@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.extractor.sparql.endpointlist;
 
 import com.linkedpipes.etl.executor.api.v1.component.task.Task;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,5 +108,4 @@ public class QueryTask implements Task {
     public void setPassword(String password) {
         this.password = password;
     }
-
 }

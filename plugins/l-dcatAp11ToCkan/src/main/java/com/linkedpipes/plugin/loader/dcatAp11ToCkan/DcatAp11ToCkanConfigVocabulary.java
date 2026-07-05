@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.loader.dcatAp11ToCkan;
 
 public final class DcatAp11ToCkanConfigVocabulary {
 
-    private static final String PREFIX =
-            "http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/l-dcatAp11ToCkan#";
 
     public static final String CONFIG_CLASS = PREFIX + "Configuration";
 
@@ -24,5 +23,4 @@ public final class DcatAp11ToCkanConfigVocabulary {
     public static final String OVERRIDE_CKAN_ORGANIZATION = PREFIX + "overrideCkanOrganization";
 
     public static final String CKAN_ORGANIZATION = PREFIX + "ckanOrganization";
-
 }

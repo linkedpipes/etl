@@ -1,13 +1,12 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Value;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
 
 /**
  * Represent a column with a type.
@@ -21,16 +20,20 @@ class ColumnTyped extends ColumnAbstract {
      */
     private final String language;
 
-    ColumnTyped(IRI type, String language, String name, boolean required,
-            ResourceTemplate aboutUrl, UrlTemplate predicate) {
+    ColumnTyped(
+            IRI type,
+            String language,
+            String name,
+            boolean required,
+            ResourceTemplate aboutUrl,
+            UrlTemplate predicate) {
         super(name, required, aboutUrl, predicate);
         this.type = type;
         this.language = language;
     }
 
     @Override
-    public List<Resource> emit(StatementConsumer outputConsumer,
-            List<String> row, int rowNumber)
+    public List<Resource> emit(StatementConsumer outputConsumer, List<String> row, int rowNumber)
             throws LpException, MissingColumnValue {
         final Resource s = aboutUrl.getResource(row, rowNumber);
         if (s == null) {
@@ -54,5 +57,4 @@ class ColumnTyped extends ColumnAbstract {
         outputConsumer.submit(s, p, o);
         return Arrays.asList(s);
     }
-
 }

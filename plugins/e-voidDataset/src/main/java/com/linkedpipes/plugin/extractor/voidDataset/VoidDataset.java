@@ -6,6 +6,7 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.plugin.extractor.voidDataset.VoidDatasetConfiguration.LocalizedString;
+import java.util.*;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
@@ -19,8 +20,6 @@ import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.util.Repositories;
-
-import java.util.*;
 
 public class VoidDataset implements Component, SequentialExecution {
 
@@ -46,14 +45,11 @@ public class VoidDataset implements Component, SequentialExecution {
 
         String distributionIRI;
 
-        if (configuration.getGetDistributionIRIFromInput() != null &&
-                configuration.getGetDistributionIRIFromInput()) {
-            distributionIRI = querySingleResult("SELECT ?d WHERE "
-                    + "{?d a <" +
-                    VoidDatasetVocabulary.DCAT_DISTRIBUTION_CLASS + ">}", "d");
+        if (configuration.getGetDistributionIRIFromInput() != null && configuration.getGetDistributionIRIFromInput()) {
+            distributionIRI = querySingleResult(
+                    "SELECT ?d WHERE " + "{?d a <" + VoidDatasetVocabulary.DCAT_DISTRIBUTION_CLASS + ">}", "d");
             if (isBlank(distributionIRI)) {
-                throw new LpException(
-                        "Missing distribution in the input data.");
+                throw new LpException("Missing distribution in the input data.");
             }
 
         } else {
@@ -62,36 +58,27 @@ public class VoidDataset implements Component, SequentialExecution {
 
         IRI distribution = valueFactory.createIRI(distributionIRI);
 
-        addIRI(distribution, RDF.TYPE,
-                VoidDatasetVocabulary.VOID_DATASET_CLASS);
-        addIRIs(distribution, VoidDatasetVocabulary.VOID_EXAMPLE_RESOURCE,
-                configuration.getExampleResourceIRIs());
+        addIRI(distribution, RDF.TYPE, VoidDatasetVocabulary.VOID_DATASET_CLASS);
+        addIRIs(distribution, VoidDatasetVocabulary.VOID_EXAMPLE_RESOURCE, configuration.getExampleResourceIRIs());
 
         if (!isBlank(configuration.getSparqlEndpointIRI())) {
-            addIRI(distribution, VoidDatasetVocabulary.VOID_SPARQL_ENDPOINT,
-                    configuration.getSparqlEndpointIRI());
+            addIRI(distribution, VoidDatasetVocabulary.VOID_SPARQL_ENDPOINT, configuration.getSparqlEndpointIRI());
         }
 
-        if (configuration.getCopyDownloadURLsToDataDumps() != null &&
-                configuration.getCopyDownloadURLsToDataDumps()) {
-            List<Map<String, Value>> results = executeSelectQuery(
-                    "SELECT ?downloadURL WHERE { <" + distributionIRI + "> <" +
-                            VoidDatasetVocabulary.DCAT_DOWNLOAD_URL +
-                            "> ?downloadURL .}");
+        if (configuration.getCopyDownloadURLsToDataDumps() != null && configuration.getCopyDownloadURLsToDataDumps()) {
+            List<Map<String, Value>> results = executeSelectQuery("SELECT ?downloadURL WHERE { <" + distributionIRI
+                    + "> <" + VoidDatasetVocabulary.DCAT_DOWNLOAD_URL + "> ?downloadURL .}");
             List<String> downloadURLs = new LinkedList<>();
             for (Map<String, Value> result : results) {
                 downloadURLs.add(result.get("downloadURL").toString());
             }
-            addIRIs(distribution, VoidDatasetVocabulary.VOID_DATA_DUMP,
-                    downloadURLs);
+            addIRIs(distribution, VoidDatasetVocabulary.VOID_DATA_DUMP, downloadURLs);
         }
 
         // Add all triples.
-        Repositories.consume(outputRdf.getRepository(),
-                (RepositoryConnection connection) -> {
-                    connection.add(statements, outputRdf.getWriteGraph());
-                });
-
+        Repositories.consume(outputRdf.getRepository(), (RepositoryConnection connection) -> {
+            connection.add(statements, outputRdf.getWriteGraph());
+        });
     }
 
     /**
@@ -101,8 +88,7 @@ public class VoidDataset implements Component, SequentialExecution {
      * @param value
      * @param language Is not used if null.
      */
-    private void addStringIfNotBlank(IRI subject, IRI predicate, String value,
-            String language) {
+    private void addStringIfNotBlank(IRI subject, IRI predicate, String value, String language) {
         if (isBlank(value)) {
             return;
         }
@@ -112,49 +98,42 @@ public class VoidDataset implements Component, SequentialExecution {
         } else {
             object = valueFactory.createLiteral(value, language);
         }
-        statements
-                .add(valueFactory.createStatement(subject, predicate, object));
+        statements.add(valueFactory.createStatement(subject, predicate, object));
     }
 
-    private void addLocalizedString(IRI subject, IRI predicate,
-            List<LocalizedString> strings) {
+    private void addLocalizedString(IRI subject, IRI predicate, List<LocalizedString> strings) {
         for (LocalizedString s : strings) {
-            statements.add(valueFactory.createStatement(subject, predicate,
-                    valueFactory.createLiteral(s.getValue(), s.getLanguage())));
+            statements.add(valueFactory.createStatement(
+                    subject, predicate, valueFactory.createLiteral(s.getValue(), s.getLanguage())));
         }
     }
 
     private void addIRIs(IRI subject, IRI predicate, List<String> IRIs) {
         for (String s : IRIs) {
-            statements.add(valueFactory.createStatement(subject, predicate,
-                    valueFactory.createIRI(s)));
+            statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createIRI(s)));
         }
     }
 
     private void addValue(IRI subject, IRI predicate, Value value) {
         if (value != null) {
-            statements.add(valueFactory
-                    .createStatement(subject, predicate, value));
+            statements.add(valueFactory.createStatement(subject, predicate, value));
         }
     }
 
     private void addValue(IRI subject, IRI predicate, String value) {
         if (!isBlank(value)) {
-            statements.add(valueFactory.createStatement(subject, predicate,
-                    valueFactory.createLiteral(value)));
+            statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createLiteral(value)));
         }
     }
 
     private void addIRI(IRI subject, IRI predicate, String stringIRI) {
         if (!isBlank(stringIRI)) {
-            statements.add(valueFactory.createStatement(subject, predicate,
-                    valueFactory.createIRI(stringIRI)));
+            statements.add(valueFactory.createStatement(subject, predicate, valueFactory.createIRI(stringIRI)));
         }
     }
 
     private void addIRI(IRI subject, IRI predicate, IRI object) {
-        statements
-                .add(valueFactory.createStatement(subject, predicate, object));
+        statements.add(valueFactory.createStatement(subject, predicate, object));
     }
 
     private static boolean isBlank(String string) {
@@ -168,11 +147,9 @@ public class VoidDataset implements Component, SequentialExecution {
      * @param bindingName Name of property to return.
      * @return
      */
-    private String querySingleResult(final String queryAsString,
-            String bindingName) throws LpException {
+    private String querySingleResult(final String queryAsString, String bindingName) throws LpException {
         return inputDistribution.execute((connection) -> {
-            final TupleQuery preparedQuery = connection.prepareTupleQuery(
-                    QueryLanguage.SPARQL, queryAsString);
+            final TupleQuery preparedQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
             final SimpleDataset dataset = new SimpleDataset();
             dataset.addDefaultGraph(inputDistribution.getReadGraph());
             preparedQuery.setDataset(dataset);
@@ -190,12 +167,10 @@ public class VoidDataset implements Component, SequentialExecution {
         });
     }
 
-    private List<Map<String, Value>> executeSelectQuery(
-            final String queryAsString) throws LpException {
+    private List<Map<String, Value>> executeSelectQuery(final String queryAsString) throws LpException {
         return inputDistribution.execute((connection) -> {
             final List<Map<String, Value>> output = new LinkedList<>();
-            final TupleQuery preparedQuery = connection
-                    .prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
+            final TupleQuery preparedQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
             final SimpleDataset dataset = new SimpleDataset();
             dataset.addDefaultGraph(inputDistribution.getReadGraph());
             preparedQuery.setDataset(dataset);
@@ -213,5 +188,4 @@ public class VoidDataset implements Component, SequentialExecution {
             return output;
         });
     }
-
 }

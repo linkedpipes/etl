@@ -5,7 +5,6 @@ import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.Loadable;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.RDF;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,23 +30,20 @@ class ConfigurationDescription implements Loadable {
         }
 
         @Override
-        public Loadable load(String predicate, RdfValue object)
-                throws RdfException {
+        public Loadable load(String predicate, RdfValue object) throws RdfException {
             switch (predicate) {
                 case RDF.TYPE:
                     types.add(object.asString());
                     break;
                 case LP_OBJECTS.HAS_PROPERTY:
                     if (property != null) {
-                        throw new RuntimeException("Multiple <" +
-                                LP_OBJECTS.HAS_PROPERTY + "> values detected!");
+                        throw new RuntimeException("Multiple <" + LP_OBJECTS.HAS_PROPERTY + "> values detected!");
                     }
                     property = object.asString();
                     break;
                 case LP_OBJECTS.HAS_CONTROL:
                     if (control != null) {
-                        throw new RuntimeException("Multiple <" +
-                                LP_OBJECTS.HAS_CONTROL + "> values detected!");
+                        throw new RuntimeException("Multiple <" + LP_OBJECTS.HAS_CONTROL + "> values detected!");
                     }
                     control = object.asString();
                     break;
@@ -56,7 +52,6 @@ class ConfigurationDescription implements Loadable {
                         complex = true;
                     }
                     break;
-
             }
             return null;
         }
@@ -84,7 +79,6 @@ class ConfigurationDescription implements Loadable {
         public boolean isComplex() {
             return complex;
         }
-
     }
 
     private final String iri;
@@ -100,16 +94,14 @@ class ConfigurationDescription implements Loadable {
     }
 
     @Override
-    public Loadable load(String predicate, RdfValue object)
-            throws RdfException {
+    public Loadable load(String predicate, RdfValue object) throws RdfException {
         switch (predicate) {
             case RDF.TYPE:
                 types.add(object.asString());
                 break;
             case LP_OBJECTS.HAS_DESCRIBE:
                 if (referencedType != null) {
-                    throw new RuntimeException("Multiple <" +
-                            LP_OBJECTS.HAS_DESCRIBE + "> values detected!");
+                    throw new RuntimeException("Multiple <" + LP_OBJECTS.HAS_DESCRIBE + "> values detected!");
                 }
                 referencedType = object.asString();
                 break;
@@ -126,8 +118,7 @@ class ConfigurationDescription implements Loadable {
             throw new InvalidDescription("Missing description type.");
         }
         if (referencedType == null) {
-            throw new InvalidDescription(
-                    "Missing referenced type predicate.");
+            throw new InvalidDescription("Missing referenced type predicate.");
         }
         for (Member member : members) {
             member.validate();
@@ -150,5 +141,4 @@ class ConfigurationDescription implements Loadable {
         }
         throw new InvalidDescription("Missing description for <{}>", property);
     }
-
 }

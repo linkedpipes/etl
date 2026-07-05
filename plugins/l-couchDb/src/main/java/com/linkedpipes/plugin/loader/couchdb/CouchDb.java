@@ -1,23 +1,21 @@
 package com.linkedpipes.plugin.loader.couchdb;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CouchDb {
 
-    private static final String EMPTY_USER_LIST =
-            "{\"members\":{\"roles\":[]},\"admins\":{\"roles\":[]}}";
+    private static final String EMPTY_USER_LIST = "{\"members\":{\"roles\":[]},\"admins\":{\"roles\":[]}}";
 
     private static final Logger LOG = LoggerFactory.getLogger(CouchDb.class);
 
@@ -46,16 +44,14 @@ public class CouchDb {
         try {
             responseCode = executeRequest(url, "DELETE");
         } catch (IOException ex) {
-            throw new LpException("Can't delete database: {}",
-                    database, ex);
+            throw new LpException("Can't delete database: {}", database, ex);
         }
         if (responseCode == 404) {
             // Already deleted.
             return;
         }
         if (responseCode < 200 || responseCode > 299) {
-            throw new LpException(
-                    "Request failed with status: {}", responseCode);
+            throw new LpException("Request failed with status: {}", responseCode);
         }
     }
 
@@ -65,17 +61,14 @@ public class CouchDb {
         try {
             responseCode = executeRequest(url, "PUT");
         } catch (IOException ex) {
-            throw new LpException("Can't create database: {}",
-                    database, ex);
+            throw new LpException("Can't create database: {}", database, ex);
         }
         if (responseCode < 200 || responseCode > 299) {
-            throw new LpException(
-                    "Can't create database, status: {}", responseCode);
+            throw new LpException("Can't create database, status: {}", responseCode);
         }
     }
 
-    private int executeRequest(String url, String method)
-            throws IOException {
+    private int executeRequest(String url, String method) throws IOException {
         HttpURLConnection connection = null;
         try {
             connection = createHttpConnection(url, method);
@@ -102,8 +95,7 @@ public class CouchDb {
         }
     }
 
-    private HttpURLConnection createHttpConnection(String url, String method)
-            throws IOException {
+    private HttpURLConnection createHttpConnection(String url, String method) throws IOException {
         URLConnection connection = (new URL(url)).openConnection();
         connection.setRequestProperty("Accept", "*/*");
         addAuthorizationHeader(connection);
@@ -139,8 +131,7 @@ public class CouchDb {
         }
     }
 
-    private HttpURLConnection createHttpConnectionForJson(
-            String url, String method) throws IOException {
+    private HttpURLConnection createHttpConnectionForJson(String url, String method) throws IOException {
         URLConnection connection = (new URL(url)).openConnection();
         HttpURLConnection httpConnection = (HttpURLConnection) connection;
         httpConnection.setRequestMethod(method);
@@ -151,8 +142,7 @@ public class CouchDb {
         return httpConnection;
     }
 
-    public void uploadDocuments(String database, Collection<File> documents)
-            throws LpException {
+    public void uploadDocuments(String database, Collection<File> documents) throws LpException {
         String url = this.server + database + "/_bulk_docs";
         HttpURLConnection connection = null;
         try {
@@ -172,11 +162,8 @@ public class CouchDb {
         }
     }
 
-    private void writeFilesAsBulkDocument(
-            OutputStream stream, Collection<File> files) throws IOException {
-        PrintWriter writer = new PrintWriter(
-                new OutputStreamWriter(stream, StandardCharsets.UTF_8),
-                true);
+    private void writeFilesAsBulkDocument(OutputStream stream, Collection<File> files) throws IOException {
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(stream, StandardCharsets.UTF_8), true);
         writer.write("{\"docs\":[");
         writer.flush();
         boolean first = true;
@@ -211,11 +198,6 @@ public class CouchDb {
         } catch (IOException ex) {
             // Ignore.
         }
-        throw new LpException(
-                "Can't execute request, response code: {}\nResponse: {}",
-                responseCode, error);
+        throw new LpException("Can't execute request, response code: {}\nResponse: {}", responseCode, error);
     }
-
 }
-
-

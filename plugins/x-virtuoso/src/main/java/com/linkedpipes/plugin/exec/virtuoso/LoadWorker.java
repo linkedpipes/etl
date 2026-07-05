@@ -1,9 +1,8 @@
 package com.linkedpipes.plugin.exec.virtuoso;
 
+import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.Callable;
 
 class LoadWorker implements Callable<Object> {
 

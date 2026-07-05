@@ -1,12 +1,11 @@
 package com.linkedpipes.etl.executor.monitor.debug.ftp;
 
-import org.apache.ftpserver.filesystem.nativefs.impl.NativeFtpFile;
-import org.apache.ftpserver.ftplet.FtpFile;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.apache.ftpserver.filesystem.nativefs.impl.NativeFtpFile;
+import org.apache.ftpserver.ftplet.FtpFile;
 
 /**
  * Represents an abstract file.
@@ -64,8 +63,7 @@ class ReadonlyFtpFile extends NativeFtpFile {
             return null;
         }
         // Sort.
-        Arrays.sort(files,
-                (File f1, File f2) -> f1.getName().compareTo(f2.getName()));
+        Arrays.sort(files, (File f1, File f2) -> f1.getName().compareTo(f2.getName()));
         // Get the virtual name of the base directory.
         String virtualFileStr = getAbsolutePath();
         if (virtualFileStr.charAt(virtualFileStr.length() - 1) != '/') {
@@ -80,5 +78,4 @@ class ReadonlyFtpFile extends NativeFtpFile {
         }
         return Collections.unmodifiableList(Arrays.asList(virtualFiles));
     }
-
 }

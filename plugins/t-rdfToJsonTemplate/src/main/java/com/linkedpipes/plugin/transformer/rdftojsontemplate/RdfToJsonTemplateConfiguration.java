@@ -11,8 +11,7 @@ public class RdfToJsonTemplateConfiguration {
     @RdfToPojo.Property(iri = RdfToJsonTemplateVocabulary.MULTIPLE_PRIMITIVES)
     private boolean ignoreMultiplePrimitives = false;
 
-    public RdfToJsonTemplateConfiguration() {
-    }
+    public RdfToJsonTemplateConfiguration() {}
 
     public String getMapping() {
         return mapping;
@@ -29,5 +28,4 @@ public class RdfToJsonTemplateConfiguration {
     public void setIgnoreMultiplePrimitives(boolean ignoreMultiplePrimitives) {
         this.ignoreMultiplePrimitives = ignoreMultiplePrimitives;
     }
-
 }

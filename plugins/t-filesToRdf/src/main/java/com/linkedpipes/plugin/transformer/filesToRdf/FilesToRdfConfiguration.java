@@ -14,8 +14,7 @@ public class FilesToRdfConfiguration {
     @RdfToPojo.Property(iri = FilesToRdfVocabulary.HAS_SKIP_ON_FAILURE)
     private boolean skipOnFailure = false;
 
-    public FilesToRdfConfiguration() {
-    }
+    public FilesToRdfConfiguration() {}
 
     public int getCommitSize() {
         return commitSize;
@@ -40,5 +39,4 @@ public class FilesToRdfConfiguration {
     public void setSkipOnFailure(boolean skipOnFailure) {
         this.skipOnFailure = skipOnFailure;
     }
-
 }

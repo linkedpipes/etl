@@ -1,8 +1,8 @@
 package com.linkedpipes.etl.storage.template.model;
 
-//import com.linkedpipes.etl.storage.template.repository.RepositoryReference;
+// import com.linkedpipes.etl.storage.template.repository.RepositoryReference;
 //
-//public abstract class Template implements RepositoryReference {
+// public abstract class Template implements RepositoryReference {
 //
 //    public enum Type {
 //        JAR_TEMPLATE,
@@ -36,4 +36,4 @@ package com.linkedpipes.etl.storage.template.model;
 //
 //    public  abstract String getConfigurationDescription();
 //
-//}
+// }

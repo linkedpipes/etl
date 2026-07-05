@@ -4,6 +4,14 @@ import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.chunk.ChunkExecution;
 import com.linkedpipes.etl.executor.api.v1.component.chunk.ChunkTransformer;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -17,20 +25,9 @@ import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+public class FilesToRdfChunkedTransformer extends ChunkTransformer<FilesContainer, Collection<Statement>> {
 
-public class FilesToRdfChunkedTransformer
-        extends ChunkTransformer<FilesContainer, Collection<Statement>> {
-
-    protected static final Logger LOG =
-            LoggerFactory.getLogger(FilesToRdfChunkedTransformer.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(FilesToRdfChunkedTransformer.class);
 
     protected final FilesToRdfConfiguration configuration;
 
@@ -52,8 +49,7 @@ public class FilesToRdfChunkedTransformer
     }
 
     @Override
-    protected Collection<Statement> processChunk(FilesContainer filesContainer)
-            throws LpException {
+    protected Collection<Statement> processChunk(FilesContainer filesContainer) throws LpException {
         buffer.clear();
         for (FilesDataUnit.Entry entry : filesContainer.getFiles()) {
             LOG.debug("Loading: {}", entry.getFileName());
@@ -61,12 +57,10 @@ public class FilesToRdfChunkedTransformer
                 loadEntry(entry);
             } catch (Throwable ex) {
                 if (configuration.isSkipOnFailure()) {
-                    LOG.warn("Failed loading {}",
-                            entry.getFileName(), ex);
+                    LOG.warn("Failed loading {}", entry.getFileName(), ex);
                     continue;
                 }
-                throw new LpException("Failed loading file: {}",
-                        entry.getFileName(), ex);
+                throw new LpException("Failed loading file: {}", entry.getFileName(), ex);
             }
         }
         return buffer;
@@ -80,8 +74,7 @@ public class FilesToRdfChunkedTransformer
             buffer.add(valueFactory.createStatement(
                     valueFactory.createBNode(),
                     valueFactory.createIRI(configuration.getFilePredicate()),
-                    valueFactory.createLiteral(entry.getFileName())
-            ));
+                    valueFactory.createLiteral(entry.getFileName())));
         }
     }
 
@@ -91,8 +84,7 @@ public class FilesToRdfChunkedTransformer
         }
         Optional<RDFFormat> format = Rio.getParserFormatForFileName(fileName);
         if (format.isEmpty()) {
-            throw new LpException(
-                    "Can't determine format for file: {}", fileName);
+            throw new LpException("Can't determine format for file: {}", fileName);
         }
         return format.get();
     }
@@ -101,7 +93,7 @@ public class FilesToRdfChunkedTransformer
         RDFParser parser;
         try {
             parser = createParser(format);
-        } catch(RuntimeException ex) {
+        } catch (RuntimeException ex) {
             throw new LpException("Can't create parser for a file: {}", file, ex);
         }
 
@@ -130,5 +122,4 @@ public class FilesToRdfChunkedTransformer
         parser.setRDFHandler(handler);
         return parser;
     }
-
 }

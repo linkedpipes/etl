@@ -9,8 +9,7 @@ public class LanguageString {
 
     protected String language;
 
-    public LanguageString() {
-    }
+    public LanguageString() {}
 
     public LanguageString(String value, String language) {
         this.value = value;
@@ -29,5 +28,4 @@ public class LanguageString {
     public String getLanguage() {
         return language;
     }
-
 }

@@ -4,7 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.pojo.Loadable;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -61,8 +60,7 @@ public class PipelineModel implements Loadable {
     public Loadable load(String predicate, BackendRdfValue object) {
         switch (predicate) {
             case LP_PIPELINE.HAS_COMPONENT:
-                final PipelineComponent component =
-                        new PipelineComponent(object.asString());
+                final PipelineComponent component = new PipelineComponent(object.asString());
                 components.add(component);
                 return component;
             case LP_PIPELINE.HAS_CONNECTION:
@@ -90,8 +88,7 @@ public class PipelineModel implements Loadable {
     }
 
     private void sortComponents() {
-        Collections.sort(components,
-                Comparator.comparingInt(x -> x.getExecutionOrder()));
+        Collections.sort(components, Comparator.comparingInt(x -> x.getExecutionOrder()));
     }
 
     public boolean isDeleteWorkingData() {
@@ -99,12 +96,10 @@ public class PipelineModel implements Loadable {
     }
 
     public boolean isDeleteLogDataOnSuccess() {
-        return LP_PIPELINE.LOG_DELETE_ON_SUCCESS.equals(
-                executionMetadata.getLogPolicy());
+        return LP_PIPELINE.LOG_DELETE_ON_SUCCESS.equals(executionMetadata.getLogPolicy());
     }
 
     public String getLogLevel() {
         return executionMetadata.getLogLevel();
     }
-
 }

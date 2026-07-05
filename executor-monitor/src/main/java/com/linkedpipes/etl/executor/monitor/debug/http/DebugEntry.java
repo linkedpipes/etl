@@ -11,13 +11,11 @@ public abstract class DebugEntry {
     public interface CreatePublicPath {
 
         String apply(File file);
-
     }
 
     protected String contentAsJsonString = null;
 
-    public abstract DebugEntry prepareData(
-            String nameFilter, String sourceFilter, long offset, long limit)
+    public abstract DebugEntry prepareData(String nameFilter, String sourceFilter, long offset, long limit)
             throws IOException;
 
     public int getSize() {
@@ -28,5 +26,4 @@ public abstract class DebugEntry {
         byte[] content = contentAsJsonString.getBytes(StandardCharsets.UTF_8);
         outputStream.write(content);
     }
-
 }

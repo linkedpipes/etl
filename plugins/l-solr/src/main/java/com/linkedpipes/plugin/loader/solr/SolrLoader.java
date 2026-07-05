@@ -40,15 +40,10 @@ public final class SolrLoader implements Component, SequentialExecution {
     }
 
     private void initializeSolr() {
-        solr = new SolrCore(
-                configuration.getServer(), configuration.getCore());
+        solr = new SolrCore(configuration.getServer(), configuration.getCore());
 
         if (configuration.isUseAuthentication()) {
-            solr.setCredentials(
-                    configuration.getUserName(), configuration.getPassword());
+            solr.setCredentials(configuration.getUserName(), configuration.getPassword());
         }
-
-
     }
-
 }

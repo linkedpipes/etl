@@ -1,16 +1,5 @@
 package com.linkedpipes.etl.rdf.rdf4j;
 
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.repository.RepositoryConnection;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.RDFParser;
-import org.eclipse.rdf4j.rio.RDFWriter;
-import org.eclipse.rdf4j.rio.Rio;
-import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
-import org.eclipse.rdf4j.rio.helpers.ContextStatementCollector;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -26,15 +15,22 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
+import org.eclipse.rdf4j.rio.helpers.ContextStatementCollector;
 
 public class Rdf4jUtils {
 
-    private Rdf4jUtils() {
+    private Rdf4jUtils() {}
 
-    }
-
-    public static void save(Collection<Statement> statements, File file)
-            throws IOException {
+    public static void save(Collection<Statement> statements, File file) throws IOException {
         RDFFormat format = getFormat(file.getName());
         File swap = new File(file + ".swp");
         try (OutputStream stream = new FileOutputStream(swap)) {
@@ -45,12 +41,10 @@ public class Rdf4jUtils {
             }
             writer.endRDF();
         }
-        Files.move(swap.toPath(), file.toPath(),
-                StandardCopyOption.REPLACE_EXISTING);
+        Files.move(swap.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
 
-    public static ClosableRdf4jSource loadAsSource(String resourceName)
-            throws IOException {
+    public static ClosableRdf4jSource loadAsSource(String resourceName) throws IOException {
         File file = resourceToFile(resourceName);
         RDFFormat format = getFormat(resourceName);
         ClosableRdf4jSource source = Rdf4jSource.createInMemory();
@@ -64,8 +58,7 @@ public class Rdf4jUtils {
         return source;
     }
 
-    public static List<Statement> loadAsStatements(String resourceName)
-            throws IOException {
+    public static List<Statement> loadAsStatements(String resourceName) throws IOException {
         File file = resourceToFile(resourceName);
         RDFFormat format = getFormat(resourceName);
         List<Statement> statements = new LinkedList<>();
@@ -77,7 +70,6 @@ public class Rdf4jUtils {
                 public void handleStatement(Statement st) {
                     statements.add(st);
                 }
-
             });
             parser.parse(stream, "http://localhost/default");
         }
@@ -92,31 +84,27 @@ public class Rdf4jUtils {
         return format;
     }
 
-    public static boolean rdfEqual(
-            String expectedResourceFile, Collection<Statement> actual) {
+    public static boolean rdfEqual(String expectedResourceFile, Collection<Statement> actual) {
         File expectedFile = resourceToFile(expectedResourceFile);
         List<Statement> expected = loadRdfFile(expectedFile);
         return rdfEqual(expected, actual);
     }
 
     // TODO: Replace wih Models.isomorphic.
-    public static boolean rdfEqual(
-            Collection<Statement> expected, Collection<Statement> actual) {
+    public static boolean rdfEqual(Collection<Statement> expected, Collection<Statement> actual) {
         boolean areEqual = diff(actual, expected, "-");
         areEqual &= diff(expected, actual, "+");
         return areEqual;
     }
 
-    public static boolean rdfContains(
-            String expectedResourceFile, Collection<Statement> subset) {
+    public static boolean rdfContains(String expectedResourceFile, Collection<Statement> subset) {
         File expectedFile = resourceToFile(expectedResourceFile);
         List<Statement> expected = loadRdfFile(expectedFile);
         return rdfContains(expected, subset);
     }
 
     // TODO: Replace wih Models.isSubset.
-    public static boolean rdfContains(
-            Collection<Statement> expected, Collection<Statement> subset) {
+    public static boolean rdfContains(Collection<Statement> expected, Collection<Statement> subset) {
         Set<Statement> expectedSet = new HashSet();
         expectedSet.addAll(expected);
         boolean result = true;
@@ -137,8 +125,7 @@ public class Rdf4jUtils {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         URL url = loader.getResource(resourceFile);
         if (url == null) {
-            throw new RuntimeException("Required resource '"
-                    + resourceFile + "' is missing.");
+            throw new RuntimeException("Required resource '" + resourceFile + "' is missing.");
         }
         return new File(url.getPath());
     }
@@ -151,8 +138,7 @@ public class Rdf4jUtils {
         List<Statement> result = new ArrayList<>();
         try (InputStream stream = new FileInputStream(file)) {
             RDFParser parser = Rio.createParser(format);
-            parser.setRDFHandler(new ContextStatementCollector(result,
-                    SimpleValueFactory.getInstance()));
+            parser.setRDFHandler(new ContextStatementCollector(result, SimpleValueFactory.getInstance()));
             parser.parse(stream, "http://localhost/base");
         } catch (IOException ex) {
             throw new RuntimeException("Can't load file.", ex);
@@ -160,9 +146,7 @@ public class Rdf4jUtils {
         return result;
     }
 
-    private static boolean diff(
-            Collection<Statement> expected, Collection<Statement> subset,
-            String prefix) {
+    private static boolean diff(Collection<Statement> expected, Collection<Statement> subset, String prefix) {
         Set<Statement> expectedSet = new HashSet();
         expectedSet.addAll(expected);
         boolean result = true;
@@ -178,6 +162,4 @@ public class Rdf4jUtils {
         }
         return result;
     }
-
-
 }

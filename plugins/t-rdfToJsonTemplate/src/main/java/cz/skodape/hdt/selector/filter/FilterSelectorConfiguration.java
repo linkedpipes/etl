@@ -27,5 +27,4 @@ public class FilterSelectorConfiguration implements SelectorConfiguration {
     public Selector createSelector() {
         return new FilterSelector(this);
     }
-
 }

@@ -39,8 +39,7 @@ public class GraphStoreProtocolConfiguration {
     @RdfToPojo.Property(iri = GraphStoreProtocolVocabulary.HAS_REPLACE)
     private boolean replace = false;
 
-    public GraphStoreProtocolConfiguration() {
-    }
+    public GraphStoreProtocolConfiguration() {}
 
     public String getTargetGraph() {
         return targetGraph;
@@ -113,5 +112,4 @@ public class GraphStoreProtocolConfiguration {
     public void setReplace(boolean replace) {
         this.replace = replace;
     }
-
 }

@@ -3,11 +3,10 @@ package com.linkedpipes.etl.unpacker.model.template;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.model.vocabulary.RDF;
 import com.linkedpipes.etl.unpacker.rdf.Loadable;
-import org.eclipse.rdf4j.model.Value;
-
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import org.eclipse.rdf4j.model.Value;
 
 public class TemplatePort implements Loadable {
 
@@ -17,8 +16,7 @@ public class TemplatePort implements Loadable {
 
     private final List<String> requirements = new LinkedList<>();
 
-    public TemplatePort() {
-    }
+    public TemplatePort() {}
 
     @Override
     public Loadable load(String predicate, Value value) {
@@ -48,5 +46,4 @@ public class TemplatePort implements Loadable {
     public List<String> getRequirements() {
         return Collections.unmodifiableList(requirements);
     }
-
 }

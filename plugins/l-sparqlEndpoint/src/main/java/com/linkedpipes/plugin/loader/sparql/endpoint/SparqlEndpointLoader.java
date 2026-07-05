@@ -4,6 +4,9 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -20,10 +23,6 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 public class SparqlEndpointLoader implements Component, SequentialExecution {
 
     @Component.ContainsConfiguration
@@ -39,14 +38,12 @@ public class SparqlEndpointLoader implements Component, SequentialExecution {
     @Override
     public void execute() throws LpException {
         // Create repository.
-        final SPARQLRepository sparqlRepository = new SPARQLRepository(
-                configuration.getEndpoint());
+        final SPARQLRepository sparqlRepository = new SPARQLRepository(configuration.getEndpoint());
         // No action here.
         try {
             sparqlRepository.init();
         } catch (Throwable t) {
-            throw new LpException(
-                    "Can't connect to remote SPARQL.", t);
+            throw new LpException("Can't connect to remote SPARQL.", t);
         }
         try {
             clearGraph(sparqlRepository);
@@ -56,21 +53,18 @@ public class SparqlEndpointLoader implements Component, SequentialExecution {
         }
     }
 
-    private void clearGraph(SPARQLRepository sparqlRepository)
-            throws LpException {
+    private void clearGraph(SPARQLRepository sparqlRepository) throws LpException {
         try (final CloseableHttpClient client = getHttpClient()) {
             sparqlRepository.setHttpClient(client);
             if (configuration.isClearDestinationGraph()) {
-                clearGraph(sparqlRepository,
-                        configuration.getTargetGraphName());
+                clearGraph(sparqlRepository, configuration.getTargetGraphName());
             }
         } catch (IOException ex) {
             throw new LpException("Can't clear data.", ex);
         }
     }
 
-    private void loadData(SPARQLRepository sparqlRepository)
-            throws LpException {
+    private void loadData(SPARQLRepository sparqlRepository) throws LpException {
         try (final CloseableHttpClient client = getHttpClient()) {
             sparqlRepository.setHttpClient(client);
             loadDataFromRepository(sparqlRepository);
@@ -80,15 +74,11 @@ public class SparqlEndpointLoader implements Component, SequentialExecution {
     }
 
     private void loadDataFromRepository(Repository repository) {
-        final IRI remoteGraph = SimpleValueFactory.getInstance().createIRI(
-                configuration.getTargetGraphName());
+        final IRI remoteGraph = SimpleValueFactory.getInstance().createIRI(configuration.getTargetGraphName());
         try (final RepositoryConnection remote = repository.getConnection();
-             final RepositoryConnection local
-                     = outputRdf.getRepository().getConnection()) {
-            final RepositoryResult<Statement> result = local.getStatements(
-                    null, null, null, outputRdf.getReadGraph());
-            final List<Statement> toAdd
-                    = new ArrayList<>(configuration.getCommitSize());
+                final RepositoryConnection local = outputRdf.getRepository().getConnection()) {
+            final RepositoryResult<Statement> result = local.getStatements(null, null, null, outputRdf.getReadGraph());
+            final List<Statement> toAdd = new ArrayList<>(configuration.getCommitSize());
             while (result.hasNext()) {
                 toAdd.add(result.next());
                 if (toAdd.size() >= configuration.getCommitSize()) {
@@ -103,24 +93,18 @@ public class SparqlEndpointLoader implements Component, SequentialExecution {
 
     private static void clearGraph(Repository repository, String graph) {
         try (RepositoryConnection connection = repository.getConnection()) {
-            final Update update = connection.prepareUpdate(QueryLanguage.SPARQL,
-                    "CLEAR GRAPH <" + graph + ">");
+            final Update update = connection.prepareUpdate(QueryLanguage.SPARQL, "CLEAR GRAPH <" + graph + ">");
             update.execute();
         }
     }
 
     private CloseableHttpClient getHttpClient() {
-        final CredentialsProvider credsProvider =
-                new BasicCredentialsProvider();
+        final CredentialsProvider credsProvider = new BasicCredentialsProvider();
         if (configuration.isUseAuthentication()) {
             credsProvider.setCredentials(
                     new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
-                    new UsernamePasswordCredentials(
-                            configuration.getUserName(),
-                            configuration.getPassword()));
+                    new UsernamePasswordCredentials(configuration.getUserName(), configuration.getPassword()));
         }
-        return HttpClients.custom()
-                .setDefaultCredentialsProvider(credsProvider).build();
+        return HttpClients.custom().setDefaultCredentialsProvider(credsProvider).build();
     }
-
 }

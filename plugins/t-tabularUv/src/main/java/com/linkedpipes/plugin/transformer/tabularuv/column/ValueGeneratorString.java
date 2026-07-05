@@ -1,10 +1,9 @@
 package com.linkedpipes.plugin.transformer.tabularuv.column;
 
+import java.util.List;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
-
-import java.util.List;
 
 /**
  * Generate values as string with language tag or without it if not specified.
@@ -33,5 +32,4 @@ public class ValueGeneratorString extends ValueGeneratorReplace {
             return valueFactory.createLiteral(rawResult);
         }
     }
-
 }

@@ -16,8 +16,7 @@ class MapComponent implements ComponentExecutor {
 
     private final ExecutionComponent execComponent;
 
-    public MapComponent(ExecutionObserver execution,
-            ExecutionComponent execComponent) {
+    public MapComponent(ExecutionObserver execution, ExecutionComponent execComponent) {
         this.execution = execution;
         this.execComponent = execComponent;
     }
@@ -34,5 +33,4 @@ class MapComponent implements ComponentExecutor {
         execution.onMapComponentSuccessful(execComponent);
         return true;
     }
-
 }

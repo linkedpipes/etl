@@ -3,8 +3,6 @@ package com.linkedpipes.etl.executor.api.v1.component.task;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
@@ -38,7 +36,6 @@ class TaskSource<T extends Task> {
         public Map<Thread, LocalTime> nextExecutionTimes = new HashMap<>();
 
         public int numberOfFailedTasks = 0;
-
     }
 
     private static final int SLEEP_TIME_MS = 100;
@@ -64,11 +61,12 @@ class TaskSource<T extends Task> {
 
     private final Map<String, TaskGroup<T>> groups;
 
-    TaskSource(Component.Context context,
-               ProgressReport progressReport,
-               ReportWriter reportWriter,
-               TaskExecutionConfiguration configuration,
-               Collection<T> tasks) {
+    TaskSource(
+            Component.Context context,
+            ProgressReport progressReport,
+            ReportWriter reportWriter,
+            TaskExecutionConfiguration configuration,
+            Collection<T> tasks) {
         this.context = context;
         this.progressReport = progressReport;
         this.reportWriter = reportWriter;
@@ -79,9 +77,7 @@ class TaskSource<T extends Task> {
     private Map<String, TaskGroup<T>> splitTasksToGroups(Collection<T> tasks) {
         Map<String, TaskGroup<T>> result = new HashMap<>();
         tasks.forEach((T task) -> {
-            TaskGroup<T> group = result.computeIfAbsent(
-                    task.getGroup(),
-                    (x) -> new TaskGroup<>());
+            TaskGroup<T> group = result.computeIfAbsent(task.getGroup(), (x) -> new TaskGroup<>());
             group.tasksForExecution.add(new TaskWrap<>(task));
         });
         return result;
@@ -129,8 +125,7 @@ class TaskSource<T extends Task> {
         for (var entry : groups.entrySet()) {
             TaskGroup<T> group = entry.getValue();
             // Check number of running tasks.
-            if (group.runningTasks.size()
-                    >= configuration.numberOfThreadsPerGroup) {
+            if (group.runningTasks.size() >= configuration.numberOfThreadsPerGroup) {
                 areThereRunningOrWaitingTasks = true;
                 continue;
             }
@@ -142,16 +137,14 @@ class TaskSource<T extends Task> {
             // There are waiting tasks.
             areThereRunningOrWaitingTasks = true;
             // Check next execution time for the group.
-            LocalTime nextExecutionTime =
-                    group.nextExecutionTimes.get(Thread.currentThread());
+            LocalTime nextExecutionTime = group.nextExecutionTimes.get(Thread.currentThread());
             if (nextExecutionTime != null && nextExecutionTime.isAfter(now)) {
                 continue;
             }
             // Search for task to execute.
             for (TaskWrap<T> task : group.tasksForExecution) {
                 // Check for next execution time.
-                if (task.nextExecutionTime != null
-                    && task.nextExecutionTime.isAfter(now)) {
+                if (task.nextExecutionTime != null && task.nextExecutionTime.isAfter(now)) {
                     continue;
                 }
                 // We have the task for execution.
@@ -162,8 +155,7 @@ class TaskSource<T extends Task> {
                 continue;
             }
             // Update the group.
-            group.runningTasks.put(
-                    taskForExecution.task.getIri(), taskForExecution);
+            group.runningTasks.put(taskForExecution.task.getIri(), taskForExecution);
             group.tasksForExecution.remove(taskForExecution);
             break;
         }
@@ -205,8 +197,7 @@ class TaskSource<T extends Task> {
         if (configuration.waitAfterTaskMs == 0) {
             return;
         }
-        LocalTime nextTime = LocalTime.now()
-                .plus(configuration.waitAfterTaskMs, ChronoUnit.MILLIS);
+        LocalTime nextTime = LocalTime.now().plus(configuration.waitAfterTaskMs, ChronoUnit.MILLIS);
         group.nextExecutionTimes.put(Thread.currentThread(), nextTime);
     }
 
@@ -224,16 +215,14 @@ class TaskSource<T extends Task> {
                 }
                 // Report progress.
                 progressReport.entryProcessed();
-                reportWriter.onTaskFailed(
-                        task, wrap.executionStart, new Date(), exception);
+                reportWriter.onTaskFailed(task, wrap.executionStart, new Date(), exception);
                 return;
             }
             // We should retry the task.
             ++wrap.numerOfFailedAttempts;
             if (configuration.waitAfterFailedTaskMs > 0) {
                 // Set next execution time.
-                wrap.nextExecutionTime = LocalTime.now().plus(
-                        configuration.waitAfterFailedTaskMs, ChronoUnit.MILLIS);
+                wrap.nextExecutionTime = LocalTime.now().plus(configuration.waitAfterFailedTaskMs, ChronoUnit.MILLIS);
             }
             // Return it back for execution from running.
             group.tasksForExecution.add(wrap);
@@ -248,5 +237,4 @@ class TaskSource<T extends Task> {
         }
         return false;
     }
-
 }

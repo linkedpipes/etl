@@ -15,6 +15,12 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -24,17 +30,9 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 public final class JsonLdToRdfTitanium implements Component, SequentialExecution {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(JsonLdToRdfTitanium.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JsonLdToRdfTitanium.class);
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
@@ -77,17 +75,14 @@ public final class JsonLdToRdfTitanium implements Component, SequentialExecution
         try (InputStream stream = new FileInputStream(entry.toFile())) {
             jsonDocument = JsonDocument.of(stream);
         } catch (IOException | JsonLdError ex) {
-            throw new LpException(
-                    "Can't load file as JSON.", entry.getFileName(), ex);
+            throw new LpException("Can't load file as JSON.", entry.getFileName(), ex);
         }
         ToRdfApi toRdfApi = new ToRdfApi(jsonDocument);
         RdfDataset rdfDocument;
         try {
             rdfDocument = toRdfApi.get();
         } catch (JsonLdError ex) {
-            throw new LpException(
-                    "Can't convert JSON to JSON-LD.",
-                    entry.getFileName(), ex);
+            throw new LpException("Can't convert JSON to JSON-LD.", entry.getFileName(), ex);
         }
         List<Statement> statements = new ArrayList<>();
         for (RdfNQuad rdfNQuad : rdfDocument.toList()) {
@@ -101,14 +96,10 @@ public final class JsonLdToRdfTitanium implements Component, SequentialExecution
 
     private Statement asRdf4jStatement(RdfNQuad quad) throws LpException {
         return valueFactory.createStatement(
-                asRdf4jResource(quad.getSubject()),
-                asRdf4jIri(quad.getPredicate()),
-                asRdf4jValue(quad.getObject())
-        );
+                asRdf4jResource(quad.getSubject()), asRdf4jIri(quad.getPredicate()), asRdf4jValue(quad.getObject()));
     }
 
-    private Resource asRdf4jResource(RdfResource rdfResource)
-            throws LpException {
+    private Resource asRdf4jResource(RdfResource rdfResource) throws LpException {
         String value = rdfResource.getValue();
         if (rdfResource.isIRI()) {
             return valueFactory.createIRI(value);
@@ -117,7 +108,6 @@ public final class JsonLdToRdfTitanium implements Component, SequentialExecution
             return valueFactory.createBNode(value);
         }
         throw new LpException("Can not cast '{}' to resource.", value);
-
     }
 
     private IRI asRdf4jIri(RdfResource rdfResource) throws LpException {
@@ -143,11 +133,8 @@ public final class JsonLdToRdfTitanium implements Component, SequentialExecution
             if (language.isPresent()) {
                 return valueFactory.createLiteral(value, language.get());
             }
-            return valueFactory.createLiteral(value,
-                    valueFactory.createIRI(type));
+            return valueFactory.createLiteral(value, valueFactory.createIRI(type));
         }
         throw new LpException("Can not cast '{}' to value.", value);
-
     }
-
 }

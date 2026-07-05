@@ -1,9 +1,8 @@
 package com.linkedpipes.etl.storage;
 
 import com.linkedpipes.etl.storage.cli.Configuration;
-import org.springframework.stereotype.Service;
-
 import java.io.File;
+import org.springframework.stereotype.Service;
 
 /**
  * Wrap the configuration, as we do not provide direct access for services.
@@ -36,5 +35,4 @@ public class ConfigurationHolder {
     public String getExecutorMonitorUrl() {
         return configuration.executorMonitorUrl;
     }
-
 }

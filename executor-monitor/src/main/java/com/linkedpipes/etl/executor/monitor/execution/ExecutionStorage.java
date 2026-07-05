@@ -11,14 +11,6 @@ import com.linkedpipes.etl.executor.monitor.executor.ExecutionSource;
 import com.linkedpipes.etl.executor.monitor.executor.Executor;
 import com.linkedpipes.etl.executor.monitor.executor.ExecutorEventListener;
 import com.linkedpipes.etl.library.rdf.Statements;
-import org.apache.commons.io.FileUtils;
-import org.eclipse.rdf4j.model.Statement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,16 +24,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import org.apache.commons.io.FileUtils;
+import org.eclipse.rdf4j.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Responsible for storing information about existing executions.
  */
 @Service
-class ExecutionStorage
-        implements ExecutionSource, ExecutorEventListener {
+class ExecutionStorage implements ExecutionSource, ExecutorEventListener {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(ExecutionStorage.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExecutionStorage.class);
 
     private static final int TOMBSTONE_TTL = 5 * 60;
 
@@ -80,9 +77,7 @@ class ExecutionStorage
         if (directory.mkdirs()) {
             return directory;
         }
-        throw new MonitorException(
-                "Execution working directory does not exists and we fail " +
-                        "to create it.");
+        throw new MonitorException("Execution working directory does not exists and we fail " + "to create it.");
     }
 
     private Execution loadExecutionForFirstTime(File directory) {
@@ -136,8 +131,7 @@ class ExecutionStorage
 
     private void updateDebugData(Execution execution) throws MonitorException {
         ExecutionLoader executionLoader = new ExecutionLoader();
-        updateExecutionDebugData(
-                execution, executionLoader.loadStatements(execution));
+        updateExecutionDebugData(execution, executionLoader.loadStatements(execution));
     }
 
     public List<Execution> getExecutions() {
@@ -199,8 +193,7 @@ class ExecutionStorage
         try {
             (new LoadOverview()).load(execution);
         } catch (MonitorException ex) {
-            LOG.error("Can't update execution overview for: {}",
-                    execution.getId(), ex);
+            LOG.error("Can't update execution overview for: {}", execution.getId(), ex);
         }
         if (ExecutionStatus.QUEUED == execution.getStatus()) {
             // We have only the overview.
@@ -209,8 +202,7 @@ class ExecutionStorage
         try {
             updateDebugData(execution);
         } catch (MonitorException ex) {
-            LOG.error("Can't update debug data for: {}",
-                    execution.getId(), ex);
+            LOG.error("Can't update debug data for: {}", execution.getId(), ex);
         }
         if (oldStatus != execution.getStatus()) {
             eventListener.onExecutionStatusDidChange(execution, oldStatus);
@@ -232,19 +224,16 @@ class ExecutionStorage
     /**
      * Updates only from execution data (debug data).
      */
-    public void updateExecutionDebugData(
-            Execution execution, Statements statements) {
+    public void updateExecutionDebugData(Execution execution, Statements statements) {
         execution.setDebugData(DebugDataFactory.create(execution, statements));
     }
 
-    public Execution createExecution(
-            Collection<Statement> pipeline, List<MultipartFile> inputs)
+    public Execution createExecution(Collection<Statement> pipeline, List<MultipartFile> inputs)
             throws MonitorException {
         String uuid = createExecutionGuid();
         File directory = new File(configuration.getWorkingDirectory(), uuid);
         try {
-            ExecutionFactory.prepareExecutionInDirectory(
-                    directory, pipeline, inputs);
+            ExecutionFactory.prepareExecutionInDirectory(directory, pipeline, inputs);
         } catch (MonitorException ex) {
             deleteDirectory(directory);
             throw ex;
@@ -278,9 +267,7 @@ class ExecutionStorage
         // Clear statements that we do not need any more.
         execution.setPipelineStatements(Collections.emptyList());
         OverviewFactory overviewFactory = new OverviewFactory();
-        updateFromOverview(
-                execution,
-                overviewFactory.createDeleted(execution, new Date()));
+        updateFromOverview(execution, overviewFactory.createDeleted(execution, new Date()));
         this.directoriesToDelete.add(execution.getDirectory());
     }
 
@@ -303,8 +290,7 @@ class ExecutionStorage
     }
 
     private boolean shouldUpdate(Execution execution) {
-        if (execution.getStatus() == ExecutionStatus.DELETED
-                || execution.getStatus() == ExecutionStatus.INVALID) {
+        if (execution.getStatus() == ExecutionStatus.DELETED || execution.getStatus() == ExecutionStatus.INVALID) {
             return false;
         }
         return !execution.isHasFinalData();
@@ -390,13 +376,11 @@ class ExecutionStorage
         updateFromOverview(execution, overview);
     }
 
-    public Execution cloneAsNewExecution(Execution source)
-            throws MonitorException {
+    public Execution cloneAsNewExecution(Execution source) throws MonitorException {
         String uuid = createExecutionGuid();
         File directory = new File(configuration.getWorkingDirectory(), uuid);
         try {
-            ExecutionFactory.cloneExecution(
-                    source.getDirectory(), directory);
+            ExecutionFactory.cloneExecution(source.getDirectory(), directory);
         } catch (MonitorException ex) {
             deleteDirectory(directory);
             throw ex;
@@ -407,5 +391,4 @@ class ExecutionStorage
         }
         return execution;
     }
-
 }

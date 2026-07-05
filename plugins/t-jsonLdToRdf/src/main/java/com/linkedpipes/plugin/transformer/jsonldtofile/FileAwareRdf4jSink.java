@@ -1,5 +1,6 @@
 package com.linkedpipes.plugin.transformer.jsonldtofile;
 
+import java.util.Date;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
@@ -12,8 +13,6 @@ import org.semarglproject.rdf.ParseException;
 import org.semarglproject.rdf4j.core.sink.RDF4JSink;
 import org.semarglproject.sink.QuadSink;
 import org.semarglproject.vocab.RDF;
-
-import java.util.Date;
 
 public class FileAwareRdf4jSink implements QuadSink {
 
@@ -35,41 +34,28 @@ public class FileAwareRdf4jSink implements QuadSink {
 
     protected Resource convertNonLiteral(String arg) {
         if (arg.startsWith(RDF.BNODE_PREFIX)) {
-            return valueFactory.createBNode(
-                    blankNodeFilePrefix + arg.substring(2));
+            return valueFactory.createBNode(blankNodeFilePrefix + arg.substring(2));
         }
         return valueFactory.createIRI(arg);
     }
 
     @Override
     public final void addNonLiteral(String s, String p, String o) {
-        addTriple(
-                convertNonLiteral(s),
-                valueFactory.createIRI(p),
-                convertNonLiteral(o));
+        addTriple(convertNonLiteral(s), valueFactory.createIRI(p), convertNonLiteral(o));
     }
 
     @Override
-    public final void addPlainLiteral(
-            String s, String p, String content, String lang) {
+    public final void addPlainLiteral(String s, String p, String content, String lang) {
         if (lang == null) {
-            addTriple(
-                    convertNonLiteral(s),
-                    valueFactory.createIRI(p),
-                    valueFactory.createLiteral(content));
+            addTriple(convertNonLiteral(s), valueFactory.createIRI(p), valueFactory.createLiteral(content));
         } else {
-            addTriple(
-                    convertNonLiteral(s),
-                    valueFactory.createIRI(p),
-                    valueFactory.createLiteral(content, lang));
+            addTriple(convertNonLiteral(s), valueFactory.createIRI(p), valueFactory.createLiteral(content, lang));
         }
     }
 
     @Override
-    public final void addTypedLiteral(
-            String s, String p, String content, String type) {
-        Literal literal = valueFactory.createLiteral(
-                content, valueFactory.createIRI(type));
+    public final void addTypedLiteral(String s, String p, String content, String type) {
+        Literal literal = valueFactory.createLiteral(content, valueFactory.createIRI(type));
         addTriple(convertNonLiteral(s), valueFactory.createIRI(p), literal);
     }
 
@@ -86,17 +72,12 @@ public class FileAwareRdf4jSink implements QuadSink {
         if (graph == null) {
             addNonLiteral(s, p, o);
         } else {
-            addQuad(
-                    convertNonLiteral(s),
-                    valueFactory.createIRI(p),
-                    convertNonLiteral(o),
-                    convertNonLiteral(graph));
+            addQuad(convertNonLiteral(s), valueFactory.createIRI(p), convertNonLiteral(o), convertNonLiteral(graph));
         }
     }
 
     @Override
-    public final void addPlainLiteral(
-            String s, String p, String content, String lang, String graph) {
+    public final void addPlainLiteral(String s, String p, String content, String lang, String graph) {
         if (graph == null) {
             addPlainLiteral(s, p, content, lang);
         } else {
@@ -117,25 +98,18 @@ public class FileAwareRdf4jSink implements QuadSink {
     }
 
     @Override
-    public final void addTypedLiteral(
-            String s, String p, String content, String type, String graph) {
+    public final void addTypedLiteral(String s, String p, String content, String type, String graph) {
         if (graph == null) {
             addTypedLiteral(s, p, content, type);
         } else {
-            Literal literal = valueFactory.createLiteral(
-                    content, valueFactory.createIRI(type));
-            addQuad(
-                    convertNonLiteral(s),
-                    valueFactory.createIRI(p),
-                    literal,
-                    convertNonLiteral(graph));
+            Literal literal = valueFactory.createLiteral(content, valueFactory.createIRI(type));
+            addQuad(convertNonLiteral(s), valueFactory.createIRI(p), literal, convertNonLiteral(graph));
         }
     }
 
     protected void addQuad(Resource s, IRI p, Value o, Resource graph) {
         try {
-            handler.handleStatement(
-                    valueFactory.createStatement(s, p, o, graph));
+            handler.handleStatement(valueFactory.createStatement(s, p, o, graph));
         } catch (RDFHandlerException e) {
             throw new RuntimeException(e);
         }
@@ -161,11 +135,9 @@ public class FileAwareRdf4jSink implements QuadSink {
 
     @Override
     public boolean setProperty(String key, Object value) {
-        if (RDF4JSink.RDF_HANDLER_PROPERTY.equals(key)
-                && value instanceof RDFHandler) {
+        if (RDF4JSink.RDF_HANDLER_PROPERTY.equals(key) && value instanceof RDFHandler) {
             handler = (RDFHandler) value;
-        } else if (RDF4JSink.VALUE_FACTORY_PROPERTY.equals(key)
-                && value instanceof ValueFactory) {
+        } else if (RDF4JSink.VALUE_FACTORY_PROPERTY.equals(key) && value instanceof ValueFactory) {
             valueFactory = (ValueFactory) value;
         } else {
             return false;
@@ -174,7 +146,5 @@ public class FileAwareRdf4jSink implements QuadSink {
     }
 
     @Override
-    public void setBaseUri(String baseUri) {
-    }
-
+    public void setBaseUri(String baseUri) {}
 }

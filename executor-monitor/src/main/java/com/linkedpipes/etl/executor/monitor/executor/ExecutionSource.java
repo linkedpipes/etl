@@ -3,7 +3,6 @@ package com.linkedpipes.etl.executor.monitor.executor;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.linkedpipes.etl.executor.monitor.MonitorException;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
-
 import java.util.Collection;
 
 public interface ExecutionSource {
@@ -13,5 +12,4 @@ public interface ExecutionSource {
     Execution getExecution(JsonNode overview) throws MonitorException;
 
     Execution getExecution(Executor executor);
-
 }

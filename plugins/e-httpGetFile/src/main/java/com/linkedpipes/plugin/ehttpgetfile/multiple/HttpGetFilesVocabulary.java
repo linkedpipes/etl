@@ -2,15 +2,11 @@ package com.linkedpipes.plugin.ehttpgetfile.multiple;
 
 public final class HttpGetFilesVocabulary {
 
-    public static final String IRI =
-            "http://etl.linkedpipes.com/resources/components/e-httpGetFiles/" +
-                    "0.0.0";
+    public static final String IRI = "http://etl.linkedpipes.com/resources/components/e-httpGetFiles/" + "0.0.0";
 
-    private HttpGetFilesVocabulary() {
-    }
+    private HttpGetFilesVocabulary() {}
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/e-httpGetFiles#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/e-httpGetFiles#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -24,11 +20,9 @@ public final class HttpGetFilesVocabulary {
 
     public static final String SKIP_ON_ERROR = PREFIX + "skipOnError";
 
-    public static final String HAS_FOLLOW_REDIRECT
-            = PREFIX + "hardRedirect";
+    public static final String HAS_FOLLOW_REDIRECT = PREFIX + "hardRedirect";
 
-    public static final String HAS_UTF8_REDIRECT
-            = PREFIX + "utf8Redirect";
+    public static final String HAS_UTF8_REDIRECT = PREFIX + "utf8Redirect";
 
     public static final String HAS_HEADER = PREFIX + "header";
 
@@ -46,8 +40,7 @@ public final class HttpGetFilesVocabulary {
 
     public static final String HAS_GROUP = PREFIX + "group";
 
-    public static final String HAS_THREADS_PER_GROUP =
-            PREFIX + "threadsPerGroup";
+    public static final String HAS_THREADS_PER_GROUP = PREFIX + "threadsPerGroup";
 
     public static final String HAS_HEADER_OBJECT = PREFIX + "hasHeaderObject";
 
@@ -66,5 +59,4 @@ public final class HttpGetFilesVocabulary {
     public static final String HAS_RETRY_TIME = PREFIX + "retryWaitTime";
 
     public static final String HAS_WAIT_TIME = PREFIX + "waitTime";
-
 }

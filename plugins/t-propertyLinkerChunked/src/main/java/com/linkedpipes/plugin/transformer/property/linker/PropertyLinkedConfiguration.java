@@ -11,8 +11,7 @@ public class PropertyLinkedConfiguration {
     @RdfToPojo.Property(iri = PropertyLinkerVocabulary.HAS_DATA_PREDICATE)
     private String dataPredicate;
 
-    public PropertyLinkedConfiguration() {
-    }
+    public PropertyLinkedConfiguration() {}
 
     public String getChunkPredicate() {
         return chunkPredicate;
@@ -29,5 +28,4 @@ public class PropertyLinkedConfiguration {
     public void setDataPredicate(String dataPredicate) {
         this.dataPredicate = dataPredicate;
     }
-
 }

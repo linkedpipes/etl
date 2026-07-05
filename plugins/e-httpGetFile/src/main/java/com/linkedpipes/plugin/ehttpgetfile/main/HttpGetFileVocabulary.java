@@ -2,12 +2,9 @@ package com.linkedpipes.plugin.ehttpgetfile.main;
 
 public final class HttpGetFileVocabulary {
 
-    public static final String IRI =
-            "http://etl.linkedpipes.com/resources/components/e-httpGetFile/" +
-                    "0.0.0";
+    public static final String IRI = "http://etl.linkedpipes.com/resources/components/e-httpGetFile/" + "0.0.0";
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/e-httpGetFile#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/e-httpGetFile#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -23,7 +20,5 @@ public final class HttpGetFileVocabulary {
 
     public static final String ENCODE_URL = PREFIX + "encodeUrl";
 
-    private HttpGetFileVocabulary() {
-    }
-
+    private HttpGetFileVocabulary() {}
 }

@@ -35,8 +35,7 @@ public final class SparqlConstruct implements Component, SequentialExecution {
     }
 
     private void checkConfiguration() throws LpException {
-        if (configuration.getQuery() == null
-                || configuration.getQuery().isEmpty()) {
+        if (configuration.getQuery() == null || configuration.getQuery().isEmpty()) {
             throw new LpException("Missing query.");
         }
     }
@@ -54,8 +53,7 @@ public final class SparqlConstruct implements Component, SequentialExecution {
 
     private GraphQueryResult executeQuery(RepositoryConnection connection) {
         final String queryAsString = configuration.getQuery();
-        GraphQuery query = connection.prepareGraphQuery(
-                QueryLanguage.SPARQL, queryAsString);
+        GraphQuery query = connection.prepareGraphQuery(QueryLanguage.SPARQL, queryAsString);
         query.setDataset(createDataset());
         return query.evaluate();
     }
@@ -68,10 +66,7 @@ public final class SparqlConstruct implements Component, SequentialExecution {
 
     private void addResultToOutput(GraphQueryResult result) throws LpException {
         outputRdf.execute((connection) -> {
-            connection.add(
-                    (Iterable<? extends Statement>) result,
-                    outputRdf.getWriteGraph());
+            connection.add((Iterable<? extends Statement>) result, outputRdf.getWriteGraph());
         });
     }
-
 }

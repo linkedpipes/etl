@@ -17,10 +17,8 @@ public class ExecutorProfile {
 
     public void write(StatementsBuilder builder) {
         // TODO Add class for ExecutionProfile
-        builder.addIri(
-                iri, LP_PIPELINE.HAS_RDF_REPOSITORY_POLICY, repositoryPolicy);
-        builder.addIri(
-                iri, LP_PIPELINE.HAS_RDF_REPOSITORY_TYPE, repositoryType);
+        builder.addIri(iri, LP_PIPELINE.HAS_RDF_REPOSITORY_POLICY, repositoryPolicy);
+        builder.addIri(iri, LP_PIPELINE.HAS_RDF_REPOSITORY_TYPE, repositoryType);
     }
 
     public String getIri() {
@@ -34,5 +32,4 @@ public class ExecutorProfile {
     public void setRepositoryType(String repositoryType) {
         this.repositoryType = repositoryType;
     }
-
 }

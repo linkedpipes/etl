@@ -28,5 +28,4 @@ public class OperationFailed extends Exception {
     public String getMessage() {
         return MessageFormatter.arrayFormat(message, args).getMessage();
     }
-
 }

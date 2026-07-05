@@ -2,11 +2,9 @@ package com.linkedpipes.plugin.extractor.ftpfiles;
 
 public final class FtpFilesVocabulary {
 
-    private FtpFilesVocabulary() {
-    }
+    private FtpFilesVocabulary() {}
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/e-ftpFiles#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/e-ftpFiles#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -22,7 +20,5 @@ public final class FtpFilesVocabulary {
 
     public static final String HAS_BINARY_MODE = PREFIX + "binaryMode";
 
-    public static final String HAS_KEEP_ALIVE_CONTROL
-            = PREFIX + "keepAliveControl";
-
+    public static final String HAS_KEEP_ALIVE_CONTROL = PREFIX + "keepAliveControl";
 }

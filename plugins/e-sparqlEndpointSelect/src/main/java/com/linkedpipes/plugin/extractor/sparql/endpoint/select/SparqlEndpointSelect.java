@@ -5,6 +5,13 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.IDN;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -24,23 +31,13 @@ import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.IDN;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Execute given sparql query at the remote repository and save
  * the result as a file.
  */
-public final class SparqlEndpointSelect implements Component,
-        SequentialExecution {
+public final class SparqlEndpointSelect implements Component, SequentialExecution {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(SparqlEndpointSelect.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SparqlEndpointSelect.class);
 
     @Component.InputPort(iri = "OutputFiles")
     public WritableFilesDataUnit outputFiles;
@@ -56,15 +53,11 @@ public final class SparqlEndpointSelect implements Component,
 
     @Override
     public void execute() throws LpException {
-        if (configuration.getEndpoint() == null
-                || configuration.getEndpoint().isEmpty()) {
-            throw new LpException("Missing property: {}",
-                    SparqlEndpointSelectVocabulary.HAS_ENDPOINT);
+        if (configuration.getEndpoint() == null || configuration.getEndpoint().isEmpty()) {
+            throw new LpException("Missing property: {}", SparqlEndpointSelectVocabulary.HAS_ENDPOINT);
         }
-        if (configuration.getQuery() == null
-                || configuration.getQuery().isEmpty()) {
-            throw new LpException("Missing property: {}",
-                    SparqlEndpointSelectVocabulary.HAS_QUERY);
+        if (configuration.getQuery() == null || configuration.getQuery().isEmpty()) {
+            throw new LpException("Missing property: {}", SparqlEndpointSelectVocabulary.HAS_QUERY);
         }
         //
         final SPARQLRepository repository = new SPARQLRepository(getEndpoint());
@@ -83,8 +76,7 @@ public final class SparqlEndpointSelect implements Component,
         }
         repository.setHttpClient(getHttpClient());
         //
-        final File outputFile = outputFiles.createFile(
-                configuration.getFileName());
+        final File outputFile = outputFiles.createFile(configuration.getFileName());
         try {
             queryRemote(repository, outputFile, configuration.getQuery());
         } catch (Throwable t) {
@@ -104,25 +96,18 @@ public final class SparqlEndpointSelect implements Component,
         return tokens[0] + "://" + IDN.toASCII(url[0]) + "/" + url[1];
     }
 
-    public void queryRemote(SPARQLRepository repository, File outputFile,
-            String queryAsString) throws LpException {
-        final SPARQLResultsCSVWriterFactory writerFactory =
-                new SPARQLResultsCSVWriterFactory();
-        try (RepositoryConnection remoteConnection
-                     = repository.getConnection()) {
-            final TupleQuery query = remoteConnection.prepareTupleQuery(
-                    QueryLanguage.SPARQL,
-                    queryAsString);
+    public void queryRemote(SPARQLRepository repository, File outputFile, String queryAsString) throws LpException {
+        final SPARQLResultsCSVWriterFactory writerFactory = new SPARQLResultsCSVWriterFactory();
+        try (RepositoryConnection remoteConnection = repository.getConnection()) {
+            final TupleQuery query = remoteConnection.prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
             // Construct dataset.
             final SimpleDataset dataset = new SimpleDataset();
             for (String iri : configuration.getDefaultGraphs()) {
                 dataset.addDefaultGraph(valueFactory.createIRI(iri));
             }
             query.setDataset(dataset);
-            try (final OutputStream outputStream
-                         = new FileOutputStream(outputFile)) {
-                final TupleQueryResultWriter resultWriter
-                        = writerFactory.getWriter(outputStream);
+            try (final OutputStream outputStream = new FileOutputStream(outputFile)) {
+                final TupleQueryResultWriter resultWriter = writerFactory.getWriter(outputStream);
                 query.evaluate(resultWriter);
             } catch (IOException ex) {
                 throw new LpException("Can't save data.", ex);
@@ -135,12 +120,8 @@ public final class SparqlEndpointSelect implements Component,
         if (configuration.isUseAuthentication()) {
             provider.setCredentials(
                     new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
-                    new UsernamePasswordCredentials(
-                            configuration.getUsername(),
-                            configuration.getPassword()));
+                    new UsernamePasswordCredentials(configuration.getUsername(), configuration.getPassword()));
         }
-        return HttpClients.custom()
-                .setDefaultCredentialsProvider(provider).build();
+        return HttpClients.custom().setDefaultCredentialsProvider(provider).build();
     }
-
 }

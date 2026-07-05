@@ -3,6 +3,12 @@ package com.linkedpipes.etl.dataunit.core;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
+import java.util.Calendar;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
@@ -13,13 +19,6 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.net.URL;
-import java.util.Calendar;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Rdf4jSource implements RdfSource {
 
@@ -70,8 +69,7 @@ public class Rdf4jSource implements RdfSource {
         @Override
         public Calendar asCalendar() {
             if (this.value instanceof Literal) {
-                return ((Literal) this.value)
-                        .calendarValue().toGregorianCalendar();
+                return ((Literal) this.value).calendarValue().toGregorianCalendar();
             }
             return null;
         }
@@ -96,11 +94,9 @@ public class Rdf4jSource implements RdfSource {
     }
 
     public File fileFromResource(String fileName) {
-        URL url = Thread.currentThread().getContextClassLoader()
-                .getResource(fileName);
+        URL url = Thread.currentThread().getContextClassLoader().getResource(fileName);
         if (url == null) {
-            throw new RuntimeException(
-                    "Required resource '" + fileName + "' is missing.");
+            throw new RuntimeException("Required resource '" + fileName + "' is missing.");
         }
         return new File(url.getPath());
     }
@@ -108,8 +104,7 @@ public class Rdf4jSource implements RdfSource {
     @Override
     public List<String> getByType(String type) {
         ValueFactory valueFactory = SimpleValueFactory.getInstance();
-        return model.filter(null, RDF.TYPE, valueFactory.createIRI(type))
-                .stream()
+        return model.filter(null, RDF.TYPE, valueFactory.createIRI(type)).stream()
                 .map((statement -> statement.getSubject().stringValue()))
                 .collect(Collectors.toList());
     }
@@ -120,15 +115,12 @@ public class Rdf4jSource implements RdfSource {
     }
 
     @Override
-    public void statements(String subject, StatementHandler handler)
-            throws RdfException {
+    public void statements(String subject, StatementHandler handler) throws RdfException {
         for (Statement statement : model) {
             if (!statement.getSubject().stringValue().equals(subject)) {
                 continue;
             }
-            handler.accept(statement.getPredicate().stringValue(),
-                    new Rdf4jValue(statement.getObject()));
+            handler.accept(statement.getPredicate().stringValue(), new Rdf4jValue(statement.getObject()));
         }
     }
-
 }

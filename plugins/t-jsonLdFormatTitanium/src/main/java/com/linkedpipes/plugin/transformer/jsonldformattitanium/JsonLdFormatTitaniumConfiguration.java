@@ -14,8 +14,7 @@ public class JsonLdFormatTitaniumConfiguration {
     @RdfToPojo.Property(iri = JsonLdFormatTitaniumVocabulary.HAS_FRAME)
     private String frame;
 
-    public JsonLdFormatTitaniumConfiguration() {
-    }
+    public JsonLdFormatTitaniumConfiguration() {}
 
     public String getFormat() {
         return format;
@@ -40,5 +39,4 @@ public class JsonLdFormatTitaniumConfiguration {
     public void setFrame(String frame) {
         this.frame = frame;
     }
-
 }

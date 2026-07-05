@@ -7,20 +7,18 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Optional;
 import org.eclipse.rdf4j.rio.*;
 import org.eclipse.rdf4j.rio.helpers.JSONLDSettings;
 import org.eclipse.rdf4j.rio.jsonld.JSONLDParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.Optional;
-
 public final class FilesToRdfGraph implements Component, SequentialExecution {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(FilesToRdfGraph.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FilesToRdfGraph.class);
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
@@ -54,8 +52,7 @@ public final class FilesToRdfGraph implements Component, SequentialExecution {
         if (mimeType == null || mimeType.isEmpty()) {
             defaultFormat = null;
         } else {
-            Optional<RDFFormat> format = Rio.getParserFormatForMIMEType(
-                    configuration.getMimeType());
+            Optional<RDFFormat> format = Rio.getParserFormatForMIMEType(configuration.getMimeType());
             if (format.isPresent()) {
                 defaultFormat = format.get();
             } else {
@@ -101,8 +98,7 @@ public final class FilesToRdfGraph implements Component, SequentialExecution {
         }
         Optional<RDFFormat> format = Rio.getParserFormatForFileName(fileName);
         if (!format.isPresent()) {
-            throw new LpException(
-                    "Can't determine format for file: {}", fileName);
+            throw new LpException("Can't determine format for file: {}", fileName);
         }
         return format.get();
     }
@@ -118,14 +114,11 @@ public final class FilesToRdfGraph implements Component, SequentialExecution {
         return rdfParser;
     }
 
-    private void handleLoadingException(String fileName, Exception ex)
-            throws LpException {
+    private void handleLoadingException(String fileName, Exception ex) throws LpException {
         if (configuration.isSkipOnFailure()) {
             LOG.error("Can't parse file: {}", fileName, ex);
         } else {
-            throw new LpException(
-                    "Can't parse file: {}", fileName, ex);
+            throw new LpException("Can't parse file: {}", fileName, ex);
         }
     }
-
 }

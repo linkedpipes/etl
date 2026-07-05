@@ -8,8 +8,7 @@ public class PackZipConfiguration {
     @RdfToPojo.Property(iri = PackZipVocabulary.HAS_FILE_NAME)
     private String fileName;
 
-    public PackZipConfiguration() {
-    }
+    public PackZipConfiguration() {}
 
     public String getFileName() {
         return fileName;
@@ -18,5 +17,4 @@ public class PackZipConfiguration {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
-
 }

@@ -4,13 +4,11 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 import com.linkedpipes.etl.model.vocabulary.SKOS;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-
 
 public class ExecutorPipeline {
 
@@ -38,8 +36,7 @@ public class ExecutorPipeline {
         writer.add(iri, SKOS.PREF_LABEL, label);
         writer.addIri(iri, LP_EXEC.HAS_METADATA, executorMetadata.getIri());
         executorMetadata.write(writer);
-        writer.addIri(
-                iri, LP_EXEC.HAS_EXECUTION_PROFILE, executorProfile.getIri());
+        writer.addIri(iri, LP_EXEC.HAS_EXECUTION_PROFILE, executorProfile.getIri());
         executorProfile.write(writer);
         for (ExecutorComponent component : components) {
             writer.addIri(iri, LP_PIPELINE.HAS_COMPONENT, component.getIri());
@@ -54,12 +51,9 @@ public class ExecutorPipeline {
 
     private void writeStatic(StatementsBuilder builder) {
         String sesameIri = "http://localhost/repository/sesame";
-        builder.addIri(iri, "http://linkedpipes.com/ontology/repository",
-                sesameIri);
+        builder.addIri(iri, "http://linkedpipes.com/ontology/repository", sesameIri);
         builder.addType(sesameIri, LP_PIPELINE.RDF_REPOSITORY);
-        builder.addIri(
-                sesameIri, LP_PIPELINE.HAS_REQUIREMENT,
-                LP_PIPELINE.HAS_REQ_WORKING);
+        builder.addIri(sesameIri, LP_PIPELINE.HAS_REQUIREMENT, LP_PIPELINE.HAS_REQ_WORKING);
     }
 
     /**

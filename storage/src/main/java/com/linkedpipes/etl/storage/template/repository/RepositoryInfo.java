@@ -5,7 +5,6 @@ import com.linkedpipes.etl.library.template.reference.model.ReferenceTemplate;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.template.repository.file.FileTemplateRepository;
 import com.linkedpipes.etl.storage.template.repository.legacy.LegacyTemplateRepository;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -20,8 +19,7 @@ record RepositoryInfo(
         /*
          * Template repository type.
          */
-        String templateRepository
-) {
+        String templateRepository) {
 
     public void save(File file) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -32,8 +30,7 @@ record RepositoryInfo(
      * Create new info with the latest version.
      */
     public static RepositoryInfo createNew() {
-        return new RepositoryInfo(ReferenceTemplate.VERSION,
-                FileTemplateRepository.NAME);
+        return new RepositoryInfo(ReferenceTemplate.VERSION, FileTemplateRepository.NAME);
     }
 
     public static RepositoryInfo load(File file) throws StorageException {
@@ -41,9 +38,7 @@ record RepositoryInfo(
         try {
             return mapper.readValue(file, RepositoryInfo.class);
         } catch (IOException ex) {
-            throw new StorageException(
-                    "Can't read repository info file '{}'.",
-                    file, ex);
+            throw new StorageException("Can't read repository info file '{}'.", file, ex);
         }
     }
 
@@ -53,5 +48,4 @@ record RepositoryInfo(
     public static RepositoryInfo createV0() {
         return new RepositoryInfo(0, LegacyTemplateRepository.NAME);
     }
-
 }

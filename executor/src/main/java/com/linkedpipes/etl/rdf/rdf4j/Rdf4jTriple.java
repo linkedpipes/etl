@@ -26,5 +26,4 @@ class Rdf4jTriple implements RdfTriple {
     public BackendRdfValue getObject() {
         return new Rdf4jValue(statement.getObject());
     }
-
 }

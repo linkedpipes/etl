@@ -7,8 +7,6 @@ import com.linkedpipes.etl.unpacker.model.executor.ExecutorComponent;
 import com.linkedpipes.etl.unpacker.model.executor.ExecutorPort;
 import com.linkedpipes.etl.unpacker.model.template.JarTemplate;
 import com.linkedpipes.etl.unpacker.model.template.TemplatePort;
-
-import java.util.Arrays;
 import java.util.List;
 
 class JarExpander {
@@ -23,9 +21,8 @@ class JarExpander {
         this.templateSource = templateSource;
     }
 
-    public ExecutorComponent expand(
-            String iri, List<String> configurations,
-            JarTemplate template) throws StorageException {
+    public ExecutorComponent expand(String iri, List<String> configurations, JarTemplate template)
+            throws StorageException {
 
         component = new ExecutorComponent();
         component.setIri(iri);
@@ -35,7 +32,6 @@ class JarExpander {
 
         mergeConfigurations(template, configurations);
 
-
         return component;
     }
 
@@ -44,8 +40,7 @@ class JarExpander {
         component.setTemplate(template.getIri());
         component.setRequirements(template.getRequirements());
         component.setTypes(List.of(LP_PIPELINE.COMPONENT));
-        component.setConfigDescriptionGraph(
-                template.getConfigDescriptionGraph());
+        component.setConfigDescriptionGraph(template.getConfigDescriptionGraph());
         copyPorts(template);
     }
 
@@ -66,9 +61,7 @@ class JarExpander {
         return newPort;
     }
 
-    private void mergeConfigurations(
-            JarTemplate template,
-            List<String> configurations) throws StorageException {
+    private void mergeConfigurations(JarTemplate template, List<String> configurations) throws StorageException {
         if (configurations.isEmpty()) {
             if (template.getConfigGraph() != null) {
                 copyConfigurationFromTemplate(template);
@@ -78,27 +71,21 @@ class JarExpander {
         }
     }
 
-    private void copyConfigurationFromTemplate(JarTemplate template)
-            throws StorageException {
+    private void copyConfigurationFromTemplate(JarTemplate template) throws StorageException {
         String configIri = component.getIri() + "/configuration";
         component.setConfigGraph(configIri);
 
         ConfigurationMerger merger = createMerger(template);
-        merger.copyConfigurationGraphs(
-                template.getConfigGraph(), configIri);
+        merger.copyConfigurationGraphs(template.getConfigGraph(), configIri);
     }
 
-    private ConfigurationMerger createMerger(JarTemplate template)
-            throws StorageException {
-        ConfigurationMerger merger = new ConfigurationMerger(
-                graphs, templateSource);
+    private ConfigurationMerger createMerger(JarTemplate template) throws StorageException {
+        ConfigurationMerger merger = new ConfigurationMerger(graphs, templateSource);
         merger.loadTemplateConfigAndDescription(template);
         return merger;
     }
 
-    private void mergeWithTemplate(
-            JarTemplate template, List<String> configurations)
-            throws StorageException {
+    private void mergeWithTemplate(JarTemplate template, List<String> configurations) throws StorageException {
         ConfigurationMerger merger = createMerger(template);
         configurations.add(template.getConfigGraph());
         merger.merge(template, configurations, component.getConfigGraph());
@@ -107,5 +94,4 @@ class JarExpander {
     public void setGraphs(GraphCollection graphs) {
         this.graphs = graphs;
     }
-
 }

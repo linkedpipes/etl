@@ -7,5 +7,4 @@ public class MissingResource extends MonitorException {
     public MissingResource(String message, Object... args) {
         super(message, args);
     }
-
 }

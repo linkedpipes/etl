@@ -5,6 +5,9 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.plugin.http.apache.HttpRequest;
 import com.linkedpipes.plugin.http.apache.RequestExecutor;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 import org.apache.http.HttpResponse;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
@@ -13,14 +16,9 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-
 class TaskExecutor implements TaskConsumer<HttpRequestTask> {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(TaskExecutor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TaskExecutor.class);
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
@@ -45,15 +43,11 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
 
     @Override
     public void accept(HttpRequestTask task) throws LpException {
-        LOG.info("Executing '{}' on '{}' to '{}'",
-                task.getMethod(),
-                task.getUrl(),
-                task.getOutputFileName());
+        LOG.info("Executing '{}' on '{}' to '{}'", task.getMethod(), task.getUrl(), task.getOutputFileName());
         var requestConfiguration = createConfiguration(task);
         var reportResource = createReportResource(task);
-        var executor = new RequestExecutor(
-                requestConfiguration,
-                response -> handleResponse(task, reportResource, response));
+        var executor =
+                new RequestExecutor(requestConfiguration, response -> handleResponse(task, reportResource, response));
         try {
             executor.execute();
         } catch (IOException ex) {
@@ -70,14 +64,16 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         });
         result.timeout = task.getTimeOut();
         result.contentAsBody = task.isPostContentAsBody();
-        result.content = task.getContent().stream().map(item -> {
-            var content = new HttpRequest.Content();
-            content.file = inputFilesMap.get(item.getFileReference());
-            content.value = item.getValue();
-            content.name = item.getName();
-            content.fileName = item.getFileName();
-            return content;
-        }).toList();
+        result.content = task.getContent().stream()
+                .map(item -> {
+                    var content = new HttpRequest.Content();
+                    content.file = inputFilesMap.get(item.getFileReference());
+                    content.value = item.getValue();
+                    content.name = item.getName();
+                    content.fileName = item.getFileName();
+                    return content;
+                })
+                .toList();
         result.encodeUrl = encodeUrl;
         if (task.isFollowRedirect()) {
             result.followRedirect = true;
@@ -89,12 +85,9 @@ class TaskExecutor implements TaskConsumer<HttpRequestTask> {
         return valueFactory.createIRI(task.deriveIri("report"));
     }
 
-    public void handleResponse(
-            HttpRequestTask task, Resource reportResource,
-            HttpResponse response) throws LpException {
-        var handler = new ResponseHandler(
-                outputFiles, statementsWriter, task, reportResource);
+    public void handleResponse(HttpRequestTask task, Resource reportResource, HttpResponse response)
+            throws LpException {
+        var handler = new ResponseHandler(outputFiles, statementsWriter, task, reportResource);
         handler.apply(response);
     }
-
 }

@@ -7,14 +7,13 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Chunked version of SPARQL construct. Perform the construct operation
@@ -22,11 +21,9 @@ import java.util.concurrent.TimeUnit;
  *
  * TODO: Use the same vocabulary as SPARQL construct.
  */
-public final class SparqlConstructChunked implements Component,
-        SequentialExecution {
+public final class SparqlConstructChunked implements Component, SequentialExecution {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(SparqlConstructChunked.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SparqlConstructChunked.class);
 
     @Component.InputPort(iri = "InputRdf")
     public ChunkedTriples inputRdf;
@@ -52,8 +49,7 @@ public final class SparqlConstructChunked implements Component,
     public void execute() throws LpException {
         checkConfiguration();
         createExecutors();
-        ExecutorService executor = Executors.newFixedThreadPool(
-                configuration.getNumberOfThreads());
+        ExecutorService executor = Executors.newFixedThreadPool(configuration.getNumberOfThreads());
 
         progressReport.start(inputRdf.size());
         startThreads(executor);
@@ -64,14 +60,13 @@ public final class SparqlConstructChunked implements Component,
     }
 
     private void createExecutors() {
-        executorManager = new ExecutorManager(
-                inputRdf, outputRdf, progressReport);
+        executorManager = new ExecutorManager(inputRdf, outputRdf, progressReport);
         for (int i = 0; i < configuration.getNumberOfThreads(); ++i) {
-            SparqlConstructExecutor constructExecutor =
-                    new SparqlConstructExecutor(executorManager,
-                            configuration.getQuery(),
-                            configuration.isUseDeduplication(),
-                            configuration.isSkipOnFailure());
+            SparqlConstructExecutor constructExecutor = new SparqlConstructExecutor(
+                    executorManager,
+                    configuration.getQuery(),
+                    configuration.isUseDeduplication(),
+                    configuration.isSkipOnFailure());
             executors.add(constructExecutor);
         }
     }
@@ -79,8 +74,7 @@ public final class SparqlConstructChunked implements Component,
     private void checkConfiguration() throws LpException {
         String query = configuration.getQuery();
         if (query == null || query.isEmpty()) {
-            throw new LpException("Missing property: {}",
-                    SparqlConstructVocabulary.HAS_QUERY);
+            throw new LpException("Missing property: {}", SparqlConstructVocabulary.HAS_QUERY);
         }
     }
 
@@ -108,10 +102,8 @@ public final class SparqlConstructChunked implements Component,
     private void checkExecutorsStatus() throws LpException {
         for (SparqlConstructExecutor constructExecutor : executors) {
             if (constructExecutor.isFailed()) {
-                throw new LpException(
-                        "At least one construct failed. See logs for more info.");
+                throw new LpException("At least one construct failed. See logs for more info.");
             }
         }
     }
-
 }

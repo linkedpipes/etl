@@ -4,16 +4,17 @@ import com.linkedpipes.etl.executor.ConfigurationHolder;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.PipelineExecutionObserver;
-import com.linkedpipes.etl.executor.plugin.v1.PluginV1Instance;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnitFactory;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.pipeline.Pipeline;
 import com.linkedpipes.etl.executor.plugin.osgi.OsgiPluginService;
 import com.linkedpipes.etl.executor.plugin.v1.PluginV1Holder;
+import com.linkedpipes.etl.executor.plugin.v1.PluginV1Instance;
 import com.linkedpipes.etl.executor.rdf.RdfSourceWrap;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -25,15 +26,11 @@ import org.springframework.context.event.ContextStoppedEvent;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class PluginServiceHolder
-        implements ApplicationListener<ApplicationEvent> {
+public class PluginServiceHolder implements ApplicationListener<ApplicationEvent> {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(PluginServiceHolder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PluginServiceHolder.class);
 
     private final ConfigurationHolder configuration;
 
@@ -41,44 +38,36 @@ public class PluginServiceHolder
 
     private final OsgiPluginService osgi = new OsgiPluginService();
 
-    public PluginServiceHolder(
-            ConfigurationHolder configuration,
-            AbstractApplicationContext springContext) {
+    public PluginServiceHolder(ConfigurationHolder configuration, AbstractApplicationContext springContext) {
         this.configuration = configuration;
         this.springContext = springContext;
     }
 
-    public Collection<PipelineExecutionObserver> getPipelineListeners()
-            throws ExecutorException {
+    public Collection<PipelineExecutionObserver> getPipelineListeners() throws ExecutorException {
         return osgi.getPipelineListeners();
     }
 
-    public PluginV1Instance getComponent(Pipeline pipeline, String component)
-            throws ExecutorException {
+    public PluginV1Instance getComponent(Pipeline pipeline, String component) throws ExecutorException {
         String template = getComponentTemplateIri(pipeline, component);
         checkIfBundleIsAllowed(template);
         PluginHolder pluginHolder = osgi.getPlugin(template);
         if (pluginHolder instanceof PluginV1Holder v1Holder) {
             return v1Holder.createInstance(pipeline, component);
         }
-        throw new ExecutorException("Unknown plugin holder '{}'.",
-                pluginHolder.getClass().getName());
+        throw new ExecutorException(
+                "Unknown plugin holder '{}'.", pluginHolder.getClass().getName());
     }
 
-    private String getComponentTemplateIri(Pipeline pipeline, String component)
-            throws ExecutorException {
-        String query = getComponentTemplateQuery(
-                component, pipeline.getPipelineGraph());
+    private String getComponentTemplateIri(Pipeline pipeline, String component) throws ExecutorException {
+        String query = getComponentTemplateQuery(component, pipeline.getPipelineGraph());
         try {
-            return RdfUtils.sparqlSelectSingle(
-                    pipeline.getSource(), query, "iri");
+            return RdfUtils.sparqlSelectSingle(pipeline.getSource(), query, "iri");
         } catch (RdfUtilsException ex) {
             throw new ExecutorException("Can't load component jar path.", ex);
         }
     }
 
-    private static String getComponentTemplateQuery(
-            String component, String graph) {
+    private static String getComponentTemplateQuery(String component, String graph) {
         return "SELECT ?iri WHERE { GRAPH <" + graph + "> { "
                 + " <" + component + "> <" + LP_PIPELINE.HAS_TEMPLATE
                 + "> ?iri }}";
@@ -92,25 +81,23 @@ public class PluginServiceHolder
         }
     }
 
-    public ManageableDataUnit getDataUnit(Pipeline pipeline, String subject)
-            throws ExecutorException {
-        RdfSourceWrap source = new RdfSourceWrap(
-                pipeline.getSource(), pipeline.getPipelineGraph());
+    public ManageableDataUnit getDataUnit(Pipeline pipeline, String subject) throws ExecutorException {
+        RdfSourceWrap source = new RdfSourceWrap(pipeline.getSource(), pipeline.getPipelineGraph());
         for (DataUnitFactory factory : osgi.getDataUnitFactories()) {
             try {
-                ManageableDataUnit dataUnit = factory.create(
-                        subject, pipeline.getPipelineGraph(), source);
+                ManageableDataUnit dataUnit = factory.create(subject, pipeline.getPipelineGraph(), source);
                 if (dataUnit != null) {
                     return dataUnit;
                 }
             } catch (LpException ex) {
-                LOG.error("Can't create data unit '{}' with '{}'.",
-                        subject, factory.getClass().getName(), ex);
+                LOG.error(
+                        "Can't create data unit '{}' with '{}'.",
+                        subject,
+                        factory.getClass().getName(),
+                        ex);
             }
         }
-        throw new ExecutorException(
-                "No factory can instantiate required data unit '{}'.",
-                subject);
+        throw new ExecutorException("No factory can instantiate required data unit '{}'.", subject);
     }
 
     @Override
@@ -140,5 +127,4 @@ public class PluginServiceHolder
     private void stop() {
         osgi.stopService();
     }
-
 }

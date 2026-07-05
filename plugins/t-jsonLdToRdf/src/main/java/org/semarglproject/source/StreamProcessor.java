@@ -15,13 +15,12 @@
  */
 package org.semarglproject.source;
 
+import java.io.InputStream;
+import java.io.Reader;
 import org.semarglproject.rdf.ParseException;
 import org.semarglproject.sink.DataSink;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-
-import java.io.InputStream;
-import java.io.Reader;
 
 /**
  * Simple pipeline managing wrapper. Automatically instantiates source appropriate for specified sink.
@@ -96,11 +95,10 @@ public final class StreamProcessor extends BaseStreamProcessor {
                     ((XmlSource) source).setXmlReader((XMLReader) value);
                     result = true;
                 }
-            } catch(SAXException e) {
+            } catch (SAXException e) {
                 throw new IllegalArgumentException("XMLReader was not able to be initialized", e);
             }
         }
         return sink.setProperty(key, value) || result;
     }
-
 }

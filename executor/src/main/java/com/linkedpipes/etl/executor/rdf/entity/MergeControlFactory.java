@@ -8,5 +8,4 @@ public interface MergeControlFactory {
      * Return control for object of given type.
      */
     MergeControl create(String type) throws RdfUtilsException;
-
 }

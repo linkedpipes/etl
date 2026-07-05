@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.transformer.bingtranslator;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,8 +25,7 @@ public class BingTranslatorConfiguration {
     @RdfToPojo.Property(iri = BingTranslatorVocabulary.HAS_USE_BCP47)
     private boolean useBCP47 = false;
 
-    public BingTranslatorConfiguration() {
-    }
+    public BingTranslatorConfiguration() {}
 
     public String getSubscriptionKey() {
         return subscriptionKey;

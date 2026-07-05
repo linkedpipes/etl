@@ -8,8 +8,7 @@ public class FilesFromLocalConfiguration {
     @RdfToPojo.Property(iri = FilesFromLocalVocabulary.HAS_PATH)
     private String path;
 
-    public FilesFromLocalConfiguration() {
-    }
+    public FilesFromLocalConfiguration() {}
 
     public String getPath() {
         return path;
@@ -18,5 +17,4 @@ public class FilesFromLocalConfiguration {
     public void setPath(String path) {
         this.path = path;
     }
-
 }

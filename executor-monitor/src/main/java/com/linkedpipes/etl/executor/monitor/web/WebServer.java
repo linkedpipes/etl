@@ -2,6 +2,9 @@ package com.linkedpipes.etl.executor.monitor.web;
 
 import com.linkedpipes.etl.executor.monitor.ConfigurationHolder;
 import jakarta.servlet.MultipartConfigElement;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -21,10 +24,6 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 @Service
 class WebServer implements ApplicationListener<ApplicationEvent> {
 
@@ -39,9 +38,7 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
     private Server server = null;
 
     @Autowired
-    public WebServer(
-            ConfigurationHolder configuration,
-            AbstractApplicationContext appContext) {
+    public WebServer(ConfigurationHolder configuration, AbstractApplicationContext appContext) {
         this.configuration = configuration;
         this.appContext = appContext;
     }
@@ -81,8 +78,7 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
     }
 
     private void buildServer() throws IOException {
-        LOG.info("Starting web server on port: {}",
-                configuration.getWebServerPort());
+        LOG.info("Starting web server on port: {}", configuration.getWebServerPort());
         //
         ServletContextHandler handler = new ServletContextHandler();
         handler.setErrorHandler(null);
@@ -108,10 +104,7 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
         long maxRequestSize = 32 * 1024 * 1024;
         int writeToDiskFileSizeThreshold = 2 * 1024 * 1024;
         MultipartConfigElement multipartConfig = new MultipartConfigElement(
-                uploadDirectory.toString(),
-                maxFileSize,
-                maxRequestSize,
-                writeToDiskFileSizeThreshold);
+                uploadDirectory.toString(), maxFileSize, maxRequestSize, writeToDiskFileSizeThreshold);
         servlet.getRegistration().setMultipartConfig(multipartConfig);
         //
         server.addConnector(http);
@@ -124,5 +117,4 @@ class WebServer implements ApplicationListener<ApplicationEvent> {
         threadPool.setName("web-server");
         return threadPool;
     }
-
 }

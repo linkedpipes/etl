@@ -7,10 +7,10 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,10 +27,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Iterator;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 public class XmlToChunks implements Component, SequentialExecution {
 
@@ -73,20 +72,15 @@ public class XmlToChunks implements Component, SequentialExecution {
         progressReport.done();
     }
 
-
     private void initializeProperties() throws LpException {
-        DocumentBuilderFactory builderFactory =
-                DocumentBuilderFactory.newInstance();
-        TransformerFactory transformerFactory =
-                TransformerFactory.newInstance();
+        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
         try {
             docBuilder = builderFactory.newDocumentBuilder();
             document = docBuilder.newDocument();
             transformer = transformerFactory.newTransformer();
-        } catch (ParserConfigurationException |
-                TransformerConfigurationException ex) {
-            throw new LpException(
-                    "Can't load XML document builder.", ex);
+        } catch (ParserConfigurationException | TransformerConfigurationException ex) {
+            throw new LpException("Can't load XML document builder.", ex);
         }
     }
 
@@ -96,31 +90,26 @@ public class XmlToChunks implements Component, SequentialExecution {
             eventReader = inFactory.createXMLEventReader(new FileReader(input));
             splitXmlFile(entry.getFileName());
         } catch (IOException ex) {
-            throw new LpException(
-                    "Can't write output to file.", ex);
+            throw new LpException("Can't write output to file.", ex);
         } catch (XMLStreamException ex) {
-            throw new LpException(
-                    "Exception when parsing XML. ", ex);
+            throw new LpException("Exception when parsing XML. ", ex);
         } catch (TransformerException ex) {
-            throw new LpException(
-                    "Exception when transforming XML. ", ex);
+            throw new LpException("Exception when transforming XML. ", ex);
         }
     }
 
-    private void splitXmlFile(String inputFileName) throws
-            LpException, XMLStreamException, IOException, TransformerException {
+    private void splitXmlFile(String inputFileName)
+            throws LpException, XMLStreamException, IOException, TransformerException {
         Node context = document;
         int bytes = 0;
-        int maximumChunkSize = configuration.getChunk_size() * 1024 ; //* 1024;
+        int maximumChunkSize = configuration.getChunk_size() * 1024; // * 1024;
         while (eventReader.hasNext()) {
             XMLEvent event = eventReader.nextEvent();
             bytes = bytes + event.toString().length();
 
-            boolean tooBig  = bytes > maximumChunkSize;
-            boolean isClosing =
-                    event.getEventType() == XMLStreamConstants.END_ELEMENT;
-            boolean canSplitOnThisElement =
-                    !(isWithinReferenceNodes(context.getParentNode()));
+            boolean tooBig = bytes > maximumChunkSize;
+            boolean isClosing = event.getEventType() == XMLStreamConstants.END_ELEMENT;
+            boolean canSplitOnThisElement = !(isWithinReferenceNodes(context.getParentNode()));
             if (tooBig && isClosing && canSplitOnThisElement) {
                 bytes = 0;
                 setNextOutputStream(inputFileName);
@@ -139,8 +128,8 @@ public class XmlToChunks implements Component, SequentialExecution {
                     context = context.getParentNode();
                     break;
                 case XMLStreamConstants.CHARACTERS:
-                    context.appendChild(document.createTextNode(
-                            event.asCharacters().getData()));
+                    context.appendChild(
+                            document.createTextNode(event.asCharacters().getData()));
                     break;
                 default:
                     break;
@@ -151,24 +140,22 @@ public class XmlToChunks implements Component, SequentialExecution {
     private Node addNode(Node context, XMLEvent event) {
         QName name = event.asStartElement().getName();
 
-        Element curr = document.createElementNS(name.getNamespaceURI(),
-                name.getLocalPart());
+        Element curr = document.createElementNS(name.getNamespaceURI(), name.getLocalPart());
         context.appendChild(curr);
         context = curr;
 
         Iterator<Attribute> iterator = event.asStartElement().getAttributes();
         while (iterator.hasNext()) {
             Attribute attr = iterator.next();
-            ((Element) context).setAttributeNS(
-                    attr.getName().getNamespaceURI(),
-                    attr.getName().getLocalPart(), attr.getValue());
+            ((Element) context)
+                    .setAttributeNS(
+                            attr.getName().getNamespaceURI(), attr.getName().getLocalPart(), attr.getValue());
         }
         return context;
     }
 
     private boolean isWithinReferenceNodes(Node current) {
-        for (XmlToChunksConfiguration.Reference reference :
-                configuration.getReferences()) {
+        for (XmlToChunksConfiguration.Reference reference : configuration.getReferences()) {
             if (isWithinReferenceNode(current, reference)) {
                 return true;
             }
@@ -176,8 +163,7 @@ public class XmlToChunks implements Component, SequentialExecution {
         return false;
     }
 
-    private boolean isWithinReferenceNode(Node node,
-            XmlToChunksConfiguration.Reference reference) {
+    private boolean isWithinReferenceNode(Node node, XmlToChunksConfiguration.Reference reference) {
         while (node != null && node != document) {
             if (nodeMatchToReference(node, reference)) {
                 return true;
@@ -187,8 +173,7 @@ public class XmlToChunks implements Component, SequentialExecution {
         return false;
     }
 
-    private boolean nodeMatchToReference(Node node,
-            XmlToChunksConfiguration.Reference reference) {
+    private boolean nodeMatchToReference(Node node, XmlToChunksConfiguration.Reference reference) {
         if (!node.getLocalName().equals(reference.getLocal())) {
             return false;
         }
@@ -228,14 +213,10 @@ public class XmlToChunks implements Component, SequentialExecution {
     }
 
     private void setNextOutputStream(String outputFile)
-            throws IOException, XMLStreamException, LpException,
-            TransformerException {
+            throws IOException, XMLStreamException, LpException, TransformerException {
         DOMSource source = new DOMSource(document);
-        StreamResult result = new StreamResult(
-                outputFiles.createFile(chunkNumber + "_" + outputFile));
+        StreamResult result = new StreamResult(outputFiles.createFile(chunkNumber + "_" + outputFile));
         transformer.transform(source, result);
         chunkNumber++;
     }
-
-
 }

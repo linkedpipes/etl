@@ -6,12 +6,11 @@ import com.linkedpipes.etl.executor.monitor.execution.ExecutionStatus;
 
 public interface EventListener {
 
-    default void onExecutionStatusDidChange(
-            Execution execution, ExecutionStatus oldStatus)  {
+    default void onExecutionStatusDidChange(Execution execution, ExecutionStatus oldStatus) {
         // Do nothing;
     }
 
-    default void onExecutionHasFinalData(Execution execution)  {
+    default void onExecutionHasFinalData(Execution execution) {
         // Do nothing;
     }
 
@@ -22,5 +21,4 @@ public interface EventListener {
     default void onTimeHour() {
         // Do nothing;
     }
-
 }

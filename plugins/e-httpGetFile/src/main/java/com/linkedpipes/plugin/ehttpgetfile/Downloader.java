@@ -1,11 +1,6 @@
 package com.linkedpipes.plugin.ehttpgetfile;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Downloader {
 
@@ -29,7 +28,6 @@ public class Downloader {
     public interface ReportConnection {
 
         void accept(HttpURLConnection connection) throws LpException;
-
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(Downloader.class);
@@ -41,11 +39,8 @@ public class Downloader {
      * @throws IOException
      */
     public void download(
-            DownloaderRequest request,
-            String urlToDownload,
-            File downloadPath,
-            ReportConnection reportConnection
-    ) throws IOException, LpException {
+            DownloaderRequest request, String urlToDownload, File downloadPath, ReportConnection reportConnection)
+            throws IOException, LpException {
         LOG.info("Downloading '{}' -> '{}'.", urlToDownload, downloadPath);
         HttpURLConnection connection = null;
         try {
@@ -63,18 +58,14 @@ public class Downloader {
         }
     }
 
-    private URL createUrl(DownloaderRequest request, String urlAsString)
-            throws IOException {
+    private URL createUrl(DownloaderRequest request, String urlAsString) throws IOException {
         URL url;
         try {
             // Parse so we have access to parts.
             var urlParts = new URL(urlAsString);
             // Encode the host to support IDN.
             url = new URL(
-                    urlParts.getProtocol(),
-                    IDN.toASCII(urlParts.getHost()),
-                    urlParts.getPort(),
-                    urlParts.getFile());
+                    urlParts.getProtocol(), IDN.toASCII(urlParts.getHost()), urlParts.getPort(), urlParts.getFile());
         } catch (IOException ex) {
             throw new IOException("Can't create URL.", ex);
         }
@@ -92,9 +83,7 @@ public class Downloader {
      * Open connection to given URL, does not use the URL from the task.
      * This is so we can use it in redirect handling.
      */
-    private HttpURLConnection createConnection(
-            DownloaderRequest request, URL url
-    ) throws IOException {
+    private HttpURLConnection createConnection(DownloaderRequest request, URL url) throws IOException {
         var connection = (HttpURLConnection) url.openConnection();
         setHeaders(request, connection);
         setTimeOut(request, connection);
@@ -110,9 +99,7 @@ public class Downloader {
         }
     }
 
-    private void setHeaders(
-            DownloaderRequest request, HttpURLConnection connection
-    ) {
+    private void setHeaders(DownloaderRequest request, HttpURLConnection connection) {
         Map<String, String> headers = request.requestHeaders();
         // Fixed headers, #697.
         connection.setRequestProperty("accept-encoding", "gzip");
@@ -121,9 +108,7 @@ public class Downloader {
         }
     }
 
-    private void setTimeOut(
-            DownloaderRequest request, HttpURLConnection connection
-    ) {
+    private void setTimeOut(DownloaderRequest request, HttpURLConnection connection) {
         Integer timeOut = request.timeout();
         if (timeOut != null) {
             connection.setConnectTimeout(timeOut);
@@ -135,8 +120,7 @@ public class Downloader {
         final InputStream errStream = connection.getErrorStream();
         if (errStream != null) {
             try {
-                LOG.debug("Error stream: {}",
-                        IOUtils.toString(errStream, StandardCharsets.UTF_8));
+                LOG.debug("Error stream: {}", IOUtils.toString(errStream, StandardCharsets.UTF_8));
             } catch (Throwable ex) {
                 // Ignore.
             }
@@ -153,15 +137,12 @@ public class Downloader {
         }
     }
 
-    private HttpURLConnection resolveRedirects(
-            DownloaderRequest request,
-            HttpURLConnection connection) throws IOException {
+    private HttpURLConnection resolveRedirects(DownloaderRequest request, HttpURLConnection connection)
+            throws IOException {
         while (isResponseRedirect(connection)) {
             String location = connection.getHeaderField("Location");
             if (request.useUtf8ForRedirect()) {
-                location = new String(
-                        location.getBytes(StandardCharsets.ISO_8859_1),
-                        StandardCharsets.UTF_8);
+                location = new String(location.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
             }
             connection.disconnect();
             LOG.debug("Resolved redirect to: {}", location);
@@ -171,18 +152,14 @@ public class Downloader {
         return connection;
     }
 
-    private boolean isResponseRedirect(HttpURLConnection connection)
-            throws IOException {
+    private boolean isResponseRedirect(HttpURLConnection connection) throws IOException {
         int responseCode = connection.getResponseCode();
         // Redirect responses have status codes that start with 3,
         // and a Location header holding the URL to redirect to.
-        return 299 < responseCode && responseCode < 400
-                && connection.getHeaderField("Location") != null;
+        return 299 < responseCode && responseCode < 400 && connection.getHeaderField("Location") != null;
     }
 
-    private void checkResponse(
-            DownloaderRequest request, HttpURLConnection connection
-    ) throws IOException {
+    private void checkResponse(DownloaderRequest request, HttpURLConnection connection) throws IOException {
 
         if (request.logDetail()) {
             for (Map.Entry<String, List<String>> entry :
@@ -205,13 +182,11 @@ public class Downloader {
             }
             LOG.info("Error: {}", writer);
             // Throw an exception.
-            throw new IOException(
-                    responseCode + " : " + connection.getResponseMessage());
+            throw new IOException(responseCode + " : " + connection.getResponseMessage());
         }
     }
 
-    private void saveContentToFile(HttpURLConnection connection, File file)
-            throws IOException {
+    private void saveContentToFile(HttpURLConnection connection, File file) throws IOException {
         InputStream inputStream;
         if (isGzip(connection)) {
             inputStream = new GZIPInputStream(connection.getInputStream());
@@ -238,8 +213,7 @@ public class Downloader {
         return false;
     }
 
-    private Map<String, List<String>> getNormalizedHeader(
-            HttpURLConnection connection) {
+    private Map<String, List<String>> getNormalizedHeader(HttpURLConnection connection) {
         Map<String, List<String>> result = new HashMap<>();
         for (Map.Entry<String, List<String>> entry :
                 connection.getHeaderFields().entrySet()) {
@@ -251,5 +225,4 @@ public class Downloader {
         }
         return result;
     }
-
 }

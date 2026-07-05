@@ -7,5 +7,4 @@ public class BannedComponent extends ExecutorException {
     public BannedComponent(Object... args) {
         super("Required component '{}' is banned by '{}'.", args);
     }
-
 }

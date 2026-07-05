@@ -5,12 +5,11 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import java.io.*;
+import java.util.Collection;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.util.Collection;
 
 /**
  * Used library: http://www.jcraft.com/jsch/examples/ SCP protocol:
@@ -32,7 +31,6 @@ class ScpClient implements AutoCloseable {
     interface ChanelConsumer {
 
         void accept(ChannelExec channel) throws Exception;
-
     }
 
     private final JSch jsch = new JSch();
@@ -51,9 +49,7 @@ class ScpClient implements AutoCloseable {
         this.timeOut = timeOut;
     }
 
-    public void connect(
-            String hostname, int port, String username, String password)
-            throws Exception {
+    public void connect(String hostname, int port, String username, String password) throws Exception {
         LOG.debug("connect ...");
         this.session = jsch.getSession(username, hostname, port);
         this.session.setPassword(password);
@@ -119,8 +115,7 @@ class ScpClient implements AutoCloseable {
             case 2: // Critical failure
                 LOG.info("Stderr: {}", errorStream.toString());
                 LOG.info("Stdout: {}", outputStream.toString());
-                throw new LpException(
-                        "Action failed, see log for more information.");
+                throw new LpException("Action failed, see log for more information.");
             default:
                 throw new LpException("Unexpected status: {}", status);
         }
@@ -137,8 +132,7 @@ class ScpClient implements AutoCloseable {
     }
 
     public void clearDirectory(String directory) throws Exception {
-        String command =
-                "`[ -d " + directory + " ] && rm -r " + directory + "/* || :`";
+        String command = "`[ -d " + directory + " ] && rm -r " + directory + "/* || :`";
         LOG.info("clearDirectory ... : {}", command);
         withChannelExec((channel) -> {
             channel.setCommand(command);
@@ -147,8 +141,7 @@ class ScpClient implements AutoCloseable {
         LOG.info("clearDirectory ... done");
     }
 
-    public void uploadDirectories(
-            String directory, Collection<File> directories) throws Exception {
+    public void uploadDirectories(String directory, Collection<File> directories) throws Exception {
         LOG.info("uploadDirectories ...");
         String command = "scp -r -t -d " + directory;
         withChannelExec((channel) -> {
@@ -156,7 +149,7 @@ class ScpClient implements AutoCloseable {
             channel.setErrStream(errorStream);
             this.remoteError = errorStream;
             try (OutputStream remoteOutput = channel.getOutputStream();
-                 InputStream remoteInput = channel.getInputStream()) {
+                    InputStream remoteInput = channel.getInputStream()) {
                 this.remoteOutput = remoteOutput;
                 this.remoteInput = remoteInput;
                 //
@@ -171,8 +164,7 @@ class ScpClient implements AutoCloseable {
         LOG.info("uploadDirectories ... done");
     }
 
-    private void sendDirectory(File sourceDirectory)
-            throws IOException, LpException {
+    private void sendDirectory(File sourceDirectory) throws IOException, LpException {
         for (File file : sourceDirectory.listFiles()) {
             if (file.isDirectory()) {
                 this.sendDirectory(file, file.getName());
@@ -183,8 +175,7 @@ class ScpClient implements AutoCloseable {
         }
     }
 
-    private void sendDirectory(File sourceDirectory, String directoryName)
-            throws IOException, LpException {
+    private void sendDirectory(File sourceDirectory, String directoryName) throws IOException, LpException {
         LOG.debug("Sending directory: {} ... ", directoryName);
         // Send command.
         String command = "D0755 0 " + directoryName + "\n";
@@ -199,8 +190,7 @@ class ScpClient implements AutoCloseable {
         LOG.debug("Sending directory: {} ... done", directoryName);
     }
 
-    private void sendFile(File sourceFile, String fileName)
-            throws IOException, LpException {
+    private void sendFile(File sourceFile, String fileName) throws IOException, LpException {
         LOG.debug("Sending file: {} ... ", fileName);
         if (fileName.indexOf('/') > 0) {
             throw new IllegalArgumentException("File name '" + fileName + "'");
@@ -234,9 +224,7 @@ class ScpClient implements AutoCloseable {
                 break;
             case 1:
             case 2:
-                throw new LpException(
-                        "Error:    \n{}    \n{}",
-                        this.readResponse(), this.remoteError.toString());
+                throw new LpException("Error:    \n{}    \n{}", this.readResponse(), this.remoteError.toString());
             default:
                 throw new LpException("Invalid response: {}", response);
         }
@@ -270,9 +258,8 @@ class ScpClient implements AutoCloseable {
             }
             ++waitCounter;
             if (waitCounter > DATA_AWAIT_MAX_ITERATIONS) {
-                throw new IOException("No data arrived in time: " +
-                        (DATA_AWAIT_MAX_ITERATIONS * DATA_AWAIT_SLEEP_MS) +
-                        " ms");
+                throw new IOException(
+                        "No data arrived in time: " + (DATA_AWAIT_MAX_ITERATIONS * DATA_AWAIT_SLEEP_MS) + " ms");
             }
         } while (stream.available() == 0);
     }
@@ -283,5 +270,4 @@ class ScpClient implements AutoCloseable {
             this.session.disconnect();
         }
     }
-
 }

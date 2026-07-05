@@ -1,9 +1,8 @@
 package com.linkedpipes.etl.dataunit.core.files;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.util.Iterator;
+import org.apache.commons.io.FileUtils;
 
 /**
  * Implementation of iterator that recursively iterate over
@@ -28,8 +27,7 @@ class DirectoryIterator implements Iterator<FilesDataUnit.Entry> {
     public DirectoryIterator(Iterator<File> directoryIterator) {
         this.directoryIterator = directoryIterator;
         this.currentDirectory = directoryIterator.next();
-        this.fileIterator = FileUtils.iterateFiles(
-                currentDirectory, null, true);
+        this.fileIterator = FileUtils.iterateFiles(currentDirectory, null, true);
         this.nextEntry = getNext();
     }
 
@@ -65,5 +63,4 @@ class DirectoryIterator implements Iterator<FilesDataUnit.Entry> {
             return null;
         }
     }
-
 }

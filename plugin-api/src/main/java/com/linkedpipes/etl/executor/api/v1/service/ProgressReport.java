@@ -28,5 +28,4 @@ public interface ProgressReport {
      * Report completion of the task.
      */
     void done();
-
 }

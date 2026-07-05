@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,9 +28,7 @@ public class TabularConfiguration {
         @RdfToPojo.Property(iri = TabularVocabulary.HAS_ABOUT_URL)
         private String aboutUrl;
 
-        public Schema() {
-
-        }
+        public Schema() {}
 
         public List<Column> getColumns() {
             return columns;
@@ -56,7 +53,6 @@ public class TabularConfiguration {
         public void setAboutUrl(String aboutUrl) {
             this.aboutUrl = aboutUrl;
         }
-
     }
 
     /**
@@ -135,9 +131,15 @@ public class TabularConfiguration {
             datatype = "string";
         }
 
-        public Column(String name, String lang, String separator,
-                String default_, String datatype, String aboutUrl,
-                String propertyUrl, String valueUrl) {
+        public Column(
+                String name,
+                String lang,
+                String separator,
+                String default_,
+                String datatype,
+                String aboutUrl,
+                String propertyUrl,
+                String valueUrl) {
             this.name = name;
             this.lang = lang;
             this.separator = separator;
@@ -235,7 +237,6 @@ public class TabularConfiguration {
         public void setValueUrl(String valueUrl) {
             this.valueUrl = valueUrl;
         }
-
     }
 
     @RdfToPojo.Type(iri = TabularVocabulary.DIALECT)
@@ -280,8 +281,7 @@ public class TabularConfiguration {
         @RdfToPojo.Property(iri = TabularVocabulary.HAS_TRIM)
         private boolean trim = false;
 
-        public Dialect() {
-        }
+        public Dialect() {}
 
         public String getCommentPrefix() {
             return commentPrefix;
@@ -386,7 +386,6 @@ public class TabularConfiguration {
         public void setTrim(boolean trim) {
             this.trim = trim;
         }
-
     }
 
     /**
@@ -431,8 +430,7 @@ public class TabularConfiguration {
     @RdfToPojo.Property(iri = TabularVocabulary.HAS_SKIP_LINES)
     private int skipLines = 0;
 
-    public TabularConfiguration() {
-    }
+    public TabularConfiguration() {}
 
     public Schema getTableSchema() {
         return tableSchema;

@@ -11,8 +11,7 @@ public class ChunkSplitterConfiguration {
     @RdfToPojo.Property(iri = ChunkSplitterVocabulary.HAS_INCOMING_LEVEL_DEPTH)
     private int incomingLevelDepth = 0;
 
-    public ChunkSplitterConfiguration() {
-    }
+    public ChunkSplitterConfiguration() {}
 
     public String getType() {
         return type;
@@ -29,5 +28,4 @@ public class ChunkSplitterConfiguration {
     public void setIncomingLevelDepth(int incomingLevelDepth) {
         this.incomingLevelDepth = incomingLevelDepth;
     }
-
 }

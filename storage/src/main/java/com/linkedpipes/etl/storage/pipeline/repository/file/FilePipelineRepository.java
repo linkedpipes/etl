@@ -1,8 +1,8 @@
 package com.linkedpipes.etl.storage.pipeline.repository.file;
 
 import com.linkedpipes.etl.library.pipeline.PipelineLoader;
-import com.linkedpipes.etl.library.pipeline.adapter.RawPipeline;
 import com.linkedpipes.etl.library.pipeline.adapter.PipelineToRdf;
+import com.linkedpipes.etl.library.pipeline.adapter.RawPipeline;
 import com.linkedpipes.etl.library.pipeline.adapter.RdfToRawPipeline;
 import com.linkedpipes.etl.library.pipeline.migration.PipelineMigrationFailed;
 import com.linkedpipes.etl.library.pipeline.model.Pipeline;
@@ -10,11 +10,6 @@ import com.linkedpipes.etl.library.rdf.ResourceToString;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.pipeline.PipelineRepository;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,17 +23,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Store each pipeline in a single file.
  */
 public class FilePipelineRepository implements PipelineRepository {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(FilePipelineRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FilePipelineRepository.class);
 
-    protected final SimpleDateFormat dateFormat =
-            new SimpleDateFormat("yyyy-MM-dd");
+    protected final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private final File directory;
 
@@ -48,8 +45,7 @@ public class FilePipelineRepository implements PipelineRepository {
 
     private Map<Resource, File> pipelineFiles = Collections.emptyMap();
 
-    public FilePipelineRepository(
-            File directory, TemplateToPlugin templateToPlugin) {
+    public FilePipelineRepository(File directory, TemplateToPlugin templateToPlugin) {
         this.directory = directory;
         this.templateToPlugin = templateToPlugin;
     }
@@ -76,8 +72,7 @@ public class FilePipelineRepository implements PipelineRepository {
             try {
                 rawPipeline = loadRawPipeline(file);
             } catch (StorageException ex) {
-                result.add(new StorageException(
-                        "Can't load from '{}'.", file, ex));
+                result.add(new StorageException("Can't load from '{}'.", file, ex));
                 continue;
             }
             if (Pipeline.VERSION == rawPipeline.version) {
@@ -88,18 +83,15 @@ public class FilePipelineRepository implements PipelineRepository {
             try {
                 loader = createLoader();
             } catch (StorageException ex) {
-                result.add(new StorageException(
-                        "Can't prepare loader for '{}'.",
-                        rawPipeline.resource, ex));
+                result.add(new StorageException("Can't prepare loader for '{}'.", rawPipeline.resource, ex));
                 continue;
             }
             Pipeline migrated;
             try {
                 migrated = loader.loadPipeline(rawPipeline);
             } catch (PipelineMigrationFailed ex) {
-                result.add(new StorageException(
-                        "Can't migrate pipeline '{}' from '{}'.",
-                        rawPipeline.resource, file, ex));
+                result.add(
+                        new StorageException("Can't migrate pipeline '{}' from '{}'.", rawPipeline.resource, file, ex));
                 continue;
             }
             nextPipelineFiles.put(rawPipeline.resource, file);
@@ -111,8 +103,8 @@ public class FilePipelineRepository implements PipelineRepository {
             ++migratedCounter;
         }
         pipelineFiles = nextPipelineFiles;
-        LOG.debug("Loading repository ... done " +
-                        "(files: {}, loaded: {}, migrated: {}, failed: {})",
+        LOG.debug(
+                "Loading repository ... done " + "(files: {}, loaded: {}, migrated: {}, failed: {})",
                 files.size(),
                 pipelineFiles.size(),
                 migratedCounter,
@@ -149,12 +141,9 @@ public class FilePipelineRepository implements PipelineRepository {
         } catch (IOException ex) {
             throw new StorageException("Can't read file.", ex);
         }
-        List<RawPipeline> candidates =
-                RdfToRawPipeline.asRawPipelines(statements.selector());
+        List<RawPipeline> candidates = RdfToRawPipeline.asRawPipelines(statements.selector());
         if (candidates.size() != 1) {
-            throw new StorageException(
-                    "Invalid number of pipelines '{}', expected one.",
-                    candidates.size());
+            throw new StorageException("Invalid number of pipelines '{}', expected one.", candidates.size());
         }
         return candidates.get(0);
     }
@@ -163,8 +152,7 @@ public class FilePipelineRepository implements PipelineRepository {
         return new PipelineLoader(templateToPlugin.getTemplateToPluginMap());
     }
 
-    private void handleMigrated(Pipeline pipeline, File file)
-            throws StorageException {
+    private void handleMigrated(Pipeline pipeline, File file) throws StorageException {
         // Create a backup.
         File backUpFile = createBackupFile(file);
         if (!backUpFile.exists()) {
@@ -185,15 +173,12 @@ public class FilePipelineRepository implements PipelineRepository {
         return new File(file.getParent(), fileName);
     }
 
-    protected void writePipelineToFile(File file, Pipeline pipeline)
-            throws StorageException {
-        Statements statements  = PipelineToRdf.asRdf(pipeline);
+    protected void writePipelineToFile(File file, Pipeline pipeline) throws StorageException {
+        Statements statements = PipelineToRdf.asRdf(pipeline);
         try {
             statements.file().atomicWriteToFile(file, RDFFormat.TRIG);
         } catch (IOException | RuntimeException ex) {
-            throw new StorageException(
-                    "Can't write pipeline '{}' to file '{}'.",
-                    pipeline.resource(), file, ex);
+            throw new StorageException("Can't write pipeline '{}' to file '{}'.", pipeline.resource(), file, ex);
         }
     }
 
@@ -203,8 +188,7 @@ public class FilePipelineRepository implements PipelineRepository {
     }
 
     @Override
-    public Pipeline loadPipeline(Resource resource)
-            throws StorageException {
+    public Pipeline loadPipeline(Resource resource) throws StorageException {
         File file = pipelineFiles.get(resource);
         if (file == null) {
             return null;
@@ -214,10 +198,8 @@ public class FilePipelineRepository implements PipelineRepository {
     }
 
     @Override
-    public void storePipeline(Pipeline pipeline)
-            throws StorageException {
-        File file = pipelineFiles.computeIfAbsent(
-                pipeline.resource(), resource -> createNewFile(pipeline));
+    public void storePipeline(Pipeline pipeline) throws StorageException {
+        File file = pipelineFiles.computeIfAbsent(pipeline.resource(), resource -> createNewFile(pipeline));
         writePipelineToFile(file, pipeline);
     }
 
@@ -228,16 +210,14 @@ public class FilePipelineRepository implements PipelineRepository {
     }
 
     @Override
-    public void deletePipeline(Resource resource)
-            throws StorageException {
+    public void deletePipeline(Resource resource) throws StorageException {
         File file = pipelineFiles.get(resource);
         if (file == null) {
             pipelineFiles.remove(resource);
             return;
         }
         if (!file.delete()) {
-            throw new StorageException(
-                    "Can't delete pipeline file '{}'.", file);
+            throw new StorageException("Can't delete pipeline file '{}'.", file);
         }
         pipelineFiles.remove(resource);
     }
@@ -245,10 +225,8 @@ public class FilePipelineRepository implements PipelineRepository {
     @Override
     public Resource reserveResource(ResourceFactory factory, String baseUrl) {
         String time = String.valueOf(new Date().getTime());
-        String index = String.format("%1$4s", counter.incrementAndGet())
-                .replace(" ", "0");
+        String index = String.format("%1$4s", counter.incrementAndGet()).replace(" ", "0");
         String suffix = time + "-" + index;
         return factory.apply(baseUrl, suffix);
     }
-
 }

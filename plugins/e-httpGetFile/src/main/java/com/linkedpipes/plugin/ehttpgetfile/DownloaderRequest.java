@@ -19,6 +19,4 @@ public record DownloaderRequest(
         boolean manualRedirect,
         boolean logDetail,
         boolean encodeUrl,
-        boolean useUtf8ForRedirect
-) {
-}
+        boolean useUtf8ForRedirect) {}

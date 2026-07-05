@@ -9,5 +9,4 @@ public class IdentitySelectorConfiguration implements SelectorConfiguration {
     public Selector createSelector() {
         return new IdentitySelector();
     }
-
 }

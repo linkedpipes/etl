@@ -8,11 +8,9 @@ public class ParserDbfConfig {
 
     final boolean checkStaticRowCounter;
 
-    public ParserDbfConfig(String encoding, Integer rowLimit,
-            boolean checkStaticRowCounter) {
+    public ParserDbfConfig(String encoding, Integer rowLimit, boolean checkStaticRowCounter) {
         this.encoding = encoding;
         this.rowLimit = rowLimit;
         this.checkStaticRowCounter = checkStaticRowCounter;
     }
-
 }

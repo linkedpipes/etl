@@ -1,17 +1,16 @@
 package com.linkedpipes.etl.storage.assistant.model;
 
-import org.eclipse.rdf4j.model.Resource;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import org.eclipse.rdf4j.model.Resource;
 
 /**
  * Holds information about a pipeline.
  */
 public class PipelineInfo {
 
-    static public class Template {
+    public static class Template {
 
         public final Resource resource;
 
@@ -20,7 +19,6 @@ public class PipelineInfo {
         public Template(Resource resource) {
             this.resource = resource;
         }
-
     }
 
     /**
@@ -47,5 +45,4 @@ public class PipelineInfo {
         this.resource = resource;
         this.label = label;
     }
-
 }

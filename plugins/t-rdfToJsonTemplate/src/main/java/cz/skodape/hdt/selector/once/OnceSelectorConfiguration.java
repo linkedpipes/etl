@@ -9,5 +9,4 @@ public class OnceSelectorConfiguration implements SelectorConfiguration {
     public Selector createSelector() {
         return new OnceSelector();
     }
-
 }

@@ -1,4 +1,5 @@
 package com.linkedpipes.etl.executor.cli;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -56,20 +57,13 @@ public class Configuration {
     public Configuration merge(Configuration other) {
         Configuration result = new Configuration();
 
-        result.httpPort = mergeProperty(
-                httpPort, other.httpPort);
-        result.dataDirectory = mergeProperty(
-                dataDirectory, other.dataDirectory);
-        result.logDirectory = mergeProperty(
-                logDirectory, other.logDirectory);
-        result.logLevel = mergeProperty(
-                logLevel, other.logLevel);
-        result.osgiWorkingDirectory = mergeProperty(
-                osgiWorkingDirectory, other.osgiWorkingDirectory);
-        result.osgiLibrariesDirectory = mergeProperty(
-                osgiLibrariesDirectory, other.osgiLibrariesDirectory);
-        result.pluginsDirectory = mergeProperty(
-                pluginsDirectory, other.pluginsDirectory);
+        result.httpPort = mergeProperty(httpPort, other.httpPort);
+        result.dataDirectory = mergeProperty(dataDirectory, other.dataDirectory);
+        result.logDirectory = mergeProperty(logDirectory, other.logDirectory);
+        result.logLevel = mergeProperty(logLevel, other.logLevel);
+        result.osgiWorkingDirectory = mergeProperty(osgiWorkingDirectory, other.osgiWorkingDirectory);
+        result.osgiLibrariesDirectory = mergeProperty(osgiLibrariesDirectory, other.osgiLibrariesDirectory);
+        result.pluginsDirectory = mergeProperty(pluginsDirectory, other.pluginsDirectory);
 
         // Banning components is additive.
         result.bannedPluginIriPatterns = new ArrayList<>();
@@ -82,5 +76,4 @@ public class Configuration {
     private <T> T mergeProperty(T left, T right) {
         return right == null ? left : right;
     }
-
 }

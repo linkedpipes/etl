@@ -14,8 +14,7 @@ public class JsonLdFormatConfiguration {
     @RdfToPojo.Property(iri = JsonLdFormatVocabulary.HAS_FRAME)
     private String frame;
 
-    public JsonLdFormatConfiguration() {
-    }
+    public JsonLdFormatConfiguration() {}
 
     public String getFormat() {
         return format;
@@ -40,5 +39,4 @@ public class JsonLdFormatConfiguration {
     public void setFrame(String frame) {
         this.frame = frame;
     }
-
 }

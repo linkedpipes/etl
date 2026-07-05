@@ -1,9 +1,19 @@
 package com.linkedpipes.plugin.loader.lodCloud;
 
+import static com.linkedpipes.plugin.loader.lodCloud.LodCloudVocabulary.VCARD_FN;
+import static com.linkedpipes.plugin.loader.lodCloud.LodCloudVocabulary.VCARD_HAS_EMAIL;
+
 import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import org.apache.http.ParseException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -27,17 +37,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import static com.linkedpipes.plugin.loader.lodCloud.LodCloudVocabulary.VCARD_FN;
-import static com.linkedpipes.plugin.loader.lodCloud.LodCloudVocabulary.VCARD_HAS_EMAIL;
 
 @SuppressWarnings("PackageAccessibility")
 public final class LodCloud implements Component, SequentialExecution {
@@ -66,37 +65,78 @@ public final class LodCloud implements Component, SequentialExecution {
         String apiURI = configuration.getApiUri();
         String datasetID = configuration.getDatasetID();
 
-        List<Map<String, Value>> distributions = executeSelectQuery("SELECT ?distribution WHERE {<" + datasetUrl + "> <"+ DCAT.HAS_DISTRIBUTION + "> ?distribution . ?distribution <" + LodCloudVocabulary.VOID_SPARQLENDPOINT + "> [] .  }");
+        List<Map<String, Value>> distributions =
+                executeSelectQuery("SELECT ?distribution WHERE {<" + datasetUrl + "> <" + DCAT.HAS_DISTRIBUTION
+                        + "> ?distribution . ?distribution <" + LodCloudVocabulary.VOID_SPARQLENDPOINT + "> [] .  }");
 
         if (distributions.size() != 1) {
             throw new LpException("Expected 1 distribution with SPARQL endpoint. Found: " + distributions.size());
         }
 
-        String title = executeSimpleSelectQuery("SELECT ?title WHERE {<" + datasetUrl + "> <"+ DCTERMS.TITLE + "> ?title FILTER(LANGMATCHES(LANG(?title), \"en\"))}", "title");
-        String description = executeSimpleSelectQuery("SELECT ?description WHERE {<" + datasetUrl + "> <"+ DCTERMS.DESCRIPTION + "> ?description FILTER(LANGMATCHES(LANG(?description), \"en\"))}", "description");
-        String authorName = executeSimpleSelectQuery("SELECT ?authorName WHERE {<" + datasetUrl + "> <"+ DCTERMS.PUBLISHER + ">/<" + FOAF.NAME  + "> ?authorName}", "authorName");
-        String maintainerName = executeSimpleSelectQuery("SELECT ?maintainerName WHERE {<" + datasetUrl + "> <"+ DCAT.CONTACT_POINT + ">/<" + VCARD_FN  + "> ?maintainerName}", "maintainerName");
-        String maintainerEmail = executeSimpleSelectQuery("SELECT ?maintainerEmail WHERE {<" + datasetUrl + "> <"+ DCAT.CONTACT_POINT + ">/<" + VCARD_HAS_EMAIL  + "> ?maintainerEmail}", "maintainerEmail");
+        String title = executeSimpleSelectQuery(
+                "SELECT ?title WHERE {<" + datasetUrl + "> <" + DCTERMS.TITLE
+                        + "> ?title FILTER(LANGMATCHES(LANG(?title), \"en\"))}",
+                "title");
+        String description = executeSimpleSelectQuery(
+                "SELECT ?description WHERE {<" + datasetUrl + "> <" + DCTERMS.DESCRIPTION
+                        + "> ?description FILTER(LANGMATCHES(LANG(?description), \"en\"))}",
+                "description");
+        String authorName = executeSimpleSelectQuery(
+                "SELECT ?authorName WHERE {<" + datasetUrl + "> <" + DCTERMS.PUBLISHER + ">/<" + FOAF.NAME
+                        + "> ?authorName}",
+                "authorName");
+        String maintainerName = executeSimpleSelectQuery(
+                "SELECT ?maintainerName WHERE {<" + datasetUrl + "> <" + DCAT.CONTACT_POINT + ">/<" + VCARD_FN
+                        + "> ?maintainerName}",
+                "maintainerName");
+        String maintainerEmail = executeSimpleSelectQuery(
+                "SELECT ?maintainerEmail WHERE {<" + datasetUrl + "> <" + DCAT.CONTACT_POINT + ">/<" + VCARD_HAS_EMAIL
+                        + "> ?maintainerEmail}",
+                "maintainerEmail");
 
         String distribution = distributions.get(0).get("distribution").stringValue();
-        String dtitle = executeSimpleSelectQuery("SELECT ?title WHERE {<" + distribution + "> <"+ DCTERMS.TITLE + "> ?title FILTER(LANGMATCHES(LANG(?title), \"en\"))}", "title");
-        String ddescription = executeSimpleSelectQuery("SELECT ?description WHERE {<" + distribution + "> <"+ DCTERMS.DESCRIPTION + "> ?description FILTER(LANGMATCHES(LANG(?description), \"en\"))}", "description");
-        String dissued = executeSimpleSelectQuery("SELECT ?issued WHERE {<" + distribution + "> <"+ DCTERMS.ISSUED + "> ?issued .}", "issued");
-        String dmodified = executeSimpleSelectQuery("SELECT ?modified WHERE {<" + distribution + "> <"+ DCTERMS.MODIFIED + "> ?modified .}", "modified");
-        String sparqlEndpointVoid = executeSimpleSelectQuery("SELECT ?sparqlEndpoint WHERE {<" + distribution + "> <"+ LodCloudVocabulary.VOID_SPARQLENDPOINT + "> ?sparqlEndpoint }", "sparqlEndpoint");
-        String datadump = executeSimpleSelectQuery("SELECT ?dwnld WHERE {<" + distribution + "> <"+ LodCloudVocabulary.VOID_DATADUMP + "> ?dwnld }", "dwnld");
-        String triplecount = executeSimpleSelectQuery("SELECT ?triplecount WHERE {<" + distribution + "> <"+ LodCloudVocabulary.VOID_TRIPLES + "> ?triplecount }", "triplecount");
-        String dformat = executeSimpleSelectQuery("SELECT ?format WHERE {<" + distribution + "> <"+ DCTERMS.FORMAT + "> ?format }", "format");
+        String dtitle = executeSimpleSelectQuery(
+                "SELECT ?title WHERE {<" + distribution + "> <" + DCTERMS.TITLE
+                        + "> ?title FILTER(LANGMATCHES(LANG(?title), \"en\"))}",
+                "title");
+        String ddescription = executeSimpleSelectQuery(
+                "SELECT ?description WHERE {<" + distribution + "> <" + DCTERMS.DESCRIPTION
+                        + "> ?description FILTER(LANGMATCHES(LANG(?description), \"en\"))}",
+                "description");
+        String dissued = executeSimpleSelectQuery(
+                "SELECT ?issued WHERE {<" + distribution + "> <" + DCTERMS.ISSUED + "> ?issued .}", "issued");
+        String dmodified = executeSimpleSelectQuery(
+                "SELECT ?modified WHERE {<" + distribution + "> <" + DCTERMS.MODIFIED + "> ?modified .}", "modified");
+        String sparqlEndpointVoid = executeSimpleSelectQuery(
+                "SELECT ?sparqlEndpoint WHERE {<" + distribution + "> <" + LodCloudVocabulary.VOID_SPARQLENDPOINT
+                        + "> ?sparqlEndpoint }",
+                "sparqlEndpoint");
+        String datadump = executeSimpleSelectQuery(
+                "SELECT ?dwnld WHERE {<" + distribution + "> <" + LodCloudVocabulary.VOID_DATADUMP + "> ?dwnld }",
+                "dwnld");
+        String triplecount = executeSimpleSelectQuery(
+                "SELECT ?triplecount WHERE {<" + distribution + "> <" + LodCloudVocabulary.VOID_TRIPLES
+                        + "> ?triplecount }",
+                "triplecount");
+        String dformat = executeSimpleSelectQuery(
+                "SELECT ?format WHERE {<" + distribution + "> <" + DCTERMS.FORMAT + "> ?format }", "format");
         String formatlabel = null;
         if (!dformat.isEmpty() && codelists != null) {
-            formatlabel = executeSimpleCodelistSelectQuery("SELECT ?formatlabel WHERE {<" + dformat + "> <"+ SKOS.PREF_LABEL + "> ?formatlabel FILTER(LANGMATCHES(LANG(?formatlabel), \"en\"))}", "formatlabel");
+            formatlabel = executeSimpleCodelistSelectQuery(
+                    "SELECT ?formatlabel WHERE {<" + dformat + "> <" + SKOS.PREF_LABEL
+                            + "> ?formatlabel FILTER(LANGMATCHES(LANG(?formatlabel), \"en\"))}",
+                    "formatlabel");
         }
-        String dmimetype = executeSimpleSelectQuery("SELECT ?mimetype WHERE {<" + distribution + "> <"+ DCAT.MEDIA_TYPE + "> ?mimetype }", "mimetype");
-        String dlicense = executeSimpleSelectQuery("SELECT ?license WHERE {<" + distribution + "> <"+ DCTERMS.LICENSE + "> ?license }", "license");
-        String dschema = executeSimpleSelectQuery("SELECT ?schema WHERE {<" + distribution + "> <"+ DCTERMS.CONFORMS_TO + "> ?schema }", "schema");
+        String dmimetype = executeSimpleSelectQuery(
+                "SELECT ?mimetype WHERE {<" + distribution + "> <" + DCAT.MEDIA_TYPE + "> ?mimetype }", "mimetype");
+        String dlicense = executeSimpleSelectQuery(
+                "SELECT ?license WHERE {<" + distribution + "> <" + DCTERMS.LICENSE + "> ?license }", "license");
+        String dschema = executeSimpleSelectQuery(
+                "SELECT ?schema WHERE {<" + distribution + "> <" + DCTERMS.CONFORMS_TO + "> ?schema }", "schema");
 
         LinkedList<String> examples = new LinkedList<>();
-        for (Map<String,Value> map: executeSelectQuery("SELECT ?exampleResource WHERE {<" + distribution + "> <"+ LodCloudVocabulary.VOID_EXAMPLERESOURCE + "> ?exampleResource }")) {
+        for (Map<String, Value> map : executeSelectQuery("SELECT ?exampleResource WHERE {<" + distribution + "> <"
+                + LodCloudVocabulary.VOID_EXAMPLERESOURCE + "> ?exampleResource }")) {
             examples.add(map.get("exampleResource").stringValue());
         }
 
@@ -106,7 +146,8 @@ public final class LodCloud implements Component, SequentialExecution {
         Map<String, String> resFormatIdMap = new HashMap<>();
 
         CloseableHttpClient queryClient = HttpClientBuilder.create()
-                .setRedirectStrategy(new LaxRedirectStrategy()).build();
+                .setRedirectStrategy(new LaxRedirectStrategy())
+                .build();
         HttpGet httpGet = new HttpGet(apiURI + "/package_show?id=" + datasetID);
         CloseableHttpResponse queryResponse = null;
         try {
@@ -116,11 +157,9 @@ public final class LodCloud implements Component, SequentialExecution {
                 exists = true;
 
                 JSONObject response =
-                        new JSONObject(EntityUtils.toString(queryResponse.getEntity()))
-                                .getJSONObject("result");
+                        new JSONObject(EntityUtils.toString(queryResponse.getEntity())).getJSONObject("result");
                 JSONArray resourcesArray = response.getJSONArray("resources");
-                for (int i = 0; i < resourcesArray.length(); i++ )
-                {
+                for (int i = 0; i < resourcesArray.length(); i++) {
                     try {
                         String id = resourcesArray.getJSONObject(i).getString("id");
                         String url = resourcesArray.getJSONObject(i).getString("url");
@@ -137,7 +176,7 @@ public final class LodCloud implements Component, SequentialExecution {
                 }
 
             } else {
-                //String ent = EntityUtils.toString(queryResponse.getEntity());
+                // String ent = EntityUtils.toString(queryResponse.getEntity());
                 LOG.info("Dataset not found");
             }
         } catch (IOException | ParseException | JSONException e) {
@@ -160,10 +199,14 @@ public final class LodCloud implements Component, SequentialExecution {
             JSONArray tags = new JSONArray();
             tags.put(new JSONObject().put("name", "lod"));
             tags.put(new JSONObject().put("name", configuration.getVocabTag().toString()));
-            tags.put(new JSONObject().put("name", configuration.getVocabMappingTag().toString()));
-            tags.put(new JSONObject().put("name", configuration.getPublishedTag().toString()));
-            tags.put(new JSONObject().put("name", configuration.getProvenanceMetadataTag().toString()));
-            tags.put(new JSONObject().put("name", configuration.getLicenseMetadataTag().toString()));
+            tags.put(new JSONObject()
+                    .put("name", configuration.getVocabMappingTag().toString()));
+            tags.put(
+                    new JSONObject().put("name", configuration.getPublishedTag().toString()));
+            tags.put(new JSONObject()
+                    .put("name", configuration.getProvenanceMetadataTag().toString()));
+            tags.put(new JSONObject()
+                    .put("name", configuration.getLicenseMetadataTag().toString()));
             if (configuration.isLimitedSparql()) {
                 tags.put(new JSONObject().put("name", "limited-sparql-endpoint"));
             }
@@ -190,11 +233,12 @@ public final class LodCloud implements Component, SequentialExecution {
             // Start of Sparql Endpoint resource
             JSONObject sparqlEndpoint = new JSONObject();
 
-            sparqlEndpoint.put("format","api/sparql");
-            sparqlEndpoint.put("resource_type","api");
+            sparqlEndpoint.put("format", "api/sparql");
+            sparqlEndpoint.put("resource_type", "api");
             sparqlEndpoint.put("description", configuration.getSparqlEndpointDescription());
             sparqlEndpoint.put("last_modified", dmodified);
-            if (configuration.getSparqlEndpointName() == null || configuration.getSparqlEndpointName().isEmpty()) {
+            if (configuration.getSparqlEndpointName() == null
+                    || configuration.getSparqlEndpointName().isEmpty()) {
                 sparqlEndpoint.put("name", "SPARQL endpoint");
             } else {
                 sparqlEndpoint.put("name", configuration.getSparqlEndpointName());
@@ -211,14 +255,14 @@ public final class LodCloud implements Component, SequentialExecution {
             // Start of VoID resource
             JSONObject voidJson = new JSONObject();
 
-            voidJson.put("format","meta/void");
-            voidJson.put("resource_type","file");
-            voidJson.put("description","VoID description generated live");
-            voidJson.put("name","VoID");
+            voidJson.put("format", "meta/void");
+            voidJson.put("resource_type", "file");
+            voidJson.put("description", "VoID description generated live");
+            voidJson.put("name", "VoID");
             voidJson.put("last_modified", dmodified);
             String voidUrl = sparqlEndpointVoid + "?query="
                     + URLEncoder.encode("DESCRIBE <" + distribution + ">", "UTF-8")
-                    + "&output=" + URLEncoder.encode("text/turtle","UTF-8");
+                    + "&output=" + URLEncoder.encode("text/turtle", "UTF-8");
             voidJson.put("url", voidUrl);
 
             if (resFormatIdMap.containsKey("meta/void")) voidJson.put("id", resFormatIdMap.get("meta/void"));
@@ -231,11 +275,11 @@ public final class LodCloud implements Component, SequentialExecution {
                 // Start of RDFS/OWL schema resource
                 JSONObject schemaResource = new JSONObject();
 
-                schemaResource.put("format","meta/rdf-schema");
-                schemaResource.put("resource_type","file");
-                schemaResource.put("description","RDFS/OWL Schema with proprietary vocabulary");
-                schemaResource.put("name","RDFS/OWL schema");
-                schemaResource.put("url", dschema );
+                schemaResource.put("format", "meta/rdf-schema");
+                schemaResource.put("resource_type", "file");
+                schemaResource.put("description", "RDFS/OWL Schema with proprietary vocabulary");
+                schemaResource.put("name", "RDFS/OWL schema");
+                schemaResource.put("url", dschema);
                 schemaResource.put("last_modified", dmodified);
 
                 if (resFormatIdMap.containsKey("meta/rdf-schema")) {
@@ -250,40 +294,40 @@ public final class LodCloud implements Component, SequentialExecution {
             JSONObject dump = new JSONObject();
 
             dump.put("format", formatlabel);
-            dump.put("mimetype", dmimetype.replaceAll(".*/([^/]+/[^/]+)","$1"));
-            dump.put("resource_type","file");
+            dump.put("mimetype", dmimetype.replaceAll(".*/([^/]+/[^/]+)", "$1"));
+            dump.put("resource_type", "file");
             dump.put("name", dtitle);
             dump.put("description", ddescription);
             dump.put("created", dissued);
             dump.put("last_modified", dmodified);
-            dump.put("url", datadump );
+            dump.put("url", datadump);
 
             if (resUrlIdMap.containsKey(datadump)) dump.put("id", resUrlIdMap.get(datadump));
 
             resources.put(dump);
             // End of Dump resource
 
-            for (String example: examples)
-            {
+            for (String example : examples) {
                 // Start of Example resource text/turtle
                 JSONObject exTurtle = new JSONObject();
 
-                exTurtle.put("format","example/turtle");
-                exTurtle.put("resource_type","file");
-                //exTurtle.put("description","Generated by Virtuoso FCT");
-                exTurtle.put("name","Example resource in Turtle");
+                exTurtle.put("format", "example/turtle");
+                exTurtle.put("resource_type", "file");
+                // exTurtle.put("description","Generated by Virtuoso FCT");
+                exTurtle.put("name", "Example resource in Turtle");
 
                 String exUrl;
                 try {
                     if (sparqlEndpointVoid.isEmpty()) exUrl = example;
-                    else exUrl = sparqlEndpointVoid
-                            + "?query=" + URLEncoder.encode("DESCRIBE <", "UTF-8")
-                            + example
-                            + URLEncoder.encode(">", "UTF-8")
-                            + "&default-graph-uri="
-                            + URLEncoder.encode(datasetUrl,"UTF-8")
-                            + "&output="
-                            + URLEncoder.encode("text/turtle","UTF-8");
+                    else
+                        exUrl = sparqlEndpointVoid
+                                + "?query=" + URLEncoder.encode("DESCRIBE <", "UTF-8")
+                                + example
+                                + URLEncoder.encode(">", "UTF-8")
+                                + "&default-graph-uri="
+                                + URLEncoder.encode(datasetUrl, "UTF-8")
+                                + "&output="
+                                + URLEncoder.encode("text/turtle", "UTF-8");
                 } catch (UnsupportedEncodingException e) {
                     exUrl = "";
                     LOG.error(e.getLocalizedMessage(), e);
@@ -298,13 +342,13 @@ public final class LodCloud implements Component, SequentialExecution {
                 // Start of Example resource html
                 JSONObject exHTML = new JSONObject();
 
-                exHTML.put("format","HTML");
-                exHTML.put("mimetype","text/html");
-                exHTML.put("resource_type","file");
-                exHTML.put("description","Generated by Virtuoso FCT");
-                exHTML.put("name","Example resource in Virtuoso FCT");
+                exHTML.put("format", "HTML");
+                exHTML.put("mimetype", "text/html");
+                exHTML.put("resource_type", "file");
+                exHTML.put("description", "Generated by Virtuoso FCT");
+                exHTML.put("name", "Example resource in Virtuoso FCT");
                 exHTML.put("last_modified", dmodified);
-                exHTML.put("url", example );
+                exHTML.put("url", example);
 
                 if (resUrlIdMap.containsKey(example)) exHTML.put("id", resUrlIdMap.get(example));
 
@@ -312,15 +356,15 @@ public final class LodCloud implements Component, SequentialExecution {
                 // End of html resource
 
                 // Mapping file resources
-                for (LodCloudConfiguration.MappingFile mapping: configuration.getMappingFiles()) {
+                for (LodCloudConfiguration.MappingFile mapping : configuration.getMappingFiles()) {
                     JSONObject exMapping = new JSONObject();
 
                     String mappingMime = "mapping/" + mapping.getMappingFormat();
-                    exMapping.put("format",mappingMime);
-                    exMapping.put("resource_type","file");
-                    exMapping.put("description","Schema mapping file in " + mapping.getMappingFormat() + " format.");
-                    exMapping.put("name","Mapping " + mapping.getMappingFormat());
-                    exMapping.put("url", mapping.getMappingFile() );
+                    exMapping.put("format", mappingMime);
+                    exMapping.put("resource_type", "file");
+                    exMapping.put("description", "Schema mapping file in " + mapping.getMappingFormat() + " format.");
+                    exMapping.put("name", "Mapping " + mapping.getMappingFormat());
+                    exMapping.put("url", mapping.getMappingFile());
 
                     if (resFormatIdMap.containsKey(mappingMime)) exMapping.put("id", resFormatIdMap.get(mappingMime));
 
@@ -332,38 +376,25 @@ public final class LodCloud implements Component, SequentialExecution {
 
             JSONArray extras = new JSONArray();
             extras.put(new JSONObject().put("key", "triples").put("value", triplecount));
-            if (configuration.getShortname() != null && !configuration.getShortname().isEmpty()) {
-                extras.put(
-                        new JSONObject()
-                                .put("key", "shortname")
-                                .put("value", configuration.getShortname())
-                );
+            if (configuration.getShortname() != null
+                    && !configuration.getShortname().isEmpty()) {
+                extras.put(new JSONObject().put("key", "shortname").put("value", configuration.getShortname()));
             }
-            if (configuration.getNamespace() != null && !configuration.getNamespace().isEmpty()) {
-                extras.put(
-                        new JSONObject()
-                                .put("key", "namespace")
-                                .put("value", configuration.getNamespace())
-                );
+            if (configuration.getNamespace() != null
+                    && !configuration.getNamespace().isEmpty()) {
+                extras.put(new JSONObject().put("key", "namespace").put("value", configuration.getNamespace()));
             }
-            if (!dlicense.isEmpty()) extras.put(
-                    new JSONObject()
-                            .put("key", "license_link")
-                            .put("value", dlicense)
-            );
-            extras.put(
-                    new JSONObject()
-                            .put("key", "sparql_graph_name")
-                            .put("value", datasetUrl)
-            );
-            for (LodCloudConfiguration.LinkCount link: configuration.getLinks()) {
-                extras.put(
-                        new JSONObject()
-                                .put("key", "links:" + link.getTargetDataset())
-                                .put("value", link.getLinkCount()));
+            if (!dlicense.isEmpty())
+                extras.put(new JSONObject().put("key", "license_link").put("value", dlicense));
+            extras.put(new JSONObject().put("key", "sparql_graph_name").put("value", datasetUrl));
+            for (LodCloudConfiguration.LinkCount link : configuration.getLinks()) {
+                extras.put(new JSONObject()
+                        .put("key", "links:" + link.getTargetDataset())
+                        .put("value", link.getLinkCount()));
             }
 
-            if (configuration.getDatasetID() != null && !configuration.getDatasetID().isEmpty()) {
+            if (configuration.getDatasetID() != null
+                    && !configuration.getDatasetID().isEmpty()) {
                 root.put("name", configuration.getDatasetID());
             }
             root.put("url", datasetUrl);
@@ -389,8 +420,8 @@ public final class LodCloud implements Component, SequentialExecution {
                 Date versiondate = new Date();
                 String version = dateFormat.format(versiondate);
                 root.put("version", version);
-            }
-            else if (configuration.getVersion() != null && !configuration.getVersion().isEmpty()) {
+            } else if (configuration.getVersion() != null
+                    && !configuration.getVersion().isEmpty()) {
                 root.put("version", configuration.getVersion());
             }
 
@@ -406,7 +437,9 @@ public final class LodCloud implements Component, SequentialExecution {
                 createRoot.put("owner_org", configuration.getOrgID());
 
                 LOG.debug("Creating dataset in CKAN");
-                CloseableHttpClient client = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
+                CloseableHttpClient client = HttpClientBuilder.create()
+                        .setRedirectStrategy(new LaxRedirectStrategy())
+                        .build();
                 HttpPost httpPost = new HttpPost(apiURI + "/package_create?id=" + datasetID);
                 httpPost.addHeader(new BasicHeader("Authorization", configuration.getApiKey()));
 
@@ -424,9 +457,14 @@ public final class LodCloud implements Component, SequentialExecution {
                         LOG.info("Dataset created OK: " + response.getStatusLine());
                     } else if (response.getStatusLine().getStatusCode() == 409) {
                         LOG.error("Dataset already exists: " + response.getStatusLine());
-                        throw new LpException("Dataset already exists or cannot be created", "Dataset already exists or cannot be created: {0}", response.getStatusLine());
+                        throw new LpException(
+                                "Dataset already exists or cannot be created",
+                                "Dataset already exists or cannot be created: {0}",
+                                response.getStatusLine());
                     } else {
-                        throw new LpException("Error while creating dataset", "Response while creating dataset: " + response.getStatusLine());
+                        throw new LpException(
+                                "Error while creating dataset",
+                                "Response while creating dataset: " + response.getStatusLine());
                     }
                 } catch (IOException e) {
                     LOG.error(e.getLocalizedMessage(), e);
@@ -460,7 +498,8 @@ public final class LodCloud implements Component, SequentialExecution {
                 if (response.getStatusLine().getStatusCode() == 200) {
                     LOG.info("Response: " + EntityUtils.toString(response.getEntity()));
                 } else {
-                    throw new LpException("Error updating dataset", "Response while updating dataset: {0}", response.getStatusLine());
+                    throw new LpException(
+                            "Error updating dataset", "Response while updating dataset: {0}", response.getStatusLine());
                 }
             } catch (IOException e) {
                 LOG.error(e.getLocalizedMessage(), e);
@@ -478,13 +517,11 @@ public final class LodCloud implements Component, SequentialExecution {
         } catch (JSONException | UnsupportedEncodingException e) {
             LOG.error(e.getLocalizedMessage(), e);
         }
-
     }
 
     private String executeSimpleSelectQuery(final String queryAsString, String bindingName) throws LpException {
         return metadata.execute((connection) -> {
-            final TupleQuery preparedQuery = connection.prepareTupleQuery(
-                    QueryLanguage.SPARQL, queryAsString);
+            final TupleQuery preparedQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, queryAsString);
             final SimpleDataset dataset = new SimpleDataset();
             dataset.addDefaultGraph(metadata.getReadGraph());
             preparedQuery.setDataset(dataset);
@@ -535,6 +572,4 @@ public final class LodCloud implements Component, SequentialExecution {
             }
         });
     }
-
-
 }

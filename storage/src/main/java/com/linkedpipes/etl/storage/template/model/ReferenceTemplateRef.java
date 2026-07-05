@@ -1,17 +1,17 @@
 package com.linkedpipes.etl.storage.template.model;
 
-//import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-//import com.linkedpipes.etl.storage.rdf.PojoLoader;
-//import org.eclipse.rdf4j.model.IRI;
-//import org.eclipse.rdf4j.model.Value;
-//import org.eclipse.rdf4j.model.ValueFactory;
-//import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+// import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
+// import com.linkedpipes.etl.storage.rdf.PojoLoader;
+// import org.eclipse.rdf4j.model.IRI;
+// import org.eclipse.rdf4j.model.Value;
+// import org.eclipse.rdf4j.model.ValueFactory;
+// import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 //
-///**
+/// **
 // * Represent a thin template that can modify basic component
 // * properties and configuration.
 // */
-//public class ReferenceTemplateRef
+// public class ReferenceTemplateRef
 //        extends Template implements PojoLoader.Loadable {
 //
 //    public static final IRI TYPE;
@@ -82,4 +82,4 @@ package com.linkedpipes.etl.storage.template.model;
 //        return coreTemplate;
 //    }
 //
-//}
+// }

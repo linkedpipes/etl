@@ -5,13 +5,12 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import java.util.*;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.repository.RepositoryResult;
-
-import java.util.*;
 
 public final class RdfDifference implements Component, SequentialExecution {
 
@@ -34,8 +33,7 @@ public final class RdfDifference implements Component, SequentialExecution {
     public void execute() throws LpException {
         buildToRemoveIndex();
         dataRdf.execute((connection) -> {
-            RepositoryResult<Statement> result = connection.getStatements(
-                    null, null, null, dataRdf.getReadGraph());
+            RepositoryResult<Statement> result = connection.getStatements(null, null, null, dataRdf.getReadGraph());
             addDifference(result);
         });
     }
@@ -43,8 +41,7 @@ public final class RdfDifference implements Component, SequentialExecution {
     private void buildToRemoveIndex() throws LpException {
         toRemoveIndex = new HashMap<>();
         toRemoveRdf.execute((connection) -> {
-            RepositoryResult<Statement> result = connection.getStatements(
-                    null, null, null, toRemoveRdf.getReadGraph());
+            RepositoryResult<Statement> result = connection.getStatements(null, null, null, toRemoveRdf.getReadGraph());
             while (result.hasNext()) {
                 addToRemoveIndex(result.next());
             }
@@ -52,8 +49,7 @@ public final class RdfDifference implements Component, SequentialExecution {
     }
 
     private void addToRemoveIndex(Statement statement) {
-        Map<IRI, Set<Value>> subjectMap = toRemoveIndex.get(
-                statement.getSubject());
+        Map<IRI, Set<Value>> subjectMap = toRemoveIndex.get(statement.getSubject());
         if (subjectMap == null) {
             subjectMap = new HashMap<>();
             toRemoveIndex.put(statement.getSubject(), subjectMap);
@@ -66,8 +62,7 @@ public final class RdfDifference implements Component, SequentialExecution {
         predicateMap.add(statement.getObject());
     }
 
-    private void addDifference(RepositoryResult<Statement> result)
-            throws LpException {
+    private void addDifference(RepositoryResult<Statement> result) throws LpException {
         while (result.hasNext()) {
             Statement statement = result.next();
             if (shouldRemoveStatement(statement)) {
@@ -82,8 +77,7 @@ public final class RdfDifference implements Component, SequentialExecution {
     }
 
     private boolean shouldRemoveStatement(Statement statement) {
-        Map<IRI, Set<Value>> subjectMap = toRemoveIndex.get(
-                statement.getSubject());
+        Map<IRI, Set<Value>> subjectMap = toRemoveIndex.get(statement.getSubject());
         if (subjectMap == null) {
             return false;
         }
@@ -100,5 +94,4 @@ public final class RdfDifference implements Component, SequentialExecution {
             buffer.clear();
         });
     }
-
 }

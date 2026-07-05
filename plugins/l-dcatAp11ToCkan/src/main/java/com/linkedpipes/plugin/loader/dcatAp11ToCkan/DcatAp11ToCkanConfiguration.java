@@ -32,8 +32,7 @@ public class DcatAp11ToCkanConfiguration {
     @RdfToPojo.Property(iri = DcatAp11ToCkanConfigVocabulary.CKAN_ORGANIZATION)
     private String ckanOrganization;
 
-    public DcatAp11ToCkanConfiguration() {
-    }
+    public DcatAp11ToCkanConfiguration() {}
 
     public String getApiUri() {
         return apiUri;

@@ -4,10 +4,9 @@ import com.linkedpipes.etl.dataunit.core.rdf.ChunkedTriples;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import org.eclipse.rdf4j.model.Statement;
-
 import java.util.Collection;
 import java.util.Iterator;
+import org.eclipse.rdf4j.model.Statement;
 
 class ExecutorManager {
 
@@ -19,9 +18,7 @@ class ExecutorManager {
 
     private boolean terminate = false;
 
-    public ExecutorManager(ChunkedTriples inputRdf,
-            WritableChunkedTriples outputRdf,
-            ProgressReport progressReport) {
+    public ExecutorManager(ChunkedTriples inputRdf, WritableChunkedTriples outputRdf, ProgressReport progressReport) {
         this.inputChunks = inputRdf.iterator();
         this.outputRdf = outputRdf;
         this.progressReport = progressReport;
@@ -45,10 +42,8 @@ class ExecutorManager {
         }
     }
 
-    public synchronized void submitResult(Collection<Statement> statements)
-            throws LpException {
+    public synchronized void submitResult(Collection<Statement> statements) throws LpException {
         outputRdf.submit(statements);
         progressReport.entryProcessed();
     }
-
 }

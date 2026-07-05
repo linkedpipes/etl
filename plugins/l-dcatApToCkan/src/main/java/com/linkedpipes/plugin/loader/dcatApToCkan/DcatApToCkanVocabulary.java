@@ -91,5 +91,4 @@ public final class DcatApToCkanVocabulary {
         VCARD_HAS_EMAIL = valueFactory.createIRI(VCARD + "hasEmail");
         VCARD_FN = valueFactory.createIRI(VCARD + "fn");
     }
-
 }

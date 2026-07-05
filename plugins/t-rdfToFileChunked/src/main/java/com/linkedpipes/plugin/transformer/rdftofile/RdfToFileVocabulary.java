@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.rdftofile;
 
 public final class RdfToFileVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-rdfToFile#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-rdfToFile#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -15,7 +14,5 @@ public final class RdfToFileVocabulary {
 
     public static final String HAS_PREFIXES = PREFIX + "prefixTurtle";
 
-    private RdfToFileVocabulary() {
-    }
-
+    private RdfToFileVocabulary() {}
 }

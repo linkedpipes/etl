@@ -1,8 +1,6 @@
 package com.linkedpipes.plugin.ehttpgetfile.multiple;
 
-import com.linkedpipes.etl.executor.api.v1.component.task.TaskExecutionConfiguration;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -56,8 +54,7 @@ public class HttpGetFilesConfiguration {
     @RdfToPojo.Property(iri = HttpGetFilesVocabulary.HAS_WAIT_TIME)
     private int waitTimeMs = 0;
 
-    public HttpGetFilesConfiguration() {
-    }
+    public HttpGetFilesConfiguration() {}
 
     public boolean isManualFollowRedirect() {
         return manualFollowRedirect;
@@ -154,5 +151,4 @@ public class HttpGetFilesConfiguration {
     public void setWaitTimeMs(int waitTimeMs) {
         this.waitTimeMs = waitTimeMs;
     }
-
 }

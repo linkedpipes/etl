@@ -24,27 +24,19 @@ public class PluginV1Holder implements PluginHolder {
         return template;
     }
 
-    public PluginV1Instance createInstance(
-            Pipeline pipeline, String component)
-            throws ExecutorException {
+    public PluginV1Instance createInstance(Pipeline pipeline, String component) throws ExecutorException {
         // Create instance.
         Component instance;
         try {
             instance = (Component) componentClass.newInstance();
         } catch (IllegalAccessException | InstantiationException ex) {
-            throw new ExecutorException(
-                    "Can't create component instance class.", ex);
+            throw new ExecutorException("Can't create component instance class.", ex);
         }
         //
-        return new PluginV1Instance(
-                (SequentialExecution) instance,
-                component,
-                wrapPipeline(pipeline));
+        return new PluginV1Instance((SequentialExecution) instance, component, wrapPipeline(pipeline));
     }
 
     private RdfSourceWrap wrapPipeline(Pipeline pipeline) {
-        return new RdfSourceWrap(
-                pipeline.getSource(), pipeline.getPipelineGraph());
+        return new RdfSourceWrap(pipeline.getSource(), pipeline.getPipelineGraph());
     }
-
 }

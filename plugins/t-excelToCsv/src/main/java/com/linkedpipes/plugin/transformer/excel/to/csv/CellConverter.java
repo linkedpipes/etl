@@ -1,14 +1,13 @@
 package com.linkedpipes.plugin.transformer.excel.to.csv;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.util.NumberToTextConverter;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 class CellConverter {
 
@@ -43,14 +42,12 @@ class CellConverter {
                 throw new IllegalArgumentException("Wrong cell type: "
                         + cell.getCellType()
                         + " on row: " + Integer.toString(cell.getRowIndex())
-                        + " column: " +
-                        Integer.toString(cell.getColumnIndex()));
+                        + " column: " + Integer.toString(cell.getColumnIndex()));
             default:
                 throw new IllegalArgumentException("Unknown cell type: "
                         + cell.getCellType()
                         + " on row: " + Integer.toString(cell.getRowIndex())
-                        + " column: " +
-                        Integer.toString(cell.getColumnIndex()));
+                        + " column: " + Integer.toString(cell.getColumnIndex()));
         }
     }
 
@@ -64,11 +61,9 @@ class CellConverter {
 
     private String convertFormulaCell(Cell cell) {
         if (!configuration.isEvaluateFormulas()) {
-            throw new IllegalArgumentException(
-                    "Evaluation of cells with formulas are not enabled, "
-                            + "  row: " + Integer.toString(cell.getRowIndex())
-                            + " column: " +
-                            Integer.toString(cell.getColumnIndex()));
+            throw new IllegalArgumentException("Evaluation of cells with formulas are not enabled, "
+                    + "  row: " + Integer.toString(cell.getRowIndex())
+                    + " column: " + Integer.toString(cell.getColumnIndex()));
         }
         CellValue value = evaluator.evaluate(cell);
         switch (value.getCellType()) {
@@ -81,19 +76,15 @@ class CellConverter {
             case Cell.CELL_TYPE_STRING:
                 return value.getStringValue();
             default:
-                throw new IllegalArgumentException(
-                        "Unsupported value type for formula: "
-                                + value.getCellType()
-                                + " on row: " +
-                                Integer.toString(cell.getRowIndex())
-                                + " column: " +
-                                Integer.toString(cell.getColumnIndex()));
+                throw new IllegalArgumentException("Unsupported value type for formula: "
+                        + value.getCellType()
+                        + " on row: " + Integer.toString(cell.getRowIndex())
+                        + " column: " + Integer.toString(cell.getColumnIndex()));
         }
     }
 
     private String convertNumericCell(Cell cell) {
-        if (configuration.isNumericParse() &&
-                DateUtil.isCellDateFormatted(cell)) {
+        if (configuration.isNumericParse() && DateUtil.isCellDateFormatted(cell)) {
             return convertToDate(cell, cell.getNumericCellValue());
         }
         return NumberToTextConverter.toText(cell.getNumericCellValue());
@@ -112,11 +103,9 @@ class CellConverter {
     }
 
     private String convertNumericValue(Cell cell, double value) {
-        if (configuration.isNumericParse() &&
-                DateUtil.isCellDateFormatted(cell)) {
+        if (configuration.isNumericParse() && DateUtil.isCellDateFormatted(cell)) {
             return convertToDate(cell, value);
         }
         return NumberToTextConverter.toText(cell.getNumericCellValue());
     }
-
 }

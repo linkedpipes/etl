@@ -14,8 +14,7 @@ public class ModifyDateConfiguration {
     @RdfToPojo.Property(iri = ModifyDateVocabulary.HAS_OUTPUT)
     private String outputPredicate = "http://localhost/temp/ontology/date";
 
-    public ModifyDateConfiguration() {
-    }
+    public ModifyDateConfiguration() {}
 
     public String getInputPredicate() {
         return inputPredicate;

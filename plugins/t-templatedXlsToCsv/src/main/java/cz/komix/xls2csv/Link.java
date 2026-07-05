@@ -10,7 +10,6 @@ class Link {
     private static final String COLUMNS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     private final int xMin, xMax, yMin, yMax;
-
     private int linkX, linkY;
 
     Link(String reference, int xMin, int xMax, int yMin, int yMax) {
@@ -18,16 +17,10 @@ class Link {
         this.xMax = xMax;
         this.yMin = yMin;
         this.yMax = yMax;
-        this.linkX = COLUMNS.indexOf(
-                reference.replaceAll("\\%\\%B_\\(([A-Z]),([0-9]+)\\)\\%\\%.*",
-                        "$1"));
-        this.linkY = Integer.parseInt(
-                reference.replaceAll("\\%\\%B_\\(([A-Z]),([0-9]+)\\)\\%\\%.*",
-                        "$2")) - 1;
-        LOG.debug("Odkaz z X: " + xMin + " - " + xMax + ", Y: "
-                + yMin + " - " + yMax);
-        LOG.debug("Odkaz na " + reference + " prelozen na X: " + linkX
-                + ", Y: " + linkY);
+        this.linkX = COLUMNS.indexOf(reference.replaceAll("\\%\\%B_\\(([A-Z]),([0-9]+)\\)\\%\\%.*", "$1"));
+        this.linkY = Integer.parseInt(reference.replaceAll("\\%\\%B_\\(([A-Z]),([0-9]+)\\)\\%\\%.*", "$2")) - 1;
+        LOG.debug("Odkaz z X: " + xMin + " - " + xMax + ", Y: " + yMin + " - " + yMax);
+        LOG.debug("Odkaz na " + reference + " prelozen na X: " + linkX + ", Y: " + linkY);
     }
 
     Link(String reference, int x, int y) {
@@ -62,5 +55,4 @@ class Link {
     public void setLinkY(int linkY) {
         this.linkY = linkY;
     }
-
 }

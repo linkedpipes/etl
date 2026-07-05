@@ -19,7 +19,6 @@ import cz.skodape.hdt.json.jackson.model.JacksonPrimitive;
 import cz.skodape.hdt.json.jackson.model.JacksonReference;
 import cz.skodape.hdt.json.jackson.model.JacksonReverseArray;
 import cz.skodape.hdt.json.jackson.model.JacksonValueWrap;
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
@@ -37,8 +36,7 @@ public class JacksonSource implements PropertySource {
         this.url = url;
     }
 
-    public static JacksonSource create(String content)
-            throws IOException, OperationFailed {
+    public static JacksonSource create(String content) throws IOException, OperationFailed {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(new StringReader(content));
         JacksonSource result = new JacksonSource(null);
@@ -70,8 +68,7 @@ public class JacksonSource implements PropertySource {
         }
     }
 
-    private JacksonReference wrapJsonNode(
-            JsonNode node, JacksonReference parent) throws OperationFailed {
+    private JacksonReference wrapJsonNode(JsonNode node, JacksonReference parent) throws OperationFailed {
         List<JacksonReference> parents = collectParents(parent);
         if (node.isArray()) {
             ArrayNode arrayNode = (ArrayNode) node;
@@ -112,8 +109,7 @@ public class JacksonSource implements PropertySource {
         return new MemoryReferenceSource<>(sourceAsArray(reference));
     }
 
-    public List<Reference> sourceAsArray(Reference reference)
-            throws OperationFailed {
+    public List<Reference> sourceAsArray(Reference reference) throws OperationFailed {
         List<Reference> result = new ArrayList<>();
         if (reference instanceof JacksonObject) {
             result.add(reference);
@@ -127,22 +123,19 @@ public class JacksonSource implements PropertySource {
         } else if (reference instanceof JacksonArray) {
             JacksonReference jsonReference = (JacksonReference) reference;
             ((JacksonArray) reference)
-                    .getValues()
-                    .stream()
-                    .map(value -> wrapString(value, jsonReference))
-                    .forEach(result::add);
+                    .getValues().stream()
+                            .map(value -> wrapString(value, jsonReference))
+                            .forEach(result::add);
         } else if (reference instanceof JacksonPrimitive) {
             result.add(reference);
         } else if (reference instanceof JacksonReverseArray) {
-            JacksonReverseArray reverseArray =
-                    (JacksonReverseArray) reference;
+            JacksonReverseArray reverseArray = (JacksonReverseArray) reference;
             return reverseArray.getReferences();
         } else {
             if (reference == null) {
                 throw new OperationFailed("Reference is null.");
             } else {
-                throw new OperationFailed(
-                        "Unknown reference type: {}", reference.getClass());
+                throw new OperationFailed("Unknown reference type: {}", reference.getClass());
             }
         }
         return result;
@@ -153,15 +146,11 @@ public class JacksonSource implements PropertySource {
     }
 
     @Override
-    public ArrayReference property(ObjectReference reference, String property)
-            throws OperationFailed {
+    public ArrayReference property(ObjectReference reference, String property) throws OperationFailed {
         if (reference instanceof JacksonObject) {
-            JacksonObject objectReference =
-                    (JacksonObject) reference;
+            JacksonObject objectReference = (JacksonObject) reference;
             JsonNode node = objectReference.getNode().get(property);
-            return new JacksonNodeArray(
-                    collectParents(objectReference),
-                    Collections.singletonList(node));
+            return new JacksonNodeArray(collectParents(objectReference), Collections.singletonList(node));
         }
         if (reference instanceof JacksonValueWrap) {
             JacksonValueWrap valueReference = (JacksonValueWrap) reference;
@@ -191,9 +180,7 @@ public class JacksonSource implements PropertySource {
     }
 
     @Override
-    public ArrayReference reverseProperty(Reference reference, String property)
-            throws OperationFailed {
+    public ArrayReference reverseProperty(Reference reference, String property) throws OperationFailed {
         throw new OperationFailed("Operation not supported.");
     }
-
 }

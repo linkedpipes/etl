@@ -9,5 +9,4 @@ import java.util.Map;
 public class ObjectTransformation extends BaseTransformation {
 
     public Map<String, BaseTransformation> properties = new HashMap<>();
-
 }

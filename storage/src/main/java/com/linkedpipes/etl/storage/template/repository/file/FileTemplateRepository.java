@@ -10,11 +10,6 @@ import com.linkedpipes.etl.library.template.reference.adapter.ReferenceTemplateT
 import com.linkedpipes.etl.library.template.reference.model.ReferenceTemplate;
 import com.linkedpipes.etl.storage.StorageException;
 import com.linkedpipes.etl.storage.template.TemplateRepository;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,6 +21,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Keep plugin templates in memory and store each reference templates
@@ -33,8 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class FileTemplateRepository implements TemplateRepository {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(FileTemplateRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FileTemplateRepository.class);
 
     public static final String NAME = "file";
 
@@ -43,8 +41,7 @@ public class FileTemplateRepository implements TemplateRepository {
     /**
      * We keep those in memory.
      */
-    private final Map<Resource, PluginTemplate> pluginTemplates =
-            new HashMap<>();
+    private final Map<Resource, PluginTemplate> pluginTemplates = new HashMap<>();
 
     private final AtomicInteger counter = new AtomicInteger();
 
@@ -76,22 +73,18 @@ public class FileTemplateRepository implements TemplateRepository {
             try {
                 rawTemplate = loadRawTemplate(file);
             } catch (StorageException ex) {
-                result.add(new StorageException(
-                        "Can't load from '{}'.", file, ex));
+                result.add(new StorageException("Can't load from '{}'.", file, ex));
                 continue;
             }
             rawTemplates.add(rawTemplate);
             nextReferenceFiles.put(rawTemplate.resource, file);
         }
-        ReferenceTemplateLoader loader = new ReferenceTemplateLoader(
-                pluginTemplates.keySet(), Collections.emptyMap());
+        ReferenceTemplateLoader loader = new ReferenceTemplateLoader(pluginTemplates.keySet(), Collections.emptyMap());
         loader.loadAndMigrate(rawTemplates);
         loader.getContainers().stream()
                 .filter(ReferenceTemplateLoader.Container::isFailed)
                 .forEach(container -> result.add(new StorageException(
-                        "Can't load template '{}'.",
-                        container.rawTemplate().resource,
-                        container.exception())));
+                        "Can't load template '{}'.", container.rawTemplate().resource, container.exception())));
         // Save migrated templates.
         for (ReferenceTemplate template : loader.getMigratedTemplates()) {
             try {
@@ -117,8 +110,7 @@ public class FileTemplateRepository implements TemplateRepository {
                 .toList();
     }
 
-    private RawReferenceTemplate loadRawTemplate(File file)
-            throws StorageException {
+    private RawReferenceTemplate loadRawTemplate(File file) throws StorageException {
         Statements statements = Statements.arrayList();
         try {
             statements.file().addAllIfExists(file);
@@ -126,37 +118,27 @@ public class FileTemplateRepository implements TemplateRepository {
             throw new StorageException("Can't read file.", ex);
         }
         List<RawReferenceTemplate> candidates =
-                RdfToRawReferenceTemplate.asRawReferenceTemplates(
-                        statements.selector());
+                RdfToRawReferenceTemplate.asRawReferenceTemplates(statements.selector());
         if (candidates.size() != 1) {
             throw new StorageException(
-                    "Invalid number of components '{}', expected one in '{}'.",
-                    candidates.size(), file);
+                    "Invalid number of components '{}', expected one in '{}'.", candidates.size(), file);
         }
         return candidates.get(0);
     }
 
-    private void handleMigrated(ReferenceTemplate template, File file)
-            throws StorageException {
+    private void handleMigrated(ReferenceTemplate template, File file) throws StorageException {
         try {
             writeTemplate(template, file);
         } catch (StorageException ex) {
-            throw new StorageException(
-                    "Can't save migrated template '{}'.",
-                    template.resource());
+            throw new StorageException("Can't save migrated template '{}'.", template.resource());
         }
     }
 
-    private void writeTemplate(ReferenceTemplate template, File file)
-            throws StorageException {
+    private void writeTemplate(ReferenceTemplate template, File file) throws StorageException {
         referenceFiles.put(template.resource(), file);
         Statements statements = Statements.arrayList();
-        statements.addAll(
-                ReferenceTemplateToRdf.definitionAsRdf(template)
-                        .withGraph(template.resource()));
-        statements.addAll(
-                ReferenceTemplateToRdf.configurationAsRdf(template)
-                        .withGraph(template.configurationGraph()));
+        statements.addAll(ReferenceTemplateToRdf.definitionAsRdf(template).withGraph(template.resource()));
+        statements.addAll(ReferenceTemplateToRdf.configurationAsRdf(template).withGraph(template.configurationGraph()));
         try {
             statements.file().writeToFile(file, RDFFormat.TRIG);
         } catch (IOException ex) {
@@ -185,8 +167,7 @@ public class FileTemplateRepository implements TemplateRepository {
     }
 
     @Override
-    public ReferenceTemplate loadReferenceTemplate(Resource resource)
-            throws StorageException {
+    public ReferenceTemplate loadReferenceTemplate(Resource resource) throws StorageException {
         File file = referenceFiles.get(resource);
         if (file == null) {
             return null;
@@ -196,10 +177,8 @@ public class FileTemplateRepository implements TemplateRepository {
     }
 
     @Override
-    public void storeReferenceTemplate(ReferenceTemplate template)
-            throws StorageException {
-        File file = referenceFiles.computeIfAbsent(
-                template.resource(), key -> createNewFile(template));
+    public void storeReferenceTemplate(ReferenceTemplate template) throws StorageException {
+        File file = referenceFiles.computeIfAbsent(template.resource(), key -> createNewFile(template));
         writeTemplate(template, file);
     }
 
@@ -209,12 +188,10 @@ public class FileTemplateRepository implements TemplateRepository {
     }
 
     @Override
-    public void deleteReferenceTemplate(Resource resource)
-            throws StorageException {
+    public void deleteReferenceTemplate(Resource resource) throws StorageException {
         File file = referenceFiles.get(resource);
         if (!file.delete()) {
-            throw new StorageException(
-                    "Can't delete pipeline file '{}'.", file);
+            throw new StorageException("Can't delete pipeline file '{}'.", file);
         }
         referenceFiles.remove(resource);
     }
@@ -222,10 +199,8 @@ public class FileTemplateRepository implements TemplateRepository {
     @Override
     public Resource reserveResource(ResourceFactory factory, String baseUrl) {
         String time = String.valueOf(new Date().getTime());
-        String index = String.format("%1$4s", counter.incrementAndGet())
-                .replace(" ", "0");
+        String index = String.format("%1$4s", counter.incrementAndGet()).replace(" ", "0");
         String suffix = time + "-" + index;
         return factory.apply(baseUrl, suffix);
     }
-
 }

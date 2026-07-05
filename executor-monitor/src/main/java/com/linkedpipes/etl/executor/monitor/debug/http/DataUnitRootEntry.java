@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.monitor.debug.http;
 
 import com.linkedpipes.etl.executor.monitor.debug.DataUnit;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,18 +14,14 @@ class DataUnitRootEntry extends DebugEntry {
 
     final CreatePublicPath createPublicPath;
 
-    public DataUnitRootEntry(
-            DataUnit dataUnit, CreatePublicPath createPublicPath) {
+    public DataUnitRootEntry(DataUnit dataUnit, CreatePublicPath createPublicPath) {
         this.dataUnit = dataUnit;
         this.createPublicPath = createPublicPath;
     }
 
     @Override
-    public DebugEntry prepareData(
-            String nameFilter, String sourceFilter, long offset, long limit)
-            throws IOException {
-        List<ResponseContent.Entry> data =
-                collectEntries(nameFilter, sourceFilter, offset, limit);
+    public DebugEntry prepareData(String nameFilter, String sourceFilter, long offset, long limit) throws IOException {
+        List<ResponseContent.Entry> data = collectEntries(nameFilter, sourceFilter, offset, limit);
         //
         ResponseContent content = new ResponseContent(data);
         content.metadata.count = totalEntryCount;
@@ -64,10 +59,7 @@ class DataUnitRootEntry extends DebugEntry {
                 }
                 if (file.isDirectory()) {
                     data.add(new ResponseContent.Entry(
-                            ResponseContent.TYPE_DIR,
-                            file.getName(),
-                            file.getName(),
-                            directory.getName()));
+                            ResponseContent.TYPE_DIR, file.getName(), file.getName(), directory.getName()));
                 } else {
                     data.add(new ResponseContent.Entry(
                             ResponseContent.TYPE_FILE,
@@ -90,5 +82,4 @@ class DataUnitRootEntry extends DebugEntry {
     private boolean filterByName(File file, String filter) {
         return filter == null || file.getName().startsWith(filter);
     }
-
 }

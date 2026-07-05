@@ -4,12 +4,11 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.model.vocabulary.RDF;
 import com.linkedpipes.etl.model.vocabulary.SKOS;
 import com.linkedpipes.etl.unpacker.rdf.Loadable;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Value;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
 
 public class DesignerComponent implements Loadable {
 
@@ -30,8 +29,7 @@ public class DesignerComponent implements Loadable {
 
     private boolean disabled = false;
 
-    public DesignerComponent() {
-    }
+    public DesignerComponent() {}
 
     public DesignerComponent(DesignerComponent component) {
         this.iri = component.iri;
@@ -41,11 +39,10 @@ public class DesignerComponent implements Loadable {
         this.template = component.template;
         this.label = component.label;
         this.disabled = component.disabled;
-
     }
 
     @Override
-    public void resource(String resource)  {
+    public void resource(String resource) {
         iri = resource;
     }
 
@@ -105,5 +102,4 @@ public class DesignerComponent implements Loadable {
     public boolean isDisabled() {
         return disabled;
     }
-
 }

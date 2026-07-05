@@ -1,18 +1,17 @@
 package com.linkedpipes.etl.executor.component.configuration;
 
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_OBJECTS;
-import com.linkedpipes.etl.rdf.utils.RdfBuilder;
-import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.executor.rdf.entity.EntityReference;
 import com.linkedpipes.etl.executor.rdf.entity.MergeType;
-import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
 import com.linkedpipes.etl.rdf.rdf4j.Rdf4jSource;
+import com.linkedpipes.etl.rdf.utils.RdfBuilder;
+import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.ClosableRdfSource;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.LinkedList;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DefaultControlTest {
 
@@ -20,7 +19,8 @@ public class DefaultControlTest {
     public void initFromTwoSources() throws RdfUtilsException {
         ClosableRdfSource source = Rdf4jSource.createInMemory();
         RdfBuilder builder = RdfBuilder.create(source, "http://graph");
-        builder.entity("http://des").iri(RDF.TYPE, LP_OBJECTS.DESCRIPTION)
+        builder.entity("http://des")
+                .iri(RDF.TYPE, LP_OBJECTS.DESCRIPTION)
                 .iri(LP_OBJECTS.HAS_DESCRIBE, "http://type")
                 .entity(LP_OBJECTS.HAS_MEMBER, "http://des/1")
                 .iri(LP_OBJECTS.HAS_PROPERTY, "http://value/1")
@@ -52,26 +52,19 @@ public class DefaultControlTest {
         control.loadDefinition(source, "http://type");
 
         List<EntityReference> refs = new LinkedList<>();
-        refs.add(new EntityReference("http://config",
-                "http://config/1", source));
-        refs.add(new EntityReference("http://config",
-                "http://config/2", otherSource));
+        refs.add(new EntityReference("http://config", "http://config/1", source));
+        refs.add(new EntityReference("http://config", "http://config/2", otherSource));
         control.init(refs);
 
         control.onReference("http://config", "http://config/1");
-        Assertions.assertEquals(MergeType.SKIP,
-                control.onProperty("http://value/1"));
-        Assertions.assertEquals(MergeType.LOAD,
-                control.onProperty("http://value/2"));
+        Assertions.assertEquals(MergeType.SKIP, control.onProperty("http://value/1"));
+        Assertions.assertEquals(MergeType.LOAD, control.onProperty("http://value/2"));
 
         control.onReference("http://config", "http://config/2");
-        Assertions.assertEquals(MergeType.LOAD,
-                control.onProperty("http://value/1"));
-        Assertions.assertEquals(MergeType.SKIP,
-                control.onProperty("http://value/2"));
+        Assertions.assertEquals(MergeType.LOAD, control.onProperty("http://value/1"));
+        Assertions.assertEquals(MergeType.SKIP, control.onProperty("http://value/2"));
 
         source.close();
         otherSource.close();
     }
-
 }

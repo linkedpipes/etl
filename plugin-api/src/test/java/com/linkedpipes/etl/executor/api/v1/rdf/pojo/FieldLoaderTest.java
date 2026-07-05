@@ -3,16 +3,15 @@ package com.linkedpipes.etl.executor.api.v1.rdf.pojo;
 import com.linkedpipes.etl.executor.api.v1.rdf.LanguageString;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 public class FieldLoaderTest {
 
@@ -21,9 +20,7 @@ public class FieldLoaderTest {
         VALUE_B
     }
 
-    public static class TestLangString extends LanguageString {
-
-    }
+    public static class TestLangString extends LanguageString {}
 
     public static class TestClass {
 
@@ -75,8 +72,7 @@ public class FieldLoaderTest {
             return reference;
         }
 
-        public void setReference(
-                TestClass reference) {
+        public void setReference(TestClass reference) {
             this.reference = reference;
         }
     }
@@ -283,7 +279,6 @@ public class FieldLoaderTest {
         Assertions.assertEquals(20, calendar.get(Calendar.DAY_OF_MONTH));
     }
 
-
     @Test
     public void loadNestedCollection() throws Exception {
         TestClass instance = new TestClass();
@@ -340,5 +335,4 @@ public class FieldLoaderTest {
         Assertions.assertEquals("value", langString.getValue());
         Assertions.assertEquals("cs", langString.getLanguage());
     }
-
 }

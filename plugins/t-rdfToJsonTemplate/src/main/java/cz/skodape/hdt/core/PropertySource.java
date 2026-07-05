@@ -28,14 +28,11 @@ public interface PropertySource {
     /**
      * Return values for given object and property.
      */
-    ArrayReference property(ObjectReference reference, String property)
-            throws OperationFailed;
+    ArrayReference property(ObjectReference reference, String property) throws OperationFailed;
 
     /**
      * Return array of all references that have given property with
      * given reference as a value.
      */
-    ArrayReference reverseProperty(Reference reference, String property)
-            throws OperationFailed;
-
+    ArrayReference reverseProperty(Reference reference, String property) throws OperationFailed;
 }

@@ -8,8 +8,7 @@ public class StreamCompressionConfiguration {
     @RdfToPojo.Property(iri = StreamCompressionVocabulary.HAS_FORMAT)
     private String format;
 
-    public StreamCompressionConfiguration() {
-    }
+    public StreamCompressionConfiguration() {}
 
     public String getFormat() {
         return format;
@@ -18,5 +17,4 @@ public class StreamCompressionConfiguration {
     public void setFormat(String format) {
         this.format = format;
     }
-
 }

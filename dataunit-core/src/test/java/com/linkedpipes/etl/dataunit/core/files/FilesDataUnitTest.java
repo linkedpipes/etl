@@ -3,11 +3,6 @@ package com.linkedpipes.etl.dataunit.core.files;
 import com.linkedpipes.etl.dataunit.core.DataUnitConfiguration;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
-import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +12,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class FilesDataUnitTest {
 
@@ -31,9 +30,7 @@ public class FilesDataUnitTest {
 
     @Test
     public void addAndRead() throws Exception {
-        DefaultFilesDataUnit files = new DefaultFilesDataUnit(
-                createConfiguration(),
-                Collections.EMPTY_LIST);
+        DefaultFilesDataUnit files = new DefaultFilesDataUnit(createConfiguration(), Collections.EMPTY_LIST);
         //
         Assertions.assertEquals(0, files.size());
         // This does not create the file.
@@ -49,10 +46,8 @@ public class FilesDataUnitTest {
         List<String> paths = new ArrayList<>();
         files.forEach((entry) -> paths.add(entry.getFileName()));
         //
-        Assertions.assertTrue(
-                paths.contains("directory-a" + File.separator + "a"));
-        Assertions.assertTrue(
-                paths.contains("directory-b" + File.separator + "b"));
+        Assertions.assertTrue(paths.contains("directory-a" + File.separator + "a"));
+        Assertions.assertTrue(paths.contains("directory-b" + File.separator + "b"));
     }
 
     private DataUnitConfiguration createConfiguration() throws IOException {
@@ -63,13 +58,10 @@ public class FilesDataUnitTest {
     @Test
     public void merge() throws Exception {
         //
-        DefaultFilesDataUnit a = new DefaultFilesDataUnit(
-                createConfiguration(), Collections.EMPTY_LIST);
-        DefaultFilesDataUnit b = new DefaultFilesDataUnit(
-                createConfiguration(), Collections.EMPTY_LIST);
+        DefaultFilesDataUnit a = new DefaultFilesDataUnit(createConfiguration(), Collections.EMPTY_LIST);
+        DefaultFilesDataUnit b = new DefaultFilesDataUnit(createConfiguration(), Collections.EMPTY_LIST);
         DefaultFilesDataUnit c = new DefaultFilesDataUnit(
-                createConfiguration(),
-                Arrays.asList("http://dataunit/a", "http://dataunit/b"));
+                createConfiguration(), Arrays.asList("http://dataunit/a", "http://dataunit/b"));
         //
         FileUtils.writeStringToFile(a.createFile("dir/a"), "");
         FileUtils.writeStringToFile(a.createFile("1"), "");
@@ -93,8 +85,7 @@ public class FilesDataUnitTest {
 
     @Test
     public void saveAndLoad() throws Exception {
-        DefaultFilesDataUnit a = new DefaultFilesDataUnit(
-                createConfiguration(), Collections.EMPTY_LIST);
+        DefaultFilesDataUnit a = new DefaultFilesDataUnit(createConfiguration(), Collections.EMPTY_LIST);
         File file = a.createFile("dir/a");
         FileUtils.writeStringToFile(file, "");
         Assertions.assertEquals(1, a.size());
@@ -102,21 +93,19 @@ public class FilesDataUnitTest {
         File saveDirectory = getTempDirectory();
         saveDirectory.mkdirs();
         a.save(saveDirectory);
-        DefaultFilesDataUnit b = new DefaultFilesDataUnit(
-                createConfiguration(), Collections.EMPTY_LIST);
+        DefaultFilesDataUnit b = new DefaultFilesDataUnit(createConfiguration(), Collections.EMPTY_LIST);
         Assertions.assertEquals(0, b.size());
         b.initialize(saveDirectory);
         Assertions.assertEquals(1, b.size());
-        Assertions.assertEquals("dir" + File.separator + "a",
-                b.iterator().next().getFileName());
-        Assertions.assertEquals(file.toPath().normalize(),
-                b.iterator().next().toFile().toPath().normalize());
+        Assertions.assertEquals(
+                "dir" + File.separator + "a", b.iterator().next().getFileName());
+        Assertions.assertEquals(
+                file.toPath().normalize(), b.iterator().next().toFile().toPath().normalize());
     }
 
     @Test
     public void createExisting() throws Exception {
-        DefaultFilesDataUnit a = new DefaultFilesDataUnit(
-                createConfiguration(), Collections.EMPTY_LIST);
+        DefaultFilesDataUnit a = new DefaultFilesDataUnit(createConfiguration(), Collections.EMPTY_LIST);
         FileUtils.writeStringToFile(a.createFile("dir/a"), "");
         try {
             a.createFile("dir/a");
@@ -132,5 +121,4 @@ public class FilesDataUnitTest {
         this.DIRECTORIES.add(file);
         return file;
     }
-
 }

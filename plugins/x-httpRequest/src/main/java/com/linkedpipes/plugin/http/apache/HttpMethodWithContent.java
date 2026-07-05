@@ -1,8 +1,7 @@
 package com.linkedpipes.plugin.http.apache;
 
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-
 import java.net.URI;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 
 class HttpMethodWithContent extends HttpEntityEnclosingRequestBase {
 
@@ -17,5 +16,4 @@ class HttpMethodWithContent extends HttpEntityEnclosingRequestBase {
     public String getMethod() {
         return method;
     }
-
 }

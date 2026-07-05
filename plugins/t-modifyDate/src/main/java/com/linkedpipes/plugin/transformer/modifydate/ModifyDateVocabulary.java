@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.modifydate;
 
 public class ModifyDateVocabulary {
 
-    private static final String PREFIX =
-            "http://plugins.linkedpipes.com/ontology/t-modifyDate#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-modifyDate#";
 
     public static final String CONFIG_CLASS = PREFIX + "Configuration";
 
@@ -12,5 +11,4 @@ public class ModifyDateVocabulary {
     public static final String HAS_VALUE = PREFIX + "shiftBy";
 
     public static final String HAS_OUTPUT = PREFIX + "output";
-
 }

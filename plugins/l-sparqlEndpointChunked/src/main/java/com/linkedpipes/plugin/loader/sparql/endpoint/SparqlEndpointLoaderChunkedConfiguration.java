@@ -5,35 +5,28 @@ import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 @RdfToPojo.Type(iri = SparqlEndpointLoaderChunkedVocabulary.CONFIG)
 public class SparqlEndpointLoaderChunkedConfiguration {
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointLoaderChunkedVocabulary.HAS_ENDPOINT)
+    @RdfToPojo.Property(iri = SparqlEndpointLoaderChunkedVocabulary.HAS_ENDPOINT)
     private String endpoint;
 
     @RdfToPojo.Property(iri = SparqlEndpointLoaderChunkedVocabulary.HAS_AUTH)
     private boolean useAuthentication = true;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointLoaderChunkedVocabulary.HAS_USERNAME)
+    @RdfToPojo.Property(iri = SparqlEndpointLoaderChunkedVocabulary.HAS_USERNAME)
     private String userName;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointLoaderChunkedVocabulary.HAS_PASSWORD)
+    @RdfToPojo.Property(iri = SparqlEndpointLoaderChunkedVocabulary.HAS_PASSWORD)
     private String password;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointLoaderChunkedVocabulary.HAS_CLEAR_GRAPH)
+    @RdfToPojo.Property(iri = SparqlEndpointLoaderChunkedVocabulary.HAS_CLEAR_GRAPH)
     private boolean clearDestinationGraph = false;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointLoaderChunkedVocabulary.HAS_TAGET_GRAPH)
+    @RdfToPojo.Property(iri = SparqlEndpointLoaderChunkedVocabulary.HAS_TAGET_GRAPH)
     private String targetGraphName;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointLoaderChunkedVocabulary.HAS_COMMIT_SIZE)
+    @RdfToPojo.Property(iri = SparqlEndpointLoaderChunkedVocabulary.HAS_COMMIT_SIZE)
     private int commitSize = 100000;
 
-    public SparqlEndpointLoaderChunkedConfiguration() {
-    }
+    public SparqlEndpointLoaderChunkedConfiguration() {}
 
     public String getEndpoint() {
         return endpoint;

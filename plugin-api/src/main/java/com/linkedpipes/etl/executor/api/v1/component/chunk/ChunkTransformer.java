@@ -1,18 +1,16 @@
 package com.linkedpipes.etl.executor.api.v1.component.chunk;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import java.util.Map;
-
 public abstract class ChunkTransformer<Chunk, Product> implements Runnable {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ChunkTransformer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChunkTransformer.class);
 
-    protected final Map<String,String> contextMap = MDC.getCopyOfContextMap();
+    protected final Map<String, String> contextMap = MDC.getCopyOfContextMap();
 
     private final ChunkExecution<Chunk, Product> owner;
 
@@ -26,7 +24,7 @@ public abstract class ChunkTransformer<Chunk, Product> implements Runnable {
     public void run() {
         MDC.setContextMap(contextMap);
         LOG.info("Executor is running ...");
-        while(true) {
+        while (true) {
             Chunk next = owner.next();
             if (next == null) {
                 break;
@@ -48,5 +46,4 @@ public abstract class ChunkTransformer<Chunk, Product> implements Runnable {
     public boolean isFinished() {
         return finished;
     }
-
 }

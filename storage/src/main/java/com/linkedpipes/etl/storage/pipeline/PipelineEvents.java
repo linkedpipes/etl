@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.storage.pipeline;
 
 import com.linkedpipes.etl.library.pipeline.model.Pipeline;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +36,6 @@ public class PipelineEvents {
         default void onPipelineReload() {
             // Do nothing.
         }
-
     }
 
     private final List<Listener> registered = new ArrayList<>();
@@ -75,5 +73,4 @@ public class PipelineEvents {
             listener.onPipelineReload();
         }
     }
-
 }

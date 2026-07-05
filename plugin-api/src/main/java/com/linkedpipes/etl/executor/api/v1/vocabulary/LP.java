@@ -2,8 +2,7 @@ package com.linkedpipes.etl.executor.api.v1.vocabulary;
 
 public final class LP {
 
-    private static final String REPORT_PREFIX =
-            "https://vocabulary.etl.linkedpipes.com/report/";
+    private static final String REPORT_PREFIX = "https://vocabulary.etl.linkedpipes.com/report/";
 
     public static final String REPORT = REPORT_PREFIX + "Report";
 
@@ -29,16 +28,13 @@ public final class LP {
 
     public static final String FAILED = REPORT_PREFIX + "Failed";
 
-    private static final String EVENT_PREFIX =
-            "http://linkedpipes.com/ontology/events/";
+    private static final String EVENT_PREFIX = "http://linkedpipes.com/ontology/events/";
 
     public static final String HAS_CREATED = EVENT_PREFIX + "created";
 
-    private static final String PROGRESS_PREFIX =
-            "http://linkedpipes.com/ontology/progress/";
+    private static final String PROGRESS_PREFIX = "http://linkedpipes.com/ontology/progress/";
 
-    public static final String PROGRESS_REPORT =
-            PROGRESS_PREFIX + "ProgressReport";
+    public static final String PROGRESS_REPORT = PROGRESS_PREFIX + "ProgressReport";
 
     public static final String HAS_TOTAL = PROGRESS_PREFIX + "total";
 
@@ -48,7 +44,5 @@ public final class LP {
 
     public static final String HAS_COMPONENT = PREFIX + "component";
 
-    public static final String HAS_WORKING_DIRECTORY =
-            PREFIX + "workingDirectory";
-
+    public static final String HAS_WORKING_DIRECTORY = PREFIX + "workingDirectory";
 }

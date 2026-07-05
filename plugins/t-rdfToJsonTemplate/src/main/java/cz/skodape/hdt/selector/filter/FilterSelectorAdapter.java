@@ -4,11 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import cz.skodape.hdt.model.SelectorConfiguration;
 import cz.skodape.hdt.model.TransformationFileAdapter;
 import cz.skodape.hdt.selector.path.PathSelectorAdapter;
-
 import java.io.IOException;
 
-public class FilterSelectorAdapter
-        implements TransformationFileAdapter.SelectorConfigurationAdapter {
+public class FilterSelectorAdapter implements TransformationFileAdapter.SelectorConfigurationAdapter {
 
     @Override
     public SelectorConfiguration readJson(JsonNode root) throws IOException {
@@ -19,8 +17,7 @@ public class FilterSelectorAdapter
         return null;
     }
 
-    public FilterSelectorConfiguration readConfiguration(
-            JsonNode root) throws IOException {
+    public FilterSelectorConfiguration readConfiguration(JsonNode root) throws IOException {
         FilterSelectorConfiguration result = new FilterSelectorConfiguration();
         PathSelectorAdapter pathAdapter = new PathSelectorAdapter();
         result.path = pathAdapter.readConfiguration(root);
@@ -29,8 +26,7 @@ public class FilterSelectorAdapter
         return result;
     }
 
-    private FilterSelectorConfiguration.ConditionType readCondition(
-            JsonNode node) throws IOException {
+    private FilterSelectorConfiguration.ConditionType readCondition(JsonNode node) throws IOException {
         String type = node.textValue();
         switch (type) {
             case "Contain":
@@ -38,9 +34,7 @@ public class FilterSelectorAdapter
             case "Equal":
                 return FilterSelectorConfiguration.ConditionType.Equal;
             default:
-                throw new IOException(
-                        "Unsupported condition type '" + type + "'.");
+                throw new IOException("Unsupported condition type '" + type + "'.");
         }
     }
-
 }

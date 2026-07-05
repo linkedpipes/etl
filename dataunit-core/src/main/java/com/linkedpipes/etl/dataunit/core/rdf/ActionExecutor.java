@@ -9,12 +9,9 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
  */
 class ActionExecutor {
 
-    private ActionExecutor() {
-    }
+    private ActionExecutor() {}
 
-    public static void execute(
-            Repository repository,
-            Rdf4jDataUnit.RepositoryProcedure procedure) throws LpException {
+    public static void execute(Repository repository, Rdf4jDataUnit.RepositoryProcedure procedure) throws LpException {
         try (RepositoryConnection connection = repository.getConnection()) {
             procedure.accept(connection);
         } catch (Exception ex) {
@@ -25,9 +22,8 @@ class ActionExecutor {
         }
     }
 
-    public static <T> T execute(
-            Repository repository,
-            Rdf4jDataUnit.RepositoryFunction<T> function) throws LpException {
+    public static <T> T execute(Repository repository, Rdf4jDataUnit.RepositoryFunction<T> function)
+            throws LpException {
         try (RepositoryConnection connection = repository.getConnection()) {
             return function.accept(connection);
         } catch (Exception ex) {
@@ -38,8 +34,7 @@ class ActionExecutor {
         }
     }
 
-    public static void execute(Rdf4jDataUnit.Procedure procedure)
-            throws LpException {
+    public static void execute(Rdf4jDataUnit.Procedure procedure) throws LpException {
         try {
             procedure.accept();
         } catch (Exception ex) {
@@ -49,5 +44,4 @@ class ActionExecutor {
             throw new LpException("Can't execute procedure.", ex);
         }
     }
-
 }

@@ -13,7 +13,6 @@ public class AbstractEventTest {
         public DefaultEvent(String type) {
             super(type);
         }
-
     }
 
     @Test
@@ -23,14 +22,9 @@ public class AbstractEventTest {
         TripleWriter writer = Mockito.mock(TripleWriter.class);
         event.write(writer);
 
-        Mockito.verify(writer, Mockito.times(1)).iri(
-                Mockito.eq("http://event"),
-                Mockito.eq(RDF.TYPE),
-                Mockito.eq("http://type"));
-        Mockito.verify(writer, Mockito.times(1)).date(
-                Mockito.eq("http://event"),
-                Mockito.eq(LP.HAS_CREATED),
-                Mockito.any());
+        Mockito.verify(writer, Mockito.times(1))
+                .iri(Mockito.eq("http://event"), Mockito.eq(RDF.TYPE), Mockito.eq("http://type"));
+        Mockito.verify(writer, Mockito.times(1))
+                .date(Mockito.eq("http://event"), Mockito.eq(LP.HAS_CREATED), Mockito.any());
     }
-
 }

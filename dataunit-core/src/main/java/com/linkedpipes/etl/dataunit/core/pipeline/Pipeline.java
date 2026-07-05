@@ -4,7 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import com.linkedpipes.etl.executor.api.v1.rdf.pojo.Loadable;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,5 +75,4 @@ class Pipeline implements Loadable {
     public ExecutionProfile getExecutionProfile() {
         return executionProfile;
     }
-
 }

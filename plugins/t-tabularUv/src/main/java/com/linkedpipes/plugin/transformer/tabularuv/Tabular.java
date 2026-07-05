@@ -39,28 +39,21 @@ public class Tabular implements Component, SequentialExecution {
     public void execute() throws LpException {
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
         final RdfWriter writer = new RdfWriter(outputRdf);
-        final TableToRdf tableToRdf = new TableToRdf(
-                configuration.getTableToRdfConfig(),
-                writer,
-                valueFactory);
+        final TableToRdf tableToRdf = new TableToRdf(configuration.getTableToRdfConfig(), writer, valueFactory);
         // Prepare parser based on type.
         final Parser parser;
         switch (configuration.getTableType()) {
             case CSV:
-                parser = new ParserCsv(configuration.getParserCsvConfig(),
-                        tableToRdf);
+                parser = new ParserCsv(configuration.getParserCsvConfig(), tableToRdf);
                 break;
             case DBF:
-                parser = new ParserDbf(configuration.getParserDbfConfig(),
-                        tableToRdf);
+                parser = new ParserDbf(configuration.getParserDbfConfig(), tableToRdf);
                 break;
             case XLS:
-                parser = new ParserXls(configuration.getParserXlsConfig(),
-                        tableToRdf);
+                parser = new ParserXls(configuration.getParserXlsConfig(), tableToRdf);
                 break;
             default:
-                throw new LpException("Unknown table type: {}",
-                        configuration.getTableType());
+                throw new LpException("Unknown table type: {}", configuration.getTableType());
         }
         progressReport.start(inputFiles.size());
         for (FilesDataUnit.Entry entry : inputFiles) {
@@ -70,10 +63,11 @@ public class Tabular implements Component, SequentialExecution {
             // If set add subject for the whole table.
             if (configuration.isUseTableSubject()) {
                 // Prepare subject for table.
-                final IRI tableSubject = valueFactory.createIRI(
-                        entry.toFile().toURI().toString());
+                final IRI tableSubject =
+                        valueFactory.createIRI(entry.toFile().toURI().toString());
                 tableToRdf.setTableSubject(tableSubject);
-                writer.add(tableSubject,
+                writer.add(
+                        tableSubject,
                         TabularOntology.TABLE_SYMBOLIC_NAME,
                         valueFactory.createLiteral(entry.getFileName()));
             }
@@ -81,13 +75,11 @@ public class Tabular implements Component, SequentialExecution {
             try {
                 parser.parse(entry.toFile());
             } catch (ParseFailed ex) {
-                throw new LpException("Can't parse file: {}",
-                        entry.getFileName(), ex);
+                throw new LpException("Can't parse file: {}", entry.getFileName(), ex);
             }
             progressReport.entryProcessed();
         }
         writer.flush();
         progressReport.done();
     }
-
 }

@@ -5,6 +5,8 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import java.io.IOException;
+import java.io.StringReader;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF4J;
@@ -19,9 +21,6 @@ import org.eclipse.rdf4j.sail.shacl.ShaclSail;
 import org.eclipse.rdf4j.sail.shacl.ShaclSailValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.StringReader;
 
 public final class Shacl implements Component, SequentialExecution {
 
@@ -59,8 +58,7 @@ public final class Shacl implements Component, SequentialExecution {
 
     private void loadRules(SailRepository sailRepository) throws LpException {
         LOG.info("Adding rules to SHACL repository ...");
-        try (RepositoryConnection connection =
-                     sailRepository.getConnection()) {
+        try (RepositoryConnection connection = sailRepository.getConnection()) {
             connection.begin();
             addRulesFromInput(connection);
             addRulesFromConfiguration(connection);
@@ -70,32 +68,26 @@ public final class Shacl implements Component, SequentialExecution {
         }
     }
 
-    private void addRulesFromInput(RepositoryConnection connection)
-            throws LpException {
+    private void addRulesFromInput(RepositoryConnection connection) throws LpException {
         rulesRdf.execute((inputConnection) -> {
             RepositoryResult<Statement> statements =
-                    inputConnection.getStatements(
-                            null, null, null, rulesRdf.getReadGraph());
+                    inputConnection.getStatements(null, null, null, rulesRdf.getReadGraph());
             connection.add(statements, RDF4J.SHACL_SHAPE_GRAPH);
         });
     }
 
-    private void addRulesFromConfiguration(RepositoryConnection connection)
-            throws IOException {
+    private void addRulesFromConfiguration(RepositoryConnection connection) throws IOException {
         StringReader reader = new StringReader(configuration.getShapes());
-        connection.add(
-                reader, "", RDFFormat.TURTLE, RDF4J.SHACL_SHAPE_GRAPH);
+        connection.add(reader, "", RDFFormat.TURTLE, RDF4J.SHACL_SHAPE_GRAPH);
     }
 
     private void validateData(SailRepository sailRepository) throws LpException {
-        try (SailRepositoryConnection connection =
-                     sailRepository.getConnection()) {
+        try (SailRepositoryConnection connection = sailRepository.getConnection()) {
             connection.begin();
             LOG.info("Adding content to SHACL repository ...");
             inputRdf.execute((inputConnection) -> {
                 RepositoryResult<Statement> statements =
-                        inputConnection.getStatements(
-                                null, null, null, inputRdf.getReadGraph());
+                        inputConnection.getStatements(null, null, null, inputRdf.getReadGraph());
                 connection.add(statements);
             });
             LOG.info("Validating ..");
@@ -112,17 +104,14 @@ public final class Shacl implements Component, SequentialExecution {
         }
     }
 
-    private void onRuleViolation(ShaclSailValidationException ex)
-            throws LpException {
+    private void onRuleViolation(ShaclSailValidationException ex) throws LpException {
         LOG.info("Writing validation report ...");
         Model validationReportModel = ex.validationReportAsModel();
-        try (RepositoryConnection connection =
-                     reportRdf.getRepository().getConnection()) {
+        try (RepositoryConnection connection = reportRdf.getRepository().getConnection()) {
             connection.add(validationReportModel, reportRdf.getWriteGraph());
         }
         if (configuration.isFailOnError()) {
             throw new LpException("Validation failed.");
         }
     }
-
 }

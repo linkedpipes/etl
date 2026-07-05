@@ -14,8 +14,7 @@ public class LoaderLocalConfiguration {
     @RdfToPojo.Property(iri = LoaderLocalVocabulary.HAS_DIRECTORY_PERMISSIONS)
     private String directoryPermissions = null;
 
-    public LoaderLocalConfiguration() {
-    }
+    public LoaderLocalConfiguration() {}
 
     public String getPath() {
         return path;
@@ -40,5 +39,4 @@ public class LoaderLocalConfiguration {
     public void setDirectoryPermissions(String directoryPermissions) {
         this.directoryPermissions = directoryPermissions;
     }
-
 }

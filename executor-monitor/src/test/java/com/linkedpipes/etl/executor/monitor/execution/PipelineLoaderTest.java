@@ -31,10 +31,9 @@ public class PipelineLoaderTest {
         expected.addIri(meta, RDF.TYPE, LP_PIPELINE.EXECUTION_METADATA);
         expected.addIri(meta, LP_EXEC.HAS_TARGET_COMPONENT, "http://component");
         expected.add("http://component", SKOS.PREF_LABEL, "Component");
-        expected.addIri(pipeline, LP_EXEC.HAS_METADATA ,meta);
+        expected.addIri(pipeline, LP_EXEC.HAS_METADATA, meta);
         //
         var actual = execution.getPipelineStatements();
         Assertions.assertTrue(StatementsCompare.isIsomorphic(expected, actual));
     }
-
 }

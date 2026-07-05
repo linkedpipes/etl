@@ -10,8 +10,7 @@ import org.slf4j.LoggerFactory;
 
 public class OnceSelector implements Selector {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(OnceSelector.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OnceSelector.class);
 
     private ReferenceSource input = null;
 
@@ -54,5 +53,4 @@ public class OnceSelector implements Selector {
         } while ((next = input.next()) != null);
         LOG.warn(message.toString());
     }
-
 }

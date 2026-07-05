@@ -5,16 +5,15 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
-import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.repository.RepositoryResult;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 
 public final class ValueParser implements Component, SequentialExecution {
 
@@ -60,8 +59,7 @@ public final class ValueParser implements Component, SequentialExecution {
         statements = new ArrayList<>();
         IRI source = valueFactory.createIRI(configuration.getSource());
         inputRdf.execute((connection -> {
-            RepositoryResult<Statement> result = connection.getStatements(
-                    null, source, null, inputRdf.getReadGraph());
+            RepositoryResult<Statement> result = connection.getStatements(null, source, null, inputRdf.getReadGraph());
             statements.clear();
             while (result.hasNext()) {
                 statements.add(result.next());
@@ -71,27 +69,21 @@ public final class ValueParser implements Component, SequentialExecution {
     }
 
     private void prepareProducers() throws LpException {
-        for (ValueParserConfiguration.OutputBinding output
-                : configuration.getBindings()) {
-            producers.put(output.getGroup(),
-                    createProducer(output.getTarget(), output.getType()));
+        for (ValueParserConfiguration.OutputBinding output : configuration.getBindings()) {
+            producers.put(output.getGroup(), createProducer(output.getTarget(), output.getType()));
         }
     }
 
-    private DefaultProducer createProducer(String predicate, String type)
-            throws LpException {
+    private DefaultProducer createProducer(String predicate, String type) throws LpException {
         // For backward compatibility.
         if (type == null) {
             type = VALUES;
         }
         switch (type) {
             case LIST_WITH_INDEX:
-                return new ListProducer(outputRdf, predicate,
-                        configuration.isKeepMetadata(),
-                        true);
+                return new ListProducer(outputRdf, predicate, configuration.isKeepMetadata(), true);
             case VALUES:
-                return new DefaultProducer(outputRdf, predicate,
-                        configuration.isKeepMetadata());
+                return new DefaultProducer(outputRdf, predicate, configuration.isKeepMetadata());
             default:
                 throw new LpException("Invalid type: {}", type);
         }
@@ -114,8 +106,7 @@ public final class ValueParser implements Component, SequentialExecution {
     private void parseValue(String value) {
         Matcher matcher = pattern.matcher(value);
         while (matcher.find()) {
-            for (Map.Entry<String, DefaultProducer> entry
-                    : producers.entrySet()) {
+            for (Map.Entry<String, DefaultProducer> entry : producers.entrySet()) {
                 String groupValue = matcher.group(entry.getKey());
                 if (groupValue == null) {
                     continue;
@@ -130,5 +121,4 @@ public final class ValueParser implements Component, SequentialExecution {
             producer.onEntityEnd();
         }
     }
-
 }

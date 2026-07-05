@@ -35,8 +35,7 @@ public class ImportPipelineOptions {
      */
     public String targetLabel = null;
 
-    public ImportPipelineOptions() {
-    }
+    public ImportPipelineOptions() {}
 
     public ImportPipelineOptions copyForPipeline(Resource pipeline) {
         ImportPipelineOptions result = new ImportPipelineOptions();
@@ -48,5 +47,4 @@ public class ImportPipelineOptions {
         result.targetLabel = null;
         return result;
     }
-
 }

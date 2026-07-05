@@ -11,7 +11,6 @@ import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 /**
  * Should be used to represent an execution in execution list.
@@ -24,8 +23,7 @@ public class OverviewToListStatements {
         return asStatements(execution, OverviewObject.fromJson(json));
     }
 
-    public Statements asStatements(
-            Execution execution, OverviewObject overview) {
+    public Statements asStatements(Execution execution, OverviewObject overview) {
         if (ExecutionStatus.DELETED.equals(execution.getStatus())) {
             return deletedAsStatements(execution);
         }
@@ -38,15 +36,12 @@ public class OverviewToListStatements {
         builder.addIri(iri, LP_OVERVIEW.HAS_STATUS, overview.getStatus());
 
         if (overview.getDirectorySize() != null) {
-            builder.add(iri, LP_EXEC.HAS_SIZE,
-                    valueFactory.createLiteral(overview.getDirectorySize()));
+            builder.add(iri, LP_EXEC.HAS_SIZE, valueFactory.createLiteral(overview.getDirectorySize()));
         }
 
         String pipeline = overview.getPipeline();
         if (pipeline != null && !"null".equals(pipeline)) {
-            builder.addIri(
-                    iri, LP_OVERVIEW.HAS_PIPELINE,
-                    pipeline);
+            builder.addIri(iri, LP_OVERVIEW.HAS_PIPELINE, pipeline);
         }
 
         if (overview.getStart() != null) {
@@ -58,33 +53,23 @@ public class OverviewToListStatements {
         }
 
         if (overview.getProgressCurrent() != null) {
-            builder.add(
-                    iri, LP_OVERVIEW.HAS_PROGRESS_CURRENT,
-                    overview.getProgressCurrent());
+            builder.add(iri, LP_OVERVIEW.HAS_PROGRESS_CURRENT, overview.getProgressCurrent());
         }
 
         if (overview.getProgressTotal() != null) {
-            builder.add(
-                    iri, LP_OVERVIEW.HAS_PROGRESS_TOTAL,
-                    overview.getProgressTotal());
+            builder.add(iri, LP_OVERVIEW.HAS_PROGRESS_TOTAL, overview.getProgressTotal());
         }
 
         if (overview.getProgressTotalMap() != null) {
-            builder.add(
-                    iri, LP_OVERVIEW.HAS_PROGRESS_TOTAL_MAP,
-                    overview.getProgressTotalMap());
+            builder.add(iri, LP_OVERVIEW.HAS_PROGRESS_TOTAL_MAP, overview.getProgressTotalMap());
         }
 
         if (overview.getProgressCurrentExecuted() != null) {
-            builder.add(
-                    iri, LP_OVERVIEW.HAS_PROGRESS_EXECUTED,
-                    overview.getProgressCurrentExecuted());
+            builder.add(iri, LP_OVERVIEW.HAS_PROGRESS_EXECUTED, overview.getProgressCurrentExecuted());
         }
 
         if (overview.getProgressCurrentMapped() != null) {
-            builder.add(
-                    iri, LP_OVERVIEW.HAS_PROGRESS_MAPPED,
-                    overview.getProgressCurrentMapped());
+            builder.add(iri, LP_OVERVIEW.HAS_PROGRESS_MAPPED, overview.getProgressCurrentMapped());
         }
 
         return builder;
@@ -97,5 +82,4 @@ public class OverviewToListStatements {
         statements.addType(iri, LP_LIST.TOMBSTONE);
         return statements;
     }
-
 }

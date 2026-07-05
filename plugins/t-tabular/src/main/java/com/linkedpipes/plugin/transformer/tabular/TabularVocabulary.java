@@ -4,8 +4,7 @@ public final class TabularVocabulary {
 
     private static final String PREFIX = "http://www.w3.org/ns/csvw#";
 
-    public static final String LOCAL_PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-tabular#";
+    public static final String LOCAL_PREFIX = "http://plugins.linkedpipes.com/ontology/t-tabular#";
 
     public static final String TABLE = PREFIX + "Table";
 
@@ -35,8 +34,7 @@ public final class TabularVocabulary {
 
     public static final String HAS_SKIP_COLUMNS = PREFIX + "skipColumns";
 
-    public static final String HAS_SKIP_INITIAL_SPACE = PREFIX
-            + "skipInitialSpace";
+    public static final String HAS_SKIP_INITIAL_SPACE = PREFIX + "skipInitialSpace";
 
     public static final String HAS_SKIP_ROWS = PREFIX + "skipRows";
 
@@ -74,17 +72,13 @@ public final class TabularVocabulary {
 
     public static final String HAS_BASE_URI = LOCAL_PREFIX + "baseUri";
 
-    public static final String HAS_GENERATE_NULL_HEADER = LOCAL_PREFIX
-            + "generateNullHeaderNames";
+    public static final String HAS_GENERATE_NULL_HEADER = LOCAL_PREFIX + "generateNullHeaderNames";
 
-    public static final String HAS_ENCODE_TYPE = LOCAL_PREFIX +
-            "encodeType";
+    public static final String HAS_ENCODE_TYPE = LOCAL_PREFIX + "encodeType";
 
     public static final String HAS_SKIP_LINES = LOCAL_PREFIX + "skipLines";
 
     public static final String HAS_SKIP_ON_ERROR = LOCAL_PREFIX + "skipOnError";
 
-    private TabularVocabulary() {
-    }
-
+    private TabularVocabulary() {}
 }

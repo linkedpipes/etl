@@ -5,6 +5,9 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import java.net.IDN;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -27,14 +30,9 @@ import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.IDN;
-import java.util.HashMap;
-import java.util.Map;
-
 public final class SparqlEndpoint implements Component, SequentialExecution {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(SparqlEndpoint.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SparqlEndpoint.class);
 
     @Component.InputPort(iri = "OutputRdf")
     public WritableSingleGraphDataUnit outputRdf;
@@ -50,15 +48,11 @@ public final class SparqlEndpoint implements Component, SequentialExecution {
 
     @Override
     public void execute() throws LpException {
-        if (configuration.getEndpoint() == null
-                || configuration.getEndpoint().isEmpty()) {
-            throw new LpException("Missing property: {}",
-                    SparqlEndpointVocabulary.HAS_ENDPOINT);
+        if (configuration.getEndpoint() == null || configuration.getEndpoint().isEmpty()) {
+            throw new LpException("Missing property: {}", SparqlEndpointVocabulary.HAS_ENDPOINT);
         }
-        if (configuration.getQuery() == null
-                || configuration.getQuery().isEmpty()) {
-            throw new LpException("Missing property: {}",
-                    SparqlEndpointVocabulary.HAS_QUERY);
+        if (configuration.getQuery() == null || configuration.getQuery().isEmpty()) {
+            throw new LpException("Missing property: {}", SparqlEndpointVocabulary.HAS_QUERY);
         }
         //
         final SPARQLRepository repository = createRepository();
@@ -84,8 +78,7 @@ public final class SparqlEndpoint implements Component, SequentialExecution {
     }
 
     private SPARQLRepository createRepository() {
-        TolerantSparqlRepository repository =
-                new TolerantSparqlRepository(getEndpoint());
+        TolerantSparqlRepository repository = new TolerantSparqlRepository(getEndpoint());
         if (configuration.isUseTolerantRepository()) {
             repository.fixMissingLanguageTag();
         }
@@ -114,29 +107,22 @@ public final class SparqlEndpoint implements Component, SequentialExecution {
         if (configuration.isUseAuthentication()) {
             provider.setCredentials(
                     new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
-                    new UsernamePasswordCredentials(
-                            configuration.getUsername(),
-                            configuration.getPassword()));
+                    new UsernamePasswordCredentials(configuration.getUsername(), configuration.getPassword()));
         }
-        return HttpClients.custom()
-                .setDefaultCredentialsProvider(provider).build();
+        return HttpClients.custom().setDefaultCredentialsProvider(provider).build();
     }
 
     public void queryRemote(SPARQLRepository repository) throws LpException {
         final IRI graph = outputRdf.getWriteGraph();
-        try (RepositoryConnection localConnection
-                     = outputRdf.getRepository().getConnection()) {
+        try (RepositoryConnection localConnection = outputRdf.getRepository().getConnection()) {
             localConnection.begin();
             // We can't use Repositories.graphQuery (Repositories.get) here,
             // as Virtuoso fail with
             // 'No permission to execute procedure DB.DBA.SPARUL_RUN'
             // as sesame try to execute given action in a transaction.
-            try (RepositoryConnection remoteConnection
-                         = repository.getConnection()) {
-                final GraphQuery preparedQuery
-                        = remoteConnection.prepareGraphQuery(
-                        QueryLanguage.SPARQL,
-                        configuration.getQuery());
+            try (RepositoryConnection remoteConnection = repository.getConnection()) {
+                final GraphQuery preparedQuery =
+                        remoteConnection.prepareGraphQuery(QueryLanguage.SPARQL, configuration.getQuery());
                 // Construct dataset.
                 final SimpleDataset dataset = new SimpleDataset();
                 for (String iri : configuration.getDefaultGraphs()) {
@@ -145,8 +131,7 @@ public final class SparqlEndpoint implements Component, SequentialExecution {
                 preparedQuery.setDataset(dataset);
                 RDFHandler handler = new AbstractRDFHandler() {
                     @Override
-                    public void handleStatement(Statement st)
-                            throws RDFHandlerException {
+                    public void handleStatement(Statement st) throws RDFHandlerException {
                         localConnection.add(st, graph);
                     }
                 };
@@ -158,5 +143,4 @@ public final class SparqlEndpoint implements Component, SequentialExecution {
             localConnection.commit();
         }
     }
-
 }

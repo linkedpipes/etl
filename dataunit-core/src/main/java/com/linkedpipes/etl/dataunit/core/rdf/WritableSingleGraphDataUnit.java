@@ -8,5 +8,4 @@ public interface WritableSingleGraphDataUnit extends Rdf4jDataUnit {
     IRI getWriteGraph();
 
     TripleWriter getWriter();
-
 }

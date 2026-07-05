@@ -6,6 +6,4 @@ import org.eclipse.rdf4j.model.Statement;
 public interface StatementHandler {
 
     void handle(Statement statement) throws Exception;
-
 }
-

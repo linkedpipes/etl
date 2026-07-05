@@ -7,10 +7,9 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.io.File;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
-
-import java.io.File;
 
 public final class UnpackZip implements Component, SequentialExecution {
 
@@ -36,8 +35,7 @@ public final class UnpackZip implements Component, SequentialExecution {
         for (FilesDataUnit.Entry entry : input) {
             final File outputDirectory;
             if (configuration.isUsePrefix()) {
-                outputDirectory = new File(output.getWriteDirectory(),
-                        entry.getFileName());
+                outputDirectory = new File(output.getWriteDirectory(), entry.getFileName());
             } else {
                 outputDirectory = output.getWriteDirectory();
             }
@@ -59,14 +57,11 @@ public final class UnpackZip implements Component, SequentialExecution {
         try {
             final ZipFile zip = new ZipFile(zipFile);
             if (zip.isEncrypted()) {
-                throw new LpException("File is encrypted: {}",
-                        zipFile.getName());
+                throw new LpException("File is encrypted: {}", zipFile.getName());
             }
             zip.extractAll(targetDirectory.toString());
         } catch (ZipException ex) {
-            throw new LpException("Extraction failure: {}",
-                    zipFile.getName(), ex);
+            throw new LpException("Extraction failure: {}", zipFile.getName(), ex);
         }
     }
-
 }

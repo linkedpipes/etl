@@ -6,6 +6,10 @@ import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import org.apache.jena.atlas.lib.Timer;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.sparql.core.DatasetGraph;
@@ -14,19 +18,12 @@ import org.apache.jena.tdb2.loader.DataLoader;
 import org.apache.jena.tdb2.loader.LoaderFactory;
 import org.apache.jena.tdb2.loader.base.LoaderOps;
 import org.apache.jena.tdb2.loader.base.MonitorOutput;
-import org.apache.jena.tdb2.loader.base.ProgressMonitorOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 public final class JenaTdbLoader implements Component, SequentialExecution {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(JenaTdbLoader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JenaTdbLoader.class);
 
     @Component.InputPort(iri = "InputFiles")
     public FilesDataUnit inputFiles;
@@ -46,8 +43,7 @@ public final class JenaTdbLoader implements Component, SequentialExecution {
         checkConfiguration();
 
         Dataset dataset = TDB2Factory.connectDataset(getOutputPath());
-        DataLoader loader = createLoader(
-                dataset.asDatasetGraph(), LoaderOps.outputToLog(LOG));
+        DataLoader loader = createLoader(dataset.asDatasetGraph(), LoaderOps.outputToLog(LOG));
 
         List<String> filesToLoad = collectInputFiles();
 
@@ -58,7 +54,6 @@ public final class JenaTdbLoader implements Component, SequentialExecution {
         });
 
         LOG.info("Loading time: {} s", elapsed / 1000);
-
     }
 
     private void checkConfiguration() throws LpException {
@@ -90,8 +85,7 @@ public final class JenaTdbLoader implements Component, SequentialExecution {
         return result;
     }
 
-    private DataLoader createLoader(
-            DatasetGraph dataset, MonitorOutput monitor) throws LpException {
+    private DataLoader createLoader(DatasetGraph dataset, MonitorOutput monitor) throws LpException {
         switch (configuration.getLoader()) {
             case "basic":
                 return LoaderFactory.basicLoader(dataset, monitor);
@@ -102,9 +96,7 @@ public final class JenaTdbLoader implements Component, SequentialExecution {
             case "parallel":
                 return LoaderFactory.parallelLoader(dataset, monitor);
             default:
-                throw new LpException("Unknown loader type '{}'",
-                        configuration.getLoader());
+                throw new LpException("Unknown loader type '{}'", configuration.getLoader());
         }
     }
-
 }

@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1.dataunit;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-
 import java.io.File;
 import java.util.Map;
 
@@ -22,8 +21,7 @@ public interface ManageableDataUnit extends DataUnit {
      * Called before data unit is used. Only one initializer method is called!
      * Should prepare content of data unit from given data units.
      */
-    void initialize(Map<String, ManageableDataUnit> dataUnits)
-            throws LpException;
+    void initialize(Map<String, ManageableDataUnit> dataUnits) throws LpException;
 
     /**
      * Save content of data unit into a directory so it can be later loaded
@@ -57,5 +55,4 @@ public interface ManageableDataUnit extends DataUnit {
      * <p>This function must not change inner state of the instance.
      */
     void referenceContent(File source, File destination) throws LpException;
-
 }

@@ -22,10 +22,6 @@ import com.linkedpipes.etl.storage.assistant.model.PipelineInfo;
 import com.linkedpipes.etl.storage.assistant.model.TemplateUseInfo;
 import com.linkedpipes.etl.storage.plugin.JavaPluginService;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Statement;
-import org.springframework.web.multipart.MultipartFile;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -35,23 +31,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.jar.JarEntry;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.springframework.web.multipart.MultipartFile;
 
 class TemplateServletService {
 
-    private static final String TEMPLATE =
-            "http://etl.linkedpipes.com/ontology/Template";
+    private static final String TEMPLATE = "http://etl.linkedpipes.com/ontology/Template";
 
-    private static final String PIPELINE =
-            "http://linkedpipes.com/ontology/Pipeline";
+    private static final String PIPELINE = "http://linkedpipes.com/ontology/Pipeline";
 
-    private static final String HAS_LABEL =
-            "http://www.w3.org/2004/02/skos/core#prefLabel";
+    private static final String HAS_LABEL = "http://www.w3.org/2004/02/skos/core#prefLabel";
 
-    private static final String HAS_USED_IN_PIPELINE =
-            "http://etl.linkedpipes.com/ontology/usedIn";
+    private static final String HAS_USED_IN_PIPELINE = "http://etl.linkedpipes.com/ontology/usedIn";
 
-    private static final String HAS_INSTANCE =
-            "http://etl.linkedpipes.com/ontology/hasInstance";
+    private static final String HAS_INSTANCE = "http://etl.linkedpipes.com/ontology/hasInstance";
 
     private final AssistantService assistantService;
 
@@ -69,9 +63,7 @@ class TemplateServletService {
      * Return list of templates. For each template return definition
      * and configuration.
      */
-    public void handleGetTemplateList(
-            HttpServletRequest request, HttpServletResponse response)
-            throws ServerError {
+    public void handleGetTemplateList(HttpServletRequest request, HttpServletResponse response) throws ServerError {
         Statements statements;
         try {
             statements = buildTemplateList();
@@ -83,12 +75,10 @@ class TemplateServletService {
 
     private Statements buildTemplateList() throws StorageException {
         StatementsBuilder result = Statements.arrayList().builder();
-        for (PluginTemplate template :
-                templateFacade.getPluginTemplates()) {
+        for (PluginTemplate template : templateFacade.getPluginTemplates()) {
             result.addAll(PluginTemplateToRdf.definitionAsRdf(template));
         }
-        for (ReferenceTemplate template :
-                templateFacade.getReferenceTemplates()) {
+        for (ReferenceTemplate template : templateFacade.getReferenceTemplates()) {
             result.addAll(ReferenceTemplateToRdf.definitionAsRdf(template));
         }
         return result;
@@ -98,9 +88,7 @@ class TemplateServletService {
      * Return definition of template with given resource. The definition
      * can be of jar or reference template.
      */
-    public void handleGetTemplate(
-            Resource resource,
-            HttpServletRequest request, HttpServletResponse response)
+    public void handleGetTemplate(Resource resource, HttpServletRequest request, HttpServletResponse response)
             throws ServerError {
         try {
             if (templateFacade.isPluginTemplate(resource)) {
@@ -113,34 +101,24 @@ class TemplateServletService {
         }
     }
 
-    private void handleGetPluginTemplate(
-            Resource resource,
-            HttpServletRequest request, HttpServletResponse response)
+    private void handleGetPluginTemplate(Resource resource, HttpServletRequest request, HttpServletResponse response)
             throws StorageException {
-        PluginTemplate template =
-                templateFacade.getPluginTemplate(resource);
+        PluginTemplate template = templateFacade.getPluginTemplate(resource);
         if (template == null) {
             response.setStatus(ServletUtilities.HTTP_NOT_FOUND);
             return;
         }
-        ServletUtilities.sendResponse(
-                request, response,
-                PluginTemplateToRdf.definitionAsRdf(template));
+        ServletUtilities.sendResponse(request, response, PluginTemplateToRdf.definitionAsRdf(template));
     }
 
-    private void handleGetReferenceTemplate(
-            Resource resource,
-            HttpServletRequest request, HttpServletResponse response)
+    private void handleGetReferenceTemplate(Resource resource, HttpServletRequest request, HttpServletResponse response)
             throws StorageException {
-        ReferenceTemplate template =
-                templateFacade.getReferenceTemplate(resource);
+        ReferenceTemplate template = templateFacade.getReferenceTemplate(resource);
         if (template == null) {
             response.setStatus(ServletUtilities.HTTP_NOT_FOUND);
             return;
         }
-        ServletUtilities.sendResponse(
-                request, response,
-                ReferenceTemplateToRdf.definitionAsRdf(template));
+        ServletUtilities.sendResponse(request, response, ReferenceTemplateToRdf.definitionAsRdf(template));
     }
 
     /**
@@ -148,9 +126,7 @@ class TemplateServletService {
      * configuration as specified by in the jar file. For reference template
      * this is configuration as saved for the template.
      */
-    public void handleGetConfiguration(
-            Resource resource,
-            HttpServletRequest request, HttpServletResponse response)
+    public void handleGetConfiguration(Resource resource, HttpServletRequest request, HttpServletResponse response)
             throws ServerError {
         try {
             if (templateFacade.isPluginTemplate(resource)) {
@@ -164,35 +140,25 @@ class TemplateServletService {
     }
 
     private void handleGetPluginConfiguration(
-            Resource resource,
-            HttpServletRequest request, HttpServletResponse response)
-            throws StorageException {
-        PluginTemplate template =
-                templateFacade.getPluginTemplate(resource);
+            Resource resource, HttpServletRequest request, HttpServletResponse response) throws StorageException {
+        PluginTemplate template = templateFacade.getPluginTemplate(resource);
         if (template == null) {
             response.setStatus(ServletUtilities.HTTP_NOT_FOUND);
             return;
         }
         ServletUtilities.sendResponse(
-                request, response,
-                template.configuration()
-                        .withGraph(template.configurationGraph()));
+                request, response, template.configuration().withGraph(template.configurationGraph()));
     }
 
     private void handleGetReferenceConfiguration(
-            Resource resource,
-            HttpServletRequest request, HttpServletResponse response)
-            throws StorageException {
-        ReferenceTemplate template =
-                templateFacade.getReferenceTemplate(resource);
+            Resource resource, HttpServletRequest request, HttpServletResponse response) throws StorageException {
+        ReferenceTemplate template = templateFacade.getReferenceTemplate(resource);
         if (template == null) {
             response.setStatus(ServletUtilities.HTTP_NOT_FOUND);
             return;
         }
         ServletUtilities.sendResponse(
-                request, response,
-                template.configuration()
-                        .withGraph(template.configurationGraph()));
+                request, response, template.configuration().withGraph(template.configurationGraph()));
     }
 
     /**
@@ -200,29 +166,22 @@ class TemplateServletService {
      * contain resolved control effects like inherit from template, or force.
      */
     public void handleGetEffectiveConfiguration(
-            Resource resource,
-            HttpServletRequest request, HttpServletResponse response)
-            throws ServerError {
+            Resource resource, HttpServletRequest request, HttpServletResponse response) throws ServerError {
         try {
             if (templateFacade.isPluginTemplate(resource)) {
-                handleGetEffectivePluginConfiguration(
-                        resource, request, response);
+                handleGetEffectivePluginConfiguration(resource, request, response);
             } else {
-                handleGetEffectiveReferenceConfiguration(
-                        resource, request, response);
+                handleGetEffectiveReferenceConfiguration(resource, request, response);
             }
         } catch (StorageException ex) {
-            throw new ServerError(
-                    "Can't get template effective configuration.", ex);
+            throw new ServerError("Can't get template effective configuration.", ex);
         }
     }
 
     private void handleGetEffectivePluginConfiguration(
-            Resource resource,
-            HttpServletRequest request, HttpServletResponse response)
+            Resource resource, HttpServletRequest request, HttpServletResponse response)
             throws StorageException, ServerError {
-        PluginTemplate template =
-                templateFacade.getPluginTemplate(resource);
+        PluginTemplate template = templateFacade.getPluginTemplate(resource);
         if (template == null) {
             response.setStatus(ServletUtilities.HTTP_NOT_FOUND);
             return;
@@ -235,28 +194,21 @@ class TemplateServletService {
                     template.configurationGraph().stringValue(),
                     template.configurationGraph()));
         } catch (ConfigurationException ex) {
-            throw new ServerError(
-                    "Can't get create effective configuration.", ex);
+            throw new ServerError("Can't get create effective configuration.", ex);
         }
-        ServletUtilities.sendResponse(
-                request, response,
-                result.withGraph(template.configurationGraph()));
+        ServletUtilities.sendResponse(request, response, result.withGraph(template.configurationGraph()));
     }
 
     private void handleGetEffectiveReferenceConfiguration(
-            Resource resource,
-            HttpServletRequest request, HttpServletResponse response)
+            Resource resource, HttpServletRequest request, HttpServletResponse response)
             throws StorageException, ServerError {
-        ReferenceTemplate template =
-                templateFacade.getReferenceTemplate(resource);
+        ReferenceTemplate template = templateFacade.getReferenceTemplate(resource);
         if (template == null) {
             response.setStatus(ServletUtilities.HTTP_NOT_FOUND);
             return;
         }
-        PluginTemplate plugin =
-                templateFacade.getPluginTemplate(template.plugin());
-        List<List<Statement>> configurations =
-                collectConfigurations(template, plugin);
+        PluginTemplate plugin = templateFacade.getPluginTemplate(template.plugin());
+        List<List<Statement>> configurations = collectConfigurations(template, plugin);
         //
         Statements result = Statements.arrayList();
         try {
@@ -266,27 +218,21 @@ class TemplateServletService {
                     template.configurationGraph().stringValue(),
                     template.configurationGraph()));
         } catch (ConfigurationException ex) {
-            throw new ServerError(
-                    "Can't get create effective configuration.", ex);
+            throw new ServerError("Can't get create effective configuration.", ex);
         }
-        ServletUtilities.sendResponse(
-                request, response,
-                result.withGraph(template.configurationGraph()));
+        ServletUtilities.sendResponse(request, response, result.withGraph(template.configurationGraph()));
     }
 
-    private List<List<Statement>> collectConfigurations(
-            ReferenceTemplate template, PluginTemplate plugin)
+    private List<List<Statement>> collectConfigurations(ReferenceTemplate template, PluginTemplate plugin)
             throws StorageException {
         List<List<Statement>> result = new ArrayList<>();
         result.add(template.configuration().asList());
         while (!Objects.equal(template.template(), template.plugin())) {
             // There is another reference template.
-            ReferenceTemplate nextTemplate =
-                    templateFacade.getReferenceTemplate(template.template());
+            ReferenceTemplate nextTemplate = templateFacade.getReferenceTemplate(template.template());
             if (nextTemplate == null) {
                 throw new StorageException(
-                        "Missing template '{}' parent for '{}'.",
-                        template.template(), template.resource());
+                        "Missing template '{}' parent for '{}'.", template.template(), template.resource());
             }
             template = nextTemplate;
             // Add configuration.
@@ -302,16 +248,12 @@ class TemplateServletService {
      * template identified by the resource.
      */
     public void handleGetTemplateConfiguration(
-            Resource resource,
-            HttpServletRequest request, HttpServletResponse response)
-            throws ServerError {
+            Resource resource, HttpServletRequest request, HttpServletResponse response) throws ServerError {
         try {
             if (templateFacade.isPluginTemplate(resource)) {
-                handleGetTemplatePluginConfiguration(
-                        resource, request, response);
+                handleGetTemplatePluginConfiguration(resource, request, response);
             } else {
-                handleGetTemplateReferenceConfiguration(
-                        resource, request, response);
+                handleGetTemplateReferenceConfiguration(resource, request, response);
             }
         } catch (StorageException ex) {
             throw new ServerError("Can't get template configuration.", ex);
@@ -319,11 +261,8 @@ class TemplateServletService {
     }
 
     private void handleGetTemplatePluginConfiguration(
-            Resource resource,
-            HttpServletRequest request, HttpServletResponse response)
-            throws StorageException {
-        PluginTemplate template =
-                templateFacade.getPluginTemplate(resource);
+            Resource resource, HttpServletRequest request, HttpServletResponse response) throws StorageException {
+        PluginTemplate template = templateFacade.getPluginTemplate(resource);
         if (template == null) {
             response.setStatus(ServletUtilities.HTTP_NOT_FOUND);
             return;
@@ -334,23 +273,17 @@ class TemplateServletService {
                 template.configurationDescription(),
                 template.configurationGraph().stringValue(),
                 template.configurationGraph()));
-        ServletUtilities.sendResponse(
-                request, response,
-                result.withGraph(template.configurationGraph()));
+        ServletUtilities.sendResponse(request, response, result.withGraph(template.configurationGraph()));
     }
 
     private void handleGetTemplateReferenceConfiguration(
-            Resource resource,
-            HttpServletRequest request, HttpServletResponse response)
-            throws StorageException {
-        ReferenceTemplate template =
-                templateFacade.getReferenceTemplate(resource);
+            Resource resource, HttpServletRequest request, HttpServletResponse response) throws StorageException {
+        ReferenceTemplate template = templateFacade.getReferenceTemplate(resource);
         if (template == null) {
             response.setStatus(ServletUtilities.HTTP_NOT_FOUND);
             return;
         }
-        PluginTemplate plugin =
-                templateFacade.getPluginTemplate(template.plugin());
+        PluginTemplate plugin = templateFacade.getPluginTemplate(template.plugin());
         //
         Statements result = Statements.arrayList();
         result.addAll(ConfigurationFacade.createNewFromTemplate(
@@ -358,18 +291,14 @@ class TemplateServletService {
                 plugin.configurationDescription(),
                 template.configurationGraph().stringValue(),
                 template.configurationGraph()));
-        ServletUtilities.sendResponse(
-                request, response,
-                result.withGraph(template.configurationGraph()));
+        ServletUtilities.sendResponse(request, response, result.withGraph(template.configurationGraph()));
     }
 
     /**
      * Return configuration description for given template.
      */
     public void handleGetConfigurationDescription(
-            Resource resource,
-            HttpServletRequest request, HttpServletResponse response)
-            throws ServerError {
+            Resource resource, HttpServletRequest request, HttpServletResponse response) throws ServerError {
         PluginTemplate plugin;
         try {
             plugin = templateFacade.findPluginTemplate(resource);
@@ -381,8 +310,7 @@ class TemplateServletService {
             return;
         }
         Statements result = ConfigurationDescriptionToRdf.asRdf(
-                plugin.configurationDescription(),
-                plugin.configurationDescriptionGraph());
+                plugin.configurationDescription(), plugin.configurationDescriptionGraph());
         ServletUtilities.sendResponse(request, response, result);
     }
 
@@ -391,8 +319,10 @@ class TemplateServletService {
      */
     public void handleGetDialogResource(
             Resource resource,
-            String dialogName, String filePath,
-            HttpServletRequest request, HttpServletResponse response)
+            String dialogName,
+            String filePath,
+            HttpServletRequest request,
+            HttpServletResponse response)
             throws ServerError {
         PluginTemplate pluginTemplate;
         try {
@@ -414,8 +344,7 @@ class TemplateServletService {
             response.setStatus(ServletUtilities.HTTP_NOT_FOUND);
             return;
         }
-        JavaPlugin javaPlugin = pluginService.getPluginForPluginTemplate(
-                resource);
+        JavaPlugin javaPlugin = pluginService.getPluginForPluginTemplate(resource);
         if (javaPlugin == null) {
             response.setStatus(ServletUtilities.HTTP_NOT_FOUND);
             return;
@@ -441,22 +370,16 @@ class TemplateServletService {
     /**
      * Return list of template usage.
      */
-    public void handleGetTemplateUsage(
-            Resource resource,
-            HttpServletRequest request, HttpServletResponse response) {
+    public void handleGetTemplateUsage(Resource resource, HttpServletRequest request, HttpServletResponse response) {
         StatementsBuilder result = Statements.arrayList().builder();
-        List<TemplateUseInfo> infos =
-                assistantService.getTemplateUseInfo(resource);
+        List<TemplateUseInfo> infos = assistantService.getTemplateUseInfo(resource);
         for (TemplateUseInfo info : infos) {
             result.addType(info.resource(), TEMPLATE);
             if (info.template() != null) {
                 result.add(info.template(), HAS_INSTANCE, info.resource());
             }
             for (PipelineInfo pipeline : info.pipelines()) {
-                result.add(
-                        info.resource(),
-                        HAS_USED_IN_PIPELINE,
-                        pipeline.resource);
+                result.add(info.resource(), HAS_USED_IN_PIPELINE, pipeline.resource);
                 result.addType(pipeline.resource, PIPELINE);
                 result.add(pipeline.resource, HAS_LABEL, pipeline.label);
             }
@@ -471,20 +394,15 @@ class TemplateServletService {
      * TODO: Change this to PATCH method
      */
     public void handleUpdateReferenceDefinition(
-            Resource resource, MultipartFile templateFile,
-            HttpServletRequest request, HttpServletResponse response)
+            Resource resource, MultipartFile templateFile, HttpServletRequest request, HttpServletResponse response)
             throws InvalidRequest, ServerError {
         Statements statements = ServletUtilities.read(templateFile);
         List<RawReferenceTemplate> candidates =
-                RdfToRawReferenceTemplate.asRawReferenceTemplates(
-                        statements.selector());
+                RdfToRawReferenceTemplate.asRawReferenceTemplates(statements.selector());
         if (candidates.size() != 1) {
-            throw new InvalidRequest(
-                    "Unexpected template definition count '{}'.",
-                    candidates.size());
+            throw new InvalidRequest("Unexpected template definition count '{}'.", candidates.size());
         }
-        ReferenceTemplate template =
-                candidates.get(0).toReferenceTemplate();
+        ReferenceTemplate template = candidates.get(0).toReferenceTemplate();
         ReferenceTemplate storedTemplate;
         try {
             storedTemplate = templateFacade.getReferenceTemplate(resource);
@@ -518,8 +436,10 @@ class TemplateServletService {
      * Update configuration of a reference template.
      */
     public void handleUpdateReferenceConfiguration(
-            Resource resource, MultipartFile configurationFile,
-            HttpServletRequest request, HttpServletResponse response)
+            Resource resource,
+            MultipartFile configurationFile,
+            HttpServletRequest request,
+            HttpServletResponse response)
             throws InvalidRequest, ServerError {
         Statements statements = ServletUtilities.read(configurationFile);
         ReferenceTemplate template;
@@ -529,11 +449,18 @@ class TemplateServletService {
             throw new ServerError("Can't get template.", ex);
         }
         ReferenceTemplate nextTemplate = new ReferenceTemplate(
-                template.resource(), template.version(),
-                template.template(), template.plugin(),
-                template.label(), template.description(), template.note(),
-                template.color(), template.tags(), template.knownAs(),
-                statements, template.configurationGraph());
+                template.resource(),
+                template.version(),
+                template.template(),
+                template.plugin(),
+                template.label(),
+                template.description(),
+                template.note(),
+                template.color(),
+                template.tags(),
+                template.knownAs(),
+                statements,
+                template.configurationGraph());
         try {
             templateFacade.storeReferenceTemplate(nextTemplate);
         } catch (StorageException ex) {
@@ -546,27 +473,24 @@ class TemplateServletService {
      * Create new reference template.
      */
     public void handleCreateReference(
-            MultipartFile templateFile, MultipartFile configurationFile,
-            HttpServletRequest request, HttpServletResponse response)
+            MultipartFile templateFile,
+            MultipartFile configurationFile,
+            HttpServletRequest request,
+            HttpServletResponse response)
             throws InvalidRequest, ServerError {
         Statements templateStatements = ServletUtilities.read(templateFile);
         Statements configuration = ServletUtilities.read(configurationFile);
         List<RawReferenceTemplate> candidates =
-                RdfToRawReferenceTemplate.asRawReferenceTemplates(
-                        templateStatements.selector());
+                RdfToRawReferenceTemplate.asRawReferenceTemplates(templateStatements.selector());
         if (candidates.size() != 1) {
-            throw new InvalidRequest(
-                    "Unexpected template definition count '{}'.",
-                    candidates.size());
+            throw new InvalidRequest("Unexpected template definition count '{}'.", candidates.size());
         }
         ReferenceTemplate template = candidates.get(0).toReferenceTemplate();
         PluginTemplate plugin;
         try {
             plugin = templateFacade.findPluginTemplate(template.template());
         } catch (StorageException ex) {
-            throw new InvalidRequest(
-                    "Can't find plugin for template '{}'.",
-                    template.template());
+            throw new InvalidRequest("Can't find plugin for template '{}'.", template.template());
         }
         Resource resource = templateFacade.reserveReferenceResource();
         ReferenceTemplate nextTemplate = new ReferenceTemplate(
@@ -587,16 +511,13 @@ class TemplateServletService {
         } catch (StorageException ex) {
             throw new ServerError("Can't update template.", ex);
         }
-        ServletUtilities.sendResponse(
-                request, response, ReferenceTemplateToRdf.asRdf(nextTemplate));
+        ServletUtilities.sendResponse(request, response, ReferenceTemplateToRdf.asRdf(nextTemplate));
     }
 
     /**
      * Delete reference template.
      */
-    public void handleDeleteReference(
-            Resource resource,
-            HttpServletRequest request, HttpServletResponse response)
+    public void handleDeleteReference(Resource resource, HttpServletRequest request, HttpServletResponse response)
             throws ServerError {
         try {
             templateFacade.deleteReferenceTemplate(resource);
@@ -605,5 +526,4 @@ class TemplateServletService {
         }
         response.setStatus(ServletUtilities.HTTP_OK);
     }
-
 }

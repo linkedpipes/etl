@@ -5,7 +5,10 @@ import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 
 enum CrudType {
-    CREATE, UPDATE, NOOP, DELETE
+    CREATE,
+    UPDATE,
+    NOOP,
+    DELETE
 }
 
 class CrudEvent {

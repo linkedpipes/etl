@@ -25,5 +25,4 @@ public class RdfBuilderTest {
         Mockito.verify(writer).string("http://b", "http://value", "b", null);
         Mockito.verify(writer, Mockito.times(1)).flush();
     }
-
 }

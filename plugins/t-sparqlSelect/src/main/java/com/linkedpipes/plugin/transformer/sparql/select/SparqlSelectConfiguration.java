@@ -11,8 +11,7 @@ public class SparqlSelectConfiguration {
     @RdfToPojo.Property(iri = SparqlSelectVocabulary.HAS_FILE_NAME)
     private String fileName;
 
-    public SparqlSelectConfiguration() {
-    }
+    public SparqlSelectConfiguration() {}
 
     public String getQuery() {
         return query;
@@ -29,5 +28,4 @@ public class SparqlSelectConfiguration {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
-
 }

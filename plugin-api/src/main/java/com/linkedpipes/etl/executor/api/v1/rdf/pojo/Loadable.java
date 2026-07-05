@@ -10,5 +10,4 @@ public interface Loadable {
     }
 
     Loadable load(String predicate, RdfValue value) throws RdfException;
-
 }

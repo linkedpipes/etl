@@ -1,59 +1,46 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint.select;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @RdfToPojo.Type(iri = SparqlEndpointConstructScrollableCursorVocabulary.CONFIG)
 public class SparqlEndpointConstructScrollableCursorConfiguration {
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_ENDPOINT)
+    @RdfToPojo.Property(iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_ENDPOINT)
     private String endpoint;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_PREFIXES)
+    @RdfToPojo.Property(iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_PREFIXES)
     private String prefixes;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_OUTER_CONSTRUCT)
+    @RdfToPojo.Property(iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_OUTER_CONSTRUCT)
     private String outerConstruct;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_INNER_SELECT)
+    @RdfToPojo.Property(iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_INNER_SELECT)
     private String innerSelect;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_DEFAULT_GRAPH)
+    @RdfToPojo.Property(iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_DEFAULT_GRAPH)
     private List<String> defaultGraphs = new ArrayList<>();
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_PAGE_SIZE)
+    @RdfToPojo.Property(iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_PAGE_SIZE)
     private Integer pageSize;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_ENCODE_RDF)
+    @RdfToPojo.Property(iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_ENCODE_RDF)
     private boolean fixIncomingRdf = false;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_AUTH)
+    @RdfToPojo.Property(iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_AUTH)
     private boolean useAuthentication = false;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_USERNAME)
+    @RdfToPojo.Property(iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_USERNAME)
     private String username;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_PASSWORD)
+    @RdfToPojo.Property(iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_PASSWORD)
     private String password;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_USE_TOLERANT_REPOSITORY)
+    @RdfToPojo.Property(iri = SparqlEndpointConstructScrollableCursorVocabulary.HAS_USE_TOLERANT_REPOSITORY)
     private boolean useTolerantRepository = false;
 
-    public SparqlEndpointConstructScrollableCursorConfiguration() {
-    }
+    public SparqlEndpointConstructScrollableCursorConfiguration() {}
 
     public String getEndpoint() {
         return endpoint;
@@ -142,5 +129,4 @@ public class SparqlEndpointConstructScrollableCursorConfiguration {
     public void setUseTolerantRepository(boolean useTolerantRepository) {
         this.useTolerantRepository = useTolerantRepository;
     }
-
 }

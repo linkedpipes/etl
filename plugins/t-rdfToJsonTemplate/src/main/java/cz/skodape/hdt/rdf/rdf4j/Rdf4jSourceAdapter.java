@@ -3,11 +3,9 @@ package cz.skodape.hdt.rdf.rdf4j;
 import com.fasterxml.jackson.databind.JsonNode;
 import cz.skodape.hdt.model.SourceConfiguration;
 import cz.skodape.hdt.model.TransformationFileAdapter;
-
 import java.io.File;
 
-public class Rdf4jSourceAdapter
-        implements TransformationFileAdapter.SourceConfigurationAdapter {
+public class Rdf4jSourceAdapter implements TransformationFileAdapter.SourceConfigurationAdapter {
 
     @Override
     public SourceConfiguration readJson(JsonNode root) {
@@ -22,8 +20,7 @@ public class Rdf4jSourceAdapter
     }
 
     public SourceConfiguration readRdf4jMemorySource(JsonNode root) {
-        Rdf4jMemorySourceConfiguration result =
-                new Rdf4jMemorySourceConfiguration();
+        Rdf4jMemorySourceConfiguration result = new Rdf4jMemorySourceConfiguration();
         if (root.has("file")) {
             result.file = new File(root.get("file").asText());
         }
@@ -33,14 +30,11 @@ public class Rdf4jSourceAdapter
         return result;
     }
 
-
     public SourceConfiguration readRdf4jChunkedSource(JsonNode root) {
-        Rdf4jChunkedSourceConfiguration result =
-                new Rdf4jChunkedSourceConfiguration();
+        Rdf4jChunkedSourceConfiguration result = new Rdf4jChunkedSourceConfiguration();
         if (root.has("file")) {
             result.file = new File(root.get("file").asText());
         }
         return result;
     }
-
 }

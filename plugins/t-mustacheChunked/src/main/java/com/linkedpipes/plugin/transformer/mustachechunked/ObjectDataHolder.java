@@ -22,5 +22,4 @@ class ObjectDataHolder {
      * If {@link #output} is true then contains data.
      */
     Object data;
-
 }

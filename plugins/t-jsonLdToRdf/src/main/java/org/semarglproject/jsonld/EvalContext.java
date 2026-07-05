@@ -17,19 +17,18 @@
  */
 package org.semarglproject.jsonld;
 
-import org.semarglproject.ri.MalformedCurieException;
-import org.semarglproject.ri.MalformedIriException;
-import org.semarglproject.ri.RIUtils;
-import org.semarglproject.sink.QuadSink;
-import org.semarglproject.vocab.JsonLd;
-import org.semarglproject.vocab.RDF;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.TreeMap;
+import org.semarglproject.ri.MalformedCurieException;
+import org.semarglproject.ri.MalformedIriException;
+import org.semarglproject.ri.RIUtils;
+import org.semarglproject.sink.QuadSink;
+import org.semarglproject.vocab.JsonLd;
+import org.semarglproject.vocab.RDF;
 
 /**
  * Provides context for IRI resolving, holds processing state for each JSON-LD node.
@@ -91,7 +90,6 @@ final class EvalContext {
     private final Map<String, String> dtMappings = new TreeMap<>();
 
     private final Map<String, String> langMappings = new TreeMap<>();
-
 
     private final Collection<EvalContext> children = new ArrayList<>();
 
@@ -318,7 +316,6 @@ final class EvalContext {
             }
         } catch (MalformedIriException e) {
         }
-
     }
 
     void addPlainLiteral(String object, String lang) {
@@ -480,8 +477,9 @@ final class EvalContext {
     }
 
     public boolean isParsingContext() {
-        return parent != null && (JsonLd.CONTEXT_KEY.equals(parent.predicate)
-                || parent.parent != null && JsonLd.CONTEXT_KEY.equals(parent.parent.predicate));
+        return parent != null
+                && (JsonLd.CONTEXT_KEY.equals(parent.predicate)
+                        || parent.parent != null && JsonLd.CONTEXT_KEY.equals(parent.parent.predicate));
     }
 
     public void processContext(EvalContext context) {
@@ -500,5 +498,4 @@ final class EvalContext {
     public boolean hasIdDeclared() {
         return (state & ID_DECLARED) == ID_DECLARED;
     }
-
 }

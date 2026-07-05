@@ -16,8 +16,7 @@ class ExecutionContext implements Component.Context {
 
     private boolean cancelled = false;
 
-    public ExecutionContext(
-            ExecutionComponent component, ExecutionObserver execution) {
+    public ExecutionContext(ExecutionComponent component, ExecutionObserver execution) {
         this.component = component;
         this.execution = execution;
     }
@@ -35,5 +34,4 @@ class ExecutionContext implements Component.Context {
     public void cancel() {
         cancelled = true;
     }
-
 }

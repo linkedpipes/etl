@@ -14,39 +14,37 @@ class DirectoryEntry extends DebugEntry {
 
     final CreatePublicPath createPublicPath;
 
-    public DirectoryEntry(
-            File directory, String source, CreatePublicPath createPublicPath) {
+    public DirectoryEntry(File directory, String source, CreatePublicPath createPublicPath) {
         this.directory = directory;
         this.source = source;
         this.createPublicPath = createPublicPath;
     }
 
     @Override
-    public DebugEntry prepareData(
-            String nameFilter, String sourceFilter, long offset, long limit)
-            throws IOException {
-        ResponseContent content = prepareResponse(
-                directory, source, nameFilter, sourceFilter, offset, limit,
-                createPublicPath);
+    public DebugEntry prepareData(String nameFilter, String sourceFilter, long offset, long limit) throws IOException {
+        ResponseContent content =
+                prepareResponse(directory, source, nameFilter, sourceFilter, offset, limit, createPublicPath);
         contentAsJsonString = content.asJsonString();
         return this;
     }
 
     public static ResponseContent prepareResponse(
-            File directory, String source,
-            String nameFilter, String sourceFilter, long offset, long limit,
+            File directory,
+            String source,
+            String nameFilter,
+            String sourceFilter,
+            long offset,
+            long limit,
             CreatePublicPath createPublicPath) {
         long totalEntryCount = 0;
         long end = offset + limit;
         File[] files = directory.listFiles();
         if (files == null) {
-            return createContentResponse(
-                    Collections.emptyList(), totalEntryCount);
+            return createContentResponse(Collections.emptyList(), totalEntryCount);
         }
         // Source filter.
         if (sourceFilter != null && !sourceFilter.equals(source)) {
-            return createContentResponse(
-                    Collections.emptyList(), totalEntryCount);
+            return createContentResponse(Collections.emptyList(), totalEntryCount);
         }
         // Search for files.
         List<ResponseContent.Entry> data = new ArrayList<>();
@@ -64,11 +62,7 @@ class DirectoryEntry extends DebugEntry {
                 continue;
             }
             if (file.isDirectory()) {
-                data.add(new ResponseContent.Entry(
-                        ResponseContent.TYPE_DIR,
-                        file.getName(),
-                        file.getName(),
-                        source));
+                data.add(new ResponseContent.Entry(ResponseContent.TYPE_DIR, file.getName(), file.getName(), source));
             } else {
                 data.add(new ResponseContent.Entry(
                         ResponseContent.TYPE_FILE,
@@ -84,8 +78,7 @@ class DirectoryEntry extends DebugEntry {
         return createContentResponse(data, totalEntryCount);
     }
 
-    private static ResponseContent createContentResponse(
-            List<ResponseContent.Entry> data, long count) {
+    private static ResponseContent createContentResponse(List<ResponseContent.Entry> data, long count) {
         ResponseContent content = new ResponseContent(data);
         content.metadata.count = count;
         content.metadata.type = ResponseContent.TYPE_DIR;
@@ -95,5 +88,4 @@ class DirectoryEntry extends DebugEntry {
     private static boolean filterByName(File file, String filter) {
         return filter == null || file.getName().startsWith(filter);
     }
-
 }

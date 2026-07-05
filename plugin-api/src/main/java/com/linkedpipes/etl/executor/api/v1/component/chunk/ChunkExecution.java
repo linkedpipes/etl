@@ -4,21 +4,18 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public abstract class ChunkExecution<Chunk, Product>
-        implements SequentialExecution {
+public abstract class ChunkExecution<Chunk, Product> implements SequentialExecution {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ChunkExecution.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChunkExecution.class);
 
     @Component.Inject
     public ProgressReport progressReport;
@@ -71,9 +68,7 @@ public abstract class ChunkExecution<Chunk, Product>
 
     protected abstract ChunkTransformer<Chunk, Product> createExecutor();
 
-    protected void startExecutors(
-            ExecutorService executor,
-            List<ChunkTransformer<Chunk, Product>> executors) {
+    protected void startExecutors(ExecutorService executor, List<ChunkTransformer<Chunk, Product>> executors) {
         for (ChunkTransformer<Chunk, Product> constructExecutor : executors) {
             executor.submit(constructExecutor);
         }
@@ -94,8 +89,7 @@ public abstract class ChunkExecution<Chunk, Product>
         LOG.info("Waiting for executors to finish ... done");
     }
 
-    protected void checkExecutors(List<ChunkTransformer<Chunk, Product>> executors)
-            throws LpException {
+    protected void checkExecutors(List<ChunkTransformer<Chunk, Product>> executors) throws LpException {
         if (terminateExecution) {
             throw new LpException("At least chunk execution failed.");
         }
@@ -145,5 +139,4 @@ public abstract class ChunkExecution<Chunk, Product>
      * @param product Content of this object may change, later.
      */
     protected abstract void submitInternal(Product product) throws LpException;
-
 }

@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.exec.virtuoso;
 
 public final class VirtuosoVocabulary {
 
-    private static final String PREFIX =
-            "http://plugins.linkedpipes.com/ontology/x-virtuoso#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/x-virtuoso#";
 
     public static final String CONFIG_CLASS = PREFIX + "Configuration";
 
@@ -21,8 +20,7 @@ public final class VirtuosoVocabulary {
 
     public static final String TARGET_GRAPH = PREFIX + "graph";
 
-    public static final String STATUS_UPDATE_INTERVAL =
-            PREFIX + "updateInterval";
+    public static final String STATUS_UPDATE_INTERVAL = PREFIX + "updateInterval";
 
     public static final String CLEAR_LOAD_GRAPH = PREFIX + "clearLoadList";
 
@@ -30,13 +28,9 @@ public final class VirtuosoVocabulary {
 
     public static final String CHECKPOINT = PREFIX + "checkpoint";
 
-    public static final String FULLTEXT_INDEX =
-            PREFIX + "fulltextIndex";
+    public static final String FULLTEXT_INDEX = PREFIX + "fulltextIndex";
 
-    public static final String REBUILD_INDEX =
-            PREFIX + "rebuild";
+    public static final String REBUILD_INDEX = PREFIX + "rebuild";
 
-    public static final String UPDATE_INDEX =
-            PREFIX + "update";
-
+    public static final String UPDATE_INDEX = PREFIX + "update";
 }

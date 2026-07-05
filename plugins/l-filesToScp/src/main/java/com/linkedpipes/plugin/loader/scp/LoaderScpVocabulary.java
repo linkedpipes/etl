@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.loader.scp;
 
 public final class LoaderScpVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/l-filesToScp#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/l-filesToScp#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -15,19 +14,13 @@ public final class LoaderScpVocabulary {
 
     public static final String HAS_PORT = PREFIX + "port";
 
-    public static final String HAS_TARGET_DIRECTORY
-            = PREFIX + "directory";
+    public static final String HAS_TARGET_DIRECTORY = PREFIX + "directory";
 
-    public static final String HAS_CREATE_DIRECTORY
-            = PREFIX + "createDirectory";
+    public static final String HAS_CREATE_DIRECTORY = PREFIX + "createDirectory";
 
-    public static final String HAS_CLEAR_DIRECTORY
-            = PREFIX + "clearDirectory";
+    public static final String HAS_CLEAR_DIRECTORY = PREFIX + "clearDirectory";
 
-    public static final String HAS_CONNECTION_TIME_OUT
-            = PREFIX + "connectionTimeOut";
+    public static final String HAS_CONNECTION_TIME_OUT = PREFIX + "connectionTimeOut";
 
-    private LoaderScpVocabulary() {
-    }
-
+    private LoaderScpVocabulary() {}
 }

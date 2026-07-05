@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.loader.graphstoreprotocol;
 
 public final class GraphStoreProtocolVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/l-graphStoreProtocol#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -29,7 +28,5 @@ public final class GraphStoreProtocolVocabulary {
 
     public static final String HAS_FILE_NAME = PREFIX + "fileName";
 
-    private GraphStoreProtocolVocabulary() {
-    }
-
+    private GraphStoreProtocolVocabulary() {}
 }

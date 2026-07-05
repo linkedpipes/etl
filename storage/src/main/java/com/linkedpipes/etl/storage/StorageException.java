@@ -40,5 +40,4 @@ public class StorageException extends Exception {
         // Use first given message if it exists.
         return MessageFormatter.arrayFormat(message, args).getMessage();
     }
-
 }

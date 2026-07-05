@@ -8,8 +8,7 @@ import java.util.Map;
  */
 class MustacheTemplatePrefixExpander {
 
-    private MustacheTemplatePrefixExpander() {
-    }
+    private MustacheTemplatePrefixExpander() {}
 
     private enum StatusComment {
         NONE,
@@ -46,8 +45,7 @@ class MustacheTemplatePrefixExpander {
      * @param commentBuffer
      * @param queryBuffer
      */
-    private static void parseCommentQuery(String queryString,
-            StringBuffer commentBuffer, StringBuffer queryBuffer) {
+    private static void parseCommentQuery(String queryString, StringBuffer commentBuffer, StringBuffer queryBuffer) {
         StatusComment status = StatusComment.NONE;
         for (int index = 0; index < queryString.length(); index++) {
             final char character = queryString.charAt(index);
@@ -185,8 +183,7 @@ class MustacheTemplatePrefixExpander {
                     if (character == '>') {
                         status = StatusPrefix.NONE;
                         // Add prefix, require white space.
-                        prefixes.put(prefixBuffer.toString().trim(),
-                                iriBuffer.toString());
+                        prefixes.put(prefixBuffer.toString().trim(), iriBuffer.toString());
                         //
                         prefixBuffer.setLength(0);
                         iriBuffer.setLength(0);
@@ -232,8 +229,7 @@ class MustacheTemplatePrefixExpander {
                     prefixBuffer.setLength(0);
                     status = StatusReplace.READ;
                     // If first character is special skip it.
-                    if (!Character.isAlphabetic(character)
-                            && character != ':') {
+                    if (!Character.isAlphabetic(character) && character != ':') {
                         resultBuffer.append(character);
                         break;
                     }
@@ -246,8 +242,7 @@ class MustacheTemplatePrefixExpander {
                             status = StatusReplace.NONE;
                             break;
                         case ':':
-                            final String prefix
-                                    = prefixBuffer.toString().trim();
+                            final String prefix = prefixBuffer.toString().trim();
                             final String replacement = prefixes.get(prefix);
                             if (replacement == null) {
                                 // It was not a known prefix.
@@ -274,10 +269,8 @@ class MustacheTemplatePrefixExpander {
         final StringBuffer queryBuffer = new StringBuffer(queryString.length());
         parseCommentQuery(queryString, commentBuffer, queryBuffer);
         // Read prefixes from comments.
-        final Map<String, String> prefixes = readPrefixes(
-                commentBuffer.toString());
+        final Map<String, String> prefixes = readPrefixes(commentBuffer.toString());
         // Replace in the template.
         return expand(prefixes, queryBuffer.toString());
     }
-
 }

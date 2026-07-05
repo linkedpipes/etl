@@ -1,6 +1,8 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint.select;
 
-
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.BitSet;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.RDFHandler;
@@ -8,10 +10,6 @@ import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.BitSet;
 
 class RdfEncodeHandler extends AbstractRDFHandler {
 
@@ -34,8 +32,7 @@ class RdfEncodeHandler extends AbstractRDFHandler {
         allowed.clear('\\');
     }
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(RdfEncodeHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RdfEncodeHandler.class);
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
@@ -58,14 +55,12 @@ class RdfEncodeHandler extends AbstractRDFHandler {
     }
 
     @Override
-    public void handleNamespace(String prefix, String uri)
-            throws RDFHandlerException {
+    public void handleNamespace(String prefix, String uri) throws RDFHandlerException {
         handler.handleNamespace(prefix, uri);
     }
 
     @Override
-    public void handleStatement(Statement st)
-            throws RDFHandlerException {
+    public void handleStatement(Statement st) throws RDFHandlerException {
         try {
             handler.handleStatement(checkStatement(st));
         } catch (UnsupportedEncodingException ex) {
@@ -73,30 +68,26 @@ class RdfEncodeHandler extends AbstractRDFHandler {
         }
     }
 
-    private Statement checkStatement(Statement st)
-            throws UnsupportedEncodingException {
+    private Statement checkStatement(Statement st) throws UnsupportedEncodingException {
         statementChanged = false;
         Resource subject = makeSave(st.getSubject());
         IRI predicate = makeSave(st.getPredicate());
         Value object = makeSave(st.getObject());
         Resource context = makeSave(st.getContext());
         if (statementChanged) {
-            return valueFactory.createStatement(
-                    subject, predicate, object, context);
+            return valueFactory.createStatement(subject, predicate, object, context);
         } else {
             return st;
         }
     }
 
-    private <T extends Value> T makeSave(T value)
-            throws UnsupportedEncodingException {
+    private <T extends Value> T makeSave(T value) throws UnsupportedEncodingException {
         if (!(value instanceof IRI)) {
             return value;
         }
         //
         String iriAsString = value.stringValue();
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream(
-                iriAsString.length() + 6);
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream(iriAsString.length() + 6);
         // Inspired by URLCodec.encodeUrl
         boolean valueChanged = false;
         for (byte c : iriAsString.getBytes("UTF-8")) {
@@ -117,18 +108,15 @@ class RdfEncodeHandler extends AbstractRDFHandler {
             } else {
                 valueChanged = true;
                 buffer.write('%');
-                char hex1 = Character.toUpperCase(
-                        Character.forDigit((b >> 4) & 0xF, 16));
-                char hex2 = Character.toUpperCase(
-                        Character.forDigit(b & 0xF, 16));
+                char hex1 = Character.toUpperCase(Character.forDigit((b >> 4) & 0xF, 16));
+                char hex2 = Character.toUpperCase(Character.forDigit(b & 0xF, 16));
                 buffer.write(hex1);
                 buffer.write(hex2);
             }
         }
         if (valueChanged) {
             String encoded = new String(buffer.toByteArray(), "UTF-8");
-            LOG.warn("Invalid value changed: {} -> {}",
-                    iriAsString, encoded);
+            LOG.warn("Invalid value changed: {} -> {}", iriAsString, encoded);
             statementChanged = true;
             return (T) valueFactory.createIRI(encoded);
         } else {
@@ -140,5 +128,4 @@ class RdfEncodeHandler extends AbstractRDFHandler {
     public void handleComment(String comment) throws RDFHandlerException {
         handler.handleComment(comment);
     }
-
 }

@@ -12,8 +12,7 @@ public final class VoidDatasetVocabulary {
 
     public static final String XSD = "http://www.w3.org/2001/XMLSchema#";
 
-    public static final String MY =
-            "http://etl.linkedpipes.com/ontology/components/e-voidDataset/";
+    public static final String MY = "http://etl.linkedpipes.com/ontology/components/e-voidDataset/";
 
     public static final IRI DCAT_DOWNLOAD_URL;
 
@@ -46,7 +45,5 @@ public final class VoidDatasetVocabulary {
         VOID_DATA_DUMP = valueFactory.createIRI(VOID + "dataDump");
     }
 
-    private VoidDatasetVocabulary() {
-    }
-
+    private VoidDatasetVocabulary() {}
 }

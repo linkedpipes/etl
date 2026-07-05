@@ -2,9 +2,8 @@ package com.linkedpipes.plugin.http.request.main;
 
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import org.eclipse.rdf4j.model.Statement;
-
 import java.util.List;
+import org.eclipse.rdf4j.model.Statement;
 
 public class StatementsConsumer {
 
@@ -25,5 +24,4 @@ public class StatementsConsumer {
             });
         }
     }
-
 }

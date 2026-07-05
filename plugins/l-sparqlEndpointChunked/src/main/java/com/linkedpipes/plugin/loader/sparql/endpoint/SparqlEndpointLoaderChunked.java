@@ -6,6 +6,11 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -21,14 +26,7 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
-public class SparqlEndpointLoaderChunked implements Component,
-        SequentialExecution {
+public class SparqlEndpointLoaderChunked implements Component, SequentialExecution {
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
@@ -46,14 +44,12 @@ public class SparqlEndpointLoaderChunked implements Component,
     @Override
     public void execute() throws LpException {
         // Create repository.
-        final SPARQLRepository sparqlRepository = new SPARQLRepository(
-                configuration.getEndpoint());
+        final SPARQLRepository sparqlRepository = new SPARQLRepository(configuration.getEndpoint());
         // No action here.
         try {
             sparqlRepository.init();
         } catch (Throwable t) {
-            throw new LpException(
-                    "Can't connect to remote SPARQL.", t);
+            throw new LpException("Can't connect to remote SPARQL.", t);
         }
         try {
             clearGraph(sparqlRepository);
@@ -63,21 +59,18 @@ public class SparqlEndpointLoaderChunked implements Component,
         }
     }
 
-    private void clearGraph(SPARQLRepository sparqlRepository)
-            throws LpException {
+    private void clearGraph(SPARQLRepository sparqlRepository) throws LpException {
         try (final CloseableHttpClient httpclient = getHttpClient()) {
             sparqlRepository.setHttpClient(httpclient);
             if (configuration.isClearDestinationGraph()) {
-                clearGraph(sparqlRepository,
-                        configuration.getTargetGraphName());
+                clearGraph(sparqlRepository, configuration.getTargetGraphName());
             }
         } catch (IOException ex) {
             throw new LpException("Can't clear data.", ex);
         }
     }
 
-    private void loadData(SPARQLRepository sparqlRepository)
-            throws LpException {
+    private void loadData(SPARQLRepository sparqlRepository) throws LpException {
         try (final CloseableHttpClient httpclient = getHttpClient()) {
             sparqlRepository.setHttpClient(httpclient);
             loadDataFromRepository(sparqlRepository);
@@ -87,8 +80,7 @@ public class SparqlEndpointLoaderChunked implements Component,
     }
 
     private void loadDataFromRepository(Repository repository) throws LpException {
-        final IRI graph = SimpleValueFactory.getInstance().createIRI(
-                configuration.getTargetGraphName());
+        final IRI graph = SimpleValueFactory.getInstance().createIRI(configuration.getTargetGraphName());
         progressReport.start(inputRdf.size());
         for (ChunkedTriples.Chunk chunk : inputRdf) {
             final Collection<Statement> statements = chunk.toCollection();
@@ -99,8 +91,7 @@ public class SparqlEndpointLoaderChunked implements Component,
                 continue;
             }
             // Split.
-            final List<Statement> toAdd = new ArrayList<>(
-                    configuration.getCommitSize());
+            final List<Statement> toAdd = new ArrayList<>(configuration.getCommitSize());
             final Iterator<Statement> iterator = statements.iterator();
             while (iterator.hasNext()) {
                 toAdd.add(iterator.next());
@@ -125,24 +116,18 @@ public class SparqlEndpointLoaderChunked implements Component,
 
     private static void clearGraph(Repository repository, String graph) {
         try (RepositoryConnection connection = repository.getConnection()) {
-            final Update update = connection.prepareUpdate(QueryLanguage.SPARQL,
-                    "CLEAR GRAPH <" + graph + ">");
+            final Update update = connection.prepareUpdate(QueryLanguage.SPARQL, "CLEAR GRAPH <" + graph + ">");
             update.execute();
         }
     }
 
     private CloseableHttpClient getHttpClient() {
-        final CredentialsProvider credsProvider =
-                new BasicCredentialsProvider();
+        final CredentialsProvider credsProvider = new BasicCredentialsProvider();
         if (configuration.isUseAuthentication()) {
             credsProvider.setCredentials(
                     new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
-                    new UsernamePasswordCredentials(
-                            configuration.getUserName(),
-                            configuration.getPassword()));
+                    new UsernamePasswordCredentials(configuration.getUserName(), configuration.getPassword()));
         }
-        return HttpClients.custom()
-                .setDefaultCredentialsProvider(credsProvider).build();
+        return HttpClients.custom().setDefaultCredentialsProvider(credsProvider).build();
     }
-
 }

@@ -26,8 +26,7 @@ public class DcatApToCkanConfiguration {
     @RdfToPojo.Property(iri = DcatApToCkanConfigVocabulary.LOAD_LANGUAGE)
     private String loadLanguage = "cs";
 
-    @RdfToPojo.Property(
-            iri = DcatApToCkanConfigVocabulary.GENERATE_VIRTUOSO_EXAMPLE)
+    @RdfToPojo.Property(iri = DcatApToCkanConfigVocabulary.GENERATE_VIRTUOSO_EXAMPLE)
     private boolean generateVirtuosoTurtleExampleResource = true;
 
     @RdfToPojo.Property(iri = DcatApToCkanConfigVocabulary.GENERATE_EXAMPLE)
@@ -36,8 +35,7 @@ public class DcatApToCkanConfiguration {
     @RdfToPojo.Property(iri = DcatApToCkanConfigVocabulary.OVERWRITE)
     private boolean overwrite = false;
 
-    public DcatApToCkanConfiguration() {
-    }
+    public DcatApToCkanConfiguration() {}
 
     public String getApiUri() {
         return apiUri;
@@ -99,10 +97,8 @@ public class DcatApToCkanConfiguration {
         return generateVirtuosoTurtleExampleResource;
     }
 
-    public void setGenerateVirtuosoTurtleExampleResource(
-            boolean generateVirtuosoTurtleExampleResource) {
-        this.generateVirtuosoTurtleExampleResource =
-                generateVirtuosoTurtleExampleResource;
+    public void setGenerateVirtuosoTurtleExampleResource(boolean generateVirtuosoTurtleExampleResource) {
+        this.generateVirtuosoTurtleExampleResource = generateVirtuosoTurtleExampleResource;
     }
 
     public boolean isGenerateExampleResource() {
@@ -120,5 +116,4 @@ public class DcatApToCkanConfiguration {
     public void setOverwrite(boolean overwrite) {
         this.overwrite = overwrite;
     }
-
 }

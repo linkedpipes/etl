@@ -7,5 +7,4 @@ public interface Event {
     void setIri(String iri);
 
     void write(TripleWriter builder);
-
 }

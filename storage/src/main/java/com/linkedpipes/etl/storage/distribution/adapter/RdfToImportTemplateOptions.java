@@ -3,37 +3,29 @@ package com.linkedpipes.etl.storage.distribution.adapter;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsSelector;
 import com.linkedpipes.etl.storage.distribution.model.ImportTemplateOptions;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class RdfToImportTemplateOptions {
 
-    private static final String TYPE =
-            "http://linkedpipes.com/ontology/UpdateOptions";
+    private static final String TYPE = "http://linkedpipes.com/ontology/UpdateOptions";
 
-    private static final String HAS_UPDATE_TEMPLATES =
-            "http://etl.linkedpipes.com/ontology/updateExistingTemplates";
+    private static final String HAS_UPDATE_TEMPLATES = "http://etl.linkedpipes.com/ontology/updateExistingTemplates";
 
-    private static final String HAS_IMPORT_TEMPLATES =
-            "http://etl.linkedpipes.com/ontology/importNewTemplates";
+    private static final String HAS_IMPORT_TEMPLATES = "http://etl.linkedpipes.com/ontology/importNewTemplates";
 
-    public static List<ImportTemplateOptions> asImportTemplateOptions(
-            Statements statements) {
+    public static List<ImportTemplateOptions> asImportTemplateOptions(Statements statements) {
         StatementsSelector selector = statements.selector();
-        return selector.selectByType(TYPE)
-                .stream().map(statement -> loadOptions(
-                        selector.selectByGraph(statement.getContext()),
-                        statement.getSubject()))
+        return selector.selectByType(TYPE).stream()
+                .map(statement -> loadOptions(selector.selectByGraph(statement.getContext()), statement.getSubject()))
                 .collect(Collectors.toList());
     }
 
-    private static ImportTemplateOptions loadOptions(
-            Statements statements, Resource resource) {
+    private static ImportTemplateOptions loadOptions(Statements statements, Resource resource) {
         StatementsSelector selector = statements.selector();
         ImportTemplateOptions result = new ImportTemplateOptions();
         for (Statement statement : selector.withSubject(resource)) {
@@ -55,5 +47,4 @@ public class RdfToImportTemplateOptions {
         }
         return result;
     }
-
 }

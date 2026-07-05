@@ -1,11 +1,10 @@
 package com.linkedpipes.plugin.transformer.filesToRdfGraph;
 
+import java.util.Date;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.RDFHandler;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
-
-import java.util.Date;
 
 class BlankNodePrefixUpdater implements RDFHandler {
 
@@ -31,8 +30,7 @@ class BlankNodePrefixUpdater implements RDFHandler {
     }
 
     @Override
-    public void handleNamespace(String prefix, String uri)
-            throws RDFHandlerException {
+    public void handleNamespace(String prefix, String uri) throws RDFHandlerException {
         handler.handleNamespace(prefix, uri);
     }
 
@@ -50,8 +48,7 @@ class BlankNodePrefixUpdater implements RDFHandler {
             updated = true;
         }
         if (updated) {
-            handler.handleStatement(valueFactory.createStatement(subject,
-                    st.getPredicate(), object, st.getContext()));
+            handler.handleStatement(valueFactory.createStatement(subject, st.getPredicate(), object, st.getContext()));
         } else {
             handler.handleStatement(st);
         }
@@ -65,5 +62,4 @@ class BlankNodePrefixUpdater implements RDFHandler {
     public void handleComment(String comment) throws RDFHandlerException {
         handler.handleComment(comment);
     }
-
 }

@@ -15,9 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.semarglproject.jsonld;
 
+import java.util.BitSet;
+import java.util.Deque;
+import java.util.LinkedList;
 import org.semarglproject.rdf.ParseException;
 import org.semarglproject.rdf.ProcessorGraphHandler;
 import org.semarglproject.sink.CharSink;
@@ -25,10 +27,6 @@ import org.semarglproject.sink.Pipe;
 import org.semarglproject.sink.QuadSink;
 import org.semarglproject.sink.TripleSink;
 import org.semarglproject.source.StreamProcessor;
-
-import java.util.BitSet;
-import java.util.Deque;
-import java.util.LinkedList;
 
 /**
  * Implementation of streaming <a href="http://www.w3.org/TR/2013/WD-json-ld-20130411/">JSON-LD</a> parser.
@@ -165,7 +163,8 @@ public final class JsonLdParser extends Pipe<TripleSink> implements CharSink {
         int end = start + count;
 
         for (int pos = start; pos < end; pos++) {
-            if (parsingState == PARSING_ARRAY_BEFORE_VALUE || parsingState == PARSING_OBJECT_BEFORE_VALUE
+            if (parsingState == PARSING_ARRAY_BEFORE_VALUE
+                    || parsingState == PARSING_OBJECT_BEFORE_VALUE
                     || parsingState == PARSING_OBJECT_BEFORE_KEY) {
                 processValueChar(buffer, pos);
             } else if (parsingState == PARSING_STRING) {
@@ -430,5 +429,4 @@ public final class JsonLdParser extends Pipe<TripleSink> implements CharSink {
         }
         return result.toString();
     }
-
 }

@@ -1,13 +1,12 @@
 package com.linkedpipes.etl.rdf.rdf4j;
 
-import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
+import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
+import java.util.Calendar;
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
-
-import java.util.Calendar;
 
 class Rdf4jValue implements BackendRdfValue {
 
@@ -28,8 +27,8 @@ class Rdf4jValue implements BackendRdfValue {
     }
 
     private Literal asLiteral() throws RdfUtilsException {
-        if (value instanceof  Literal) {
-            return (Literal)value;
+        if (value instanceof Literal) {
+            return (Literal) value;
         } else {
             throw new RdfUtilsException("Invalid value type.");
         }
@@ -42,7 +41,7 @@ class Rdf4jValue implements BackendRdfValue {
 
     @Override
     public String getType() {
-        if (value instanceof  Literal) {
+        if (value instanceof Literal) {
             return ((Literal) value).getDatatype().stringValue();
         }
         return null;
@@ -50,7 +49,7 @@ class Rdf4jValue implements BackendRdfValue {
 
     @Override
     public String getLanguage() {
-        if (value instanceof  Literal) {
+        if (value instanceof Literal) {
             return ((Literal) value).getLanguage().orElseGet(() -> null);
         }
         return null;
@@ -63,7 +62,7 @@ class Rdf4jValue implements BackendRdfValue {
 
     @Override
     public Double asDouble() {
-        if (value instanceof  Literal) {
+        if (value instanceof Literal) {
             return ((Literal) value).doubleValue();
         }
         return null;
@@ -71,7 +70,7 @@ class Rdf4jValue implements BackendRdfValue {
 
     @Override
     public Calendar asCalendar() {
-        if (value instanceof  Literal) {
+        if (value instanceof Literal) {
             return ((Literal) value).calendarValue().toGregorianCalendar();
         }
         return null;

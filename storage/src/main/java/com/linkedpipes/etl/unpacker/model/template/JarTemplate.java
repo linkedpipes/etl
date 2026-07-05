@@ -3,11 +3,10 @@ package com.linkedpipes.etl.unpacker.model.template;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.model.vocabulary.RDF;
 import com.linkedpipes.etl.unpacker.rdf.Loadable;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Value;
-
 import java.util.LinkedList;
 import java.util.List;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Value;
 
 public class JarTemplate extends Template {
 
@@ -73,5 +72,4 @@ public class JarTemplate extends Template {
     public boolean isSupportControl() {
         return supportControl;
     }
-
 }

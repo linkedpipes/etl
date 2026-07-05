@@ -15,8 +15,7 @@ import org.osgi.service.component.annotations.Component;
 @Component(
         immediate = true,
         service = {DataUnitFactory.class, PipelineExecutionObserver.class})
-public class RdfDataUnitFactory
-        implements DataUnitFactory, PipelineExecutionObserver {
+public class RdfDataUnitFactory implements DataUnitFactory, PipelineExecutionObserver {
 
     private FactoryConfiguration factoryConfiguration;
 
@@ -25,32 +24,22 @@ public class RdfDataUnitFactory
     private PipelineModel pipelineModel = new PipelineModel();
 
     @Override
-    public ManageableDataUnit create(
-            String dataUnit, String graph, RdfSource definition)
-            throws LpException {
+    public ManageableDataUnit create(String dataUnit, String graph, RdfSource definition) throws LpException {
         if (factoryConfiguration == null) {
             return null;
         }
-        DataUnitConfiguration configuration =
-                loadDataUnitConfiguration(dataUnit, definition);
+        DataUnitConfiguration configuration = loadDataUnitConfiguration(dataUnit, definition);
 
         for (String type : configuration.getTypes()) {
             switch (type) {
                 case LP_PIPELINE.SINGLE_GRAPH_DATA_UNIT:
                     return new DefaultSingleGraphDataUnit(
-                            configuration,
-                            repositoryManager,
-                            pipelineModel.getSourcesFor(dataUnit)
-                    );
+                            configuration, repositoryManager, pipelineModel.getSourcesFor(dataUnit));
                 case LP_PIPELINE.GRAPH_LIST_DATA_UNIT:
                     return new DefaultGraphListDataUnit(
-                            configuration,
-                            repositoryManager,
-                            pipelineModel.getSourcesFor(dataUnit));
+                            configuration, repositoryManager, pipelineModel.getSourcesFor(dataUnit));
                 case LP_PIPELINE.CHUNKED_TRIPLES_DATA_UNIT:
-                    return new DefaultChunkedTriples(
-                            configuration,
-                            pipelineModel.getSourcesFor(dataUnit));
+                    return new DefaultChunkedTriples(configuration, pipelineModel.getSourcesFor(dataUnit));
                 default:
                     break;
             }
@@ -58,18 +47,14 @@ public class RdfDataUnitFactory
         return null;
     }
 
-    private DataUnitConfiguration loadDataUnitConfiguration(
-            String dataUnit, RdfSource definition)
-            throws LpException {
-        DataUnitConfiguration configuration =
-                new DataUnitConfiguration(dataUnit);
+    private DataUnitConfiguration loadDataUnitConfiguration(String dataUnit, RdfSource definition) throws LpException {
+        DataUnitConfiguration configuration = new DataUnitConfiguration(dataUnit);
         RdfToPojoLoader.load(definition, dataUnit, configuration);
         return configuration;
     }
 
     @Override
-    public void onPipelineBegin(
-            String pipeline, RdfSource definition) throws LpException {
+    public void onPipelineBegin(String pipeline, RdfSource definition) throws LpException {
         pipelineModel.load(pipeline, definition);
         if (pipelineModel.getRdfRepository() == null) {
             return;
@@ -78,13 +63,9 @@ public class RdfDataUnitFactory
         initializeRepositoryManager();
     }
 
-    private void loadFactoryConfiguration(RdfSource definition)
-            throws RdfException {
+    private void loadFactoryConfiguration(RdfSource definition) throws RdfException {
         factoryConfiguration = new FactoryConfiguration();
-        RdfToPojoLoader.load(
-                definition,
-                pipelineModel.getRdfRepository(),
-                factoryConfiguration);
+        RdfToPojoLoader.load(definition, pipelineModel.getRdfRepository(), factoryConfiguration);
     }
 
     private void initializeRepositoryManager() {
@@ -103,5 +84,4 @@ public class RdfDataUnitFactory
         repositoryManager.closeAll();
         repositoryManager = null;
     }
-
 }

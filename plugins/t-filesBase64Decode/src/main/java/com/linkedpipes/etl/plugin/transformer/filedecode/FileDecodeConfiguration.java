@@ -8,8 +8,7 @@ public class FileDecodeConfiguration {
     @RdfToPojo.Property(iri = FileDecodeVocabulary.HAS_SKIP_ERROR)
     private boolean skipOnError = false;
 
-    public FileDecodeConfiguration() {
-    }
+    public FileDecodeConfiguration() {}
 
     public boolean isSkipOnError() {
         return skipOnError;
@@ -18,5 +17,4 @@ public class FileDecodeConfiguration {
     public void setSkipOnError(boolean skipOnError) {
         this.skipOnError = skipOnError;
     }
-
 }

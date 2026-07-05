@@ -2,11 +2,9 @@ package com.linkedpipes.plugin.loader.ftpfiles;
 
 public final class FtpFilesLoaderVocabulary {
 
-    private FtpFilesLoaderVocabulary() {
-    }
+    private FtpFilesLoaderVocabulary() {}
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/l-ftpFiles#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/l-ftpFiles#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -21,5 +19,4 @@ public final class FtpFilesLoaderVocabulary {
     public static final String HAS_DIRECTORY = PREFIX + "directory";
 
     public static final String HAS_RETRY_COUNT = PREFIX + "retryCount";
-
 }

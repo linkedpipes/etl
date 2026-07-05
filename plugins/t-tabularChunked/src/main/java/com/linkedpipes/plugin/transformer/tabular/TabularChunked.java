@@ -7,18 +7,16 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 /**
  * Chunked version of tabular.
  */
 public class TabularChunked implements Component, SequentialExecution {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(TabularChunked.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TabularChunked.class);
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
@@ -38,12 +36,10 @@ public class TabularChunked implements Component, SequentialExecution {
 
     @Override
     public void execute() throws LpException {
-        final RdfOutput output = new RdfOutput(outputRdfDataUnit,
-                configuration.getChunkSize());
+        final RdfOutput output = new RdfOutput(outputRdfDataUnit, configuration.getChunkSize());
         LOG.info("Chunk size: {}", configuration.getChunkSize());
         final Parser parser = new Parser(configuration);
-        final Mapper mapper = new Mapper(output, configuration,
-                ColumnFactory.createColumnList(configuration));
+        final Mapper mapper = new Mapper(output, configuration, ColumnFactory.createColumnList(configuration));
         mapper.initialize(null);
         progressReport.start(inputFilesDataUnit.size());
         for (FilesDataUnit.Entry entry : inputFilesDataUnit) {
@@ -61,8 +57,7 @@ public class TabularChunked implements Component, SequentialExecution {
             try {
                 parser.parse(entry, mapper);
             } catch (IOException | ColumnAbstract.MissingColumnValue ex) {
-                throw new LpException("Can't process file: {}",
-                        entry.getFileName(), ex);
+                throw new LpException("Can't process file: {}", entry.getFileName(), ex);
             }
             mapper.onTableEnd();
             output.onFileEnd();
@@ -70,5 +65,4 @@ public class TabularChunked implements Component, SequentialExecution {
         }
         progressReport.done();
     }
-
 }

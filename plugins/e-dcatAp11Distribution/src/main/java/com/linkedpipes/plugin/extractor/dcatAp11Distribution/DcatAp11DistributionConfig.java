@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.extractor.dcatAp11Distribution;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.LanguageString;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -243,8 +242,7 @@ public class DcatAp11DistributionConfig {
     }
 
     public static class LocalizedString extends LanguageString {
-        public LocalizedString() {
-        }
+        public LocalizedString() {}
 
         public LocalizedString(String value, String language) {
             super(value, language);
@@ -254,16 +252,13 @@ public class DcatAp11DistributionConfig {
     @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "datasetIRI")
     private String datasetIRI;
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DistributionVocabulary.MY + "getDatasetIRIFromInput")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "getDatasetIRIFromInput")
     private Boolean getDatasetIRIFromInput;
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DistributionVocabulary.MY + "distributionIRI")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "distributionIRI")
     private String distributionIRI;
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DistributionVocabulary.MY + "genDistroIRI")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "genDistroIRI")
     private Boolean genDistroIRI;
 
     @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "accessURLs")
@@ -275,16 +270,13 @@ public class DcatAp11DistributionConfig {
     @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "licenseIRI")
     private String licenseIRI;
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DistributionVocabulary.MY + "licenseTypeIRI")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "licenseTypeIRI")
     private String licenseTypeIRI;
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DistributionVocabulary.MY + "descriptions")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "descriptions")
     private List<LocalizedString> descriptions = new LinkedList<>();
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DistributionVocabulary.MY + "downloadURLs")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "downloadURLs")
     private List<String> downloadURLs = new LinkedList<>();
 
     @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "mediaType")
@@ -293,33 +285,28 @@ public class DcatAp11DistributionConfig {
     @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "titles")
     private List<LocalizedString> titles = new LinkedList<>();
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DistributionVocabulary.MY + "documentationIRIs")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "documentationIRIs")
     private List<String> documentationIRIs = new LinkedList<>();
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DistributionVocabulary.MY + "languagesFromDataset")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "languagesFromDataset")
     private Boolean languagesFromDataset;
 
     @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "languages")
     private List<String> languages = new LinkedList<>();
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DistributionVocabulary.MY + "conformsToIRIs")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "conformsToIRIs")
     private List<String> conformsToIRIs = new LinkedList<>();
 
     @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "statusIRI")
     private String statusIRI;
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DistributionVocabulary.MY + "issuedFromDataset")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "issuedFromDataset")
     private Boolean issuedFromDataset;
 
     @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "issued")
     private Date issued;
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DistributionVocabulary.MY + "modifiedFromDataset")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "modifiedFromDataset")
     private Boolean modifiedFromDataset;
 
     @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "modifiedNow")
@@ -340,15 +327,12 @@ public class DcatAp11DistributionConfig {
     @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "spatialIRIs")
     private List<String> spatialIRIs = new LinkedList<>();
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DistributionVocabulary.MY + "temporalStart")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "temporalStart")
     private Date temporalStart;
 
     @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "temporalEnd")
     private Date temporalEnd;
 
-    @RdfToPojo.Property(
-            iri = DcatAp11DistributionVocabulary.MY + "distributionTypeIRI")
+    @RdfToPojo.Property(iri = DcatAp11DistributionVocabulary.MY + "distributionTypeIRI")
     private String distributionTypeIRI;
-
 }

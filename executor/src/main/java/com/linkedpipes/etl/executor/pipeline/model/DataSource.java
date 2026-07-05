@@ -14,8 +14,7 @@ public class DataSource implements Loadable {
 
     private String execution;
 
-    public DataSource() {
-    }
+    public DataSource() {}
 
     public String getDataPath() {
         return dataPath;
@@ -38,5 +37,4 @@ public class DataSource implements Loadable {
                 return null;
         }
     }
-
 }

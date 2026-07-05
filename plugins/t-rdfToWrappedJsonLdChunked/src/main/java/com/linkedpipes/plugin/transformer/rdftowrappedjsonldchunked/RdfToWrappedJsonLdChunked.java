@@ -7,14 +7,12 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.io.*;
+import java.util.Collection;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 
-import java.io.*;
-import java.util.Collection;
-
-public class RdfToWrappedJsonLdChunked
-        implements Component, SequentialExecution {
+public class RdfToWrappedJsonLdChunked implements Component, SequentialExecution {
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
@@ -61,29 +59,26 @@ public class RdfToWrappedJsonLdChunked
         return outputFiles.createFile(++fileCounter + ".json");
     }
 
-    private void transformFile(Collection<Statement> statements, File target)
-            throws LpException {
+    private void transformFile(Collection<Statement> statements, File target) throws LpException {
         String id = getId(statements);
         templateWriter.setId(id);
         templateWriter.setStatements(statements);
         try (OutputStream stream = new FileOutputStream(target);
-             Writer writer = new OutputStreamWriter(stream, "UTF-8")) {
+                Writer writer = new OutputStreamWriter(stream, "UTF-8")) {
             templateWriter.writeToWriter(writer);
         } catch (IOException ex) {
-            throw new LpException("Failed to create file: {}",
-                    target, ex);
+            throw new LpException("Failed to create file: {}", target, ex);
         }
     }
 
     private String getId(Collection<Statement> statements) {
         String type = configuration.getMainResourceType();
         for (Statement statement : statements) {
-            if (RDF.TYPE.equals(statement.getPredicate()) ||
-                    statement.getObject().stringValue().equals(type)) {
+            if (RDF.TYPE.equals(statement.getPredicate())
+                    || statement.getObject().stringValue().equals(type)) {
                 return statement.getSubject().stringValue();
             }
         }
         return null;
     }
-
 }

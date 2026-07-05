@@ -37,14 +37,12 @@ public final class SparqlUpdate implements Component, SequentialExecution {
     private void copyStatements() throws LpException {
         IRI inputGraph = inputRdf.getReadGraph();
         inputRdf.execute((connection) -> {
-            RepositoryResult<Statement> statement = connection
-                    .getStatements(null, null, null, true, inputGraph);
+            RepositoryResult<Statement> statement = connection.getStatements(null, null, null, true, inputGraph);
             addToOutput(statement);
         });
     }
 
-    private void addToOutput(RepositoryResult<Statement> statement)
-            throws LpException {
+    private void addToOutput(RepositoryResult<Statement> statement) throws LpException {
         IRI outputGraph = outputRdf.getWriteGraph();
         outputRdf.execute((connection) -> {
             connection.add(statement, outputGraph);
@@ -53,8 +51,7 @@ public final class SparqlUpdate implements Component, SequentialExecution {
 
     private void executeUpdate() throws LpException {
         outputRdf.execute((connection) -> {
-            Update update = connection.prepareUpdate(QueryLanguage.SPARQL,
-                    configuration.getQuery());
+            Update update = connection.prepareUpdate(QueryLanguage.SPARQL, configuration.getQuery());
             update.setDataset(createDataset());
             update.execute();
         });

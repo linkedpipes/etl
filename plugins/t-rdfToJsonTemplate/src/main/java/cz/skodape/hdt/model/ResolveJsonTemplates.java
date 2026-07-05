@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +19,7 @@ public class ResolveJsonTemplates {
 
     public JsonNode resolveTemplates(JsonNode root) {
         if (root.isObject()) {
-            readTemplates((ObjectNode)root);
+            readTemplates((ObjectNode) root);
             return applyTemplates(root);
         } else {
             return root;
@@ -49,7 +48,7 @@ public class ResolveJsonTemplates {
             ObjectNode objectNode = (ObjectNode) node;
             var iterator = objectNode.fields();
             while (iterator.hasNext()) {
-                var entry  = iterator.next();
+                var entry = iterator.next();
                 result.set(entry.getKey(), applyTemplates(entry.getValue()));
             }
             return result;
@@ -64,5 +63,4 @@ public class ResolveJsonTemplates {
             return node;
         }
     }
-
 }

@@ -5,7 +5,6 @@ import com.linkedpipes.etl.executor.api.v1.rdf.pojo.Loadable;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_EXEC;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.RDF;
-
 import java.io.File;
 import java.net.URI;
 import java.util.Collections;
@@ -31,9 +30,7 @@ public class DataUnitConfiguration implements Loadable {
         this.resource = resource;
     }
 
-    public DataUnitConfiguration(
-            String resource, String binding, String group,
-            String workingDirectory) {
+    public DataUnitConfiguration(String resource, String binding, String group, String workingDirectory) {
         this.resource = resource;
         this.binding = binding;
         this.group = group;
@@ -80,5 +77,4 @@ public class DataUnitConfiguration implements Loadable {
     public File getWorkingDirectory() {
         return new File(URI.create(workingDirectory));
     }
-
 }

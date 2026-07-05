@@ -8,9 +8,7 @@ public class JsonLdToRdfTitaniumConfiguration {
     @RdfToPojo.Property(iri = JsonLdToRdfTitaniumVocabulary.HAS_SKIP_ON_FAILURE)
     private boolean skipOnFailure = false;
 
-    public JsonLdToRdfTitaniumConfiguration() {
-
-    }
+    public JsonLdToRdfTitaniumConfiguration() {}
 
     public boolean isSkipOnFailure() {
         return skipOnFailure;
@@ -19,5 +17,4 @@ public class JsonLdToRdfTitaniumConfiguration {
     public void setSkipOnFailure(boolean skipOnFailure) {
         this.skipOnFailure = skipOnFailure;
     }
-
 }

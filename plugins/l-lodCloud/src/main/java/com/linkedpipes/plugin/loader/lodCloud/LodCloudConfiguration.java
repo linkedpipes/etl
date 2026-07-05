@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.loader.lodCloud;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -215,28 +214,34 @@ public class LodCloudConfiguration {
     @RdfToPojo.Type(iri = LodCloudConfigVocabulary.LINK_COUNT_CLASS)
     public static class LinkCount {
 
-        @RdfToPojo.Property( iri = LodCloudConfigVocabulary.TARGET_DATASET)
+        @RdfToPojo.Property(iri = LodCloudConfigVocabulary.TARGET_DATASET)
         private String targetDataset;
 
-        @RdfToPojo.Property( iri = LodCloudConfigVocabulary.LINK_COUNT)
+        @RdfToPojo.Property(iri = LodCloudConfigVocabulary.LINK_COUNT)
         private Long linkCount;
+
         public LinkCount() {
             targetDataset = "";
             linkCount = new Long(0);
         }
+
         public LinkCount(String s, Long count) {
             targetDataset = s;
             linkCount = new Long(count);
         }
+
         public String getTargetDataset() {
             return targetDataset;
         }
+
         public void setTargetDataset(String targetDataset) {
             this.targetDataset = targetDataset;
         }
+
         public Long getLinkCount() {
             return linkCount;
         }
+
         public void setLinkCount(Long linkCount) {
             this.linkCount = linkCount;
         }
@@ -245,35 +250,45 @@ public class LodCloudConfiguration {
     @RdfToPojo.Type(iri = LodCloudConfigVocabulary.MAPPING_FILE_CLASS)
     public static class MappingFile {
 
-        @RdfToPojo.Property( iri = LodCloudConfigVocabulary.MAPPING_FORMAT)
+        @RdfToPojo.Property(iri = LodCloudConfigVocabulary.MAPPING_FORMAT)
         private MappingFormats mappingFormat;
 
-        @RdfToPojo.Property( iri = LodCloudConfigVocabulary.MAPPING_FILE)
+        @RdfToPojo.Property(iri = LodCloudConfigVocabulary.MAPPING_FILE)
         private String mappingFile;
+
         public MappingFile() {
             setMappingFormat(MappingFormats.OWL);
             setMappingFile("");
         }
+
         public MappingFile(MappingFormats format, String file) {
             setMappingFormat(format);
             setMappingFile(file);
         }
+
         public String getMappingFile() {
             return mappingFile;
         }
+
         public void setMappingFile(String mappingFile) {
             this.mappingFile = mappingFile;
         }
+
         public MappingFormats getMappingFormat() {
             return mappingFormat;
         }
+
         public void setMappingFormat(MappingFormats mappingFormat) {
             this.mappingFormat = mappingFormat;
         }
     }
 
     public enum MappingFormats {
-        RDFS, OWL, SKOS, R2R, RIF
+        RDFS,
+        OWL,
+        SKOS,
+        R2R,
+        RIF
     }
 
     public enum VocabTags {
@@ -346,104 +361,115 @@ public class LodCloudConfiguration {
         }
     }
 
-    public enum Topics {media, geographic, lifesciences, publications, government, ecommerce, socialweb, usergeneratedcontent, schemata, crossdomain } ;
+    public enum Topics {
+        media,
+        geographic,
+        lifesciences,
+        publications,
+        government,
+        ecommerce,
+        socialweb,
+        usergeneratedcontent,
+        schemata,
+        crossdomain
+    };
 
     public enum Licenses {
         pddl {
-            //Open Data Commons Public Domain Dedication and License (PDDL)
-            //http://opendefinition.org/licenses/odc-pddl
+            // Open Data Commons Public Domain Dedication and License (PDDL)
+            // http://opendefinition.org/licenses/odc-pddl
             public String toString() {
-                return "odc-pddl" ;
+                return "odc-pddl";
             }
         },
         ccby {
-            //Creative Commons Attribution
-            //http://opendefinition.org/licenses/cc-by
+            // Creative Commons Attribution
+            // http://opendefinition.org/licenses/cc-by
             public String toString() {
-                return "cc-by" ;
+                return "cc-by";
             }
         },
         ccbysa {
-            //Creative Commons Attribution Share-Alike
-            //http://opendefinition.org/licenses/cc-by-sa
+            // Creative Commons Attribution Share-Alike
+            // http://opendefinition.org/licenses/cc-by-sa
             public String toString() {
-                return "cc-by-sa" ;
+                return "cc-by-sa";
             }
         },
         cczero {
-            //Creative Commons CCZero
-            //http://opendefinition.org/licenses/cc-zero
+            // Creative Commons CCZero
+            // http://opendefinition.org/licenses/cc-zero
             public String toString() {
-                return "cc-zero" ;
+                return "cc-zero";
             }
         },
         ccnc {
-            //Creative Commons Non-Commercial (Any)
+            // Creative Commons Non-Commercial (Any)
             public String toString() {
-                return "cc-nc" ;
+                return "cc-nc";
             }
         },
         gfdl {
-            //GNU Free Documentation License
+            // GNU Free Documentation License
             public String toString() {
-                return "gfdl" ;
+                return "gfdl";
             }
         },
         notspecified {
-            //License Not Specified
+            // License Not Specified
             public String toString() {
-                return "notspecified" ;
+                return "notspecified";
             }
         },
         odcby {
-            //Open Data Commons Attribution License
-            //http://opendefinition.org/licenses/odc-by
+            // Open Data Commons Attribution License
+            // http://opendefinition.org/licenses/odc-by
             public String toString() {
-                return "odc-by" ;
+                return "odc-by";
             }
         },
         odcodbl {
-            //Open Data Commons Open Database License (ODbL)
-            //http://www.opendefinition.org/licenses/odc-odbl
+            // Open Data Commons Open Database License (ODbL)
+            // http://www.opendefinition.org/licenses/odc-odbl
             public String toString() {
-                return "odc-odbl" ;
+                return "odc-odbl";
             }
         },
         otherat {
-            //Other (Attribution)
+            // Other (Attribution)
             public String toString() {
-                return "other-at" ;
+                return "other-at";
             }
         },
         othernc {
-            //Other (Non-Commercial)
+            // Other (Non-Commercial)
             public String toString() {
-                return "other-nc" ;
+                return "other-nc";
             }
         },
         otherclosed {
-            //Other (Not Open)
+            // Other (Not Open)
             public String toString() {
-                return "other-closed" ;
+                return "other-closed";
             }
         },
         otheropen {
-            //Other (Open)
+            // Other (Open)
             public String toString() {
-                return "other-open" ;
+                return "other-open";
             }
         },
         otherpd {
-            //Other (Public Domain)
+            // Other (Public Domain)
             public String toString() {
-                return "other-pd" ;
+                return "other-pd";
             }
         },
         ukogl {
-            //UK Open Government Licence (OGL)
-            //http://reference.data.gov.uk/id/open-government-licence
+            // UK Open Government Licence (OGL)
+            // http://reference.data.gov.uk/id/open-government-licence
             public String toString() {
-                return "uk-ogl" ;
+                return "uk-ogl";
             }
         }
     }
@@ -458,7 +484,7 @@ public class LodCloudConfiguration {
     private boolean lodcloudNolinks;
 
     @RdfToPojo.Property(iri = LodCloudConfigVocabulary.LOD_UNCONNECTED)
-    private boolean lodcloudUnconnected ;
+    private boolean lodcloudUnconnected;
 
     @RdfToPojo.Property(iri = LodCloudConfigVocabulary.LOD_NEEDS_INFO)
     private boolean lodcloudNeedsInfo;
@@ -470,7 +496,7 @@ public class LodCloudConfiguration {
     private boolean versionGenerated;
 
     @RdfToPojo.Property(iri = LodCloudConfigVocabulary.LICENSE_METADATA_TAG)
-    private LicenseMetadataTags licenseMetadataTag ;
+    private LicenseMetadataTags licenseMetadataTag;
 
     @RdfToPojo.Property(iri = LodCloudConfigVocabulary.PROVENANCE_METADATA_TAG)
     private ProvenanceMetadataTags provenanceMetadataTag;
@@ -487,19 +513,19 @@ public class LodCloudConfiguration {
     private final String apiUri = "https://old.datahub.io/api/3/action";
 
     @RdfToPojo.Property(iri = LodCloudConfigVocabulary.VERSION)
-    private String version ;
+    private String version;
 
     @RdfToPojo.Property(iri = LodCloudConfigVocabulary.LICENSE_ID)
-    private Licenses license_id ;
+    private Licenses license_id;
 
     @RdfToPojo.Property(iri = LodCloudConfigVocabulary.ORGANIZATION_ID)
-    private String orgID ;
+    private String orgID;
 
     @RdfToPojo.Property(iri = LodCloudConfigVocabulary.SHORTNAME)
-    private String shortname ;
+    private String shortname;
 
     @RdfToPojo.Property(iri = LodCloudConfigVocabulary.NAMESPACE)
-    private String namespace ;
+    private String namespace;
 
     @RdfToPojo.Property(iri = LodCloudConfigVocabulary.VOCABULARIES)
     private Collection<String> vocabularies = new LinkedList<>();
@@ -514,10 +540,10 @@ public class LodCloudConfiguration {
     private Collection<MappingFile> mappingFiles = new LinkedList<>();
 
     @RdfToPojo.Property(iri = LodCloudConfigVocabulary.SPARQL_ENDPOINT_NAME)
-    private String sparqlEndpointName ;
+    private String sparqlEndpointName;
 
     @RdfToPojo.Property(iri = LodCloudConfigVocabulary.SPARQL_ENDPOINT_DESCRIPTION)
-    private String sparqlEndpointDescription ;
+    private String sparqlEndpointDescription;
 
     @RdfToPojo.Property(iri = LodCloudConfigVocabulary.API_KEY)
     private String apiKey;
@@ -525,7 +551,5 @@ public class LodCloudConfiguration {
     @RdfToPojo.Property(iri = LodCloudConfigVocabulary.DATASET_ID)
     private String datasetID;
 
-    public LodCloudConfiguration() {
-    }
-
+    public LodCloudConfiguration() {}
 }

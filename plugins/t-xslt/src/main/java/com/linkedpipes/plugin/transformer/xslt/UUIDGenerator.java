@@ -17,8 +17,7 @@ public class UUIDGenerator extends ExtensionFunctionDefinition {
         return singletonInstance;
     }
 
-    private UUIDGenerator() {
-    }
+    private UUIDGenerator() {}
 
     @Override
     public StructuredQName getFunctionQName() {
@@ -40,12 +39,9 @@ public class UUIDGenerator extends ExtensionFunctionDefinition {
         return new ExtensionFunctionCall() {
 
             @Override
-            public Sequence call(XPathContext context, Sequence[] arguments)
-                    throws XPathException {
+            public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
                 return new StringValue(java.util.UUID.randomUUID().toString());
             }
-
         };
     }
-
 }

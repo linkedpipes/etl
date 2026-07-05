@@ -1,6 +1,8 @@
 package com.linkedpipes.plugin.loader.graphstoreprotocol;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import java.io.IOException;
+import java.net.SocketException;
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
 import org.apache.http.auth.AuthScope;
@@ -18,13 +20,9 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.SocketException;
-
 public class HttpService {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(HttpService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HttpService.class);
 
     private final boolean useAuthentication;
 
@@ -34,26 +32,21 @@ public class HttpService {
 
     private final String authenticationEndpoint;
 
-    public HttpService(
-            boolean useAuthentication,
-            String userName, String password,
-            String authenticationEndpoint) {
+    public HttpService(boolean useAuthentication, String userName, String password, String authenticationEndpoint) {
         this.useAuthentication = useAuthentication;
         this.userName = userName;
         this.password = password;
         this.authenticationEndpoint = authenticationEndpoint;
     }
 
-    public void executeHttp(HttpEntityEnclosingRequestBase httpMethod)
-            throws LpException {
+    public void executeHttp(HttpEntityEnclosingRequestBase httpMethod) throws LpException {
         CloseableHttpClient httpClient = createHttpClient();
         HttpClientContext context = HttpClientContext.create();
         if (useAuthentication) {
             authenticate(httpClient, context);
         }
         //
-        try (CloseableHttpResponse response
-                     = httpClient.execute(httpMethod, context)) {
+        try (CloseableHttpResponse response = httpClient.execute(httpMethod, context)) {
             logResponseEntity(response);
             checkResponseCode(response);
         } catch (IOException | ParseException ex) {
@@ -80,8 +73,8 @@ public class HttpService {
                     new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
                     new UsernamePasswordCredentials(userName, password));
             //
-            RequestConfig requestConfig = RequestConfig.custom()
-                    .setAuthenticationEnabled(true).build();
+            RequestConfig requestConfig =
+                    RequestConfig.custom().setAuthenticationEnabled(true).build();
             //
             return HttpClients.custom()
                     .setDefaultRequestConfig(requestConfig)
@@ -99,22 +92,19 @@ public class HttpService {
      * can be too big - it would look like a failure to us
      * (as Virtuoso just close the connection before reading all the data).
      */
-    protected void authenticate(
-            CloseableHttpClient httpClient,
-            HttpClientContext context) {
+    protected void authenticate(CloseableHttpClient httpClient, HttpClientContext context) {
         var request = new HttpPut(authenticationEndpoint);
         try {
-            CloseableHttpResponse response =
-                    httpClient.execute(request, context);
+            CloseableHttpResponse response = httpClient.execute(request, context);
             response.close();
         } catch (Exception ex) {
             LOG.info("Exception during first empty request:", ex);
         }
     }
 
-    protected void logResponseEntity(CloseableHttpResponse response)
-            throws IOException {
-        LOG.info("Response code: {} phrase: {}",
+    protected void logResponseEntity(CloseableHttpResponse response) throws IOException {
+        LOG.info(
+                "Response code: {} phrase: {}",
                 response.getStatusLine().getStatusCode(),
                 response.getStatusLine().getReasonPhrase());
         try {
@@ -122,20 +112,19 @@ public class HttpService {
             if (entity == null) {
                 return;
             }
-            LOG.debug("Response:\n {} ",EntityUtils.toString(entity));
+            LOG.debug("Response:\n {} ", EntityUtils.toString(entity));
         } catch (SocketException ex) {
             LOG.error("Can't read response entity.", ex);
         }
     }
 
-    protected void checkResponseCode(CloseableHttpResponse response)
-            throws LpException {
+    protected void checkResponseCode(CloseableHttpResponse response) throws LpException {
         int statusCode = response.getStatusLine().getStatusCode();
         if (statusCode >= 400) {
             throw new LpException(
                     "Can't upload data, status: {} \n Server response: {}",
-                    statusCode, response.getStatusLine().getReasonPhrase());
+                    statusCode,
+                    response.getStatusLine().getReasonPhrase());
         }
     }
-
 }

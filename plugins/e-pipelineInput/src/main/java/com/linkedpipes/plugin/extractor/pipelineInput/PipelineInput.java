@@ -5,17 +5,15 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.DefinitionReader;
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
+import org.apache.commons.io.FileUtils;
 
 public class PipelineInput implements Component, SequentialExecution {
 
-    private static final String HAS_INPUT_DIRECTORY =
-            "http://linkedpipes.com/ontology/inputDirectory";
+    private static final String HAS_INPUT_DIRECTORY = "http://linkedpipes.com/ontology/inputDirectory";
 
     @Component.OutputPort(iri = "FilesOutput")
     public WritableFilesDataUnit output;
@@ -48,5 +46,4 @@ public class PipelineInput implements Component, SequentialExecution {
             throw new LpException("Can't copy data.", ex);
         }
     }
-
 }

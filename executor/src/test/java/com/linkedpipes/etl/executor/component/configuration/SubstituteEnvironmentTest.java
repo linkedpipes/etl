@@ -8,12 +8,10 @@ import com.linkedpipes.etl.rdf.utils.RdfBuilder;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.RdfTriple;
 import com.linkedpipes.etl.rdf.utils.vocabulary.RDF;
+import java.util.*;
 import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.*;
 
 public class SubstituteEnvironmentTest {
 
@@ -23,10 +21,8 @@ public class SubstituteEnvironmentTest {
         env.put("LP_ETL_HOST", "lp");
         env.put("LP_ETL_PORT", "8080");
         //
-        Assertions.assertEquals("lp:8080", SubstituteEnvironment.substitute(
-                env, "{LP_ETL_HOST}:{LP_ETL_PORT}"));
-        Assertions.assertEquals("x-lp:8080", SubstituteEnvironment.substitute(
-                env, "x-{LP_ETL_HOST}:{LP_ETL_PORT}"));
+        Assertions.assertEquals("lp:8080", SubstituteEnvironment.substitute(env, "{LP_ETL_HOST}:{LP_ETL_PORT}"));
+        Assertions.assertEquals("x-lp:8080", SubstituteEnvironment.substitute(env, "x-{LP_ETL_HOST}:{LP_ETL_PORT}"));
     }
 
     /**
@@ -62,10 +58,7 @@ public class SubstituteEnvironmentTest {
         builder.commit();
 
         var actual = SubstituteEnvironment.substitute(
-                env,
-                source,
-                new EntityReference("http://localhost/entity", graph, null),
-                configurationClass);
+                env, source, new EntityReference("http://localhost/entity", graph, null), configurationClass);
 
         List<Statement> sourceList = new ArrayList<>();
         source.statements(null, graph, sourceList::add);
@@ -110,10 +103,7 @@ public class SubstituteEnvironmentTest {
         builder.commit();
 
         var actual = SubstituteEnvironment.substitute(
-                env,
-                source,
-                new EntityReference("http://localhost/entity", graph, null),
-                configurationClass);
+                env, source, new EntityReference("http://localhost/entity", graph, null), configurationClass);
 
         List<RdfTriple> targetList = new ArrayList<>();
         actual.getSource().triples(null, targetList::add);
@@ -142,5 +132,4 @@ public class SubstituteEnvironmentTest {
         // Input is 8 triples, we lose one by substitution.
         Assertions.assertEquals(7, targetList.size());
     }
-
 }

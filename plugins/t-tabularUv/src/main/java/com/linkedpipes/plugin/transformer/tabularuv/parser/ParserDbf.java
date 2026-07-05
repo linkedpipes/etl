@@ -3,18 +3,17 @@ package com.linkedpipes.plugin.transformer.tabularuv.parser;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdf;
 import com.linkedpipes.plugin.transformer.tabularuv.mapper.TableToRdfConfigurator;
-import org.jamel.dbf.DbfReader;
-import org.jamel.dbf.structure.DbfField;
-import org.jamel.dbf.structure.DbfHeader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.jamel.dbf.DbfReader;
+import org.jamel.dbf.structure.DbfField;
+import org.jamel.dbf.structure.DbfHeader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ParserDbf implements Parser {
 
@@ -41,8 +40,7 @@ public class ParserDbf implements Parser {
             encoding = config.encoding;
         }
         if (!Charset.isSupported(encoding)) {
-            throw new ParseFailed("Charset '" + encoding
-                    + "' is not supported.");
+            throw new ParseFailed("Charset '" + encoding + "' is not supported.");
         }
         final DbfReader reader = new DbfReader(inFile);
         // get header
@@ -62,23 +60,19 @@ public class ParserDbf implements Parser {
         Object[] row = reader.nextRecord();
         List<Object> stringRow = new ArrayList(row.length);
         // configure parser
-        TableToRdfConfigurator.configure(tableToRdf, header,
-                Arrays.asList(row), 0);
+        TableToRdfConfigurator.configure(tableToRdf, header, Arrays.asList(row), 0);
         // go ...
         if (config.rowLimit == null) {
             LOG.debug("Row limit: not used");
         } else {
             LOG.debug("Row limit: {}", config.rowLimit);
         }
-        while (row != null
-                &&
-                (config.rowLimit == null || rowNumPerFile < config.rowLimit)) {
+        while (row != null && (config.rowLimit == null || rowNumPerFile < config.rowLimit)) {
             // convert
             for (Object item : row) {
                 if (item instanceof byte[]) {
                     try {
-                        final String newString
-                                = new String((byte[]) item, config.encoding);
+                        final String newString = new String((byte[]) item, config.encoding);
                         stringRow.add(newString);
                     } catch (UnsupportedEncodingException ex) {
                         // terminate DPU as this can not be handled
@@ -101,5 +95,4 @@ public class ParserDbf implements Parser {
             }
         }
     }
-
 }

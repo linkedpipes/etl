@@ -24,17 +24,13 @@ class TolerantSparqlRepository extends SPARQLRepository {
                 return simpleFactory.createLiteral(value, datatype);
             }
         }
-
     }
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(TolerantSparqlRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TolerantSparqlRepository.class);
 
-    private final ValueFactory simpleFactory =
-            SimpleValueFactory.getInstance();
+    private final ValueFactory simpleFactory = SimpleValueFactory.getInstance();
 
-    private final ValueFactory updatedFactory =
-            new TolerantValueFactory();
+    private final ValueFactory updatedFactory = new TolerantValueFactory();
 
     public TolerantSparqlRepository(String endpointUrl) {
         super(endpointUrl);
@@ -51,5 +47,4 @@ class TolerantSparqlRepository extends SPARQLRepository {
         httpClient.setValueFactory(getValueFactory());
         return httpClient;
     }
-
 }

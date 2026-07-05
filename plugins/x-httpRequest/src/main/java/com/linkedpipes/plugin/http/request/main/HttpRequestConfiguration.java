@@ -82,5 +82,4 @@ public class HttpRequestConfiguration {
     public void setHasUtf8Redirect(boolean hasUtf8Redirect) {
         this.hasUtf8Redirect = hasUtf8Redirect;
     }
-
 }

@@ -14,8 +14,7 @@ public class RdfToFileConfiguration {
     @RdfToPojo.Property(iri = RdfToFileVocabulary.HAS_GRAPH_URI)
     private String graphUri;
 
-    public RdfToFileConfiguration() {
-    }
+    public RdfToFileConfiguration() {}
 
     public String getFileName() {
         return fileName;
@@ -40,5 +39,4 @@ public class RdfToFileConfiguration {
     public void setGraphUri(String graphUri) {
         this.graphUri = graphUri;
     }
-
 }

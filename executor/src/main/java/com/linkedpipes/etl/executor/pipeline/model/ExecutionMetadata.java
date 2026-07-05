@@ -15,8 +15,7 @@ public class ExecutionMetadata implements Loadable {
     private String logLevel = "DEBUG";
 
     @Override
-    public Loadable load(String predicate, BackendRdfValue object)
-            throws RdfUtilsException {
+    public Loadable load(String predicate, BackendRdfValue object) throws RdfUtilsException {
         switch (predicate) {
             case LP_EXEC.HAS_DELETE_WORKING_DATA:
                 deleteWorkingData = object.asBoolean();
@@ -43,5 +42,4 @@ public class ExecutionMetadata implements Loadable {
     public String getLogLevel() {
         return logLevel;
     }
-
 }

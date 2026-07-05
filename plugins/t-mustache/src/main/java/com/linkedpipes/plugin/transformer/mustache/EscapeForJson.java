@@ -31,5 +31,4 @@ class EscapeForJson {
         }
         return builder.toString();
     }
-
 }

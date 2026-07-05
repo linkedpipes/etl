@@ -6,8 +6,7 @@ import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
 public class VirtuosoExtractorConfiguration {
 
     @RdfToPojo.Property(iri = VirtuosoExtractorVocabulary.VIRTUOSO_URI)
-    private String virtuosoUrl =
-            "jdbc:virtuosoExtractor://localhost:1111/charset=UTF-8/";
+    private String virtuosoUrl = "jdbc:virtuosoExtractor://localhost:1111/charset=UTF-8/";
 
     @RdfToPojo.Property(iri = VirtuosoExtractorVocabulary.USERNAME)
     private String username = "dba";
@@ -21,8 +20,7 @@ public class VirtuosoExtractorConfiguration {
     @RdfToPojo.Property(iri = VirtuosoExtractorVocabulary.GRAPH)
     private String graph = "";
 
-    public VirtuosoExtractorConfiguration() {
-    }
+    public VirtuosoExtractorConfiguration() {}
 
     public String getVirtuosoUrl() {
         return virtuosoUrl;

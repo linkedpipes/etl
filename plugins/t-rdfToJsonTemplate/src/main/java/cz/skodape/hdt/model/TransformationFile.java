@@ -15,5 +15,4 @@ public class TransformationFile {
     public String propertySource;
 
     public Map<String, SourceConfiguration> sources = new HashMap<>();
-
 }

@@ -1,13 +1,13 @@
 package com.linkedpipes.etl.storage.template.model;
 
-//import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
-//import org.eclipse.rdf4j.model.IRI;
-//import org.eclipse.rdf4j.model.Literal;
-//import org.eclipse.rdf4j.model.Value;
-//import org.eclipse.rdf4j.model.ValueFactory;
-//import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+// import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
+// import org.eclipse.rdf4j.model.IRI;
+// import org.eclipse.rdf4j.model.Literal;
+// import org.eclipse.rdf4j.model.Value;
+// import org.eclipse.rdf4j.model.ValueFactory;
+// import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 //
-//public class JarTemplateRef extends Template implements PojoLoader.Loadable {
+// public class JarTemplateRef extends Template implements PojoLoader.Loadable {
 //
 //    public static final IRI TYPE;
 //
@@ -55,4 +55,4 @@ package com.linkedpipes.etl.storage.template.model;
 //        return configurationDescription;
 //    }
 //
-//}
+// }

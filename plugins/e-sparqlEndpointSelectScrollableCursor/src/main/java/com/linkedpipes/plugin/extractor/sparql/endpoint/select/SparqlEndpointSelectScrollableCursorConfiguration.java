@@ -1,55 +1,43 @@
 package com.linkedpipes.plugin.extractor.sparql.endpoint.select;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @RdfToPojo.Type(iri = SparqlEndpointSelectScrollableCursorVocabulary.CONFIG)
 public class SparqlEndpointSelectScrollableCursorConfiguration {
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_ENDPOINT)
+    @RdfToPojo.Property(iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_ENDPOINT)
     private String endpoint;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_PREFIXES)
+    @RdfToPojo.Property(iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_PREFIXES)
     private String prefixes;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_OUTER_SELECT)
+    @RdfToPojo.Property(iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_OUTER_SELECT)
     private String outerSelect;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_INNER_SELECT)
+    @RdfToPojo.Property(iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_INNER_SELECT)
     private String innerSelect;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_DEFAULT_GRAPH)
+    @RdfToPojo.Property(iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_DEFAULT_GRAPH)
     private List<String> defaultGraphs = new ArrayList<>();
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_FILE_NAME)
+    @RdfToPojo.Property(iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_FILE_NAME)
     private String fileName;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_PAGE_SIZE)
+    @RdfToPojo.Property(iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_PAGE_SIZE)
     private Integer pageSize;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_AUTH)
+    @RdfToPojo.Property(iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_AUTH)
     private boolean useAuthentication = false;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_USERNAME)
+    @RdfToPojo.Property(iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_USERNAME)
     private String username;
 
-    @RdfToPojo.Property(
-            iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_PASSWORD)
+    @RdfToPojo.Property(iri = SparqlEndpointSelectScrollableCursorVocabulary.HAS_PASSWORD)
     private String password;
 
-    public SparqlEndpointSelectScrollableCursorConfiguration() {
-    }
+    public SparqlEndpointSelectScrollableCursorConfiguration() {}
 
     public String getEndpoint() {
         return endpoint;
@@ -130,5 +118,4 @@ public class SparqlEndpointSelectScrollableCursorConfiguration {
     public void setPassword(String password) {
         this.password = password;
     }
-
 }

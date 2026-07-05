@@ -1,13 +1,12 @@
 package com.linkedpipes.plugin.http.apache;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
+import java.io.IOException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
-
-import java.io.IOException;
 
 /**
  * We can add custom redirect handling using:
@@ -21,7 +20,6 @@ public class RequestExecutor {
     public interface ResponseConsumer {
 
         void apply(HttpResponse response) throws LpException;
-
     }
 
     private final HttpRequest request;
@@ -77,5 +75,4 @@ public class RequestExecutor {
                 // manager/pool.
                 .setSocketTimeout(timeout);
     }
-
 }

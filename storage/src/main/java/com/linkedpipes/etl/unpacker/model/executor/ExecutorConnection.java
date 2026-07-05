@@ -15,8 +15,7 @@ public class ExecutorConnection {
 
     private String targetBinding;
 
-    public ExecutorConnection() {
-    }
+    public ExecutorConnection() {}
 
     public void write(StatementsBuilder builder) {
         builder.addType(iri, LP_PIPELINE.CONNECTION);
@@ -65,5 +64,4 @@ public class ExecutorConnection {
     public void setTargetBinding(String targetBinding) {
         this.targetBinding = targetBinding;
     }
-
 }

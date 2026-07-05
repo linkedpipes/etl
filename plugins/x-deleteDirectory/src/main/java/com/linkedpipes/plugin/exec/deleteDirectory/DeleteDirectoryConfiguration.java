@@ -8,8 +8,7 @@ public class DeleteDirectoryConfiguration {
     @RdfToPojo.Property(iri = DeleteDirectoryVocabulary.HAS_DIRECTORY)
     private String directory = null;
 
-    public DeleteDirectoryConfiguration() {
-    }
+    public DeleteDirectoryConfiguration() {}
 
     public String getDirectory() {
         return directory;

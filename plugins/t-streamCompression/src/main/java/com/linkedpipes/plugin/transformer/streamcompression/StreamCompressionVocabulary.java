@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.streamcompression;
 
 public class StreamCompressionVocabulary {
 
-    private static final String PREFIX =
-            "http://plugins.linkedpipes.com/ontology/t-streamCompression#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-streamCompression#";
 
     public static final String CONFIG_CLASS = PREFIX + "Configuration";
 
@@ -12,5 +11,4 @@ public class StreamCompressionVocabulary {
     public static final String FORMAT_GZIP = PREFIX + "gzip";
 
     public static final String FORMAT_BZ2 = PREFIX + "bzip2";
-
 }

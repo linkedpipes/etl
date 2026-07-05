@@ -11,7 +11,6 @@ public class DescriptionTest {
 
         @RdfToPojo.Property(iri = "http://label")
         private String label;
-
     }
 
     @RdfToPojo.Type(iri = "http://inheritance")
@@ -22,11 +21,10 @@ public class DescriptionTest {
 
         @RdfToPojo.Resource
         private String iri;
-
     }
 
     @Test
-    public void simpleScan()  {
+    public void simpleScan() {
         Descriptor desc = new Descriptor(TestObject.class);
 
         Assertions.assertEquals("http://type", desc.getObjectType());
@@ -43,5 +41,4 @@ public class DescriptionTest {
         Assertions.assertNotNull(desc.getFieldForPredicate("http://label"));
         Assertions.assertNotNull(desc.getFieldForResource());
     }
-
 }

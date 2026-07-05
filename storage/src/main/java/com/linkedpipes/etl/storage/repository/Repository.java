@@ -1,9 +1,8 @@
 package com.linkedpipes.etl.storage.repository;
 
 import com.linkedpipes.etl.storage.StorageException;
-import org.eclipse.rdf4j.model.Resource;
-
 import java.util.List;
+import org.eclipse.rdf4j.model.Resource;
 
 public interface Repository {
 
@@ -11,7 +10,6 @@ public interface Repository {
     interface ResourceFactory {
 
         Resource apply(String baseUrl, String suffix);
-
     }
 
     /**
@@ -36,5 +34,4 @@ public interface Repository {
      * method multiple times must not return same resources.
      */
     Resource reserveResource(ResourceFactory factory, String baseUrl);
-
 }

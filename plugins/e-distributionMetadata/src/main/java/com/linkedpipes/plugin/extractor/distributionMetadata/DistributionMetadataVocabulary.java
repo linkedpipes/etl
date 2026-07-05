@@ -66,5 +66,4 @@ public final class DistributionMetadataVocabulary {
         POD_DISTRIBUTION_DESCRIBREBYTYPE = valueFactory.createIRI(POD + "distribution-describedByType");
         WDRS_DESCRIBEDBY = valueFactory.createIRI(WDRS + "describedBy");
     }
-
 }

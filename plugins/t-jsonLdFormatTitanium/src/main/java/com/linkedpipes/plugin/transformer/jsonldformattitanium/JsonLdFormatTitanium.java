@@ -7,7 +7,6 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-
 import java.io.File;
 
 public class JsonLdFormatTitanium implements Component, SequentialExecution {
@@ -37,8 +36,7 @@ public class JsonLdFormatTitanium implements Component, SequentialExecution {
             try {
                 transformFile(inputFile, outputFile);
             } catch (LpException ex) {
-                throw new LpException(
-                        "Can't transform: {}", entry.getFileName(), ex);
+                throw new LpException("Can't transform: {}", entry.getFileName(), ex);
             }
             progressReport.entryProcessed();
         }
@@ -61,16 +59,10 @@ public class JsonLdFormatTitanium implements Component, SequentialExecution {
                 operator.frame(source, configuration.getFrame(), target);
                 break;
             case JsonLdFormatTitaniumVocabulary.FRAME_AS_ARRAY:
-                operator.frameAsArray(
-                        source,
-                        configuration.getFrame(),
-                        configuration.getContext(),
-                        target);
+                operator.frameAsArray(source, configuration.getFrame(), configuration.getContext(), target);
                 break;
             default:
-                throw new LpException("Invalid format type: '{}'",
-                        configuration.getFormat());
+                throw new LpException("Invalid format type: '{}'", configuration.getFormat());
         }
     }
-
 }

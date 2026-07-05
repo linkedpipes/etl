@@ -4,26 +4,21 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.event.Event;
 import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.eclipse.rdf4j.model.IRI;
 
 public class ComponentMessageWriter extends BaseMessageWriter {
 
     // TODO Remove and replace with references to vocabulary.
-    private static final String LP_PREFIX =
-            "http://linkedpipes.com/ontology/";
+    private static final String LP_PREFIX = "http://linkedpipes.com/ontology/";
 
     private final DefaultComponentTripleWriter writer;
 
-    public ComponentMessageWriter(
-            String executionIri, AtomicInteger eventCounter, File file) {
+    public ComponentMessageWriter(String executionIri, AtomicInteger eventCounter, File file) {
         super(executionIri, eventCounter, file);
-        this.writer = new DefaultComponentTripleWriter(
-                this.statements, this.executionIri);
+        this.writer = new DefaultComponentTripleWriter(this.statements, this.executionIri);
     }
 
     public void addEvent(ExecutionComponent component, Event event) {
@@ -31,7 +26,8 @@ public class ComponentMessageWriter extends BaseMessageWriter {
         IRI iri = this.createEventIri(index);
         this.createBaseEvent(iri, index);
 
-        this.statements.add(this.valueFactory.createStatement(iri,
+        this.statements.add(this.valueFactory.createStatement(
+                iri,
                 this.valueFactory.createIRI(LP_PIPELINE.HAS_COMPONENT),
                 this.valueFactory.createIRI(component.getIri()),
                 this.executionIri));
@@ -46,9 +42,7 @@ public class ComponentMessageWriter extends BaseMessageWriter {
         this.createBaseEvent(iri, index);
 
         this.statements.addType(iri, LP_PREFIX + "events/ComponentBegin");
-        this.statements.addIri(iri,
-                "http://linkedpipes.com/ontology/component",
-                component.getIri());
+        this.statements.addIri(iri, "http://linkedpipes.com/ontology/component", component.getIri());
     }
 
     public void onComponentEnd(ExecutionComponent component) {
@@ -57,21 +51,16 @@ public class ComponentMessageWriter extends BaseMessageWriter {
         this.createBaseEvent(iri, index);
 
         this.statements.addType(iri, LP_PREFIX + "events/ComponentEnd");
-        this.statements.addIri(iri,
-                "http://linkedpipes.com/ontology/component",
-                component.getIri());
+        this.statements.addIri(iri, "http://linkedpipes.com/ontology/component", component.getIri());
     }
 
-    public void onComponentFailed(
-            ExecutionComponent component, LpException exception) {
+    public void onComponentFailed(ExecutionComponent component, LpException exception) {
         int index = this.messageCounter.getAndIncrement();
         IRI iri = this.createEventIri(index);
         this.createBaseEvent(iri, index);
 
-        this.statements.addType(iri,  LP_PREFIX + "events/ComponentFailed");
-        this.statements.addIri(iri,
-                "http://linkedpipes.com/ontology/component",
-                component.getIri());
+        this.statements.addType(iri, LP_PREFIX + "events/ComponentFailed");
+        this.statements.addIri(iri, "http://linkedpipes.com/ontology/component", component.getIri());
 
         // Get exceptions.
         LpException lpException = null;
@@ -85,20 +74,16 @@ public class ComponentMessageWriter extends BaseMessageWriter {
 
         // Format into a message.
         if (lpException != null) {
-            this.statements.add(iri,
-                    LP_PREFIX + "events/reason",
-                    lpException.getMessage());
+            this.statements.add(iri, LP_PREFIX + "events/reason", lpException.getMessage());
         }
         if (rootCause.getMessage() == null) {
-            this.statements.add(iri,
+            this.statements.add(
+                    iri,
                     LP_PREFIX + "events/rootException",
                     rootCause.getClass().getSimpleName());
         } else {
-            String message = rootCause.getClass().getSimpleName()
-                    + " : " + rootCause.getMessage();
-            this.statements.add(iri,
-                    LP_PREFIX + "events/rootException",
-                    message);
+            String message = rootCause.getClass().getSimpleName() + " : " + rootCause.getMessage();
+            this.statements.add(iri, LP_PREFIX + "events/rootException", message);
         }
     }
 

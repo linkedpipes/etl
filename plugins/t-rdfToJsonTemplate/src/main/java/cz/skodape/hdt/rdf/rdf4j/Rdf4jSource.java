@@ -12,15 +12,14 @@ import cz.skodape.hdt.rdf.rdf4j.model.Rdf4jLiteral;
 import cz.skodape.hdt.rdf.rdf4j.model.Rdf4jPrimitive;
 import cz.skodape.hdt.rdf.rdf4j.model.Rdf4jReference;
 import cz.skodape.hdt.rdf.rdf4j.model.Rdf4jResource;
-import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.Value;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 
 public abstract class Rdf4jSource implements PropertySource {
 
@@ -44,8 +43,7 @@ public abstract class Rdf4jSource implements PropertySource {
                 return false;
             }
             ResourceInGraph that = (ResourceInGraph) other;
-            return resource.equals(that.resource)
-                    && graph.equals(that.graph);
+            return resource.equals(that.resource) && graph.equals(that.graph);
         }
 
         @Override
@@ -61,13 +59,11 @@ public abstract class Rdf4jSource implements PropertySource {
         if (value instanceof Literal) {
             return new Rdf4jLiteral(graph, (Literal) value);
         }
-        throw new RuntimeException(
-                "Can't convert rdf4j type: " + value.stringValue());
+        throw new RuntimeException("Can't convert rdf4j type: " + value.stringValue());
     }
 
     @Override
-    public ReferenceSource source(Reference reference)
-            throws OperationFailed {
+    public ReferenceSource source(Reference reference) throws OperationFailed {
         List<Reference> result = new ArrayList<>();
         Rdf4jReference rdfReference = asRdfReference(reference);
         if (rdfReference instanceof Rdf4jArray) {
@@ -79,22 +75,18 @@ public abstract class Rdf4jSource implements PropertySource {
         return new MemoryReferenceSource<>(result);
     }
 
-    protected Rdf4jReference asRdfReference(Reference reference)
-            throws OperationFailed {
+    protected Rdf4jReference asRdfReference(Reference reference) throws OperationFailed {
         if (reference instanceof Rdf4jReference) {
             return (Rdf4jReference) reference;
         }
         if (reference == null) {
             throw new OperationFailed("Reference is null.");
         }
-        throw new OperationFailed(
-                "Unsupported reference type: {}",
-                reference.getClass());
+        throw new OperationFailed("Unsupported reference type: {}", reference.getClass());
     }
 
     @Override
-    public ArrayReference property(ObjectReference reference, String property)
-            throws OperationFailed {
+    public ArrayReference property(ObjectReference reference, String property) throws OperationFailed {
         Rdf4jReference rdfReference = asRdfReference(reference);
         if (rdfReference instanceof Rdf4jResource) {
             return property((Rdf4jResource) rdfReference, property);
@@ -103,32 +95,24 @@ public abstract class Rdf4jSource implements PropertySource {
             return property((Rdf4jLiteral) rdfReference, property);
         }
         throw new OperationFailed(
-                "Operation not supported for: "
-                        + rdfReference.getClass().getName());
+                "Operation not supported for: " + rdfReference.getClass().getName());
     }
 
-    protected ArrayReference property(
-            Rdf4jResource resourceReference, String property)
-            throws OperationFailed {
+    protected ArrayReference property(Rdf4jResource resourceReference, String property) throws OperationFailed {
         Resource graph = resourceReference.getGraph();
         if ("@value".equals(property)) {
             String id = resourceReference.getResource().stringValue();
             return new Rdf4jArray(graph, new Rdf4jPrimitive(graph, id));
         }
-        List<Rdf4jReference> result =
-                property(graph, resourceReference.getResource(), property)
-                        .stream()
-                        .map((value) -> this.wrap(graph, value))
-                        .collect(Collectors.toList());
+        List<Rdf4jReference> result = property(graph, resourceReference.getResource(), property).stream()
+                .map((value) -> this.wrap(graph, value))
+                .collect(Collectors.toList());
         return new Rdf4jArray(graph, result);
     }
 
-    protected abstract List<Value> property(
-            Resource graph, Resource resource, String property)
-            throws OperationFailed;
+    protected abstract List<Value> property(Resource graph, Resource resource, String property) throws OperationFailed;
 
-    protected ArrayReference property(
-            Rdf4jLiteral resourceReference, String property) {
+    protected ArrayReference property(Rdf4jLiteral resourceReference, String property) {
         Resource graph = resourceReference.getGraph();
         Literal literal = resourceReference.getLiteral();
         List<Rdf4jReference> result = new ArrayList<>(1);
@@ -153,18 +137,15 @@ public abstract class Rdf4jSource implements PropertySource {
     }
 
     @Override
-    public ArrayReference reverseProperty(Reference reference, String property)
-            throws OperationFailed {
+    public ArrayReference reverseProperty(Reference reference, String property) throws OperationFailed {
         Rdf4jReference rdfReference = asRdfReference(reference);
         if (rdfReference instanceof Rdf4jResource) {
             Rdf4jResource resourceReference = (Rdf4jResource) rdfReference;
             final Resource graph = resourceReference.getGraph();
             final Value value = resourceReference.getResource();
-            List<Rdf4jReference> result =
-                    reverseProperty(graph, value, property)
-                            .stream()
-                            .map((resource) -> this.wrap(graph, resource))
-                            .collect(Collectors.toList());
+            List<Rdf4jReference> result = reverseProperty(graph, value, property).stream()
+                    .map((resource) -> this.wrap(graph, resource))
+                    .collect(Collectors.toList());
             return new Rdf4jArray(graph, result);
         }
         if (rdfReference instanceof Rdf4jLiteral) {
@@ -174,12 +155,9 @@ public abstract class Rdf4jSource implements PropertySource {
             throw new OperationFailed("Operation not supported for primitive value.");
         }
         throw new OperationFailed(
-                "Operation not supported for: "
-                        + rdfReference.getClass().getName());
+                "Operation not supported for: " + rdfReference.getClass().getName());
     }
 
-    protected abstract List<Resource> reverseProperty(
-            Resource graph, Value value, String property)
+    protected abstract List<Resource> reverseProperty(Resource graph, Value value, String property)
             throws OperationFailed;
-
 }

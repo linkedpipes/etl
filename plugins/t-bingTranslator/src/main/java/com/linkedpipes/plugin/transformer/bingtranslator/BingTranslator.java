@@ -7,6 +7,13 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
@@ -26,14 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.*;
-
 public final class BingTranslator implements Component, SequentialExecution {
 
     /**
@@ -47,20 +46,15 @@ public final class BingTranslator implements Component, SequentialExecution {
      */
     private static final int API_TOKEN_TTL = 1000 * 60 * 8;
 
-    public static final String ISSUE_TOKEN_URL =
-            "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
+    public static final String ISSUE_TOKEN_URL = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
 
-    public static final String TRANSLATE_URL =
-            "https://api.microsofttranslator.com/v2/http.svc/TranslateArray";
+    public static final String TRANSLATE_URL = "https://api.microsofttranslator.com/v2/http.svc/TranslateArray";
 
-    private static final String TYPE_STRING =
-            "http://www.w3.org/2001/XMLSchema#string";
+    private static final String TYPE_STRING = "http://www.w3.org/2001/XMLSchema#string";
 
-    private static final String TYPE_LANG_STRING =
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString";
+    private static final String TYPE_LANG_STRING = "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString";
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(BingTranslator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BingTranslator.class);
 
     @Component.ContainsConfiguration
     @Component.InputPort(iri = "Configuration")
@@ -115,8 +109,7 @@ public final class BingTranslator implements Component, SequentialExecution {
             throw new LpException("Can't create SAX parser,", ex);
         }
         // We use LinkedHashMap to preserve ordering.
-        final Map<String, LinkedHashMap<String, List<Statement>>> data =
-                new HashMap<>();
+        final Map<String, LinkedHashMap<String, List<Statement>>> data = new HashMap<>();
         // Read chunks.
         progressReport.start(input.size());
         for (ChunkedTriples.Chunk chunk : input) {
@@ -147,8 +140,7 @@ public final class BingTranslator implements Component, SequentialExecution {
                 data.get(language).get(value).add(s);
             }
             // Translate chunk content.
-            for (Map.Entry<String, LinkedHashMap<String, List<Statement>>>
-                    entry : data.entrySet()) {
+            for (Map.Entry<String, LinkedHashMap<String, List<Statement>>> entry : data.entrySet()) {
                 for (String lang : configuration.getTargetLanguages()) {
                     if (lang.equals(entry.getKey())) {
                         // Labels are already in required language.
@@ -166,8 +158,8 @@ public final class BingTranslator implements Component, SequentialExecution {
         progressReport.done();
     }
 
-    private void translate(LinkedHashMap<String, List<Statement>> data,
-            String fromLanguage, String toLanguage) throws LpException {
+    private void translate(LinkedHashMap<String, List<Statement>> data, String fromLanguage, String toLanguage)
+            throws LpException {
         // Check entity count.
         if (data.size() > BING_QUERY_LIMIT) {
             splitAndTransform(data, fromLanguage, toLanguage);
@@ -175,27 +167,23 @@ public final class BingTranslator implements Component, SequentialExecution {
         }
         // Check request size -> for this we need a valid token.
         checkApiKey();
-        final String requestBody = prepareRequest(data.keySet(), token,
-                fromLanguage, toLanguage);
+        final String requestBody = prepareRequest(data.keySet(), token, fromLanguage, toLanguage);
         if (requestBody == null) {
             splitAndTransform(data, fromLanguage, toLanguage);
             return;
         }
         //
-        LOG.info("Translate: {} {} -> {} ...", data.size(), fromLanguage,
-                toLanguage);
+        LOG.info("Translate: {} {} -> {} ...", data.size(), fromLanguage, toLanguage);
         // Prepare request.
         final HttpPost post = new HttpPost(TRANSLATE_URL);
         post.addHeader("Content-Type", "application/xml");
         post.addHeader("Accept", "application/xml");
-        final HttpEntity entity = new StringEntity(requestBody,
-                ContentType.create("text/plain", Consts.UTF_8));
+        final HttpEntity entity = new StringEntity(requestBody, ContentType.create("text/plain", Consts.UTF_8));
         post.setEntity(entity);
         // Execute request.
         final CloseableHttpClient httpClient = HttpClients.custom().build();
         final HttpClientContext context = HttpClientContext.create();
-        try (final CloseableHttpResponse response
-                     = httpClient.execute(post, context)) {
+        try (final CloseableHttpResponse response = httpClient.execute(post, context)) {
             final String responseString;
             try {
                 responseString = EntityUtils.toString(response.getEntity());
@@ -206,25 +194,30 @@ public final class BingTranslator implements Component, SequentialExecution {
             int responseCode = response.getStatusLine().getStatusCode();
             if (responseCode == 200) {
                 try {
-                    storeResults(data, parseOkResponse(responseString),
-                            fromLanguage, toLanguage);
+                    storeResults(data, parseOkResponse(responseString), fromLanguage, toLanguage);
                 } catch (LpException ex) {
-                    LOG.info("Request:\n{}\nResponse:\n{}",
-                            requestBody, responseString);
+                    LOG.info("Request:\n{}\nResponse:\n{}", requestBody, responseString);
                     throw ex;
                 }
                 return;
             }
             // We need to detect the error.
             if (responseString.contains("The incoming token has expired")) {
-                throw new LpException("The token expired before " +
-                                "use, retrieval: {}, current: {}) : {}\n{}",
-                        tokenRetrieval, (new Date()).getTime(),
-                        responseCode, responseString);
+                throw new LpException(
+                        "The token expired before " + "use, retrieval: {}, current: {}) : {}\n{}",
+                        tokenRetrieval,
+                        (new Date()).getTime(),
+                        responseCode,
+                        responseString);
             }
             // Check for response.
-            parserErrorResponse(data, fromLanguage, toLanguage, responseCode,
-                    response.getStatusLine().getReasonPhrase(), responseString);
+            parserErrorResponse(
+                    data,
+                    fromLanguage,
+                    toLanguage,
+                    responseCode,
+                    response.getStatusLine().getReasonPhrase(),
+                    responseString);
         } catch (IOException ex) {
             throw new LpException("Can't execute request.", ex);
         }
@@ -232,9 +225,12 @@ public final class BingTranslator implements Component, SequentialExecution {
 
     private void parserErrorResponse(
             LinkedHashMap<String, List<Statement>> data,
-            String fromLanguage, String toLanguage,
-            int responseCode, String responsePhrase,
-            String responseString) throws LpException {
+            String fromLanguage,
+            String toLanguage,
+            int responseCode,
+            String responsePhrase,
+            String responseString)
+            throws LpException {
         // Check for known error responses.
         if (responseCode == 413
                 || responseString.contains(BingErrorResponse.TOO_MANY_ELEMENTS)
@@ -243,7 +239,9 @@ public final class BingTranslator implements Component, SequentialExecution {
             if (data.size() <= 1) {
                 throw new LpException(
                         "Can't further divide the data. Response {} : {}\n{}",
-                        responseCode, responsePhrase, responseString);
+                        responseCode,
+                        responsePhrase,
+                        responseString);
             }
             splitAndTransform(data, fromLanguage, toLanguage);
             return;
@@ -252,21 +250,20 @@ public final class BingTranslator implements Component, SequentialExecution {
         // Other Error codes:
         // See http://docs.microsofttranslator.com/text-translate.html#
         // for more information.
-        //Array element cannot be empty
-        //Invalid category
-        //from is invalid
-        //To is invalid
-        //The from language is not supported
-        //The to language is not supported
-        //Invalid operation
-        //Html is not in a correct format
-        //Too many strings were passed in the Translate Request
-        //Invalid credentials
-        //Service temporarily unavailable
+        // Array element cannot be empty
+        // Invalid category
+        // from is invalid
+        // To is invalid
+        // The from language is not supported
+        // The to language is not supported
+        // Invalid operation
+        // Html is not in a correct format
+        // Too many strings were passed in the Translate Request
+        // Invalid credentials
+        // Service temporarily unavailable
 
         //
-        throw new LpException("{} : {}\n{}", responseCode,
-                responsePhrase, responseString);
+        throw new LpException("{} : {}\n{}", responseCode, responsePhrase, responseString);
     }
 
     /**
@@ -276,9 +273,8 @@ public final class BingTranslator implements Component, SequentialExecution {
      * @param fromLanguage
      * @param toLanguage
      */
-    private void splitAndTransform(
-            LinkedHashMap<String, List<Statement>> data,
-            String fromLanguage, String toLanguage) throws LpException {
+    private void splitAndTransform(LinkedHashMap<String, List<Statement>> data, String fromLanguage, String toLanguage)
+            throws LpException {
         // Check size.
         if (data.size() <= 1) {
             LOG.info("Data:");
@@ -290,14 +286,12 @@ public final class BingTranslator implements Component, SequentialExecution {
 
         //
         LOG.info("Splitting ({}) ...", data.size());
-        final LinkedHashMap<String, List<Statement>> first
-                = new LinkedHashMap<>();
-        final LinkedHashMap<String, List<Statement>> second
-                = new LinkedHashMap<>();
+        final LinkedHashMap<String, List<Statement>> first = new LinkedHashMap<>();
+        final LinkedHashMap<String, List<Statement>> second = new LinkedHashMap<>();
         //
         int divider = data.size() / 2;
-        final Iterator<Map.Entry<String, List<Statement>>> iterator
-                = data.entrySet().iterator();
+        final Iterator<Map.Entry<String, List<Statement>>> iterator =
+                data.entrySet().iterator();
         for (int index = 0; index < divider; ++index) {
             final Map.Entry<String, List<Statement>> item = iterator.next();
             first.put(item.getKey(), item.getValue());
@@ -320,8 +314,7 @@ public final class BingTranslator implements Component, SequentialExecution {
     private List<String> parseOkResponse(String response) throws LpException {
         responseHandler.getValues().clear();
         try {
-            saxParser.parse(new ByteArrayInputStream(
-                    response.getBytes("utf-8")), responseHandler);
+            saxParser.parse(new ByteArrayInputStream(response.getBytes("utf-8")), responseHandler);
         } catch (UnsupportedEncodingException ex) {
             throw new LpException("UTF-8 is not supported.", ex);
         } catch (IOException | SAXException ex) {
@@ -338,8 +331,8 @@ public final class BingTranslator implements Component, SequentialExecution {
      * @param fromLanguage
      * @param toLanguage
      */
-    private void storeResults(LinkedHashMap<String, List<Statement>> data,
-            List<String> target, String fromLanguage, String toLanguage)
+    private void storeResults(
+            LinkedHashMap<String, List<Statement>> data, List<String> target, String fromLanguage, String toLanguage)
             throws LpException {
         final ValueFactory valueFactory = SimpleValueFactory.getInstance();
         if (data.size() != target.size()) {
@@ -351,12 +344,10 @@ public final class BingTranslator implements Component, SequentialExecution {
             for (String s : target) {
                 LOG.info("{}\t", s);
             }
-            throw new LpException("Number of entities in request " +
-                            "and response is not equal ({}:{})",
-                    data.size(), target.size());
+            throw new LpException(
+                    "Number of entities in request " + "and response is not equal ({}:{})", data.size(), target.size());
         }
-        final String languageTag = createTranslatedLanguageTag(fromLanguage,
-                toLanguage);
+        final String languageTag = createTranslatedLanguageTag(fromLanguage, toLanguage);
         Iterator<String> iter = data.keySet().iterator();
         for (int i = 0; i < data.size(); ++i) {
             final String literal = target.get(i);
@@ -364,9 +355,7 @@ public final class BingTranslator implements Component, SequentialExecution {
             //
             for (Statement s : statements) {
                 outputBuffer.add(valueFactory.createStatement(
-                        s.getSubject(), s.getPredicate(),
-                        valueFactory.createLiteral(literal, languageTag)
-                ));
+                        s.getSubject(), s.getPredicate(), valueFactory.createLiteral(literal, languageTag)));
             }
         }
     }
@@ -378,8 +367,7 @@ public final class BingTranslator implements Component, SequentialExecution {
      * @param toLanguage
      * @return
      */
-    private String createTranslatedLanguageTag(String fromLanguage,
-            String toLanguage) {
+    private String createTranslatedLanguageTag(String fromLanguage, String toLanguage) {
         if (configuration.isUseBCP47()) {
             return toLanguage + "-t-" + fromLanguage + "-t0-bing";
         } else {
@@ -397,12 +385,11 @@ public final class BingTranslator implements Component, SequentialExecution {
      * @param toLanguage
      * @return Null if the request is too big.
      */
-    private static String prepareRequest(Iterable<String> literals,
-            String token, String fromLanguage, String toLanguage) {
+    private static String prepareRequest(
+            Iterable<String> literals, String token, String fromLanguage, String toLanguage) {
         // Parse language tag.
         if (fromLanguage.contains("-t-")) {
-            fromLanguage = fromLanguage.substring(0,
-                    fromLanguage.indexOf("-t-"));
+            fromLanguage = fromLanguage.substring(0, fromLanguage.indexOf("-t-"));
         }
         //
         final StringBuilder request = new StringBuilder();
@@ -421,8 +408,7 @@ public final class BingTranslator implements Component, SequentialExecution {
         // Message: the parameter 'texts' must be less than '10241' characters
         final StringBuilder texts = new StringBuilder();
         for (String string : literals) {
-            texts.append("<string xmlns=\"http://schemas.microsoft.com/" +
-                    "2003/10/Serialization/Arrays\">");
+            texts.append("<string xmlns=\"http://schemas.microsoft.com/" + "2003/10/Serialization/Arrays\">");
             texts.append(StringEscapeUtils.escapeXml11(string));
             texts.append("</string>");
         }
@@ -449,12 +435,10 @@ public final class BingTranslator implements Component, SequentialExecution {
         }
         long retrieveStartTime = (new Date()).getTime();
         final HttpPost post = new HttpPost(ISSUE_TOKEN_URL);
-        post.addHeader("Ocp-Apim-Subscription-Key",
-                configuration.getSubscriptionKey());
+        post.addHeader("Ocp-Apim-Subscription-Key", configuration.getSubscriptionKey());
         final CloseableHttpClient httpClient = HttpClients.custom().build();
         final HttpClientContext context = HttpClientContext.create();
-        try (final CloseableHttpResponse response
-                     = httpClient.execute(post, context)) {
+        try (final CloseableHttpResponse response = httpClient.execute(post, context)) {
             final String responseString;
             try {
                 responseString = EntityUtils.toString(response.getEntity());
@@ -463,12 +447,10 @@ public final class BingTranslator implements Component, SequentialExecution {
             }
             switch (response.getStatusLine().getStatusCode()) {
                 case 401:
-                    throw new LpException("Unauthorized. " +
-                            "Ensure that the key provided is valid.");
+                    throw new LpException("Unauthorized. " + "Ensure that the key provided is valid.");
                 case 403:
-                    throw new LpException("Unauthorized. " +
-                            "For an account in the free-tier, this indicates " +
-                            "that the account quota has been exceeded.");
+                    throw new LpException("Unauthorized. " + "For an account in the free-tier, this indicates "
+                            + "that the account quota has been exceeded.");
                 case 200:
                     break;
                 default:
@@ -484,5 +466,4 @@ public final class BingTranslator implements Component, SequentialExecution {
             throw new LpException("Request for token failed.", ex);
         }
     }
-
 }

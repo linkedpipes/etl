@@ -1,19 +1,18 @@
 package com.linkedpipes.etl.storage.assistant.model;
 
-import org.eclipse.rdf4j.model.Resource;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.eclipse.rdf4j.model.Resource;
 
 /**
  * Store information used to assist user during pipeline desing.
  */
 public class PipelineDesign {
 
-    static public class Template {
+    public static class Template {
 
         public final Map<Resource, Integer> followup;
 
@@ -30,15 +29,12 @@ public class PipelineDesign {
                 int value = followup.getOrDefault(entry.getKey(), 0);
                 followup.put(entry.getKey(), value + entry.getValue());
             }
-
         }
-
     }
 
     public final Set<String> tags;
 
-    public final Map<Resource, Template> templates =
-            new HashMap<>();
+    public final Map<Resource, Template> templates = new HashMap<>();
 
     public PipelineDesign() {
         tags = new HashSet<>();
@@ -46,8 +42,7 @@ public class PipelineDesign {
 
     public PipelineDesign(PipelineInfo info) {
         this.tags = Collections.unmodifiableSet(info.tags);
-        info.templates.forEach((key, value) ->
-                templates.put(key, new Template(value)));
+        info.templates.forEach((key, value) -> templates.put(key, new Template(value)));
     }
 
     public void addAll(PipelineDesign other) {
@@ -61,5 +56,4 @@ public class PipelineDesign {
             templateInfo.addAll(value);
         });
     }
-
 }

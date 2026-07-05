@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1.rdf.model;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
-
 import java.util.Date;
 
 public interface TripleWriter {
@@ -17,5 +16,4 @@ public interface TripleWriter {
     void typed(String subject, String predicate, String object, String type);
 
     void flush() throws RdfException;
-
 }

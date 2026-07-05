@@ -2,7 +2,6 @@ package com.linkedpipes.plugin.transformer.tabularuv.mapper;
 
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2;
 import com.linkedpipes.plugin.transformer.tabularuv.TabularConfig_V2.ColumnInfo_V1;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -60,13 +59,20 @@ public class TableToRdfConfig {
 
     final boolean ignoreMissingColumn;
 
-    public TableToRdfConfig(String keyColumnName, String baseURI,
-            List<ColumnInfo_V1> columnsInfo, boolean generateNew,
-            String rowsClass, boolean ignoreBlankCells,
+    public TableToRdfConfig(
+            String keyColumnName,
+            String baseURI,
+            List<ColumnInfo_V1> columnsInfo,
+            boolean generateNew,
+            String rowsClass,
+            boolean ignoreBlankCells,
             List<TabularConfig_V2.AdvanceMapping> columnsInfoAdv,
-            boolean advancedKeyColumn, boolean generateRowTriple,
-            boolean autoAsStrings, boolean generateTableRowClass,
-            boolean generateLabels, boolean trimString,
+            boolean advancedKeyColumn,
+            boolean generateRowTriple,
+            boolean autoAsStrings,
+            boolean generateTableRowClass,
+            boolean generateLabels,
+            boolean trimString,
             boolean ignoreMissingColumn) {
         this.keyColumn = keyColumnName;
         this.baseURI = baseURI;
@@ -79,8 +85,7 @@ public class TableToRdfConfig {
         this.generateNew = generateNew;
         this.rowsClass = rowsClass;
         this.ignoreBlankCells = ignoreBlankCells;
-        this.columnsInfoAdv = columnsInfoAdv != null
-                ? columnsInfoAdv : Collections.EMPTY_LIST;
+        this.columnsInfoAdv = columnsInfoAdv != null ? columnsInfoAdv : Collections.EMPTY_LIST;
         this.advancedKeyColumn = advancedKeyColumn;
         this.generateRowTriple = generateRowTriple;
         this.autoAsStrings = autoAsStrings;
@@ -89,5 +94,4 @@ public class TableToRdfConfig {
         this.trimString = trimString;
         this.ignoreMissingColumn = ignoreMissingColumn;
     }
-
 }

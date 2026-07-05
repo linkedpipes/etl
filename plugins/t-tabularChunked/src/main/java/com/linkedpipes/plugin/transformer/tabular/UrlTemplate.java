@@ -1,18 +1,16 @@
 package com.linkedpipes.plugin.transformer.tabular;
 
+import java.util.List;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-
-import java.util.List;
 
 /**
  * Template for IRI.
  */
 class UrlTemplate {
 
-    protected static final ValueFactory VALUE_FACTORY
-            = SimpleValueFactory.getInstance();
+    protected static final ValueFactory VALUE_FACTORY = SimpleValueFactory.getInstance();
 
     private final StringTemplate template;
 
@@ -20,8 +18,7 @@ class UrlTemplate {
         this.template = new StringTemplate(templateAsString);
     }
 
-    public void initialize(String tableUri, List<String> header)
-            throws InvalidTemplate {
+    public void initialize(String tableUri, List<String> header) throws InvalidTemplate {
         template.initialize(tableUri, header);
     }
 
@@ -33,5 +30,4 @@ class UrlTemplate {
             return VALUE_FACTORY.createIRI(value);
         }
     }
-
 }

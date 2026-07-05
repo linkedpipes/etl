@@ -1,13 +1,12 @@
 package com.linkedpipes.etl.executor.monitor.execution.overview;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Java representation of an overview JSON.
@@ -16,8 +15,7 @@ import java.util.Date;
  */
 public class OverviewObject {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(OverviewObject.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OverviewObject.class);
 
     private String pipeline;
 
@@ -67,12 +65,9 @@ public class OverviewObject {
             overview.progressCurrent = progress.get("current").asInt();
             overview.progressTotal = progress.get("total").asInt();
 
-            overview.progressTotalMap =
-                    getIntOptional(progress, "total_map");
-            overview.progressCurrentMapped =
-                    getIntOptional(progress, "current_mapped");
-            overview.progressCurrentExecuted =
-                    getIntOptional(progress, "current_executed");
+            overview.progressTotalMap = getIntOptional(progress, "total_map");
+            overview.progressCurrentMapped = getIntOptional(progress, "current_mapped");
+            overview.progressCurrentExecuted = getIntOptional(progress, "current_executed");
         }
 
         if (root.get("directorySize") != null) {
@@ -88,8 +83,7 @@ public class OverviewObject {
         if (str == null) {
             return null;
         }
-        DateFormat dateFormat = new
-                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
         try {
             return dateFormat.parse(str);
         } catch (ParseException ex) {
@@ -174,5 +168,4 @@ public class OverviewObject {
     public Long getDirectorySize() {
         return directorySize;
     }
-
 }

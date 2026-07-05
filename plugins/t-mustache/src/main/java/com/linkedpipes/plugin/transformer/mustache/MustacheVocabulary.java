@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.mustache;
 
 public final class MustacheVocabulary {
 
-    private static final String PREFIX
-            = "http://plugins.linkedpipes.com/ontology/t-mustache#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-mustache#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -21,7 +20,5 @@ public final class MustacheVocabulary {
 
     public static final String HAS_ESCAPE_FOR_JSON = PREFIX + "escapeForJson";
 
-    private MustacheVocabulary() {
-    }
-
+    private MustacheVocabulary() {}
 }

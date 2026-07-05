@@ -6,18 +6,16 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
+import java.util.Collection;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-
 public final class GraphMerger implements Component, SequentialExecution {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(GraphMerger.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GraphMerger.class);
 
     @Component.InputPort(iri = "InputRdf")
     public GraphListDataUnit inputRdf;
@@ -40,16 +38,13 @@ public final class GraphMerger implements Component, SequentialExecution {
         progressReport.done();
     }
 
-    private void copyGraph(IRI inputGraph, IRI outputGraph)
-            throws LpException {
+    private void copyGraph(IRI inputGraph, IRI outputGraph) throws LpException {
         LOG.info("Copy: {} -> {}", inputGraph, outputGraph);
         inputRdf.execute((inConnection) -> {
-            RepositoryResult<Statement> statements =
-                    inConnection.getStatements(null, null, null, inputGraph);
+            RepositoryResult<Statement> statements = inConnection.getStatements(null, null, null, inputGraph);
             outputRdf.execute((outConnection) -> {
                 outConnection.add(statements, outputGraph);
             });
         });
     }
-
 }

@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.executor.api.v1.rdf.pojo;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.lang.reflect.Field;
 
 final class Descriptor {
@@ -13,8 +12,7 @@ final class Descriptor {
     }
 
     public String getObjectType() {
-        RdfToPojo.Type annotation = describedType.getAnnotation(
-                RdfToPojo.Type.class);
+        RdfToPojo.Type annotation = describedType.getAnnotation(RdfToPojo.Type.class);
         if (annotation == null) {
             return null;
         } else {
@@ -45,8 +43,7 @@ final class Descriptor {
 
     private Field getPropertyField(String predicate, Class<?> clazz) {
         for (Field field : clazz.getDeclaredFields()) {
-            RdfToPojo.Property prop = field.getAnnotation(
-                    RdfToPojo.Property.class);
+            RdfToPojo.Property prop = field.getAnnotation(RdfToPojo.Property.class);
             if (prop != null && prop.iri().equals(predicate)) {
                 return field;
             }
@@ -57,5 +54,4 @@ final class Descriptor {
             return getPropertyField(predicate, clazz.getSuperclass());
         }
     }
-
 }

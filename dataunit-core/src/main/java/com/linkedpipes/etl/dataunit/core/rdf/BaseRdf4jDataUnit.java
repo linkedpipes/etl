@@ -4,19 +4,17 @@ import com.linkedpipes.etl.dataunit.core.AbstractDataUnit;
 import com.linkedpipes.etl.dataunit.core.DataUnitConfiguration;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.dataunit.ManageableDataUnit;
+import java.io.File;
+import java.util.Collection;
+import java.util.Map;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.Repository;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.Map;
-
 /**
  * Base class for RDF4J data units based on RDF4J library.
  */
-abstract class BaseRdf4jDataUnit extends AbstractDataUnit
-        implements Rdf4jDataUnit, ManageableDataUnit {
+abstract class BaseRdf4jDataUnit extends AbstractDataUnit implements Rdf4jDataUnit, ManageableDataUnit {
 
     protected static final ValueFactory VF = SimpleValueFactory.getInstance();
 
@@ -25,9 +23,7 @@ abstract class BaseRdf4jDataUnit extends AbstractDataUnit
     private Repository repository;
 
     public BaseRdf4jDataUnit(
-            DataUnitConfiguration configuration,
-            Collection<String> sources,
-            RepositoryManager manager) {
+            DataUnitConfiguration configuration, Collection<String> sources, RepositoryManager manager) {
         super(configuration, sources);
         this.repositoryManager = manager;
     }
@@ -53,8 +49,7 @@ abstract class BaseRdf4jDataUnit extends AbstractDataUnit
     }
 
     @Override
-    public void initialize(Map<String, ManageableDataUnit> dataUnits)
-            throws LpException {
+    public void initialize(Map<String, ManageableDataUnit> dataUnits) throws LpException {
         setRepositoryFromManager();
     }
 
@@ -65,12 +60,9 @@ abstract class BaseRdf4jDataUnit extends AbstractDataUnit
 
     protected void setRepositoryFromManager() throws LpException {
         if (this.repository == null) {
-            this.repository = this.repositoryManager.getRepository(
-                    this.configuration);
+            this.repository = this.repositoryManager.getRepository(this.configuration);
         } else {
             throw new LpException("Repository has already been initialized.");
         }
     }
-
 }
-

@@ -31,17 +31,14 @@ public class ExcelToCsv implements Component, SequentialExecution {
     private void checkConfiguration() throws LpException {
         if (configuration.getFileNamePattern() == null
                 || configuration.getFileNamePattern().isEmpty()) {
-            throw new LpException(
-                    ExcelToCsvVocabulary.HAS_FILE_NAME);
+            throw new LpException(ExcelToCsvVocabulary.HAS_FILE_NAME);
         }
     }
 
     private void parseFiles() throws LpException {
-        WorkbookConverter parser = new WorkbookConverter(
-                configuration, outputFiles);
+        WorkbookConverter parser = new WorkbookConverter(configuration, outputFiles);
         for (FilesDataUnit.Entry entry : inputFiles) {
             parser.processEntry(entry);
         }
     }
-
 }

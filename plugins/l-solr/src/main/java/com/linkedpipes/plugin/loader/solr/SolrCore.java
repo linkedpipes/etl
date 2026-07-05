@@ -1,11 +1,6 @@
 package com.linkedpipes.plugin.loader.solr;
 
 import com.linkedpipes.etl.executor.api.v1.LpException;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -13,6 +8,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.List;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class SolrCore {
 
@@ -36,7 +35,6 @@ class SolrCore {
         this.authorizationHeader = "Basic " + new String(encodedAuth);
     }
 
-
     public void deleteData() throws LpException {
         URL url = createDeleteUrl();
         try {
@@ -46,8 +44,7 @@ class SolrCore {
         }
     }
 
-    private void executePostWithEmptyBody(URL url)
-            throws IOException, LpException {
+    private void executePostWithEmptyBody(URL url) throws IOException, LpException {
         HttpURLConnection connection = null;
         try {
             connection = createHttpConnection(url);
@@ -62,8 +59,7 @@ class SolrCore {
 
     private URL createDeleteUrl() throws LpException {
         try {
-            return new URL(serverUrl + "/" + coreName +
-                    "/update?stream.body=<delete><query>*:*</query></delete>");
+            return new URL(serverUrl + "/" + coreName + "/update?stream.body=<delete><query>*:*</query></delete>");
         } catch (MalformedURLException ex) {
             throw new LpException("Invalid Solr URL.", ex);
         }
@@ -122,31 +118,27 @@ class SolrCore {
         connection.setRequestProperty("Authorization", authorizationHeader);
     }
 
-    private void checkResponse(HttpURLConnection connection)
-            throws IOException, LpException {
+    private void checkResponse(HttpURLConnection connection) throws IOException, LpException {
         int responseCode = connection.getResponseCode();
         LOG.info("Response code is {}", responseCode);
         printResponseMessage(connection);
         if (responseCode >= 400) {
             // Print error response.
             StringBuilder errorMessage = new StringBuilder();
-            List<String> response = IOUtils.readLines(
-                    connection.getErrorStream());
+            List<String> response = IOUtils.readLines(connection.getErrorStream());
             for (String line : response) {
                 errorMessage.append(line);
                 errorMessage.append("\n");
             }
             LOG.error("Response (error): {}", errorMessage);
-            throw new LpException("Request failed {} : {}",
-                    responseCode, errorMessage);
+            throw new LpException("Request failed {} : {}", responseCode, errorMessage);
         }
     }
 
     private void printResponseMessage(HttpURLConnection connection) {
         StringBuilder logString = new StringBuilder();
         try {
-            List<String> response = IOUtils.readLines(
-                    connection.getInputStream());
+            List<String> response = IOUtils.readLines(connection.getInputStream());
             for (String line : response) {
                 logString.append(line);
                 logString.append("\n");
@@ -173,5 +165,4 @@ class SolrCore {
             throw new LpException("Invalid Solr URL.", ex);
         }
     }
-
 }

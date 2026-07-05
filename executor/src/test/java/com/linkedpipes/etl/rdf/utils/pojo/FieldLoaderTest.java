@@ -1,16 +1,15 @@
 package com.linkedpipes.etl.rdf.utils.pojo;
 
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 public class FieldLoaderTest {
 
@@ -82,8 +81,7 @@ public class FieldLoaderTest {
             return reference;
         }
 
-        public void setReference(
-                TestClass reference) {
+        public void setReference(TestClass reference) {
             this.reference = reference;
         }
     }
@@ -346,5 +344,4 @@ public class FieldLoaderTest {
         Assertions.assertEquals("value", langString.value);
         Assertions.assertEquals("cs", langString.language);
     }
-
 }

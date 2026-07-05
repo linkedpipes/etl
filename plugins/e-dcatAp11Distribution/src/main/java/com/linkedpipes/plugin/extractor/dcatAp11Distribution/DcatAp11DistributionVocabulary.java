@@ -80,7 +80,5 @@ public final class DcatAp11DistributionVocabulary {
         SPDX_SHA1 = valueFactory.createIRI(SPDX + "checksumAlgorithm_sha1");
     }
 
-    private DcatAp11DistributionVocabulary() {
-    }
-
+    private DcatAp11DistributionVocabulary() {}
 }

@@ -6,15 +6,11 @@ import java.util.Date;
 
 public class RdfFormatter {
 
-    private final DateFormat dateFormat
-            = new SimpleDateFormat("YYYY-MM-dd");
+    private final DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd");
 
-    private final DateFormat timeFormat
-            = new SimpleDateFormat("HH:mm:ss.SSS");
+    private final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss.SSS");
 
-    public RdfFormatter() {
-
-    }
+    public RdfFormatter() {}
 
     public String toXsdDate(Date date) {
         final StringBuilder dateAsString = new StringBuilder(25);
@@ -23,6 +19,4 @@ public class RdfFormatter {
         dateAsString.append(timeFormat.format(date));
         return dateAsString.toString();
     }
-
 }
-

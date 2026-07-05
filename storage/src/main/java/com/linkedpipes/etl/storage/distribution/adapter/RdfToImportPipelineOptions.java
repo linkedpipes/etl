@@ -3,49 +3,37 @@ package com.linkedpipes.etl.storage.distribution.adapter;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsSelector;
 import com.linkedpipes.etl.storage.distribution.model.ImportPipelineOptions;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class RdfToImportPipelineOptions {
 
-    private static final String TYPE =
-            "http://linkedpipes.com/ontology/UpdateOptions";
+    private static final String TYPE = "http://linkedpipes.com/ontology/UpdateOptions";
 
-    private static final String HAS_PIPELINE =
-            "http://etl.linkedpipes.com/ontology/pipeline";
+    private static final String HAS_PIPELINE = "http://etl.linkedpipes.com/ontology/pipeline";
 
-    private static final String HAS_KEEP_URL =
-            "http://etl.linkedpipes.com/ontology/keepPipelineUrl";
+    private static final String HAS_KEEP_URL = "http://etl.linkedpipes.com/ontology/keepPipelineUrl";
 
-    private static final String HAS_KEEP_SUFFIX =
-            "http://etl.linkedpipes.com/ontology/keepPipelineSuffix";
+    private static final String HAS_KEEP_SUFFIX = "http://etl.linkedpipes.com/ontology/keepPipelineSuffix";
 
-    private static final String HAS_LABEL =
-            "http://www.w3.org/2004/02/skos/core#prefLabel";
+    private static final String HAS_LABEL = "http://www.w3.org/2004/02/skos/core#prefLabel";
 
-    private static final String HAS_IMPORT =
-            "http://etl.linkedpipes.com/ontology/importPipeline";
+    private static final String HAS_IMPORT = "http://etl.linkedpipes.com/ontology/importPipeline";
 
-    private static final String HAS_TARGET =
-            "http://etl.linkedpipes.com/ontology/targetResource";
+    private static final String HAS_TARGET = "http://etl.linkedpipes.com/ontology/targetResource";
 
-    public static List<ImportPipelineOptions> asImportPipelineOptions(
-            Statements statements) {
+    public static List<ImportPipelineOptions> asImportPipelineOptions(Statements statements) {
         StatementsSelector selector = statements.selector();
-        return selector.selectByType(TYPE)
-                .stream().map(statement -> loadOptions(
-                        selector.selectByGraph(statement.getContext()),
-                        statement.getSubject()))
+        return selector.selectByType(TYPE).stream()
+                .map(statement -> loadOptions(selector.selectByGraph(statement.getContext()), statement.getSubject()))
                 .collect(Collectors.toList());
     }
 
-    private static ImportPipelineOptions loadOptions(
-            Statements statements, Resource optionsResource) {
+    private static ImportPipelineOptions loadOptions(Statements statements, Resource optionsResource) {
         StatementsSelector selector = statements.selector();
         ImportPipelineOptions result = new ImportPipelineOptions();
         for (Statement statement : selector.withSubject(optionsResource)) {
@@ -85,5 +73,4 @@ public class RdfToImportPipelineOptions {
         }
         return result;
     }
-
 }

@@ -24,5 +24,4 @@ public interface Task {
      * return constant value. This function must not return null.
      */
     String getGroup();
-
 }

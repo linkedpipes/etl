@@ -7,11 +7,6 @@ import com.linkedpipes.etl.library.template.reference.adapter.RawReferenceTempla
 import com.linkedpipes.etl.library.template.reference.adapter.RdfToRawReferenceTemplate;
 import com.linkedpipes.etl.library.template.reference.model.ReferenceTemplate;
 import com.linkedpipes.etl.storage.StorageException;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.vocabulary.OWL;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +18,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.vocabulary.OWL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * In the old structure we have a directory for mapping and a directory for
@@ -33,13 +32,11 @@ import java.util.stream.Collectors;
  */
 public class LegacyTemplateRepository {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(LegacyTemplateRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LegacyTemplateRepository.class);
 
     public static final String NAME = null;
 
-    private static final String MAPPING_GRAPH =
-            "http://etl.linkedpipes.com/resources/plugins/mapping";
+    private static final String MAPPING_GRAPH = "http://etl.linkedpipes.com/resources/plugins/mapping";
 
     private static final String MAPPING_FILE = "mapping.trig";
 
@@ -53,30 +50,21 @@ public class LegacyTemplateRepository {
 
     private final int version;
 
-    public LegacyTemplateRepository(
-            List<PluginTemplate> pluginTemplates, int version) {
-        plugins = pluginTemplates.stream()
-                .map(PluginTemplate::resource)
-                .collect(Collectors.toSet());
+    public LegacyTemplateRepository(List<PluginTemplate> pluginTemplates, int version) {
+        plugins = pluginTemplates.stream().map(PluginTemplate::resource).collect(Collectors.toSet());
         this.version = version;
     }
 
-    public List<ReferenceTemplate> loadReferenceTemplates(
-            File templateDirectory, File knowledgeDirectory)
+    public List<ReferenceTemplate> loadReferenceTemplates(File templateDirectory, File knowledgeDirectory)
             throws StorageException {
-        Map<Resource, Resource> mapping =
-                loadLocalToOriginalMapping(knowledgeDirectory);
-        List<RawReferenceTemplate> rawReferences =
-                loadRawReferenceTemplates(templateDirectory);
-        ReferenceTemplateLoader loader = new ReferenceTemplateLoader(
-                plugins, Collections.emptyMap());
+        Map<Resource, Resource> mapping = loadLocalToOriginalMapping(knowledgeDirectory);
+        List<RawReferenceTemplate> rawReferences = loadRawReferenceTemplates(templateDirectory);
+        ReferenceTemplateLoader loader = new ReferenceTemplateLoader(plugins, Collections.emptyMap());
         loader.loadAndMigrate(rawReferences);
         loader.getContainers().stream()
                 .filter(ReferenceTemplateLoader.Container::isFailed)
                 .forEach(container -> LOG.error(
-                        "Can't load template '{}'.",
-                        container.rawTemplate().resource,
-                        container.exception()));
+                        "Can't load template '{}'.", container.rawTemplate().resource, container.exception()));
         if (loader.hasAnyFailed()) {
             throw new StorageException("Can't migrate templates.");
         }
@@ -84,8 +72,7 @@ public class LegacyTemplateRepository {
         return addMappings(mapping, references);
     }
 
-    private Map<Resource, Resource> loadLocalToOriginalMapping(
-            File knowledgeDirectory) throws StorageException {
+    private Map<Resource, Resource> loadLocalToOriginalMapping(File knowledgeDirectory) throws StorageException {
         File file = new File(knowledgeDirectory, MAPPING_FILE);
         Statements statements = Statements.arrayList();
         try {
@@ -94,8 +81,11 @@ public class LegacyTemplateRepository {
             throw new StorageException("Can't read mapping file.", ex);
         }
         Map<Resource, Resource> result = new HashMap<>();
-        statements.selector().selectByGraph(MAPPING_GRAPH)
-                .selector().select(null, OWL.SAMEAS, null)
+        statements
+                .selector()
+                .selectByGraph(MAPPING_GRAPH)
+                .selector()
+                .select(null, OWL.SAMEAS, null)
                 .forEach(statement -> {
                     // Remote to original (same domain)
                     // This may not be remote to main ...
@@ -109,19 +99,16 @@ public class LegacyTemplateRepository {
         return result;
     }
 
-    private List<RawReferenceTemplate> loadRawReferenceTemplates(File directory)
-            throws StorageException {
+    private List<RawReferenceTemplate> loadRawReferenceTemplates(File directory) throws StorageException {
         List<File> directories = listReferenceDirectories(directory);
-        List<RawReferenceTemplate> result =
-                new ArrayList<>(directories.size());
+        List<RawReferenceTemplate> result = new ArrayList<>(directories.size());
         for (File file : directories) {
             result.add(loadRawReferenceTemplate(file));
         }
         return result;
     }
 
-    private List<File> listReferenceDirectories(File directory)
-            throws StorageException {
+    private List<File> listReferenceDirectories(File directory) throws StorageException {
         if (!directory.isDirectory()) {
             return Collections.emptyList();
         }
@@ -140,8 +127,7 @@ public class LegacyTemplateRepository {
         return fileName.startsWith("jar-");
     }
 
-    private RawReferenceTemplate loadRawReferenceTemplate(File directory)
-            throws StorageException {
+    private RawReferenceTemplate loadRawReferenceTemplate(File directory) throws StorageException {
         Statements content = Statements.wrap(new HashSet<>());
         try {
             content.file().addAll(new File(directory, DEFINITION_FILE));
@@ -150,13 +136,9 @@ public class LegacyTemplateRepository {
         } catch (IOException ex) {
             throw new StorageException("Can't load template files.", ex);
         }
-        List<RawReferenceTemplate> candidates =
-                RdfToRawReferenceTemplate.asRawReferenceTemplates(
-                        content.selector());
+        List<RawReferenceTemplate> candidates = RdfToRawReferenceTemplate.asRawReferenceTemplates(content.selector());
         if (candidates.size() != 1) {
-            throw new StorageException(
-                    "Invalid number of templates ({}) in '{}'.",
-                    candidates.size(), directory);
+            throw new StorageException("Invalid number of templates ({}) in '{}'.", candidates.size(), directory);
         }
         RawReferenceTemplate candidate = candidates.get(0);
         // There is no information about version in data, so we add it here.
@@ -164,17 +146,19 @@ public class LegacyTemplateRepository {
         return candidate;
     }
 
-    private List<ReferenceTemplate> addMappings(
-            Map<Resource, Resource> mapping,
-            List<ReferenceTemplate> references) {
+    private List<ReferenceTemplate> addMappings(Map<Resource, Resource> mapping, List<ReferenceTemplate> references) {
         List<ReferenceTemplate> result = new ArrayList<>(references.size());
         for (ReferenceTemplate reference : references) {
             if (mapping.containsKey(reference.resource())) {
                 result.add(new ReferenceTemplate(
-                        reference.resource(), reference.version(),
-                        reference.template(), reference.plugin(),
-                        reference.label(), reference.description(),
-                        reference.note(), reference.color(),
+                        reference.resource(),
+                        reference.version(),
+                        reference.template(),
+                        reference.plugin(),
+                        reference.label(),
+                        reference.description(),
+                        reference.note(),
+                        reference.color(),
                         reference.tags(),
                         // We know there is no knowAs for this version.
                         mapping.get(reference.resource()),
@@ -186,5 +170,4 @@ public class LegacyTemplateRepository {
         }
         return result;
     }
-
 }

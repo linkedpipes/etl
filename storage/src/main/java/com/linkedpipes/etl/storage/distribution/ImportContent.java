@@ -1,4 +1,3 @@
 package com.linkedpipes.etl.storage.distribution;
 
-public class ImportContent {
-}
+public class ImportContent {}

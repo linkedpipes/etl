@@ -7,12 +7,11 @@ import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
 import com.linkedpipes.etl.executor.api.v1.service.ProgressReport;
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import org.apache.commons.io.FileUtils;
 
 public class JsonToJsonLd implements Component, SequentialExecution {
 
@@ -46,8 +45,7 @@ public class JsonToJsonLd implements Component, SequentialExecution {
     }
 
     private void prepareStreamConfiguration() {
-        final AddContextStream.Configuration config
-                = new AddContextStream.Configuration();
+        final AddContextStream.Configuration config = new AddContextStream.Configuration();
         config.useFileName = configuration.isFileReference();
         config.context = configuration.getContext();
         config.dataPredicate = configuration.getDataPredicate();
@@ -58,23 +56,19 @@ public class JsonToJsonLd implements Component, SequentialExecution {
     }
 
     private void processEntry(FilesDataUnit.Entry entry) throws LpException {
-        final File outputFile = outputFiles.createFile(
-                entry.getFileName() + ".jsonld");
+        final File outputFile = outputFiles.createFile(entry.getFileName() + ".jsonld");
         try {
             updateFile(entry, outputFile);
         } catch (IOException ex) {
-            throw new LpException("Can't update file: {}",
-                    entry.getFileName(), ex);
+            throw new LpException("Can't update file: {}", entry.getFileName(), ex);
         }
     }
 
-    private void updateFile(FilesDataUnit.Entry inputEntry, File outputFile)
-            throws IOException {
+    private void updateFile(FilesDataUnit.Entry inputEntry, File outputFile) throws IOException {
         File inputFile = inputEntry.toFile();
-        try (InputStream inputStream = new AddContextStream(streamConfiguration,
-                inputEntry.getFileName(), new FileInputStream(inputFile))) {
+        try (InputStream inputStream =
+                new AddContextStream(streamConfiguration, inputEntry.getFileName(), new FileInputStream(inputFile))) {
             FileUtils.copyInputStreamToFile(inputStream, outputFile);
         }
     }
-
 }

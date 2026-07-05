@@ -45,8 +45,7 @@ public class GeoToolsConfiguration {
     @RdfToPojo.Property(iri = GeoToolsVocabulary.HAS_FAIL_ON_ERROR)
     private boolean failOnError = false;
 
-    public GeoToolsConfiguration() {
-    }
+    public GeoToolsConfiguration() {}
 
     public String getType() {
         return type;

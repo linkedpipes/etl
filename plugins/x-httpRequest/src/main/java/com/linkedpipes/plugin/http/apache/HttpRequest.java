@@ -34,7 +34,6 @@ public class HttpRequest {
          * Content type for this content.
          */
         public String contentType;
-
     }
 
     private static final int DEFAULT_CAPACITY = 2;
@@ -70,5 +69,4 @@ public class HttpRequest {
     public boolean contentAsBody;
 
     public List<Content> content = new ArrayList<>(DEFAULT_CAPACITY);
-
 }

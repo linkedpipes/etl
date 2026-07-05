@@ -7,10 +7,9 @@ import com.linkedpipes.etl.executor.monitor.execution.overview.OverviewFactory;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 import com.linkedpipes.etl.library.rdf.StatementsCompare;
+import java.util.Date;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.Date;
 
 public class StatusSetterTest {
 
@@ -33,12 +32,10 @@ public class StatusSetterTest {
 
         StatementsBuilder expected = Statements.arrayList().builder();
         expected.setDefaultGraph(execution.getListGraph());
-        expected.addIri(execution.getIri(), LP_OVERVIEW.HAS_STATUS,
-                ExecutionStatus.RUNNING.asStr());
+        expected.addIri(execution.getIri(), LP_OVERVIEW.HAS_STATUS, ExecutionStatus.RUNNING.asStr());
         expected.addType(execution.getIri(), LP_EXEC.EXECUTION);
 
         Statements actual = Statements.wrap(execution.getOverviewStatements());
         Assertions.assertTrue(StatementsCompare.isIsomorphic(expected, actual));
     }
-
 }

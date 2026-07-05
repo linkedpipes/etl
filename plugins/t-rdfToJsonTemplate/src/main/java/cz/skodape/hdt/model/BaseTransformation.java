@@ -9,5 +9,4 @@ import java.util.List;
 public class BaseTransformation {
 
     public List<SelectorConfiguration> selectors = new ArrayList<>();
-
 }

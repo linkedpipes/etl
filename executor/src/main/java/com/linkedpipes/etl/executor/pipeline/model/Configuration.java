@@ -22,11 +22,10 @@ public class Configuration implements Loadable {
     }
 
     @Override
-    public Loadable load(String predicate, BackendRdfValue object)
-            throws RdfUtilsException {
+    public Loadable load(String predicate, BackendRdfValue object) throws RdfUtilsException {
         switch (predicate) {
             case LP_EXEC.HAS_ORDER:
-                order = (int)object.asLong();
+                order = (int) object.asLong();
                 return null;
             case LP_PIPELINE.HAS_CONFIGURATION_GRAPH:
                 graph = object.asString();
@@ -46,8 +45,7 @@ public class Configuration implements Loadable {
 
     void check() throws InvalidPipelineException {
         if (order == null) {
-            throw new InvalidPipelineException(
-                    "Missing configuration order: {}", iri);
+            throw new InvalidPipelineException("Missing configuration order: {}", iri);
         }
     }
 }

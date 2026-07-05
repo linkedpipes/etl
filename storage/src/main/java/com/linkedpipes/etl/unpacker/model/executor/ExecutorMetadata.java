@@ -63,5 +63,4 @@ public class ExecutorMetadata {
         this.logPolicy = policy;
         this.logLevel = level;
     }
-
 }

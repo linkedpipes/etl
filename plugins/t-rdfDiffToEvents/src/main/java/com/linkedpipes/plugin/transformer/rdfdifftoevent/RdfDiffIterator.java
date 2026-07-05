@@ -1,5 +1,10 @@
 package com.linkedpipes.plugin.transformer.rdfdifftoevent;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Stack;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
@@ -8,12 +13,6 @@ import org.eclipse.rdf4j.model.impl.LinkedHashModel;
 import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryResult;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Stack;
 
 /**
  * Merge-sort style iterator that compares two named graphs by subject IRI
@@ -37,8 +36,7 @@ class RdfDiffIterator implements Iterator<CrudEvent> {
     private IRI rightCursor;
 
     RdfDiffIterator(
-            RepositoryConnection leftConn, Resource leftGraph,
-            RepositoryConnection rightConn, Resource rightGraph) {
+            RepositoryConnection leftConn, Resource leftGraph, RepositoryConnection rightConn, Resource rightGraph) {
         this.leftConn = leftConn;
         this.leftGraph = leftGraph;
         this.rightConn = rightConn;
@@ -64,9 +62,7 @@ class RdfDiffIterator implements Iterator<CrudEvent> {
 
         // Subject present only in the right graph → CREATE.
         if (leftCursor == null) {
-            CrudEvent event = new CrudEvent(
-                    CrudType.CREATE, rightCursor,
-                    getCBD(rightConn, rightCursor, rightGraph));
+            CrudEvent event = new CrudEvent(CrudType.CREATE, rightCursor, getCBD(rightConn, rightCursor, rightGraph));
             rightCursor = rightSubjects.hasNext() ? rightSubjects.next() : null;
             return event;
         }
@@ -103,9 +99,7 @@ class RdfDiffIterator implements Iterator<CrudEvent> {
         }
 
         // rightCursor sorts before leftCursor → subject only in right → CREATE.
-        CrudEvent event = new CrudEvent(
-                CrudType.CREATE, rightCursor,
-                getCBD(rightConn, rightCursor, rightGraph));
+        CrudEvent event = new CrudEvent(CrudType.CREATE, rightCursor, getCBD(rightConn, rightCursor, rightGraph));
         rightCursor = rightSubjects.hasNext() ? rightSubjects.next() : null;
         return event;
     }
@@ -114,8 +108,7 @@ class RdfDiffIterator implements Iterator<CrudEvent> {
      * Returns the Concise Bounded Description of {@code rootSubject} from
      * the given named graph, following blank-node chains recursively.
      */
-    private Model getCBD(
-            RepositoryConnection conn, IRI rootSubject, Resource graph) {
+    private Model getCBD(RepositoryConnection conn, IRI rootSubject, Resource graph) {
         Stack<Resource> stack = new Stack<>();
         LinkedHashModel model = new LinkedHashModel();
         List<Resource> processed = new ArrayList<>();
@@ -124,13 +117,9 @@ class RdfDiffIterator implements Iterator<CrudEvent> {
         while (!stack.isEmpty()) {
             Resource subject = stack.pop();
             processed.add(subject);
-            try (RepositoryResult<Statement> stmts =
-                         conn.getStatements(subject, null, null, graph)) {
+            try (RepositoryResult<Statement> stmts = conn.getStatements(subject, null, null, graph)) {
                 for (Statement stmt : stmts) {
-                    model.add(
-                            stmt.getSubject(),
-                            stmt.getPredicate(),
-                            stmt.getObject());
+                    model.add(stmt.getSubject(), stmt.getPredicate(), stmt.getObject());
                     if (stmt.getObject().isBNode()) {
                         Resource bnode = (Resource) stmt.getObject();
                         if (!processed.contains(bnode)) {

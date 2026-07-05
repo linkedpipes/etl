@@ -11,23 +11,18 @@ import java.lang.annotation.Target;
  */
 public class RdfToPojo {
 
-    private RdfToPojo() {
-
-    }
+    private RdfToPojo() {}
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE)
     public @interface Type {
 
         String iri();
-
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    public @interface Resource {
-
-    }
+    public @interface Resource {}
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
@@ -39,7 +34,5 @@ public class RdfToPojo {
          * Alternative IRIs for given predicate.
          */
         String[] alternatives() default {};
-
     }
-
 }

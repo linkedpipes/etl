@@ -19,5 +19,4 @@ public enum ExecutionStatus {
     public String getIri() {
         return iri;
     }
-
 }

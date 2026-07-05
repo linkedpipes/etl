@@ -1,11 +1,10 @@
 package com.linkedpipes.etl.executor.monitor.debug.ftp;
 
-import org.apache.ftpserver.ftplet.FtpFile;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
+import org.apache.ftpserver.ftplet.FtpFile;
 
 /**
  * Represent an abstract directory.
@@ -147,5 +146,4 @@ abstract class AbstractFtpDirectory implements FtpFile {
     public InputStream createInputStream(long offset) throws IOException {
         throw new IOException("No read permission for a directory.");
     }
-
 }

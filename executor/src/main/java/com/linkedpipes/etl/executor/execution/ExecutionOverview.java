@@ -7,10 +7,9 @@ import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
 import com.linkedpipes.etl.rdf.utils.RdfFormatter;
 import com.linkedpipes.etl.rdf.utils.vocabulary.XSD;
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.util.Date;
+import org.apache.commons.io.FileUtils;
 
 public class ExecutionOverview {
 
@@ -43,10 +42,7 @@ public class ExecutionOverview {
 
     private String lastChange;
 
-    public ExecutionOverview(
-            File directory,
-            String executionIri,
-            ExecutionStatusMonitor statusMonitor) {
+    public ExecutionOverview(File directory, String executionIri, ExecutionStatusMonitor statusMonitor) {
         onAfterUpdate();
         this.directory = directory;
         this.executionIri = executionIri;
@@ -139,11 +135,9 @@ public class ExecutionOverview {
         responseNode.put("lastChange", lastChange);
 
         ObjectNode executionProgressNode = mapper.createObjectNode();
-        executionProgressNode.put("@id",
-                executionIri + "/overview/executionProgress");
+        executionProgressNode.put("@id", executionIri + "/overview/executionProgress");
         executionProgressNode.put("total", componentsToExecute);
-        executionProgressNode.put("current",
-                executedComponents + mappedComponents);
+        executionProgressNode.put("current", executedComponents + mappedComponents);
 
         executionProgressNode.put("total_map", componentsToMap);
         executionProgressNode.put("current_mapped", mappedComponents);
@@ -190,5 +184,4 @@ public class ExecutionOverview {
 
         return contextNode;
     }
-
 }

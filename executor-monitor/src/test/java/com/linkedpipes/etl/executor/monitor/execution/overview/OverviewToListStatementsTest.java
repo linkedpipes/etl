@@ -11,23 +11,19 @@ import com.linkedpipes.etl.executor.monitor.execution.ExecutionStatus;
 import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.library.rdf.StatementsBuilder;
 import com.linkedpipes.etl.library.rdf.StatementsCompare;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 public class OverviewToListStatementsTest {
 
-    private final DateFormat dateFormat = new
-            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
-    private OverviewToListStatements toStatements =
-            new OverviewToListStatements();
+    private OverviewToListStatements toStatements = new OverviewToListStatements();
 
     private OverviewFactory overviewFactory = new OverviewFactory();
 
@@ -52,21 +48,16 @@ public class OverviewToListStatementsTest {
     public void progressPriorTo20181018() {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode root = mapper.createObjectNode();
-        root.set("status", mapper.createObjectNode()
-                .put("@id", ExecutionStatus.QUEUED.asStr()));
+        root.set("status", mapper.createObjectNode().put("@id", ExecutionStatus.QUEUED.asStr()));
         String pipeline = "http://pipeline";
-        root.set("pipeline", mapper.createObjectNode()
-                .put("@id", pipeline));
+        root.set("pipeline", mapper.createObjectNode().put("@id", pipeline));
         Date start = new GregorianCalendar(2019, 1, 1, 23, 2, 10).getTime();
         Date finished = new GregorianCalendar(2019, 1, 5, 13, 6, 30).getTime();
         root.put("executionStarted", dateFormat.format(start));
         root.put("executionFinished", dateFormat.format(finished));
         root.put("directorySize", 1204);
-        root.set("pipelineProgress", mapper.createObjectNode()
-                .put("current", 3)
-                .put("total", 10));
-        Date lastChange =
-                new GregorianCalendar(2016, 1, 5, 13, 6, 30).getTime();
+        root.set("pipelineProgress", mapper.createObjectNode().put("current", 3).put("total", 10));
+        Date lastChange = new GregorianCalendar(2016, 1, 5, 13, 6, 30).getTime();
         root.put("lastChange", dateFormat.format(lastChange));
 
         Execution execution = Mockito.mock(Execution.class);
@@ -85,8 +76,7 @@ public class OverviewToListStatementsTest {
         expected.add(iri, LP_OVERVIEW.HAS_PROGRESS_CURRENT, 3);
         expected.add(iri, LP_OVERVIEW.HAS_PROGRESS_TOTAL, 10);
 
-        expected.addIri(
-                iri, LP_OVERVIEW.HAS_STATUS, ExecutionStatus.QUEUED.asStr());
+        expected.addIri(iri, LP_OVERVIEW.HAS_STATUS, ExecutionStatus.QUEUED.asStr());
         Statements actual = this.toStatements.asStatements(execution, root);
         Assertions.assertTrue(StatementsCompare.isIsomorphic(expected, actual));
     }
@@ -95,24 +85,23 @@ public class OverviewToListStatementsTest {
     public void fullInformation() {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode root = mapper.createObjectNode();
-        root.set("status", mapper.createObjectNode()
-                .put("@id", ExecutionStatus.QUEUED.asStr()));
+        root.set("status", mapper.createObjectNode().put("@id", ExecutionStatus.QUEUED.asStr()));
         String pipeline = "http://pipeline";
-        root.set("pipeline", mapper.createObjectNode()
-                .put("@id", pipeline));
+        root.set("pipeline", mapper.createObjectNode().put("@id", pipeline));
         Date start = new GregorianCalendar(2019, 1, 1, 23, 2, 10).getTime();
         Date finished = new GregorianCalendar(2019, 1, 5, 13, 6, 30).getTime();
         root.put("executionStarted", dateFormat.format(start));
         root.put("executionFinished", dateFormat.format(finished));
         root.put("directorySize", 1204);
-        root.set("pipelineProgress", mapper.createObjectNode()
-                .put("current", 3)
-                .put("total", 10)
-                .put("total_map", 5)
-                .put("current_mapped", 2)
-                .put("current_executed", 1));
-        Date lastChange =
-                new GregorianCalendar(2016, 1, 5, 13, 6, 30).getTime();
+        root.set(
+                "pipelineProgress",
+                mapper.createObjectNode()
+                        .put("current", 3)
+                        .put("total", 10)
+                        .put("total_map", 5)
+                        .put("current_mapped", 2)
+                        .put("current_executed", 1));
+        Date lastChange = new GregorianCalendar(2016, 1, 5, 13, 6, 30).getTime();
         root.put("lastChange", dateFormat.format(lastChange));
 
         Execution execution = Mockito.mock(Execution.class);
@@ -134,10 +123,8 @@ public class OverviewToListStatementsTest {
         expected.add(iri, LP_OVERVIEW.HAS_PROGRESS_MAPPED, 2);
         expected.add(iri, LP_OVERVIEW.HAS_PROGRESS_EXECUTED, 1);
 
-        expected.addIri(
-                iri, LP_OVERVIEW.HAS_STATUS, ExecutionStatus.QUEUED.asStr());
+        expected.addIri(iri, LP_OVERVIEW.HAS_STATUS, ExecutionStatus.QUEUED.asStr());
         Statements actual = this.toStatements.asStatements(execution, root);
         Assertions.assertTrue(StatementsCompare.isIsomorphic(expected, actual));
     }
-
 }

@@ -3,20 +3,18 @@ package com.linkedpipes.etl.executor.monitor.events;
 import com.linkedpipes.etl.executor.monitor.execution.Execution;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionFacade;
 import com.linkedpipes.etl.executor.monitor.execution.ExecutionStatus;
-import org.eclipse.rdf4j.model.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.eclipse.rdf4j.model.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class LimitCountHistory implements EventListener {
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(LimitCountHistory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LimitCountHistory.class);
 
     private final List<ExecutionStatus> ignoredStates = Arrays.asList(
             ExecutionStatus.QUEUED,
@@ -44,8 +42,7 @@ class LimitCountHistory implements EventListener {
     private void pruneOnStartup() {
         List<Execution> executions = executionFacade.getExecutions().stream()
                 .filter(exec -> !ignoredStates.contains(exec.getStatus()))
-                .sorted(Comparator.comparing(Execution::getLastOverviewChange)
-                        .reversed())
+                .sorted(Comparator.comparing(Execution::getLastOverviewChange).reversed())
                 .toList();
         Map<Resource, Integer> counter = new HashMap<>();
         for (Execution execution : executions) {
@@ -59,8 +56,7 @@ class LimitCountHistory implements EventListener {
     }
 
     private void deleteExecution(Execution execution) {
-        LOG.debug("Removing execution '{}' for '{}'.",
-                execution.getIri(), execution.getPipeline());
+        LOG.debug("Removing execution '{}' for '{}'.", execution.getIri(), execution.getPipeline());
         executionFacade.deleteExecution(execution);
     }
 
@@ -73,12 +69,10 @@ class LimitCountHistory implements EventListener {
         List<Execution> executions = executionFacade.getExecutions().stream()
                 .filter(exec -> pipeline.equals(exec.getPipeline()))
                 .filter(exec -> !ignoredStates.contains(exec.getStatus()))
-                .sorted(Comparator.comparing(Execution::getLastOverviewChange)
-                        .reversed())
+                .sorted(Comparator.comparing(Execution::getLastOverviewChange).reversed())
                 .toList();
         for (int index = historyLimit; index < executions.size(); ++index) {
             deleteExecution(executions.get(index));
         }
     }
-
 }

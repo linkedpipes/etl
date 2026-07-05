@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.transformer.unpack;
 
 public final class UnpackVocabulary {
 
-    private static final String PREFIX =
-            "http://plugins.linkedpipes.com/ontology/t-unpack#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/t-unpack#";
 
     public static final String CONFIG_CLASS = PREFIX + "Configuration";
 
@@ -22,5 +21,4 @@ public final class UnpackVocabulary {
     public static final String FORMAT_GZIP = PREFIX + "gz";
 
     public static final String SKIP_ON_ERROR = PREFIX + "skipOnError";
-
 }

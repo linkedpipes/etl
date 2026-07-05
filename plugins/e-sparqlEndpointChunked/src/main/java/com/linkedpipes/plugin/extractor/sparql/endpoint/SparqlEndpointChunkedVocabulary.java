@@ -2,8 +2,7 @@ package com.linkedpipes.plugin.extractor.sparql.endpoint;
 
 final class SparqlEndpointChunkedVocabulary {
 
-    private static final String PREFIX =
-            "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#";
+    private static final String PREFIX = "http://plugins.linkedpipes.com/ontology/e-sparqlEndpointChunked#";
 
     public static final String CONFIG = PREFIX + "Configuration";
 
@@ -27,15 +26,11 @@ final class SparqlEndpointChunkedVocabulary {
 
     public static final String HAS_PASSWORD = PREFIX + "password";
 
-    public static final String HAS_USE_TOLERANT_REPOSITORY =
-            PREFIX + "useTolerantRepository";
+    public static final String HAS_USE_TOLERANT_REPOSITORY = PREFIX + "useTolerantRepository";
 
     public static final String HAS_AS_LITERALS = PREFIX + "literals";
 
-    public static final String HAS_HANDLE_INVALID =
-            PREFIX + "handleInvalidData";
+    public static final String HAS_HANDLE_INVALID = PREFIX + "handleInvalidData";
 
-    private SparqlEndpointChunkedVocabulary() {
-    }
-
+    private SparqlEndpointChunkedVocabulary() {}
 }

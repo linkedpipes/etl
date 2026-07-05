@@ -22,18 +22,15 @@ public final class SparqlAsk implements Component, SequentialExecution {
 
     @Override
     public void execute() throws LpException {
-        if (configuration.getQuery() == null
-                || configuration.getQuery().isEmpty()) {
-            throw new LpException("Missing property: {}",
-                    SparqlAskVocabulary.HAS_SPARQL);
+        if (configuration.getQuery() == null || configuration.getQuery().isEmpty()) {
+            throw new LpException("Missing property: {}", SparqlAskVocabulary.HAS_SPARQL);
         }
         //
         final boolean ask;
         try {
             ask = inputRdf.execute((connection) -> {
-                final BooleanQuery query = connection.prepareBooleanQuery(
-                        QueryLanguage.SPARQL,
-                        configuration.getQuery());
+                final BooleanQuery query =
+                        connection.prepareBooleanQuery(QueryLanguage.SPARQL, configuration.getQuery());
                 final SimpleDataset dataset = new SimpleDataset();
                 dataset.addDefaultGraph(inputRdf.getReadGraph());
                 query.setDataset(dataset);
@@ -42,10 +39,8 @@ public final class SparqlAsk implements Component, SequentialExecution {
         } catch (Throwable t) {
             throw new LpException("Can't evaluate SPARQL ask.", t);
         }
-        if ((ask && configuration.isFailOnTrue())
-                || (!ask && !configuration.isFailOnTrue())) {
+        if ((ask && configuration.isFailOnTrue()) || (!ask && !configuration.isFailOnTrue())) {
             throw new LpException("Ask assertion failure.");
         }
     }
-
 }

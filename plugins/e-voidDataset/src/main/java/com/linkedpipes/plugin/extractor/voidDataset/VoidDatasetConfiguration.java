@@ -2,10 +2,8 @@ package com.linkedpipes.plugin.extractor.voidDataset;
 
 import com.linkedpipes.etl.executor.api.v1.rdf.LanguageString;
 import com.linkedpipes.etl.executor.api.v1.rdf.RdfToPojo;
-
 import java.util.LinkedList;
 import java.util.List;
-
 
 @RdfToPojo.Type(iri = VoidDatasetVocabulary.MY + "Configuration")
 public class VoidDatasetConfiguration {
@@ -50,9 +48,7 @@ public class VoidDatasetConfiguration {
         this.copyDownloadURLsToDataDumps = copyDownloadURLsToDataDumps;
     }
 
-    public static class LocalizedString extends LanguageString {
-
-    }
+    public static class LocalizedString extends LanguageString {}
 
     @RdfToPojo.Type(iri = VoidDatasetVocabulary.MY + "LanguageObject")
     public static class Language {
@@ -75,7 +71,6 @@ public class VoidDatasetConfiguration {
         public void setIri(String iri) {
             this.iri = iri;
         }
-
     }
 
     @RdfToPojo.Property(iri = VoidDatasetVocabulary.MY + "distributionIRI")

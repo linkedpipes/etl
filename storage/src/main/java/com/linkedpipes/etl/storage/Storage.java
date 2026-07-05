@@ -6,12 +6,11 @@ import ch.qos.logback.core.Appender;
 import com.linkedpipes.etl.storage.cli.Configuration;
 import com.linkedpipes.etl.storage.cli.ConfigurationLoader;
 import com.linkedpipes.etl.storage.logging.LoggerUtils;
+import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import java.io.File;
 
 public class Storage {
 
@@ -69,26 +68,19 @@ public class Storage {
         if (configuration.logDirectory == null) {
             return;
         }
-        LoggerContext loggerContext =
-                (LoggerContext) LoggerFactory.getILoggerFactory();
-        ch.qos.logback.classic.Logger logbackLogger =
-                loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
-        String logLevel = configuration.logLevel == null ?
-                "INFO" : configuration.logLevel;
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        ch.qos.logback.classic.Logger logbackLogger = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
+        String logLevel = configuration.logLevel == null ? "INFO" : configuration.logLevel;
         File logDirectory = new File(configuration.logDirectory);
         //
         Appender<ILoggingEvent> appender =
-                LoggerUtils.createRollingFileAppender(
-                        logDirectory, "storage", loggerContext, logLevel);
+                LoggerUtils.createRollingFileAppender(logDirectory, "storage", loggerContext, logLevel);
         logbackLogger.addAppender(appender);
     }
 
     private void startSpring() {
-        ConfigurableApplicationContext context
-                = new ClassPathXmlApplicationContext(
-                "spring/context-service.xml");
+        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("spring/context-service.xml");
         context.registerShutdownHook();
         context.start();
     }
-
 }

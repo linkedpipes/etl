@@ -2,7 +2,6 @@ package com.linkedpipes.etl.storage.template;
 
 import com.linkedpipes.etl.library.template.plugin.model.PluginTemplate;
 import com.linkedpipes.etl.library.template.reference.model.ReferenceTemplate;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,10 +21,7 @@ public class TemplateEvents {
             // Do nothing.
         }
 
-        default void onReferenceTemplateUpdated(
-                ReferenceTemplate previous, ReferenceTemplate next) {
-
-        }
+        default void onReferenceTemplateUpdated(ReferenceTemplate previous, ReferenceTemplate next) {}
 
         default void onReferenceTemplateDeleted(ReferenceTemplate template) {
             // Do nothing.
@@ -34,7 +30,6 @@ public class TemplateEvents {
         default void onReferenceTemplateReload() {
             // Do nothing.
         }
-
     }
 
     private final List<Listener> registered = new ArrayList<>();
@@ -61,8 +56,7 @@ public class TemplateEvents {
         }
     }
 
-    public void onReferenceTemplateUpdated(
-            ReferenceTemplate previous, ReferenceTemplate next) {
+    public void onReferenceTemplateUpdated(ReferenceTemplate previous, ReferenceTemplate next) {
         for (Listener listener : registered) {
             listener.onReferenceTemplateUpdated(previous, next);
         }
@@ -79,5 +73,4 @@ public class TemplateEvents {
             listener.onReferenceTemplateReload();
         }
     }
-
 }

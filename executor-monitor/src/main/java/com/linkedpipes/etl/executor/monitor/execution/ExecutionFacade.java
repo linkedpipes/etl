@@ -6,19 +6,18 @@ import com.linkedpipes.etl.executor.monitor.debug.DebugData;
 import com.linkedpipes.etl.executor.monitor.debug.DebugDataSource;
 import com.linkedpipes.etl.executor.monitor.events.EventListener;
 import com.linkedpipes.etl.library.rdf.Statements;
-import org.eclipse.rdf4j.model.Statement;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import org.eclipse.rdf4j.model.Statement;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ExecutionFacade implements DebugDataSource {
@@ -78,13 +77,11 @@ public class ExecutionFacade implements DebugDataSource {
      * This is of 2022.06.
      */
     public File getExecutionLogFile(Execution execution) {
-        File primary = new File(
-                execution.getDirectory(), "log/execution.log");
+        File primary = new File(execution.getDirectory(), "log/execution.log");
         if (primary.exists()) {
             return primary;
         }
-        File secondary = new File(
-                execution.getDirectory(), "log/execution-debug.log");
+        File secondary = new File(execution.getDirectory(), "log/execution-debug.log");
         if (secondary.exists()) {
             return secondary;
         }
@@ -95,8 +92,7 @@ public class ExecutionFacade implements DebugDataSource {
         return execution.getOverviewJson();
     }
 
-    public Execution createExecution(
-            Collection<Statement> pipeline, List<MultipartFile> inputs)
+    public Execution createExecution(Collection<Statement> pipeline, List<MultipartFile> inputs)
             throws MonitorException {
         return this.storage.createExecution(pipeline, inputs);
     }
@@ -105,8 +101,7 @@ public class ExecutionFacade implements DebugDataSource {
         this.storage.delete(execution);
     }
 
-    public Statements getExecutionStatements(Execution execution)
-            throws MonitorException {
+    public Statements getExecutionStatements(Execution execution) throws MonitorException {
         Statements statements = this.executionLoader.loadStatements(execution);
         // We use the date obtained to update, in this way we can be sure,
         // that we have the latest data.
@@ -116,8 +111,7 @@ public class ExecutionFacade implements DebugDataSource {
         return statements;
     }
 
-    public Statements getMessages(Execution execution, String component)
-            throws IOException {
+    public Statements getMessages(Execution execution, String component) throws IOException {
         return this.messageLoader.loadComponentMessages(execution, component);
     }
 
@@ -130,8 +124,7 @@ public class ExecutionFacade implements DebugDataSource {
         return execution.getDebugData();
     }
 
-    public Execution cloneAsNewExecution(Execution execution)
-            throws MonitorException {
+    public Execution cloneAsNewExecution(Execution execution) throws MonitorException {
         return storage.cloneAsNewExecution(execution);
     }
 
@@ -139,5 +132,4 @@ public class ExecutionFacade implements DebugDataSource {
     public void updateExecutions() {
         storage.updateExecutions();
     }
-
 }

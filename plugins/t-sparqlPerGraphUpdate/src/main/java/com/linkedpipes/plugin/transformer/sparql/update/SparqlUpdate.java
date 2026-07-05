@@ -6,6 +6,7 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableGraphListDataUnit;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import java.util.Collection;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.query.Dataset;
@@ -13,8 +14,6 @@ import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.Update;
 import org.eclipse.rdf4j.query.impl.SimpleDataset;
 import org.eclipse.rdf4j.repository.RepositoryResult;
-
-import java.util.Collection;
 
 public final class SparqlUpdate implements Component, SequentialExecution {
 
@@ -40,17 +39,15 @@ public final class SparqlUpdate implements Component, SequentialExecution {
         Collection<IRI> inputGraphs = inputRdf.getReadGraphs();
         for (final IRI inputGraph : inputGraphs) {
             inputRdf.execute((connection) -> {
-                    IRI outputGraph = outputRdf.createGraph();
-                    RepositoryResult<Statement> statement = connection
-                        .getStatements(null, null, null, true, inputGraph);
-                    addToOutput(statement, outputGraph);
-                    executeUpdate(outputGraph);
-                });
+                IRI outputGraph = outputRdf.createGraph();
+                RepositoryResult<Statement> statement = connection.getStatements(null, null, null, true, inputGraph);
+                addToOutput(statement, outputGraph);
+                executeUpdate(outputGraph);
+            });
         }
     }
 
-    private void addToOutput(RepositoryResult<Statement> statement, IRI outputGraph)
-            throws LpException {
+    private void addToOutput(RepositoryResult<Statement> statement, IRI outputGraph) throws LpException {
         outputRdf.execute((connection) -> {
             connection.add(statement, outputGraph);
         });
@@ -58,11 +55,10 @@ public final class SparqlUpdate implements Component, SequentialExecution {
 
     private void executeUpdate(IRI outputGraph) throws LpException {
         outputRdf.execute((connection) -> {
-                Update update = connection.prepareUpdate(QueryLanguage.SPARQL,
-                                                         configuration.getQuery());
-                update.setDataset(createDataset(outputGraph));
-                update.execute();
-            });
+            Update update = connection.prepareUpdate(QueryLanguage.SPARQL, configuration.getQuery());
+            update.setDataset(createDataset(outputGraph));
+            update.execute();
+        });
     }
 
     private Dataset createDataset(IRI outputGraph) {

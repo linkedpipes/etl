@@ -2,6 +2,11 @@ package com.linkedpipes.etl.test;
 
 import com.linkedpipes.etl.dataunit.core.rdf.SingleGraphDataUnit;
 import com.linkedpipes.etl.dataunit.core.rdf.WritableSingleGraphDataUnit;
+import java.io.*;
+import java.net.URL;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.util.RDFInserter;
@@ -11,19 +16,11 @@ import org.eclipse.rdf4j.rio.RDFParser;
 import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
 
-import java.io.*;
-import java.net.URL;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-
 public class TestUtils {
 
-    private TestUtils() {
-    }
+    private TestUtils() {}
 
-    public static void load(WritableSingleGraphDataUnit dataUnit, File file,
-            RDFFormat format) throws Exception {
+    public static void load(WritableSingleGraphDataUnit dataUnit, File file, RDFFormat format) throws Exception {
         final RDFParser rdfParser = Rio.createParser(format);
         Repositories.consume(dataUnit.getRepository(), (connection) -> {
             final RDFInserter inserter = new RDFInserter(connection);
@@ -44,8 +41,7 @@ public class TestUtils {
      * @param file
      * @param format
      */
-    public static void save(SingleGraphDataUnit dataUnit, File file,
-            RDFFormat format) throws Exception {
+    public static void save(SingleGraphDataUnit dataUnit, File file, RDFFormat format) throws Exception {
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
             final RDFWriter writer = Rio.createWriter(format, outputStream);
             Repositories.consume(dataUnit.getRepository(), (connection) -> {
@@ -61,8 +57,7 @@ public class TestUtils {
      * @param file
      * @param format
      */
-    public static void save(Repository repository, File file,
-            RDFFormat format) throws Exception {
+    public static void save(Repository repository, File file, RDFFormat format) throws Exception {
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
             final RDFWriter writer = Rio.createWriter(format, outputStream);
             Repositories.consume(repository, (connection) -> {
@@ -76,11 +71,9 @@ public class TestUtils {
      * @return Path to file in test resources.
      */
     public static File fileFromResource(String fileName) {
-        final URL url = Thread.currentThread().getContextClassLoader().
-                getResource(fileName);
+        final URL url = Thread.currentThread().getContextClassLoader().getResource(fileName);
         if (url == null) {
-            throw new RuntimeException("Required resource '"
-                    + fileName + "' is missing.");
+            throw new RuntimeException("Required resource '" + fileName + "' is missing.");
         }
         return new File(url.getPath());
     }
@@ -92,13 +85,11 @@ public class TestUtils {
         return Files.createTempDirectory("lp-test-dpu-").toFile();
     }
 
-    public static List<Statement> statementsFromResource(String fileName)
-            throws IOException {
+    public static List<Statement> statementsFromResource(String fileName) throws IOException {
         File file = fileFromResource(fileName);
         try (InputStream stream = new FileInputStream(file)) {
             RDFFormat format = Rio.getParserFormatForFileName(fileName).get();
             return new ArrayList<>(Rio.parse(stream, "http://base", format));
         }
     }
-
 }

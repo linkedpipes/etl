@@ -8,7 +8,6 @@ import com.linkedpipes.etl.rdf.utils.RdfBuilder;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfSource;
-
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -18,23 +17,18 @@ import java.util.Map;
  */
 class RequirementProcessor {
 
-    private RequirementProcessor() {
-    }
+    private RequirementProcessor() {}
 
     /**
      * Handle requirements on the pipeline definition.
      */
-    public static void handle(
-            BackendRdfSource definition, String graph,
-            ResourceManager resourceManager)
+    public static void handle(BackendRdfSource definition, String graph, ResourceManager resourceManager)
             throws LpException {
         List<Map<String, String>> working;
         List<Map<String, String>> input;
         try {
-            working = RdfUtils.sparqlSelect(definition,
-                    getWorkingDirectoryQuery(graph));
-            input = RdfUtils.sparqlSelect(definition,
-                    getInputDirectoryQuery(graph));
+            working = RdfUtils.sparqlSelect(definition, getWorkingDirectoryQuery(graph));
+            input = RdfUtils.sparqlSelect(definition, getInputDirectoryQuery(graph));
         } catch (RdfUtilsException ex) {
             throw new LpException("Can't query requirements.", ex);
         }
@@ -43,18 +37,16 @@ class RequirementProcessor {
             RdfBuilder builder = RdfBuilder.create(definition, graph);
             for (Map<String, String> entry : working) {
                 String iri = entry.get("s");
-                String id = iri.substring(iri.lastIndexOf("/") + 1)
-                        .toLowerCase();
-                File file =
-                        resourceManager.getWorkingDirectory("working-" + id);
-                builder.entity(iri).iri(LP_EXEC.HAS_WORKING_DIRECTORY,
-                        file.toURI().toString());
+                String id = iri.substring(iri.lastIndexOf("/") + 1).toLowerCase();
+                File file = resourceManager.getWorkingDirectory("working-" + id);
+                builder.entity(iri)
+                        .iri(LP_EXEC.HAS_WORKING_DIRECTORY, file.toURI().toString());
             }
             File inputDirectory = resourceManager.getInputDirectory();
             for (Map<String, String> entry : input) {
                 final String iri = entry.get("s");
-                builder.entity(iri).iri(LP_EXEC.HAS_INPUT_DIRECTORY,
-                        inputDirectory.toURI().toString());
+                builder.entity(iri)
+                        .iri(LP_EXEC.HAS_INPUT_DIRECTORY, inputDirectory.toURI().toString());
             }
             builder.commit();
         } catch (RdfUtilsException ex) {
@@ -75,5 +67,4 @@ class RequirementProcessor {
                 + "<" + LP_PIPELINE.INPUT_DIRECTORY + "> \n"
                 + "}}";
     }
-
 }

@@ -35,8 +35,7 @@ public class VirtualFileSystemView implements FileSystemView {
 
     @Override
     public boolean changeWorkingDirectory(String ftpPath) {
-        final VirtualFileSystem.Path path = vfs.resolvePath(currentDirectory,
-                ftpPath);
+        final VirtualFileSystem.Path path = vfs.resolvePath(currentDirectory, ftpPath);
         if (path == null) {
             return false;
         } else {
@@ -57,8 +56,7 @@ public class VirtualFileSystemView implements FileSystemView {
 
     @Override
     public FtpFile getFile(String ftpPath) {
-        final VirtualFileSystem.Path path = vfs.resolvePath(currentDirectory,
-                ftpPath);
+        final VirtualFileSystem.Path path = vfs.resolvePath(currentDirectory, ftpPath);
         if (path == null) {
             return getHomeDirectory();
         } else {
@@ -75,5 +73,4 @@ public class VirtualFileSystemView implements FileSystemView {
     public void dispose() {
         // No operation here.
     }
-
 }

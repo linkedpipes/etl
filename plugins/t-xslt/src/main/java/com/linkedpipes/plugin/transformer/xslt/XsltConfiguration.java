@@ -17,8 +17,7 @@ public class XsltConfiguration {
     @RdfToPojo.Property(iri = XsltVocabulary.THREADS)
     private int threads = 1;
 
-    public XsltConfiguration() {
-    }
+    public XsltConfiguration() {}
 
     public String getXsltTemplate() {
         return xsltTemplate;

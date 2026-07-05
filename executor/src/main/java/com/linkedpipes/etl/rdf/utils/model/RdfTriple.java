@@ -10,5 +10,4 @@ public interface RdfTriple {
     String getPredicate();
 
     BackendRdfValue getObject();
-
 }

@@ -6,14 +6,13 @@ import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfSource;
 import com.linkedpipes.etl.executor.plugin.PluginServiceHolder;
 import com.linkedpipes.etl.executor.plugin.v1.PluginV1Instance;
+import java.io.File;
+import java.nio.file.Files;
+import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.util.Map;
 
 public class PipelineExecutorTest {
 
@@ -27,8 +26,7 @@ public class PipelineExecutorTest {
         }
 
         @Override
-        public void initialize(
-                Map<String, DataUnit> dataUnits, Component.Context context) {
+        public void initialize(Map<String, DataUnit> dataUnits, Component.Context context) {
             LOG.info("bindToPipeline");
         }
 
@@ -47,11 +45,9 @@ public class PipelineExecutorTest {
         public void execute(Component.Context context) {
             LOG.info("execute");
         }
-
     }
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(PipelineExecutorTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PipelineExecutorTest.class);
 
     public void executeTwoConnectedComponents() throws Exception {
         // Prepare working directory.
@@ -59,25 +55,17 @@ public class PipelineExecutorTest {
                 .getContextClassLoader()
                 .getResource("pipeline/two-connected-components.trig")
                 .getPath());
-        File directory =
-                Files.createTempDirectory("lp-test-executor-exec-").toFile();
+        File directory = Files.createTempDirectory("lp-test-executor-exec-").toFile();
         (new File(directory, "definition")).mkdirs();
-        Files.copy(file.toPath(),
-                (new File(directory, "definition/definition.trig")).toPath());
+        Files.copy(file.toPath(), (new File(directory, "definition/definition.trig")).toPath());
         //
-        PluginServiceHolder moduleFacade =
-                Mockito.mock(PluginServiceHolder.class);
-        Mockito.when(moduleFacade.getComponent(Mockito.any(),
-                Mockito.eq("http://pipeline/component/1")))
+        PluginServiceHolder moduleFacade = Mockito.mock(PluginServiceHolder.class);
+        Mockito.when(moduleFacade.getComponent(Mockito.any(), Mockito.eq("http://pipeline/component/1")))
                 .thenReturn(new DummyComponent());
-        Mockito.when(moduleFacade.getComponent(Mockito.any(),
-                Mockito.eq("http://pipeline/component/2")))
+        Mockito.when(moduleFacade.getComponent(Mockito.any(), Mockito.eq("http://pipeline/component/2")))
                 .thenReturn(new DummyComponent());
-        PipelineExecutor executor =
-                new PipelineExecutor(directory, "http://execution",
-                        moduleFacade);
+        PipelineExecutor executor = new PipelineExecutor(directory, "http://execution", moduleFacade);
         executor.execute();
         FileUtils.deleteDirectory(directory);
     }
-
 }

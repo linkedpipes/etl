@@ -1,21 +1,18 @@
 package com.linkedpipes.plugin.transformer.tabularuv.dbf;
 
+import java.io.DataInput;
+import java.io.IOException;
 import org.jamel.dbf.exception.DbfException;
 import org.jamel.dbf.structure.DbfHeader;
 import org.jamel.dbf.utils.DbfUtils;
-
-import java.io.DataInput;
-import java.io.IOException;
 
 public class DbfHeaderLanguageDriver extends DbfHeader {
 
     private byte languageDriver;
 
-    public static DbfHeaderLanguageDriver read(DataInput dataInput)
-            throws DbfException {
+    public static DbfHeaderLanguageDriver read(DataInput dataInput) throws DbfException {
         try {
-            final DbfHeaderLanguageDriver header
-                    = new DbfHeaderLanguageDriver();
+            final DbfHeaderLanguageDriver header = new DbfHeaderLanguageDriver();
             dataInput.readByte(); // 0
             dataInput.readByte(); // 1
             dataInput.readByte(); // 2
@@ -40,5 +37,4 @@ public class DbfHeaderLanguageDriver extends DbfHeader {
     public byte getLanguageDriver() {
         return languageDriver;
     }
-
 }

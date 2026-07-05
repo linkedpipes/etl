@@ -4,7 +4,6 @@ import com.linkedpipes.etl.executor.api.v1.rdf.RdfException;
 import com.linkedpipes.etl.executor.api.v1.rdf.model.RdfValue;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendRdfValue;
-
 import java.util.Calendar;
 
 public class RdfValueWrap implements RdfValue {
@@ -70,5 +69,4 @@ public class RdfValueWrap implements RdfValue {
     public boolean isBlankNode() {
         return value.isBlankNode();
     }
-
 }

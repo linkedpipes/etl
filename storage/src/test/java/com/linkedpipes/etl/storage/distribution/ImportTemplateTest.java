@@ -8,5 +8,4 @@ public class ImportTemplateTest {
         // Yet as the parent has knowAs, its original resource must be saved
         // to know map.
     }
-
 }

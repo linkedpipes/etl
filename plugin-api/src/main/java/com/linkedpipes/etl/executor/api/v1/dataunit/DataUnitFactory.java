@@ -13,8 +13,5 @@ public interface DataUnitFactory {
      * @param definition Pipeline definition.
      * @return Null if this factory can not create given type of dataunit.
      */
-    ManageableDataUnit create(
-            String dataUnit, String graph, RdfSource definition)
-            throws LpException;
-
+    ManageableDataUnit create(String dataUnit, String graph, RdfSource definition) throws LpException;
 }

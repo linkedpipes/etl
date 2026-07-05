@@ -1,7 +1,6 @@
 package com.linkedpipes.etl.rdf.utils.model;
 
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
-
 import java.util.Calendar;
 
 /**
@@ -32,5 +31,4 @@ public interface BackendRdfValue {
     String getLanguage();
 
     boolean isIri();
-
 }

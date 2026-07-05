@@ -6,7 +6,6 @@ import com.linkedpipes.etl.executor.api.v1.component.task.TaskConsumer;
 import com.linkedpipes.etl.executor.api.v1.report.ReportWriter;
 import com.linkedpipes.plugin.ehttpgetfile.Downloader;
 import com.linkedpipes.plugin.ehttpgetfile.DownloaderRequest;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,8 +25,7 @@ class DownloadTaskExecutor implements TaskConsumer<DownloadTask> {
             ReportWriter reportWriter) {
         this.configuration = configuration;
         this.output = output;
-        this.requestReport = new HttpRequestReport(
-                statementsConsumer, reportWriter);
+        this.requestReport = new HttpRequestReport(statementsConsumer, reportWriter);
     }
 
     @Override
@@ -41,20 +39,21 @@ class DownloadTaskExecutor implements TaskConsumer<DownloadTask> {
         //
         File targetFile = output.createFile(task.getFileName());
         try {
-            (new Downloader()).download(
-                    new DownloaderRequest(
-                            getHeader(task),
-                            getTimeOut(task),
-                            configuration.isManualFollowRedirect(),
-                            configuration.isDetailLogging(),
-                            configuration.isEncodeUrl(),
-                            configuration.isUtf8Redirect()
-                    ),
-                    task.getUri(), targetFile,
-                    connection -> {
-                        requestReport.setTask(task);
-                        this.requestReport.reportHeaderResponse(connection);
-                    });
+            (new Downloader())
+                    .download(
+                            new DownloaderRequest(
+                                    getHeader(task),
+                                    getTimeOut(task),
+                                    configuration.isManualFollowRedirect(),
+                                    configuration.isDetailLogging(),
+                                    configuration.isEncodeUrl(),
+                                    configuration.isUtf8Redirect()),
+                            task.getUri(),
+                            targetFile,
+                            connection -> {
+                                requestReport.setTask(task);
+                                this.requestReport.reportHeaderResponse(connection);
+                            });
         } catch (Exception ex) {
             throw new LpException("Can't download file.", ex);
         }
@@ -86,5 +85,4 @@ class DownloadTaskExecutor implements TaskConsumer<DownloadTask> {
             return timeOut;
         }
     }
-
 }

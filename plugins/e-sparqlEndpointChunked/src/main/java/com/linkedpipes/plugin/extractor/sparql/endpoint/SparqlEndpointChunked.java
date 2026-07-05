@@ -6,6 +6,11 @@ import com.linkedpipes.etl.dataunit.core.rdf.WritableChunkedTriples;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.component.SequentialExecution;
+import java.net.IDN;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -25,12 +30,6 @@ import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.IDN;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Takes CSV files on input. The CSV file rows are used as IRIs and mapped
  * to the given SPARQL as the ${VALUES} placeholder.
@@ -39,11 +38,9 @@ import java.util.Map;
  * CONSTRUCT { ?obec ?p ?o } WHERE { ?obec ?p ?o ${VALUES} }
  * where the input CSV file contains column "obec".
  */
-public final class SparqlEndpointChunked implements Component,
-        SequentialExecution {
+public final class SparqlEndpointChunked implements Component, SequentialExecution {
 
-    private static final Logger LOG
-            = LoggerFactory.getLogger(SparqlEndpointChunked.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SparqlEndpointChunked.class);
 
     @Component.InputPort(iri = "FilesInput")
     public FilesDataUnit inputFiles;
@@ -70,10 +67,8 @@ public final class SparqlEndpointChunked implements Component,
         final List<Statement> buffer = new ArrayList<>(50000);
         try {
             for (FilesDataUnit.Entry entry : inputFiles) {
-                final ValuesSource valuesSource = new ValuesSource(
-                        entry.toFile(),
-                        configuration.getAsLiterals(),
-                        configuration.getChunkSize());
+                final ValuesSource valuesSource =
+                        new ValuesSource(entry.toFile(), configuration.getAsLiterals(), configuration.getChunkSize());
                 valuesSource.readSource((valuesClause) -> {
                     buffer.clear();
                     executeQuery(repository, valuesClause, buffer);
@@ -90,8 +85,7 @@ public final class SparqlEndpointChunked implements Component,
     }
 
     protected Repository createRepository() {
-        TolerantSparqlRepository repository =
-                new TolerantSparqlRepository(getEndpoint());
+        TolerantSparqlRepository repository = new TolerantSparqlRepository(getEndpoint());
         if (configuration.isUseTolerantRepository()) {
             repository.fixMissingLanguageTag();
         }
@@ -120,27 +114,21 @@ public final class SparqlEndpointChunked implements Component,
         if (configuration.isUseAuthentication()) {
             provider.setCredentials(
                     new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
-                    new UsernamePasswordCredentials(
-                            configuration.getUsername(),
-                            configuration.getPassword()));
+                    new UsernamePasswordCredentials(configuration.getUsername(), configuration.getPassword()));
         }
-        return HttpClients.custom()
-                .setDefaultCredentialsProvider(provider).build();
+        return HttpClients.custom().setDefaultCredentialsProvider(provider).build();
     }
 
     protected SimpleDataset createDataset() {
         final SimpleDataset dataset = new SimpleDataset();
         for (String iri : configuration.getDefaultGraphs()) {
-            dataset.addDefaultGraph(
-                    SimpleValueFactory.getInstance().createIRI(iri));
+            dataset.addDefaultGraph(SimpleValueFactory.getInstance().createIRI(iri));
         }
         return dataset;
     }
 
-    protected void executeQuery(Repository repository, String valueClause,
-            List<Statement> buffer) throws LpException {
-        final String query = configuration.getQuery().replace("${VALUES}",
-                valueClause);
+    protected void executeQuery(Repository repository, String valueClause, List<Statement> buffer) throws LpException {
+        final String query = configuration.getQuery().replace("${VALUES}", valueClause);
         LOG.debug("query:\n{}", query);
         try {
             tryToExecuteQuery(repository, query, buffer);
@@ -155,12 +143,9 @@ public final class SparqlEndpointChunked implements Component,
         }
     }
 
-    protected void tryToExecuteQuery(Repository repository, String query,
-            List<Statement> buffer) throws LpException {
-        try (final RepositoryConnection connection =
-                     repository.getConnection()) {
-            final GraphQuery preparedQuery = connection.prepareGraphQuery(
-                    QueryLanguage.SPARQL, query);
+    protected void tryToExecuteQuery(Repository repository, String query, List<Statement> buffer) throws LpException {
+        try (final RepositoryConnection connection = repository.getConnection()) {
+            final GraphQuery preparedQuery = connection.prepareGraphQuery(QueryLanguage.SPARQL, query);
             preparedQuery.setDataset(createDataset());
             RDFHandler handler = new AbstractRDFHandler() {
                 @Override
@@ -174,5 +159,4 @@ public final class SparqlEndpointChunked implements Component,
             preparedQuery.evaluate(handler);
         }
     }
-
 }

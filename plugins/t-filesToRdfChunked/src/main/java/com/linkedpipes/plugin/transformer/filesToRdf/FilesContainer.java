@@ -1,7 +1,6 @@
 package com.linkedpipes.plugin.transformer.filesToRdf;
 
 import com.linkedpipes.etl.dataunit.core.files.FilesDataUnit;
-
 import java.util.List;
 
 public class FilesContainer {
@@ -15,5 +14,4 @@ public class FilesContainer {
     public List<FilesDataUnit.Entry> getFiles() {
         return files;
     }
-    
 }
