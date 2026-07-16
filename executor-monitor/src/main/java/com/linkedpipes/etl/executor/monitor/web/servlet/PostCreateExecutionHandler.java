@@ -41,26 +41,28 @@ class PostCreateExecutionHandler {
         this.executorService = executorService;
     }
 
-    public Response handle(MultipartFile pipeline, List<MultipartFile> inputs) throws MonitorException {
-        Statements pipelineRdf = readPipeline(pipeline);
-        Execution execution = executionFacade.createExecution(pipelineRdf, inputs);
+    public Response handle(MultipartFile pipeline, MultipartFile options, List<MultipartFile> inputs)
+            throws MonitorException {
+        Statements pipelineRdf = readStatements(pipeline, "pipeline");
+        Statements optionsRdf = options == null ? Statements.arrayList() : readStatements(options, "options");
+        Execution execution = executionFacade.createExecution(pipelineRdf, optionsRdf, inputs);
         executorService.asyncStartExecutions();
         return new Response(execution);
     }
 
-    private Statements readPipeline(MultipartFile pipeline) throws MonitorException {
-        if (pipeline.getOriginalFilename() == null) {
-            throw new MonitorException("Missing name of the pipeline.");
+    private Statements readStatements(MultipartFile file, String label) throws MonitorException {
+        if (file.getOriginalFilename() == null) {
+            throw new MonitorException("Missing name of the {}.", label);
         }
-        Optional<RDFFormat> format = Rio.getWriterFormatForFileName(pipeline.getOriginalFilename());
+        Optional<RDFFormat> format = Rio.getWriterFormatForFileName(file.getOriginalFilename());
         if (!format.isPresent()) {
             throw new MonitorException("Can't determined format type.");
         }
         Statements statements = Statements.arrayList();
-        try (InputStream stream = pipeline.getInputStream()) {
+        try (InputStream stream = file.getInputStream()) {
             statements.file().addAll(stream, format.get());
         } catch (IOException ex) {
-            throw new MonitorException("Can't read pipeline.", ex);
+            throw new MonitorException("Can't read {}.", label, ex);
         }
         return statements;
     }

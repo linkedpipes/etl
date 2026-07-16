@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.executor.pipeline;
 
+import com.linkedpipes.etl.executor.ConfigurationHolder;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.api.v1.LpException;
 import com.linkedpipes.etl.executor.api.v1.PipelineExecutionObserver;
@@ -17,6 +18,7 @@ import com.linkedpipes.etl.executor.plugin.BannedComponent;
 import com.linkedpipes.etl.executor.plugin.PluginServiceHolder;
 import com.linkedpipes.etl.executor.plugin.v1.PluginV1Instance;
 import com.linkedpipes.etl.executor.rdf.RdfSourceWrap;
+import com.linkedpipes.etl.unpacker.executions.HttpExecutionSource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -44,6 +46,8 @@ public class PipelineExecutor {
 
     private final PluginServiceHolder moduleFacade;
 
+    private final ConfigurationHolder configuration;
+
     private Pipeline pipeline;
 
     private final ExecutionObserver execution;
@@ -66,14 +70,17 @@ public class PipelineExecutor {
      * @param directory Execution directory.
      * @param iri       ExecutionObserver IRI.
      * @param modules   Module service.
+     * @param configuration Executor configuration, used to reach
+     *                      executor-monitor when unpacking the pipeline.
      */
-    public PipelineExecutor(File directory, String iri, PluginServiceHolder modules) {
+    public PipelineExecutor(File directory, String iri, PluginServiceHolder modules, ConfigurationHolder configuration) {
         // We assume that the directory we are executing is in the
         // directory with other executions.
         MDC.put(ExecutionLogger.EXECUTION_MDC, null);
         this.resources = new ResourceManager(directory.getParentFile(), directory);
         this.loggerFacade.prepareAppendersForExecution(resources.getExecutionLogFile(), "INFO");
         this.moduleFacade = modules;
+        this.configuration = configuration;
         this.execution = new ExecutionObserver(resources, iri);
         this.execution.onExecutionBegin();
         MDC.remove(ExecutionLogger.EXECUTION_MDC);
@@ -164,9 +171,16 @@ public class PipelineExecutor {
 
     private void loadPipeline() throws ExecutorException {
         File definitionFile = locatePipelineDefinitionFile();
+        File optionsFile = resources.getOptionsFile();
         pipeline = new Pipeline();
         File workingDirectory = resources.getWorkingDirectory("pipeline_repository");
-        pipeline.load(definitionFile, workingDirectory);
+        HttpExecutionSource executionSource = new HttpExecutionSource(configuration.getExecutorMonitorUrl());
+        pipeline.load(definitionFile, optionsFile, workingDirectory, executionSource);
+        // Save the resolved pipeline right away (not only at the end of
+        // execution) so executor-monitor can see execution metadata
+        // (target component, log policy, ...) computed by the unpack step
+        // even while the execution is still in progress.
+        pipeline.save(resources.getPipelineFile());
         execution.onPipelineLoaded(pipeline.getModel());
     }
 

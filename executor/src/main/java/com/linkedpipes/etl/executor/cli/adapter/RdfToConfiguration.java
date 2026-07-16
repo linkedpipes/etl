@@ -43,6 +43,8 @@ public class RdfToConfiguration {
 
     private static final String BANNED_PLUGINS = PREFIX + "bannedPluginIriPatterns";
 
+    private static final String EXECUTOR_MONITOR_URL = PREFIX + "executorMonitorUrl";
+
     private final StatementsSelector selector;
 
     private final Configuration next = new Configuration();
@@ -107,6 +109,9 @@ public class RdfToConfiguration {
                     if (value instanceof Literal literal) {
                         next.httpPort = literal.intValue();
                     }
+                    break;
+                case EXECUTOR_MONITOR_URL:
+                    next.executorMonitorUrl = value.stringValue();
                     break;
                 default:
                     break;

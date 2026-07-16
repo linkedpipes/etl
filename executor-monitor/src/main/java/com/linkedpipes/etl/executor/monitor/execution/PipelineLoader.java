@@ -53,6 +53,15 @@ class PipelineLoader {
     }
 
     private File getPipelineFile() throws MonitorException {
+        // Prefer the resolved pipeline (written by executor once unpacking
+        // succeeds) over the raw definition: the raw definition no longer
+        // carries execution metadata (target component, log policy, ...)
+        // since that is now computed by executor's unpack step, not present
+        // when the pipeline was only just submitted for execution.
+        File pipelineFile = new File(execution.getDirectory(), "pipeline.trig");
+        if (pipelineFile.exists()) {
+            return pipelineFile;
+        }
         File definitionFile = new File(execution.getDirectory(), "definition/definition.trig");
         if (definitionFile.exists()) {
             return definitionFile;
@@ -60,10 +69,6 @@ class PipelineLoader {
         File definitionFileJsonld = new File(execution.getDirectory(), "definition/definition.jsonld");
         if (definitionFileJsonld.exists()) {
             return definitionFileJsonld;
-        }
-        File pipelineFile = new File(execution.getDirectory(), "pipeline.trig");
-        if (pipelineFile.exists()) {
-            return pipelineFile;
         }
         throw new MonitorException("Missing pipeline file for execution: {}", execution.getIri());
     }

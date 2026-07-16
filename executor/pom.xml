@@ -63,6 +63,11 @@
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-rio-jsonld</artifactId>
         </dependency>
+        <!-- HTTP client, used to fetch previous-execution RDF from executor-monitor. -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>

@@ -31,11 +31,13 @@ async function handleCreateExecution(req, res) {
     });
     return;
   }
-  // Unpack pipeline.
-  const unpackedPipeline = await unpackPipeline(pipeline, options)
+  // Embed every template the pipeline references directly into its RDF,
+  // so executor can unpack and run it without calling back to storage.
+  const bundledPipeline = await bundlePipeline(pipeline);
   const url = MONITOR_API_URL + "/executions";
   const parts = {
-    "pipeline": [unpackedPipeline],
+    "pipeline": [bundledPipeline],
+    "options": [options],
     "input": (requestContent[BODY_INPUTS] ?? []).map(item => ({
       "contentType": item["content-type"],
       "fileName": item["fileName"],
@@ -125,11 +127,10 @@ async function securePipeline(req, requestContent) {
   return null;
 }
 
-async function unpackPipeline(pipeline, options) {
-  const url = STORAGE_API_URL + "/management/unpack";
+async function bundlePipeline(pipeline) {
+  const url = STORAGE_API_URL + "/management/bundle";
   const parts = {
     "pipeline": [pipeline],
-    "options": [options],
   };
   const headers = {
     "accept": CONTENT.JSONLD,

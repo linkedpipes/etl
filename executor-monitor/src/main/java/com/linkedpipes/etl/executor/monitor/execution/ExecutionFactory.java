@@ -20,8 +20,14 @@ class ExecutionFactory {
 
     private static final String DEFINITION_FILE = "definition" + File.separator + "definition.trig";
 
+    private static final String OPTIONS_FILE = "definition" + File.separator + "options.trig";
+
     public static void prepareExecutionInDirectory(
-            File directory, Collection<Statement> pipeline, List<MultipartFile> inputs) throws MonitorException {
+            File directory,
+            Collection<Statement> pipeline,
+            Collection<Statement> options,
+            List<MultipartFile> inputs)
+            throws MonitorException {
 
         // Save pipeline definition.
         File definitionFile = getDefinitionFile(directory);
@@ -30,6 +36,17 @@ class ExecutionFactory {
             Rio.write(pipeline, stream, RDFFormat.TRIG);
         } catch (IOException | IllegalStateException ex) {
             throw new MonitorException("Can't save pipeline definition.", ex);
+        }
+
+        // Save unpack options, if any were provided.
+        if (options != null && !options.isEmpty()) {
+            File optionsFile = getOptionsFile(directory);
+            optionsFile.getParentFile().mkdirs();
+            try (OutputStream stream = new FileOutputStream(optionsFile)) {
+                Rio.write(options, stream, RDFFormat.TRIG);
+            } catch (IOException | IllegalStateException ex) {
+                throw new MonitorException("Can't save unpack options.", ex);
+            }
         }
 
         // Save resources.
@@ -58,6 +75,10 @@ class ExecutionFactory {
         return new File(directory, DEFINITION_FILE);
     }
 
+    private static File getOptionsFile(File directory) {
+        return new File(directory, OPTIONS_FILE);
+    }
+
     private static File getInputsDirectory(File directory) {
         return new File(directory, "input");
     }
@@ -70,6 +91,15 @@ class ExecutionFactory {
             Files.copy(sourceDefinition.toPath(), targetDefinition.toPath());
         } catch (IOException ex) {
             throw new MonitorException("Can't copy definition.", ex);
+        }
+        File sourceOptions = getOptionsFile(source);
+        if (sourceOptions.exists()) {
+            File targetOptions = getOptionsFile(target);
+            try {
+                Files.copy(sourceOptions.toPath(), targetOptions.toPath());
+            } catch (IOException ex) {
+                throw new MonitorException("Can't copy unpack options.", ex);
+            }
         }
         File sourceInputs = getInputsDirectory(source);
         if (!sourceInputs.exists()) {

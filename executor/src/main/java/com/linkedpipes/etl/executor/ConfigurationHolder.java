@@ -36,4 +36,8 @@ public class ConfigurationHolder {
     public List<String> getBannedJarPatterns() {
         return configuration.bannedPluginIriPatterns;
     }
+
+    public String getExecutorMonitorUrl() {
+        return configuration.executorMonitorUrl;
+    }
 }

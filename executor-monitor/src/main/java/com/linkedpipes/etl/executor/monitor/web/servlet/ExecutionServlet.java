@@ -164,10 +164,11 @@ public class ExecutionServlet {
     @RequestMapping(value = "", method = RequestMethod.POST)
     public PostCreateExecutionHandler.Response createExecution(
             @RequestParam(name = "pipeline") MultipartFile pipeline,
+            @RequestParam(name = "options", required = false) MultipartFile options,
             @RequestParam(value = "input", required = false) List<MultipartFile> inputs)
             throws MonitorException {
         PostCreateExecutionHandler handler = new PostCreateExecutionHandler(this.executions, this.executor);
-        return handler.handle(pipeline, inputs);
+        return handler.handle(pipeline, options, inputs);
     }
 
     @RequestMapping(value = "/overview", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

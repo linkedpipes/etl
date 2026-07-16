@@ -1,5 +1,6 @@
 package com.linkedpipes.etl.executor.pipeline;
 
+import com.linkedpipes.etl.executor.ConfigurationHolder;
 import com.linkedpipes.etl.executor.api.v1.component.Component;
 import com.linkedpipes.etl.executor.api.v1.dataunit.DataUnit;
 import com.linkedpipes.etl.executor.api.v1.dataunit.RuntimeConfiguration;
@@ -49,6 +50,11 @@ public class PipelineExecutorTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(PipelineExecutorTest.class);
 
+    // TODO Re-enable: Pipeline.load() now always unpacks a raw (Designer-style,
+    // template-referencing) pipeline instead of loading an already-resolved
+    // one directly, so definition.trig here would need to become a raw
+    // pipeline-with-templates fixture (see pipeline-with-templates.jsonld)
+    // for this scenario to be valid again.
     public void executeTwoConnectedComponents() throws Exception {
         // Prepare working directory.
         File file = new File(Thread.currentThread()
@@ -64,7 +70,8 @@ public class PipelineExecutorTest {
                 .thenReturn(new DummyComponent());
         Mockito.when(moduleFacade.getComponent(Mockito.any(), Mockito.eq("http://pipeline/component/2")))
                 .thenReturn(new DummyComponent());
-        PipelineExecutor executor = new PipelineExecutor(directory, "http://execution", moduleFacade);
+        ConfigurationHolder configuration = Mockito.mock(ConfigurationHolder.class);
+        PipelineExecutor executor = new PipelineExecutor(directory, "http://execution", moduleFacade, configuration);
         executor.execute();
         FileUtils.deleteDirectory(directory);
     }

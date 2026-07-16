@@ -12,6 +12,7 @@ public class EnvironmentToConfiguration {
         next.osgiWorkingDirectory = getEnv("LP_ETL_EXECUTOR_OSGI");
         next.osgiLibrariesDirectory = getEnv("LP_ETL_EXECUTOR_LIBRARIES");
         next.pluginsDirectory = getEnv("LP_ETL_STORAGE_PLUGINS");
+        next.executorMonitorUrl = getEnv("LP_ETL_MONITOR_URL");
         return defaults.merge(next);
     }
 

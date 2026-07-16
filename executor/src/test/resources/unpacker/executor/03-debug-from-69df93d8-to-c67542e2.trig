@@ -1,0 +1,148 @@
+
+<http://localhost/execution-debug> {
+  <http://localhost/execution-debug> a <http://linkedpipes.com/ontology/Pipeline>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "TextHolder and FilesToRdf, FilesToRdf, SparqlConstruct";
+    <http://linkedpipes.com/ontology/executionMetadata> <http://localhost/execution-debug/metadata>;
+    <http://linkedpipes.com/ontology/profile> <http://localhost/execution-debug/profile>;
+    <http://linkedpipes.com/ontology/component> <http://localhost/pipeline/b67542e2>,
+      <http://localhost/pipeline/a67542e2>, <http://localhost/pipeline/9d21ebd5>, <http://localhost/pipeline/c67542e2>;
+    <http://linkedpipes.com/ontology/connection> <http://localhost/pipeline/connection/aff7b779>,
+      <http://localhost/pipeline/connection/fff7b779>;
+    <http://linkedpipes.com/ontology/repository> <http://localhost/repository/sesame> .
+  
+  <http://localhost/execution-debug/metadata> a <http://linkedpipes.com/ontology/ExecutionMetadata>;
+    <http://linkedpipes.com/ontology/deleteWorkingData> false;
+    <http://linkedpipes.com/ontology/saveDebugData> true;
+    <http://linkedpipes.com/ontology/logPolicy> <http://linkedpipes.com/ontology/log/Preserve>;
+    <http://linkedpipes.com/ontology/logLevel> "DEBUG";
+    <http://linkedpipes.com/ontology/execution/targetComponent> <http://localhost/pipeline/c67542e2>;
+    <http://linkedpipes.com/ontology/execution/type> <http://linkedpipes.com/resources/executionType/DebugFromTo> .
+  
+  <http://localhost/execution-debug/profile> <http://linkedpipes.com/ontology/rdfRepositoryPolicy>
+      <http://linkedpipes.com/ontology/repository/SingleRepository>;
+    <http://linkedpipes.com/ontology/rdfRepositoryType> <http://linkedpipes.com/ontology/repository/NativeStore> .
+  
+  <http://localhost/pipeline/b67542e2> a <http://linkedpipes.com/ontology/Component>;
+    <http://linkedpipes.com/ontology/executionOrder> "3"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/jar> <http://etl.linkedpipes.com/resources/jars/t-filesToRdfGraph/0.0.0>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/t-filesToRdfGraph/0.0.0>;
+    <http://linkedpipes.com/ontology/executionType> <http://linkedpipes.com/resources/execution/type/skip>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Files to RDF" .
+  
+  <http://localhost/pipeline/a67542e2> a <http://linkedpipes.com/ontology/Component>;
+    <http://linkedpipes.com/ontology/executionOrder> "2"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/jar> <http://etl.linkedpipes.com/resources/jars/t-filesToRdfGraph/0.0.0>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/t-filesToRdfGraph/0.0.0>;
+    <http://linkedpipes.com/ontology/executionType> <http://linkedpipes.com/resources/execution/type/mapped>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Files to RDF";
+    <http://linkedpipes.com/ontology/execution> <http://localhost:8080/resources/executions/69df93d8>;
+    <http://linkedpipes.com/ontology/port> <http://localhost/pipeline/a67542e2/port/InputFiles>,
+      <http://localhost/pipeline/a67542e2/port/OutputRdf> .
+  
+  <http://localhost/pipeline/a67542e2/port/InputFiles> a <http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror>,
+      <http://linkedpipes.com/ontology/Input>;
+    <http://linkedpipes.com/ontology/binding> "InputFiles";
+    <http://linkedpipes.com/ontology/requirement> <http://linkedpipes.com/resources/requirement/workingDirectory>;
+    <http://linkedpipes.com/ontology/saveDebugData> true;
+    <http://linkedpipes.com/ontology/dataSource> <http://localhost/pipeline/a67542e2/port/InputFiles/dataSource>;
+    <http://linkedpipes.com/ontology/dataUnitGroup> "1"^^<http://www.w3.org/2001/XMLSchema#int> .
+  
+  <http://localhost/pipeline/a67542e2/port/InputFiles/dataSource> a <http://linkedpipes.com/ontology/PortSource>;
+    <http://linkedpipes.com/ontology/loadPath> "working\\dataunit-002";
+    <http://linkedpipes.com/ontology/execution> <http://localhost:8080/resources/executions/69df93d8> .
+  
+  <http://localhost/pipeline/a67542e2/port/OutputRdf> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph>,
+      <http://linkedpipes.com/ontology/Output>;
+    <http://linkedpipes.com/ontology/binding> "OutputRdf";
+    <http://linkedpipes.com/ontology/saveDebugData> true;
+    <http://linkedpipes.com/ontology/dataSource> <http://localhost/pipeline/a67542e2/port/OutputRdf/dataSource>;
+    <http://linkedpipes.com/ontology/dataUnitGroup> "2"^^<http://www.w3.org/2001/XMLSchema#int> .
+  
+  <http://localhost/pipeline/a67542e2/port/OutputRdf/dataSource> a <http://linkedpipes.com/ontology/PortSource>;
+    <http://linkedpipes.com/ontology/loadPath> "working\\dataunit-003";
+    <http://linkedpipes.com/ontology/execution> <http://localhost:8080/resources/executions/69df93d8> .
+  
+  <http://localhost/pipeline/9d21ebd5> a <http://linkedpipes.com/ontology/Component>;
+    <http://linkedpipes.com/ontology/executionOrder> "1"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/jar> <http://etl.linkedpipes.com/resources/jars/e-textHolder/0.0.0>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0>;
+    <http://linkedpipes.com/ontology/executionType> <http://linkedpipes.com/resources/execution/type/mapped>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Text holder";
+    <http://linkedpipes.com/ontology/execution> <http://localhost:8080/resources/executions/f97245c9cc74>;
+    <http://linkedpipes.com/ontology/port> <http://localhost/pipeline/9d21ebd5/port/FilesOutput> .
+  
+  <http://localhost/pipeline/9d21ebd5/port/FilesOutput> a <http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror>,
+      <http://linkedpipes.com/ontology/Output>;
+    <http://linkedpipes.com/ontology/binding> "FilesOutput";
+    <http://linkedpipes.com/ontology/requirement> <http://linkedpipes.com/resources/requirement/workingDirectory>;
+    <http://linkedpipes.com/ontology/saveDebugData> true;
+    <http://linkedpipes.com/ontology/dataSource> <http://localhost/pipeline/9d21ebd5/port/FilesOutput/dataSource>;
+    <http://linkedpipes.com/ontology/dataUnitGroup> "1"^^<http://www.w3.org/2001/XMLSchema#int> .
+  
+  <http://localhost/pipeline/9d21ebd5/port/FilesOutput/dataSource> a <http://linkedpipes.com/ontology/PortSource>;
+    <http://linkedpipes.com/ontology/loadPath> "working\\dataunit-005";
+    <http://linkedpipes.com/ontology/execution> <http://localhost:8080/resources/executions/f97245c9cc74> .
+  
+  <http://localhost/pipeline/c67542e2> a <http://linkedpipes.com/ontology/Component>;
+    <http://linkedpipes.com/ontology/executionOrder> "4"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/jar> <http://etl.linkedpipes.com/resources/jars/t-sparqlConstruct/0.0.0>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0>;
+    <http://linkedpipes.com/ontology/executionType> <http://linkedpipes.com/resources/execution/type/execute>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "SPARQL Construct";
+    <http://linkedpipes.com/ontology/requirement> <http://linkedpipes.com/resources/requirement/workingDirectory>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost/pipeline/c67542e2/configuration>;
+    <http://linkedpipes.com/ontology/configurationDescription> <http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc>;
+    <http://linkedpipes.com/ontology/port> <http://localhost/pipeline/c67542e2/port/InputRdf>,
+      <http://localhost/pipeline/c67542e2/port/Configuration>, <http://localhost/pipeline/c67542e2/port/OutputRdf> .
+  
+  <http://localhost/pipeline/c67542e2/port/InputRdf> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph>,
+      <http://linkedpipes.com/ontology/Port>, <http://linkedpipes.com/ontology/Input>;
+    <http://linkedpipes.com/ontology/binding> "InputRdf";
+    <http://linkedpipes.com/ontology/saveDebugData> true;
+    <http://linkedpipes.com/ontology/dataUnitGroup> "2"^^<http://www.w3.org/2001/XMLSchema#int> .
+  
+  <http://localhost/pipeline/c67542e2/port/Configuration> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph>,
+      <http://linkedpipes.com/ontology/Port>, <http://linkedpipes.com/ontology/Input>;
+    <http://linkedpipes.com/ontology/binding> "Configuration";
+    <http://linkedpipes.com/ontology/saveDebugData> true;
+    <http://linkedpipes.com/ontology/dataUnitGroup> "3"^^<http://www.w3.org/2001/XMLSchema#int> .
+  
+  <http://localhost/pipeline/c67542e2/port/OutputRdf> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph>,
+      <http://linkedpipes.com/ontology/Port>, <http://linkedpipes.com/ontology/Output>;
+    <http://linkedpipes.com/ontology/binding> "OutputRdf";
+    <http://linkedpipes.com/ontology/saveDebugData> true;
+    <http://linkedpipes.com/ontology/dataUnitGroup> "4"^^<http://www.w3.org/2001/XMLSchema#int> .
+  
+  <http://localhost/pipeline/connection/aff7b779> a <http://linkedpipes.com/ontology/Connection>;
+    <http://linkedpipes.com/ontology/sourceComponent> <http://localhost/pipeline/9d21ebd5>;
+    <http://linkedpipes.com/ontology/sourceBinding> "FilesOutput";
+    <http://linkedpipes.com/ontology/targetComponent> <http://localhost/pipeline/a67542e2>;
+    <http://linkedpipes.com/ontology/targetBinding> "InputFiles" .
+  
+  <http://localhost/pipeline/connection/fff7b779> a <http://linkedpipes.com/ontology/Connection>;
+    <http://linkedpipes.com/ontology/sourceComponent> <http://localhost/pipeline/a67542e2>;
+    <http://linkedpipes.com/ontology/sourceBinding> "OutputRdf";
+    <http://linkedpipes.com/ontology/targetComponent> <http://localhost/pipeline/c67542e2>;
+    <http://linkedpipes.com/ontology/targetBinding> "InputRdf" .
+  
+  <http://localhost/repository/sesame> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/Repository>;
+    <http://linkedpipes.com/ontology/requirement> <http://linkedpipes.com/resources/requirement/workingDirectory> .
+}
+
+<http://localhost/pipeline/c67542e2/configuration> {
+  <http://localhost/pipeline/c67542e2/configuration> a <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query> "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o}" .
+}
+
+<http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc> {
+  <http://linkedpipes.com/resources/components/t-sparqlConstruct/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription>;
+    <http://plugins.linkedpipes.com/ontology/configuration/type> <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/configuration/member> <http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/query> .
+  
+  <http://linkedpipes.com/resources/components/t-sparqlConstruct/1.0.0/configuration/desc/query>
+    a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember>;
+    <http://plugins.linkedpipes.com/ontology/configuration/property> <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#query>;
+    <http://plugins.linkedpipes.com/ontology/configuration/control> <http://plugins.linkedpipes.com/ontology/t-sparqlConstruct#queryControl> .
+}
