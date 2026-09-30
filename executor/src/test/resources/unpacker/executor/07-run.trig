@@ -1,0 +1,126 @@
+
+<http://localhost/execution> {
+  <http://localhost/execution> a <http://linkedpipes.com/ontology/Pipeline>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "TextHolder and FilesToRdf";
+    <http://linkedpipes.com/ontology/executionMetadata> <http://localhost/execution/metadata>;
+    <http://linkedpipes.com/ontology/profile> <http://localhost/execution/profile>;
+    <http://linkedpipes.com/ontology/component> <http://localhost/pipeline/b67542e2>,
+      <http://localhost/pipeline/9d21ebd5>;
+    <http://linkedpipes.com/ontology/repository> <http://localhost/repository/sesame> .
+  
+  <http://localhost/execution/metadata> a <http://linkedpipes.com/ontology/ExecutionMetadata>;
+    <http://linkedpipes.com/ontology/deleteWorkingData> true;
+    <http://linkedpipes.com/ontology/saveDebugData> false;
+    <http://linkedpipes.com/ontology/logPolicy> <http://linkedpipes.com/ontology/log/Preserve>;
+    <http://linkedpipes.com/ontology/logLevel> "DEBUG";
+    <http://linkedpipes.com/ontology/execution/type> <http://linkedpipes.com/resources/executionType/Full> .
+  
+  <http://localhost/execution/profile> <http://linkedpipes.com/ontology/rdfRepositoryPolicy>
+      <http://linkedpipes.com/ontology/repository/SingleRepository>;
+    <http://linkedpipes.com/ontology/rdfRepositoryType> <http://linkedpipes.com/ontology/repository/NativeStore> .
+  
+  <http://localhost/pipeline/b67542e2> a <http://linkedpipes.com/ontology/Component>;
+    <http://linkedpipes.com/ontology/executionOrder> "1"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/jar> <http://etl.linkedpipes.com/resources/jars/t-filesToRdfGraph/0.0.0>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/t-filesToRdfGraph/0.0.0>;
+    <http://linkedpipes.com/ontology/executionType> <http://linkedpipes.com/resources/execution/type/execute>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Files to RDF";
+    <http://linkedpipes.com/ontology/requirement> <http://linkedpipes.com/resources/requirement/workingDirectory>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost/pipeline/b67542e2/configuration>;
+    <http://linkedpipes.com/ontology/configurationDescription> <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc>;
+    <http://linkedpipes.com/ontology/port> <http://localhost/pipeline/b67542e2/port/InputFiles>,
+      <http://localhost/pipeline/b67542e2/port/OutputRdf> .
+  
+  <http://localhost/pipeline/b67542e2/port/InputFiles> a <http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror>,
+      <http://linkedpipes.com/ontology/Input>;
+    <http://linkedpipes.com/ontology/binding> "InputFiles";
+    <http://linkedpipes.com/ontology/requirement> <http://linkedpipes.com/resources/requirement/workingDirectory>;
+    <http://linkedpipes.com/ontology/saveDebugData> false;
+    <http://linkedpipes.com/ontology/dataUnitGroup> "2"^^<http://www.w3.org/2001/XMLSchema#int> .
+  
+  <http://localhost/pipeline/b67542e2/port/OutputRdf> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/rdf/SingleGraph>,
+      <http://linkedpipes.com/ontology/Output>;
+    <http://linkedpipes.com/ontology/binding> "OutputRdf";
+    <http://linkedpipes.com/ontology/saveDebugData> false;
+    <http://linkedpipes.com/ontology/dataUnitGroup> "3"^^<http://www.w3.org/2001/XMLSchema#int> .
+  
+  <http://localhost/pipeline/9d21ebd5> a <http://linkedpipes.com/ontology/Component>;
+    <http://linkedpipes.com/ontology/executionOrder> "2"^^<http://www.w3.org/2001/XMLSchema#int>;
+    <http://linkedpipes.com/ontology/jar> <http://etl.linkedpipes.com/resources/jars/e-textHolder/0.0.0>;
+    <http://linkedpipes.com/ontology/template> <http://etl.linkedpipes.com/resources/components/e-textHolder/0.0.0>;
+    <http://linkedpipes.com/ontology/executionType> <http://linkedpipes.com/resources/execution/type/execute>;
+    <http://www.w3.org/2004/02/skos/core#prefLabel> "Text holder";
+    <http://linkedpipes.com/ontology/requirement> <http://linkedpipes.com/resources/requirement/workingDirectory>;
+    <http://linkedpipes.com/ontology/configurationGraph> <http://localhost/pipeline/9d21ebd5/configuration>;
+    <http://linkedpipes.com/ontology/configurationDescription> <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc>;
+    <http://linkedpipes.com/ontology/port> <http://localhost/pipeline/9d21ebd5/port/FilesOutput> .
+  
+  <http://localhost/pipeline/9d21ebd5/port/FilesOutput> a <http://linkedpipes.com/ontology/dataUnit/system/1.0/files/DirectoryMirror>,
+      <http://linkedpipes.com/ontology/Output>;
+    <http://linkedpipes.com/ontology/binding> "FilesOutput";
+    <http://linkedpipes.com/ontology/requirement> <http://linkedpipes.com/resources/requirement/workingDirectory>;
+    <http://linkedpipes.com/ontology/saveDebugData> false;
+    <http://linkedpipes.com/ontology/dataUnitGroup> "1"^^<http://www.w3.org/2001/XMLSchema#int> .
+  
+  <http://localhost/repository/sesame> a <http://linkedpipes.com/ontology/dataUnit/sesame/1.0/Repository>;
+    <http://linkedpipes.com/ontology/requirement> <http://linkedpipes.com/resources/requirement/workingDirectory> .
+}
+
+<http://localhost/pipeline/b67542e2/configuration> {
+  <http://localhost/pipeline/b67542e2/configuration> a <http://plugins.linkedpipes.com/ontology/t-filesToRdf#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSizeControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSize> 50000;
+    <http://plugins.linkedpipes.com/ontology/t-filesToRdf#softFailControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeTypeControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeType> "" .
+}
+
+<http://localhost/pipeline/9d21ebd5/configuration> {
+  <http://localhost/pipeline/9d21ebd5/configuration> a <http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#fileNameControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#fileName> "file.ttl";
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#contentControl> <http://plugins.linkedpipes.com/resource/configuration/None>;
+    <http://plugins.linkedpipes.com/ontology/e-textHolder#content> "<http://localhost/value> a  <http://localhost/Object> ." .
+}
+
+<http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc> {
+  <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription>;
+    <http://plugins.linkedpipes.com/ontology/configuration/type> <http://plugins.linkedpipes.com/ontology/e-textHolder#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/configuration/member> <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/fileName>,
+      <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/content> .
+  
+  <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/fileName>
+    a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember>;
+    <http://plugins.linkedpipes.com/ontology/configuration/property> <http://plugins.linkedpipes.com/ontology/e-textHolder#fileName>;
+    <http://plugins.linkedpipes.com/ontology/configuration/control> <http://plugins.linkedpipes.com/ontology/e-textHolder#fileNameControl> .
+  
+  <http://linkedpipes.com/resources/components/e-textHolder/0.0.0/configuration/desc/content>
+    a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember>;
+    <http://plugins.linkedpipes.com/ontology/configuration/property> <http://plugins.linkedpipes.com/ontology/e-textHolder#content>;
+    <http://plugins.linkedpipes.com/ontology/configuration/control> <http://plugins.linkedpipes.com/ontology/e-textHolder#contentControl> .
+}
+
+<http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc> {
+  <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription>;
+    <http://plugins.linkedpipes.com/ontology/configuration/type> <http://plugins.linkedpipes.com/ontology/t-filesToRdf#Configuration>;
+    <http://plugins.linkedpipes.com/ontology/configuration/member> <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/commitSize>,
+      <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/mimeType>,
+      <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/softFail> .
+  
+  <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/commitSize>
+    a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember>;
+    <http://plugins.linkedpipes.com/ontology/configuration/property> <http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSize>;
+    <http://plugins.linkedpipes.com/ontology/configuration/control> <http://plugins.linkedpipes.com/ontology/t-filesToRdf#commitSizeControl> .
+  
+  <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/mimeType>
+    a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember>;
+    <http://plugins.linkedpipes.com/ontology/configuration/property> <http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeType>;
+    <http://plugins.linkedpipes.com/ontology/configuration/control> <http://plugins.linkedpipes.com/ontology/t-filesToRdf#mimeTypeControl> .
+  
+  <http://linkedpipes.com/resources/components/t-filesToRdf/0.0.0/configuration/desc/softFail>
+    a <http://plugins.linkedpipes.com/ontology/configuration/ConfigurationMember>;
+    <http://plugins.linkedpipes.com/ontology/configuration/property> <http://plugins.linkedpipes.com/ontology/t-filesToRdf#softFail>;
+    <http://plugins.linkedpipes.com/ontology/configuration/control> <http://plugins.linkedpipes.com/ontology/t-filesToRdf#softFailControl> .
+}

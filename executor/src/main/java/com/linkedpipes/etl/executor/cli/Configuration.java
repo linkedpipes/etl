@@ -49,6 +49,12 @@ public class Configuration {
     public List<String> bannedPluginIriPatterns = Collections.emptyList();
 
     /**
+     * URL of executor-monitor, used to fetch data of previous executions
+     * when unpacking a pipeline for debug/resume/mapped-component execution.
+     */
+    public String executorMonitorUrl;
+
+    /**
      * Create new configuration, use values from this instance
      * as defaults.
      *
@@ -64,6 +70,7 @@ public class Configuration {
         result.osgiWorkingDirectory = mergeProperty(osgiWorkingDirectory, other.osgiWorkingDirectory);
         result.osgiLibrariesDirectory = mergeProperty(osgiLibrariesDirectory, other.osgiLibrariesDirectory);
         result.pluginsDirectory = mergeProperty(pluginsDirectory, other.pluginsDirectory);
+        result.executorMonitorUrl = mergeProperty(executorMonitorUrl, other.executorMonitorUrl);
 
         // Banning components is additive.
         result.bannedPluginIriPatterns = new ArrayList<>();

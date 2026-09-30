@@ -5,16 +5,24 @@ import com.linkedpipes.etl.executor.api.v1.vocabulary.LP_PIPELINE;
 import com.linkedpipes.etl.executor.pipeline.model.ConfigurationDescription;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineComponent;
 import com.linkedpipes.etl.executor.pipeline.model.PipelineModel;
+import com.linkedpipes.etl.library.rdf.Statements;
 import com.linkedpipes.etl.rdf.rdf4j.Rdf4jSource;
 import com.linkedpipes.etl.rdf.utils.RdfUtils;
 import com.linkedpipes.etl.rdf.utils.RdfUtilsException;
 import com.linkedpipes.etl.rdf.utils.model.BackendTripleWriter;
+import com.linkedpipes.etl.unpacker.ExecutionSource;
+import com.linkedpipes.etl.unpacker.TemplateSource;
+import com.linkedpipes.etl.unpacker.UnpackerException;
+import com.linkedpipes.etl.unpacker.UnpackerFacade;
+import com.linkedpipes.etl.unpacker.template.GraphTemplateSource;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
@@ -41,19 +49,51 @@ public class Pipeline {
     private Rdf4jSource source;
 
     /**
-     * Load pipeline definition from given file.
+     * Unpack a raw (Designer-authored, template-referencing) pipeline
+     * definition and its options into a resolved pipeline ready to run.
+     *
+     * @param definitionFile   Raw pipeline definition; self-contained,
+     *                         carrying every referenced template's RDF.
+     * @param optionsFile      Unpack options, may be {@code null} if none
+     *                         were provided.
+     * @param repositoryDirectory Directory for the repository backing the
+     *                         resolved pipeline.
+     * @param executionSource  Resolves prior-execution data for
+     *                         debug/resume/mapped-component unpacking.
      */
-    public void load(File file, File repositoryDirectory) throws ExecutorException {
-        // Check for definition file.
-        RDFFormat rdfFormat = Rio.getParserFormatForFileName(file.getName()).orElse(null);
-        if (rdfFormat == null) {
-            throw new ExecutorException("Invalid definition format.");
+    public void load(
+            File definitionFile, File optionsFile, File repositoryDirectory, ExecutionSource executionSource)
+            throws ExecutorException {
+        Statements rawDefinition = readStatements(definitionFile);
+        Statements options = optionsFile == null ? Statements.arrayList() : readStatements(optionsFile);
+        TemplateSource templateSource = new GraphTemplateSource(rawDefinition.selector());
+        UnpackerFacade unpacker = new UnpackerFacade(templateSource, executionSource);
+        Collection<Statement> resolved;
+        try {
+            resolved = unpacker.unpack(rawDefinition, options);
+        } catch (UnpackerException ex) {
+            throw new ExecutorException("Can't unpack pipeline.", ex);
         }
+        loadFromStatements(resolved, repositoryDirectory);
+    }
+
+    private Statements readStatements(File file) throws ExecutorException {
+        Statements statements = Statements.arrayList();
+        try {
+            statements.file().addAll(file);
+        } catch (IOException ex) {
+            throw new ExecutorException("Can't read '{}'.", file, ex);
+        }
+        return statements;
+    }
+
+    private void loadFromStatements(Collection<Statement> statements, File repositoryDirectory)
+            throws ExecutorException {
         // Create repository and load pipeline.
         repository = new SailRepository(new NativeStore(repositoryDirectory));
         repository.init();
         try (final RepositoryConnection connection = repository.getConnection()) {
-            connection.add(file, "http://localhost/base", rdfFormat);
+            connection.add(statements);
         } catch (Exception ex) {
             throw new ExecutorException("Can't load definition.", ex);
         }

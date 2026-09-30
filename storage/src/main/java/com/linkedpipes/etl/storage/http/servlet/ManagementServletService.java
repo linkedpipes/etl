@@ -25,8 +25,8 @@ import com.linkedpipes.etl.storage.distribution.model.ImportTemplateOptions;
 import com.linkedpipes.etl.storage.http.adapter.ImportResponseToRdf;
 import com.linkedpipes.etl.storage.http.model.ImportResponse;
 import com.linkedpipes.etl.storage.pipeline.PipelineFacade;
+import com.linkedpipes.etl.storage.template.TemplateBundler;
 import com.linkedpipes.etl.storage.template.TemplateFacade;
-import com.linkedpipes.etl.unpacker.UnpackerFacade;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -89,8 +89,6 @@ class ManagementServletService {
 
     private final TemplateFacade templateFacade;
 
-    private final UnpackerFacade unpackerFacade;
-
     private final ObjectMapper mapper = new ObjectMapper();
 
     private final ValueFactory valueFactory = SimpleValueFactory.getInstance();
@@ -99,7 +97,6 @@ class ManagementServletService {
         this.pipelineFacade = storageService.getPipelineFacade();
         this.assistantService = storageService.getAssistantService();
         this.templateFacade = storageService.getTemplateFacade();
-        this.unpackerFacade = new UnpackerFacade(storageService.getConfiguration(), storageService.getTemplateFacade());
     }
 
     public void handleExport(
@@ -384,19 +381,14 @@ class ManagementServletService {
         ServletUtilities.sendResponse(request, response, assistantService.getDataAsStatements());
     }
 
-    public void handleUnpack(
-            MultipartFile pipelineFile,
-            MultipartFile optionsFile,
-            HttpServletRequest request,
-            HttpServletResponse response)
+    public void handleBundle(MultipartFile pipelineFile, HttpServletRequest request, HttpServletResponse response)
             throws InvalidRequest, ServerError {
         Statements pipelineStatements = ServletUtilities.read(pipelineFile);
-        Statements optionsStatements = ServletUtilities.read(optionsFile);
         Statements result;
         try {
-            result = Statements.wrap(unpackerFacade.unpack(pipelineStatements, optionsStatements));
+            result = new TemplateBundler(templateFacade).bundle(pipelineStatements);
         } catch (StorageException ex) {
-            throw new ServerError("Can't prepare pipeline for execution.", ex);
+            throw new ServerError("Can't bundle pipeline templates.", ex);
         }
         ServletUtilities.sendResponse(request, response, result);
     }

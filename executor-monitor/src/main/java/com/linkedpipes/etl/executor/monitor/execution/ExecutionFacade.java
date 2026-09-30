@@ -92,9 +92,10 @@ public class ExecutionFacade implements DebugDataSource {
         return execution.getOverviewJson();
     }
 
-    public Execution createExecution(Collection<Statement> pipeline, List<MultipartFile> inputs)
+    public Execution createExecution(
+            Collection<Statement> pipeline, Collection<Statement> options, List<MultipartFile> inputs)
             throws MonitorException {
-        return this.storage.createExecution(pipeline, inputs);
+        return this.storage.createExecution(pipeline, options, inputs);
     }
 
     public void deleteExecution(Execution execution) {

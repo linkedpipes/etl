@@ -2,6 +2,7 @@ package com.linkedpipes.etl.executor.web.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.linkedpipes.etl.executor.ConfigurationHolder;
 import com.linkedpipes.etl.executor.ExecutorException;
 import com.linkedpipes.etl.executor.execution.model.ExecutionComponent;
 import com.linkedpipes.etl.executor.execution.model.ExecutionModel;
@@ -31,6 +32,8 @@ class ExecutionServlet {
 
     private final PluginServiceHolder modules;
 
+    private final ConfigurationHolder configuration;
+
     private final TaskExecutor taskExecutor;
 
     private PipelineExecutor executor = null;
@@ -38,8 +41,9 @@ class ExecutionServlet {
     private final Object lock = new Object();
 
     @Autowired
-    public ExecutionServlet(PluginServiceHolder modules, TaskExecutor taskExecutor) {
+    public ExecutionServlet(PluginServiceHolder modules, ConfigurationHolder configuration, TaskExecutor taskExecutor) {
         this.modules = modules;
+        this.configuration = configuration;
         this.taskExecutor = taskExecutor;
     }
 
@@ -59,7 +63,7 @@ class ExecutionServlet {
                 // Already executing.
                 return false;
             }
-            PipelineExecutor newExecutor = new PipelineExecutor(executionDirectory, iri, modules);
+            PipelineExecutor newExecutor = new PipelineExecutor(executionDirectory, iri, modules, configuration);
             executor = newExecutor;
             taskExecutor.execute(() -> {
                 executor.execute();

@@ -228,12 +228,13 @@ class ExecutionStorage implements ExecutionSource, ExecutorEventListener {
         execution.setDebugData(DebugDataFactory.create(execution, statements));
     }
 
-    public Execution createExecution(Collection<Statement> pipeline, List<MultipartFile> inputs)
+    public Execution createExecution(
+            Collection<Statement> pipeline, Collection<Statement> options, List<MultipartFile> inputs)
             throws MonitorException {
         String uuid = createExecutionGuid();
         File directory = new File(configuration.getWorkingDirectory(), uuid);
         try {
-            ExecutionFactory.prepareExecutionInDirectory(directory, pipeline, inputs);
+            ExecutionFactory.prepareExecutionInDirectory(directory, pipeline, options, inputs);
         } catch (MonitorException ex) {
             deleteDirectory(directory);
             throw ex;

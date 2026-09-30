@@ -96,16 +96,18 @@ public class ManagementServlet {
     }
 
     /**
-     * This should be removed after unpacker is moved to executor.
+     * Embed every template referenced by the given Designer pipeline
+     * (definition, default configuration, configuration description)
+     * directly into its RDF, so it can be unpacked and executed without
+     * any further calls back to storage.
      */
-    @RequestMapping(value = "/unpack", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void unpackPipeline(
+    @RequestMapping(value = "/bundle", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void bundlePipeline(
             @RequestParam(value = "pipeline") MultipartFile pipeline,
-            @RequestParam(value = "options", required = false) MultipartFile options,
             HttpServletRequest request,
             HttpServletResponse response) {
         ServletUtilities.wrap(request, response, () -> {
-            service.handleUnpack(pipeline, options, request, response);
+            service.handleBundle(pipeline, request, response);
         });
     }
 }

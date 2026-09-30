@@ -42,6 +42,26 @@ public class ResourceManager {
         return null;
     }
 
+    /**
+     * Search and return the unpack options file, if one was provided.
+     *
+     * @return Options as given for execution, or {@code null} if none exist.
+     */
+    public File getOptionsFile() {
+        File directory = new File(executionRoot, "definition");
+        File[] files = directory.listFiles();
+        if (files == null) {
+            return null;
+        }
+        for (File file : files) {
+            String fileName = file.getName();
+            if (fileName.startsWith("options")) {
+                return file;
+            }
+        }
+        return null;
+    }
+
     public File getExecutionRoot() {
         return executionRoot;
     }

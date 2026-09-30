@@ -28,6 +28,7 @@ public class PropertiesToConfiguration {
         next.osgiLibrariesDirectory = instance.getString("executor.osgi.lib.directory");
         next.pluginsDirectory = instance.getString("storage.jars.directory");
         next.bannedPluginIriPatterns = instance.getList("executor.banned_jar_iri_patterns");
+        next.executorMonitorUrl = instance.getString("executor-monitor.webserver.uri");
 
         return defaults.merge(next);
     }
