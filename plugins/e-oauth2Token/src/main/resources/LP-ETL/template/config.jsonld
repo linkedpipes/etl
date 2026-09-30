@@ -1,0 +1,7 @@
+[
+    {
+        "@id": "http://linkedpipes.com/resources/components/e-oauth2Token/0.0.0/configuration",
+        "@type" : ["http://plugins.linkedpipes.com/ontology/e-oauth2Token#Configuration"],
+        "http://plugins.linkedpipes.com/ontology/e-oauth2Token#provider": "ENTRA"
+    }
+]

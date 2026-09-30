@@ -18,6 +18,7 @@
         <module>e-filesFromLocal</module>
         <module>e-ftpFiles</module>
         <module>e-httpGetFile</module>
+        <module>e-oauth2Token</module>
         <module>e-pipelineInput</module>
         <module>e-sparqlEndpoint</module>
         <module>e-sparqlEndpointChunked</module>

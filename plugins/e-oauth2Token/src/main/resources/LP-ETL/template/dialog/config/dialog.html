@@ -1,0 +1,43 @@
+<lp-dialog-control-config lp-dialog="dialog" lp-application="application"></lp-dialog-control-config>
+<div>
+    <div class="row">
+        <md-input-container class="md-block" ng-hide="dialog.provider.hide" flex>
+            <label>Provider</label>
+            <md-select ng-model="dialog.provider.value"
+                       ng-disabled="dialog.provider.disabled || dialog.provider.inherit">
+                <md-option value="ENTRA">Microsoft Azure Entra ID</md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+    <div layout-gt-sm="row">
+        <md-input-container class="md-block" ng-hide="dialog.tenant.hide" flex>
+            <label>Tenant ID</label>
+            <input ng-model="dialog.tenant.value"
+                   ng-disabled="dialog.tenant.disabled || dialog.tenant.inherit"
+                   placeholder="00000000-0000-0000-0000-000000000000">
+        </md-input-container>
+        <md-input-container class="md-block" ng-hide="dialog.clientId.hide" flex>
+            <label>Client ID</label>
+            <input ng-model="dialog.clientId.value"
+                   ng-disabled="dialog.clientId.disabled || dialog.clientId.inherit"
+                   placeholder="00000000-0000-0000-0000-000000000000">
+        </md-input-container>
+    </div>
+    <md-input-container class="md-block" ng-hide="dialog.clientSecret.hide" flex>
+        <label>Client secret</label>
+        <input type="password" ng-model="dialog.clientSecret.value"
+               ng-disabled="dialog.clientSecret.disabled || dialog.clientSecret.inherit">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.scope.hide" flex>
+        <label>Scope</label>
+        <input ng-model="dialog.scope.value"
+               ng-disabled="dialog.scope.disabled || dialog.scope.inherit"
+               placeholder="https://graph.microsoft.com/.default">
+    </md-input-container>
+    <md-input-container class="md-block" ng-hide="dialog.tokenEndpoint.hide" flex>
+        <label>Token endpoint</label>
+        <input type="url" ng-model="dialog.tokenEndpoint.value"
+               ng-disabled="dialog.tokenEndpoint.disabled || dialog.tokenEndpoint.inherit"
+               placeholder="Leave empty to derive from the tenant ID">
+    </md-input-container>
+</div>

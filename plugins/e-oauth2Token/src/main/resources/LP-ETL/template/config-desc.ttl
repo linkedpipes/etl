@@ -1,0 +1,42 @@
+@prefix config: <http://plugins.linkedpipes.com/ontology/configuration/> .
+
+<http://linkedpipes.com/resources/components/e-oauth2Token/0.0.0/configuration/desc>
+    a <http://plugins.linkedpipes.com/ontology/ConfigurationDescription> ;
+    config:type <http://plugins.linkedpipes.com/ontology/e-oauth2Token#Configuration> ;
+    config:member <http://linkedpipes.com/resources/components/e-oauth2Token/0.0.0/configuration/desc/provider> ,
+        <http://linkedpipes.com/resources/components/e-oauth2Token/0.0.0/configuration/desc/tenant> ,
+        <http://linkedpipes.com/resources/components/e-oauth2Token/0.0.0/configuration/desc/clientId> ,
+        <http://linkedpipes.com/resources/components/e-oauth2Token/0.0.0/configuration/desc/clientSecret> ,
+        <http://linkedpipes.com/resources/components/e-oauth2Token/0.0.0/configuration/desc/scope> ,
+        <http://linkedpipes.com/resources/components/e-oauth2Token/0.0.0/configuration/desc/tokenEndpoint> .
+
+<http://linkedpipes.com/resources/components/e-oauth2Token/0.0.0/configuration/desc/provider>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-oauth2Token#provider> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-oauth2Token#providerControl> .
+
+<http://linkedpipes.com/resources/components/e-oauth2Token/0.0.0/configuration/desc/tenant>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-oauth2Token#tenant> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-oauth2Token#tenantControl> .
+
+<http://linkedpipes.com/resources/components/e-oauth2Token/0.0.0/configuration/desc/clientId>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-oauth2Token#clientId> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-oauth2Token#clientIdControl> .
+
+<http://linkedpipes.com/resources/components/e-oauth2Token/0.0.0/configuration/desc/clientSecret>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-oauth2Token#clientSecret> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-oauth2Token#clientSecretControl> ;
+    config:private true .
+
+<http://linkedpipes.com/resources/components/e-oauth2Token/0.0.0/configuration/desc/scope>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-oauth2Token#scope> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-oauth2Token#scopeControl> .
+
+<http://linkedpipes.com/resources/components/e-oauth2Token/0.0.0/configuration/desc/tokenEndpoint>
+    a config:ConfigurationMember ;
+    config:property <http://plugins.linkedpipes.com/ontology/e-oauth2Token#tokenEndpoint> ;
+    config:control <http://plugins.linkedpipes.com/ontology/e-oauth2Token#tokenEndpointControl> .
