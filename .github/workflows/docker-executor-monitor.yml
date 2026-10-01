@@ -35,7 +35,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: ./
-          file: ./storage/Dockerfile
+          file: ./executor-monitor/Dockerfile
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
