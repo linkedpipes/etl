@@ -17,7 +17,7 @@
         <slf4j.version>2.0.13</slf4j.version>
         <logback.version>1.5.32</logback.version>
         <jackson.version>2.17.1</jackson.version>
-        <rdf4j.version>5.0.1</rdf4j.version>
+        <rdf4j.version>5.0.3</rdf4j.version>
         <jena.version>4.1.0</jena.version>
         <mockito.version>5.19.0</mockito.version>
         <junit.version>5.10.3</junit.version>
