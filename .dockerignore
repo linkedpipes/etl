@@ -1,0 +1,13 @@
+# Distribution directory with the exception of configuration.
+deploy/
+!deploy/configuration.docker.properties
+
+# Data.
+data/
+
+# Test.
+test/
+
+# Build and package directories.
+**/node_modules
+**/target
