@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.linkedpipes</groupId>
 	<artifactId>rdf4j-storage-light</artifactId>
-	<version>5.0.3</version>
+	<version>5.1.6</version>
 	<packaging>bundle</packaging>
 	<name>LinkedPipes Rdf4j Storage Light</name>
 	<description>Lightweight packaged version of RDF4j storage.</description>
@@ -513,7 +513,7 @@
 		<dependency>
 			<groupId>no.hasmac</groupId>
 			<artifactId>hasmac-json-ld</artifactId>
-			<version>0.9.0</version>
+			<version>0.10.1</version>
 		</dependency>
 		<!-- The JTS Topology Suite is a Java library for creating and manipulating vector geometry. -->
 		<dependency>

@@ -11,12 +11,19 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.sun.net.httpserver.HttpServer;
+
 import java.io.File;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FilesToRdfTest {
 
@@ -65,6 +72,72 @@ public class FilesToRdfTest {
                 }
             }
             Assertions.assertEquals(2, subjects.size());
+        }
+    }
+
+    /**
+     * A remote context shared by many JSON-LD files must be fetched once, not
+     * once per file. RDF4J 5.0.x only used its caching document loader in
+     * secure mode, which this component disables, so every file fetched
+     * every remote context again; with many files referencing e.g.
+     * schema.org this ran the HTTP/2 connection out of streams. RDF4J 5.1
+     * caches regardless of secure mode.
+     */
+    @Test
+    public void fetchSharedRemoteContextOnce() throws Exception {
+        AtomicInteger requests = new AtomicInteger();
+        byte[] context = """
+                { "@context": { "title": "http://localhost/title" } }
+                """.getBytes(StandardCharsets.UTF_8);
+        HttpServer server = HttpServer.create(
+                new InetSocketAddress(InetAddress.getLoopbackAddress(), 0), 0);
+        server.createContext("/context.jsonld", exchange -> {
+            requests.incrementAndGet();
+            exchange.getResponseHeaders().add(
+                    "Content-Type", "application/ld+json");
+            exchange.sendResponseHeaders(200, context.length);
+            try (OutputStream body = exchange.getResponseBody()) {
+                body.write(context);
+            }
+        });
+        server.start();
+        try {
+            String contextUrl = "http://127.0.0.1:"
+                    + server.getAddress().getPort() + "/context.jsonld";
+            int fileCount = 20;
+            File input = TestUtils.getTempDirectory();
+            for (int index = 0; index < fileCount; ++index) {
+                Files.writeString(
+                        new File(input, index + ".jsonld").toPath(), """
+                        {
+                          "@context": "%s",
+                          "@id": "http://localhost/%d",
+                          "title": "%d"
+                        }
+                        """.formatted(contextUrl, index, index));
+            }
+
+            FilesToRdf component = new FilesToRdf();
+            component.configuration = new FilesToRdfConfiguration();
+            component.configuration.setCommitSize(50000);
+            try (TestEnvironment environment = TestEnvironment.create(
+                    component, TestUtils.getTempDirectory())) {
+                environment.bindSystemDataUnit("InputFiles", input);
+                TestGraphListDataUnit output =
+                        environment.bindGraphListDataUnit("OutputRdf");
+                environment.execute();
+
+                List<IRI> graphs = new ArrayList<>(output.getReadGraphs());
+                Assertions.assertEquals(fileCount, graphs.size());
+                for (IRI graph : graphs) {
+                    Assertions.assertEquals(1,
+                            statements(output, graph).size());
+                }
+            }
+            Assertions.assertEquals(1, requests.get(),
+                    "Requests for the shared remote context");
+        } finally {
+            server.stop(0);
         }
     }
 
